@@ -1,0 +1,105 @@
+buildscript {
+    repositories {
+        maven { url = 'https://repo.spongepowered.org/maven/' }
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
+
+version = '0.4'
+group = 'net.lyof.sortilege'
+archivesBaseName = 'Sortilege-1.19.2'
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: '1.19.2'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            arg '-mixin.config=sortilege.mixins.json'
+            property 'forge.logging.markers', 'SCAN,REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                sortilege {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            arg '-mixin.config=sortilege.mixins.json'
+            property 'forge.logging.markers', 'SCAN,REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                sortilege {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'sortilege', '--all', '--output', file('src/generated/resources/')
+            mods {
+                sortilege {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+mixin {
+    //add sourceSets.main, "sortilege.refmap.json"
+    config "sortilege.mixins.json"
+
+    debug.verbose = true
+    debug.export = true
+    dumpTargetOnFailure = true
+}
+
+repositories {
+    maven { url = 'https://repo.spongepowered.org/maven/' }
+
+    mavenCentral()
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.19.2-43.2.13'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+jar {
+    manifest {
+        attributes([
+                'Specification-Title'   : "Sortilege",
+                'Specification-Vendor'  : "Lyof",
+                'Specification-Version' : '1',
+                'Implementation-Title'  : "Sortilege",
+                'Implementation-Version': "1.0",
+                'Implementation-Vendor' : "Lyof",
+                'MixinConfigs'          : 'sortilege.mixins.json',
+        ])
+    }
+}
+
+jar.finalizedBy('reobfJar')
+
+task sourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allJava
+}

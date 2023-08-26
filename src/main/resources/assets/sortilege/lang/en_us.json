@@ -1,0 +1,35 @@
+{
+  "item.sortilege.wooden_staff" : "Wooden Staff",
+  "item.sortilege.stone_staff" : "Stone Staff",
+  "item.sortilege.iron_staff" : "Iron Staff",
+  "item.sortilege.golden_staff" : "Golden Staff",
+  "item.sortilege.diamond_staff" : "Diamond Staff",
+  "item.sortilege.netherite_staff" : "Netherite Staff",
+
+  "enchantment.sortilege.potency": "Potency",
+  "enchantment.sortilege.potency.desc": "Increases Staff damage.",
+  "enchantment.sortilege.stability": "Stability",
+  "enchantment.sortilege.stability.desc": "Increases Staff range.",
+  "enchantment.sortilege.chaining": "Chaining",
+  "enchantment.sortilege.chaining.desc": "Decreases Staff cooldown.",
+  "enchantment.sortilege.brazier": "Brazier",
+  "enchantment.sortilege.brazier.desc": "Burns targets hit with the Staff.",
+  "enchantment.sortilege.blizzard": "Blizzard",
+  "enchantment.sortilege.blizzard.desc": "Freezes targets hit with the Staff.",
+  "enchantment.sortilege.ignorance_curse": "Curse of Ignorance",
+  "enchantment.sortilege.ignorance_curse.desc": "Makes the Staff use XP to cast.",
+
+  "enchantment.sortilege.magic_protection": "Magic Protection",
+  "enchantment.sortilege.magic_protection.desc": "Reduces damage from magic.",
+  "enchantment.sortilege.arcane": "Arcane",
+  "enchantment.sortilege.arcane.desc": "Converts damage dealt to magic type.",
+
+  "sortilege.enchantments": "Enchantments",
+
+
+  "item.sortilege.witch_hat": "Witch Hat",
+
+
+  "item.sortilege.antidote": "Antidote",
+  "sortilege.antidote.cures": "Cures:"
+}

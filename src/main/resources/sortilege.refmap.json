@@ -1,0 +1,20 @@
+{
+  "mappings": {
+    "net/lyof/sortilege/mixins/MixinItem": {
+      "appendHoverText": "Lnet/minecraft/world/item/Item;m_7373_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"
+    },
+    "net/lyof/sortilege/mixins/MixinEnchantmentHelper": {
+      "setEnchantments": "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;m_44865_(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"
+    }
+  },
+  "data": {
+    "searge": {
+      "net/lyof/sortilege/mixins/MixinItem": {
+        "appendHoverText": "Lnet/minecraft/world/item/Item;m_7373_(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"
+      },
+      "net/lyof/sortilege/mixins/MixinEnchantmentHelper": {
+        "setEnchantments": "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;m_44865_(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"
+      }
+    }
+  }
+}

@@ -1,28 +1,17 @@
 package net.lyof.sortilege.items;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.configs.CustomStaffHandler;
-import net.lyof.sortilege.configs.ModCommonConfigs;
 import net.lyof.sortilege.configs.ModStaffConfigs;
 import net.lyof.sortilege.items.custom.StaffItem;
 import net.lyof.sortilege.items.custom.WitchHatItem;
 import net.lyof.sortilege.items.custom.potion.AntidotePotionItem;
-import net.lyof.sortilege.items.custom.potion.PotionSprayItem;
-import net.lyof.sortilege.utils.MathHelper;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,9 +47,10 @@ public class ModItems {
                     */
     public static Map<String, RegistryObject<Item>> STAFFS = new HashMap<>();
     static {
-        for (String id : ModStaffConfigs.STAFFS.keySet()) {
+        Map<String, ModStaffConfigs.StaffInfo> staffs = ModStaffConfigs.read();
+        for (String id : staffs.keySet()) {
             STAFFS.put(id, ITEMS.register(id,
-                    () -> new StaffItem(ModStaffConfigs.STAFFS.get(id))));
+                    () -> new StaffItem(staffs.get(id))));
         }
     }
 

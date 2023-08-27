@@ -25,11 +25,10 @@ public class Sortilege
 {
     public static final String MOD_ID = "sortilege";
 
-    private static final Logger LOGGER = LogUtils.getLogger();
+    protected static final Logger LOGGER = LogUtils.getLogger();
 
     public Sortilege() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        Map<String, ModStaffConfigs.Staff> staffConfig = ModStaffConfigs.read();
 
         ModItems.register(eventBus);
         ModEnchants.register(eventBus);

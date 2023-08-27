@@ -7,9 +7,6 @@ public class ModCommonConfigs {
     public static final ForgeConfigSpec SPEC;
 
 
-    public static final ForgeConfigSpec.ConfigValue<Integer> STAFF_ATTACK_COOLDOWN;
-    public static final ForgeConfigSpec.ConfigValue<Integer> STAFF_XP_COST;
-
     public static final ForgeConfigSpec.ConfigValue<Double> WITCH_HAT_DROP;
 
     public static final ForgeConfigSpec.ConfigValue<Integer> ENCHANT_LIMIT;
@@ -19,14 +16,6 @@ public class ModCommonConfigs {
 
     static {
         BUILDER.push("SortilegeConfigs");
-
-        BUILDER.push("Staffs");
-        STAFF_ATTACK_COOLDOWN = BUILDER.comment("Cooldown between Staff attacks, in ticks:")
-                        .defineInRange("attackCooldown", 25, 0, Integer.MAX_VALUE);
-        STAFF_XP_COST = BUILDER.comment("How much experience points should Staffs need and consume xp on use: (0 included)")
-                        .defineInRange("XPCost", 0, 0, Integer.MAX_VALUE);
-        BUILDER.pop();
-
 
         BUILDER.push("Enchantments");
         ENCHANT_LIMIT = BUILDER.comment("How many enchantments can an item have at maximum. Set to -1 to disable limiter")

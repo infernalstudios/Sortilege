@@ -74,12 +74,15 @@ public class ModStaffConfigs {
                     dict.containsKey("range") ? (int) Math.round((double) dict.get("range")) : 8,
                     dict.containsKey("durability") ? (int) Math.round((double) dict.get("durability")) : -1,
                     dict.containsKey("cooldown") ? (int) Math.round((double) dict.get("cooldown")) : 15,
-                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : 0,
-                    dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant")
+                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : 1,
+                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : 0,
+                    dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
+                    dict.containsKey("dependency") ? String.valueOf(dict.get("dependency")) : "minecraft"
             );
         }
 
-        public StaffInfo(String tier, int dmg, int pierce, int range, int dura, int cooldown, int charge_time, boolean fire_res) {
+        public StaffInfo(String tier, int dmg, int pierce, int range, int dura, int cooldown, int charge_time,
+                         int xp_cost, boolean fire_res, String dependency) {
             try {
                 this.tier = Tiers.valueOf(tier);
             }
@@ -93,18 +96,24 @@ public class ModStaffConfigs {
                 (int) Math.round(this.tier.getUses() * 0.7) : dura;
             this.cooldown = cooldown;
             this.charge_time = charge_time;
+            this.xp_cost = xp_cost;
             this.fireRes = fire_res;
+            this.dependency = dependency;
         }
 
         @Override
         public String toString() {
-            return "Staff{" +
+            return "StaffInfo{" +
                     "tier=" + tier +
                     ", damage=" + damage +
                     ", pierce=" + pierce +
                     ", range=" + range +
                     ", durability=" + durability +
+                    ", cooldown=" + cooldown +
+                    ", charge_time=" + charge_time +
+                    ", xp_cost=" + xp_cost +
                     ", fireRes=" + fireRes +
+                    ", dependency=" + dependency +
                     '}';
         }
 
@@ -115,7 +124,9 @@ public class ModStaffConfigs {
         public int durability;
         public int cooldown;
         public int charge_time;
+        public int xp_cost;
         public boolean fireRes;
+        public String dependency;
     }
 
 

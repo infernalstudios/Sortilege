@@ -1,21 +1,13 @@
 package net.lyof.sortilege.items.custom;
 
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.configs.CustomStaffHandler;
-import net.lyof.sortilege.configs.ModCommonConfigs;
 import net.lyof.sortilege.configs.ModStaffConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
-import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -32,67 +24,84 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Properties;
 
 public class StaffItem extends TieredItem {
-    public float attackDamage;
-    public int maxTargets;
-    public int attackRange;
+    public @Nullable ModStaffConfigs.StaffInfo rawInfos;
+    public float damage;
+    public int pierce;
+    public int range;
+    public int cooldown;
+    public int charge;
+    public int xp_cost;
 
-    public StaffItem(ModStaffConfigs.Staff stats) {
-        this(stats.tier, stats.damage, stats.pierce, stats.range, stats.durability,
+    public @Nullable InteractionHand handSave;
+
+
+    public StaffItem(ModStaffConfigs.StaffInfo stats) {
+        this(stats.tier, stats.damage, stats.pierce, stats.range, stats.durability, stats.cooldown, stats.charge_time, stats.xp_cost,
                 stats.fireRes ?
                     new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).fireResistant() :
                     new Item.Properties().tab(CreativeModeTab.TAB_COMBAT));
+        this.rawInfos = stats;
     }
 
-    public StaffItem(Tier pTier, int damage, int targets, int range, Properties properties) {
-        this(pTier, (int) (damage + pTier.getAttackDamageBonus()), targets, range, (int) Math.round(pTier.getUses() * 0.7), properties);
-    }
-
-    public StaffItem(Tier pTier, int damage, int targets, int range, int dura, Properties properties) {
+    public StaffItem(Tier pTier, int damage, int targets, int range, int dura, int cooldown, int charge, int xp_cost,
+                     Properties properties) {
         super(pTier, properties.defaultDurability(dura));
 
-        this.attackDamage = damage;
-        this.maxTargets = targets;
-        this.attackRange = range;
+        this.damage = damage;
+        this.pierce = targets;
+        this.range = range;
+        this.cooldown = cooldown;
+        this.charge = charge;
+        this.xp_cost = xp_cost;
     }
 
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        list.add(Component.literal(this.attackDamage + " Magic Damage"));
-        list.add(Component.literal(this.maxTargets + " Pierce"));
-        list.add(Component.literal(this.attackRange + " Range"));
+        list.add(Component.literal(String.valueOf(this.rawInfos)));
+        list.add(Component.literal(this.damage + " Magic Damage"));
+        list.add(Component.literal(this.pierce + " Pierce"));
+        list.add(Component.literal(this.range + " Range"));
     }
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
-        int ATTACK_COOLDOWN = ModCommonConfigs.STAFF_ATTACK_COOLDOWN.get();
-        int NEED_XP = ModCommonConfigs.STAFF_XP_COST.get();
+        int cost = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, player.getItemInHand(hand)) + this.xp_cost;
+        if (!player.isCreative() && player.totalExperience < cost)
+            return super.use(world, player, hand);
 
+        this.handSave = hand;
+        player.startUsingItem(hand);
+        return super.use(world, player, hand);
+    }
 
-        ItemStack staff = player.getItemInHand(hand);
+    @Override
+    public ItemStack finishUsingItem(ItemStack staff, Level world, LivingEntity entity) {
+        if (!(entity instanceof Player player))
+            return staff;
+
 
         int ench_brazier = ItemHelper.getEnchantLevel(ModEnchants.BRAZIER, staff);
         int ench_blizzard = ItemHelper.getEnchantLevel(ModEnchants.BLIZZARD, staff);
-        int ench_ignorance = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, staff) + NEED_XP;
+        int ench_ignorance = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, staff) + this.xp_cost;
         int ench_potency = ItemHelper.getEnchantLevel(ModEnchants.POTENCY, staff);
-        int range = this.attackRange + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, staff)*2;
+        int range = this.range + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, staff)*2;
 
 
         if (ench_ignorance > 0 && !player.isCreative()) {
             if (player.totalExperience < ench_ignorance)
-                return super.use(world, player, hand);
+                return staff;
             player.giveExperiencePoints(-ench_ignorance);
         }
 
-        player.swing(hand, true);
+        if (this.handSave != null)
+            player.swing(this.handSave, true);
+
         world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
-        player.getCooldowns().addCooldown(staff.getItem(), ATTACK_COOLDOWN);
+        player.getCooldowns().addCooldown(staff.getItem(), this.cooldown);
         if (!player.getAbilities().instabuild && staff.hurt(1, RandomSource.create(), null)) {
             staff.shrink(1);
             staff.setDamageValue(0);
@@ -102,9 +111,8 @@ public class StaffItem extends TieredItem {
         // Getting the look vector to shoot the ray along
         Vec3 look = MathHelper.getLookVector(player);
 
-
         // Initialising variables to be used in the loop
-        int targetsLeft = this.maxTargets;// + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, staff);
+        int targetsLeft = this.pierce + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, staff);
         List<String> targetsHit = new ArrayList<>();
         int index;
 
@@ -132,7 +140,7 @@ public class StaffItem extends TieredItem {
             y = (float) (player.getY() + look.y * i/2 + player.getEyeHeight());
             z = (float) (player.getZ() + look.z * i/2);
 
-            player.getLevel().addParticle(particle, x, y ,z, 0, 0, 0);
+            world.addParticle(particle, x, y ,z, 0, 0, 0);
             if (staff.isEnchanted() && Math.random() < 0.5)
                 player.getLevel().addParticle(ParticleTypes.ENCHANTED_HIT, x, y ,z, 0, 0, 0);
 
@@ -148,7 +156,7 @@ public class StaffItem extends TieredItem {
 
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target.getStringUUID())) {
-                    target.hurt(damagetype, this.attackDamage + ench_potency);
+                    target.hurt(damagetype, this.damage + ench_potency);
 
                     if (ench_brazier > 0)
                         target.setSecondsOnFire(ench_brazier * 4);
@@ -162,6 +170,11 @@ public class StaffItem extends TieredItem {
                 index++;
             }
         }
-        return super.use(world, player, hand);
+        return staff;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack) {
+        return this.charge;
     }
 }

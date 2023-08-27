@@ -177,4 +177,9 @@ public class StaffItem extends TieredItem {
     public int getUseDuration(ItemStack stack) {
         return this.charge;
     }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BOW;
+    }
 }

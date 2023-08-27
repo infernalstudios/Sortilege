@@ -25,26 +25,6 @@ public class ModItems {
 
 
     // STAFF REGISTRY
-    /*
-    public static final RegistryObject<Item> WOODEN_STAFF = ITEMS.register("wooden_staff",
-            () -> new StaffItem(Tiers.WOOD, 2, 1, 4,
-                    new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-    public static final RegistryObject<Item> STONE_STAFF = ITEMS.register("stone_staff",
-            () -> new StaffItem(Tiers.STONE, 2, 1, 6,
-                    new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-    public static final RegistryObject<Item> IRON_STAFF = ITEMS.register("iron_staff",
-            () -> new StaffItem(Tiers.IRON, 2, 1, 8,
-                    new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-    public static final RegistryObject<Item> GOLDEN_STAFF = ITEMS.register("golden_staff",
-            () -> new StaffItem(Tiers.GOLD, 2, 2, 12,
-                    new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-    public static final RegistryObject<Item> DIAMOND_STAFF = ITEMS.register("diamond_staff",
-            () -> new StaffItem(Tiers.DIAMOND, 2, 2, 12,
-                    new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
-    public static final RegistryObject<Item> NETHERITE_STAFF = ITEMS.register("netherite_staff",
-            () -> new StaffItem(Tiers.NETHERITE, 2, 3, 16,
-                    new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).fireResistant()));
-                    */
     public static Map<String, RegistryObject<Item>> STAFFS = new HashMap<>();
     static {
         Map<String, ModStaffConfigs.StaffInfo> staffs = ModStaffConfigs.read();

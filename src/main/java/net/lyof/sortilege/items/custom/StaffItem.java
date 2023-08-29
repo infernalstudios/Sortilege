@@ -1,6 +1,7 @@
 package net.lyof.sortilege.items.custom;
 
-import net.lyof.sortilege.configs.ModStaffConfigs;
+import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffItem extends TieredItem {
-    public @Nullable ModStaffConfigs.StaffInfo rawInfos;
+    public @Nullable ModJsonConfigs.StaffInfo rawInfos;
     public float damage;
     public int pierce;
     public int range;
@@ -39,7 +40,7 @@ public class StaffItem extends TieredItem {
     public @Nullable InteractionHand handSave;
 
 
-    public StaffItem(ModStaffConfigs.StaffInfo stats) {
+    public StaffItem(ModJsonConfigs.StaffInfo stats) {
         this(stats.tier, stats.damage, stats.pierce, stats.range, stats.durability, stats.cooldown, stats.charge_time, stats.xp_cost,
                 stats.fireRes ?
                     new Item.Properties().tab(CreativeModeTab.TAB_COMBAT).fireResistant() :
@@ -72,6 +73,8 @@ public class StaffItem extends TieredItem {
         int cost = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, player.getItemInHand(hand)) + this.xp_cost;
         if (!player.isCreative() && player.totalExperience < cost)
             return super.use(world, player, hand);
+
+        Sortilege.log(ModJsonConfigs.getVersion());
 
         this.handSave = hand;
         player.startUsingItem(hand);

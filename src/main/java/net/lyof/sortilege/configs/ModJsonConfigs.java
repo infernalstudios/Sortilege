@@ -6,18 +6,36 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class ModStaffConfigs {
-    public static Map<String, StaffInfo> STAFFS = new HashMap<>();
+public class ModJsonConfigs {
+    public static final ConfigEntry VERSION = new ConfigEntry("TECHNICAL.VERSION_DO_NOT_EDIT", 0);
+    public static final ConfigEntry RELOAD = new ConfigEntry("TECHNICAL.FORCE_RELOAD", false);
+
+    public static Map CONFIG = new HashMap<>();
     public static final String DEFAULT_CONFIG = """
 {
+  "TECHNICAL": {
+    "VERSION_DO_NOT_EDIT": 1,
+    "FORCE_RELOAD": false
+  },
+  
+  "enchantments": {
+    "enchant_limiter": {
+      "default": 3,
+      "overrides": {
+      }
+    }
+  },
   "staffs": {
     "wooden_staff": {
       "tier": "WOOD",
@@ -65,7 +83,57 @@ public class ModStaffConfigs {
   }
 }""";
 
+    public static Map<String, StaffInfo> STAFFS = new HashMap<>();
+
+    public static class ConfigEntry {
+        public List<String> path;
+        @Nullable public Object fallback;
+
+        public ConfigEntry(String path) {
+            this(path, null);
+        }
+
+        public ConfigEntry(String path, Object fallback) {
+            this.path = List.of(path.split("\\."));
+            this.fallback = fallback;
+        }
+
+        public String get() {
+            return this.get(this.fallback);
+        }
+
+        public String get(Object fallback) {
+            Map next = CONFIG;
+
+            for (String step : this.path) {
+                try {
+                    next = (Map) next.get(step);
+                }
+                catch (Exception e) {
+                    if (Objects.equals(step, this.path.get(this.path.size() - 1)))
+                        return String.valueOf(next.get(step));
+                    else
+                        return String.valueOf(fallback);
+                }
+                if (next == null)
+                    return String.valueOf(fallback);
+            }
+            return String.valueOf(next);
+        }
+    }
+
     public static class StaffInfo {
+        public Tier tier;
+        public int damage;
+        public int pierce;
+        public int range;
+        public int durability;
+        public int cooldown;
+        public int charge_time;
+        public int xp_cost;
+        public boolean fireRes;
+        public String dependency;
+
         public StaffInfo(Map<String, ?> dict) {
             this(
                     dict.containsKey("tier") ? (String) dict.get("tier") : "WOOD",
@@ -116,32 +184,26 @@ public class ModStaffConfigs {
                     ", dependency=" + dependency +
                     '}';
         }
-
-        public Tier tier;
-        public int damage;
-        public int pierce;
-        public int range;
-        public int durability;
-        public int cooldown;
-        public int charge_time;
-        public int xp_cost;
-        public boolean fireRes;
-        public String dependency;
     }
 
 
-    public static Map<String, StaffInfo> read() {
+    public static void register() {
+        register(false);
+    }
+
+    public static void register(boolean force) {
         String path = Minecraft.getInstance().gameDirectory.getAbsolutePath();
         while (path.length() > 0 && !path.endsWith("\\"))
             path = path.substring(0, path.length() - 1);
-        path += "config\\sortilege-staffs.json";
+        path += "config\\" + Sortilege.MOD_ID + "-common.json";
 
         // Create config file if it doesn't exist already
         File config = new File(path);
         boolean create = !config.isFile();
 
-        if (create) {
+        if (create || force) {
             try {
+                config.delete();
                 config.createNewFile();
 
                 FileWriter writer = new FileWriter(path);
@@ -156,7 +218,6 @@ public class ModStaffConfigs {
         }
 
 
-        Gson gson = new Gson();
         String configContent = DEFAULT_CONFIG;
         try {
             configContent = FileUtils.readFileToString(config, StandardCharsets.UTF_8);
@@ -164,7 +225,14 @@ public class ModStaffConfigs {
         catch (IOException e) {
             e.printStackTrace();
         }
-        Map<String, Map<String, Map<String, Map>>> json = gson.fromJson(configContent, Map.class);
+        Map<String, Map<String, Map<String, Map>>> json = new Gson().fromJson(configContent, Map.class);
+        CONFIG = json;
+
+        if (Boolean.parseBoolean(RELOAD.get()) || Double.parseDouble(VERSION.get()) < getVersion()) {
+            register(true);
+            return;
+        }
+        Sortilege.log("RELOADDD " + Boolean.parseBoolean(RELOAD.get()) + " " + RELOAD.get());
 
 
         Map<String, StaffInfo> result = new HashMap<>();
@@ -173,6 +241,20 @@ public class ModStaffConfigs {
         }
 
         STAFFS = result;
-        return result;
+    }
+
+    public static double getVersion() {
+        String text = DEFAULT_CONFIG;
+        int start = 0;
+
+        while (!List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9').contains(text.charAt(start))) {
+            start++;
+        }
+        int end = start + 1;
+        while (List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9').contains(text.charAt(end))) {
+            end++;
+        }
+
+        return Double.parseDouble(text.substring(start, end));
     }
 }

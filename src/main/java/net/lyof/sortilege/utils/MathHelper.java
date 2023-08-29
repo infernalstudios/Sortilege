@@ -1,11 +1,7 @@
 package net.lyof.sortilege.utils;
 
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.Map;
 
 public class MathHelper {
     public static Vec3 getLookVector(Player player) {

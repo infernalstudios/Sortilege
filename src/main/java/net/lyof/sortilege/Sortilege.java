@@ -2,7 +2,7 @@ package net.lyof.sortilege;
 
 import com.mojang.logging.LogUtils;
 import net.lyof.sortilege.configs.ModCommonConfigs;
-import net.lyof.sortilege.configs.ModStaffConfigs;
+import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.recipes.AntidoteBrewingRecipe;
@@ -17,8 +17,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
-import java.util.Map;
-
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Sortilege.MOD_ID)
 public class Sortilege
@@ -29,6 +27,7 @@ public class Sortilege
 
     public Sortilege() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        ModJsonConfigs.register();
 
         ModItems.register(eventBus);
         ModEnchants.register(eventBus);

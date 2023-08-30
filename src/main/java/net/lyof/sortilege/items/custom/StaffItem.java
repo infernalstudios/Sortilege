@@ -26,7 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StaffItem extends TieredItem {
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;
@@ -73,8 +75,6 @@ public class StaffItem extends TieredItem {
         int cost = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, player.getItemInHand(hand)) + this.xp_cost;
         if (!player.isCreative() && player.totalExperience < cost)
             return super.use(world, player, hand);
-
-        Sortilege.log(ModJsonConfigs.getVersion());
 
         this.handSave = hand;
         player.startUsingItem(hand);
@@ -148,7 +148,7 @@ public class StaffItem extends TieredItem {
                 player.getLevel().addParticle(ParticleTypes.ENCHANTED_HIT, x, y ,z, 0, 0, 0);
 
             pos = new BlockPos(Math.round(x-0.5), Math.round(y-0.5), Math.round(z-0.5));
-            List<Entity> entities = player.getLevel().getEntities(null, new AABB(pos).inflate(0.5));
+            List<Entity> entities = player.getLevel().getEntities(null, new AABB(pos).inflate(0.1));
 
             if (targetsLeft <= 0 || player.level.getBlockState(pos).canOcclude())
                 break;

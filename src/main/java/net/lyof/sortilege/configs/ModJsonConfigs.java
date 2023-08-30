@@ -12,16 +12,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class ModJsonConfigs {
-    public static final ConfigEntry VERSION = new ConfigEntry("TECHNICAL.VERSION_DO_NOT_EDIT", 0);
-    public static final ConfigEntry RELOAD = new ConfigEntry("TECHNICAL.FORCE_RELOAD", false);
+    public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 1d);
+    public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RELOAD", false);
 
-    public static Map CONFIG = new HashMap<>();
+    public static Map CONFIG = new TreeMap<>();
     public static final String DEFAULT_CONFIG = """
 {
   "TECHNICAL": {
@@ -32,6 +29,7 @@ public class ModJsonConfigs {
   "enchantments": {
     "enchant_limiter": {
       "default": 3,
+      "override_mode": "absolute",
       "overrides": {
       }
     }
@@ -85,25 +83,28 @@ public class ModJsonConfigs {
 
     public static Map<String, StaffInfo> STAFFS = new HashMap<>();
 
-    public static class ConfigEntry {
+
+    public static class ConfigEntry<T> {
         public List<String> path;
-        @Nullable public Object fallback;
+        public T fallback;
 
         public ConfigEntry(String path) {
             this(path, null);
         }
 
-        public ConfigEntry(String path, Object fallback) {
+        public ConfigEntry(String path, @Nullable T fallback) {
             this.path = List.of(path.split("\\."));
             this.fallback = fallback;
         }
 
-        public String get() {
+        public T get() {
             return this.get(this.fallback);
         }
 
-        public String get(Object fallback) {
+        @SuppressWarnings("unchecked")
+        public T get(T fallback) {
             Map next = CONFIG;
+            Object result = null;
 
             for (String step : this.path) {
                 try {
@@ -111,14 +112,23 @@ public class ModJsonConfigs {
                 }
                 catch (Exception e) {
                     if (Objects.equals(step, this.path.get(this.path.size() - 1)))
-                        return String.valueOf(next.get(step));
+                        result = next.get(step);
                     else
-                        return String.valueOf(fallback);
+                        return fallback;
                 }
                 if (next == null)
-                    return String.valueOf(fallback);
+                    return fallback;
             }
-            return String.valueOf(next);
+
+            if (fallback.getClass() == Integer.class)
+                return (T) (Integer) Long.valueOf(Math.round(Double.parseDouble(String.valueOf(result)))).intValue();
+            if (fallback.getClass() == Double.class)
+                return (T) Double.valueOf(String.valueOf(result));
+            if (fallback.getClass() == String.class)
+                return (T) String.valueOf(result);
+            if (fallback instanceof Map)
+                return (T) next;
+            return fallback;
         }
     }
 
@@ -228,11 +238,10 @@ public class ModJsonConfigs {
         Map<String, Map<String, Map<String, Map>>> json = new Gson().fromJson(configContent, Map.class);
         CONFIG = json;
 
-        if (Boolean.parseBoolean(RELOAD.get()) || Double.parseDouble(VERSION.get()) < getVersion()) {
+        if (!force && (RELOAD.get() || VERSION.get() < getVersion())) {
             register(true);
             return;
         }
-        Sortilege.log("RELOADDD " + Boolean.parseBoolean(RELOAD.get()) + " " + RELOAD.get());
 
 
         Map<String, StaffInfo> result = new HashMap<>();

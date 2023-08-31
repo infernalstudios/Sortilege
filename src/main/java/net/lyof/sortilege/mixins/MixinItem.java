@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixins;
 
 import net.lyof.sortilege.configs.ModCommonConfigs;
+import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -21,7 +22,7 @@ public class MixinItem {
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     public void showEnchantLimit(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag, CallbackInfo ci) {
         int a = EnchantmentHelper.getEnchantments(itemstack).size();
-        int m = ModCommonConfigs.ENCHANT_LIMIT.get();
+        int m = ItemHelper.getMaxEnchantValue(itemstack);
         if ((a > 0 || false) &&
                 m > 0 && itemstack.getEnchantmentValue() > 0 && !itemstack.is(Items.ENCHANTED_BOOK))
             list.add(Component.literal(a + "/" + m).append(" ")

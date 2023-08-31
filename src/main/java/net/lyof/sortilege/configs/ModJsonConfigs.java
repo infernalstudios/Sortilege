@@ -149,9 +149,9 @@ public class ModJsonConfigs {
 
     public static void register(boolean force) {
         String path = Minecraft.getInstance().gameDirectory.getAbsolutePath();
-        while (path.length() > 0 && !path.endsWith("\\"))
+        while (path.length() > 0 && !path.endsWith("/"))
             path = path.substring(0, path.length() - 1);
-        path += "config\\" + Sortilege.MOD_ID + "-common.json";
+        path += "config/" + Sortilege.MOD_ID + "-common.json";
 
         // Create config file if it doesn't exist already
         File config = new File(path);

@@ -1,9 +1,15 @@
 package net.lyof.sortilege.utils;
 
+import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ItemHelper {
     public static int getEnchantLevel(RegistryObject<Enchantment> enchant, ItemStack item) {
@@ -20,5 +26,24 @@ public class ItemHelper {
 
     public static boolean hasEnchant(Enchantment enchant, ItemStack item) {
         return getEnchantLevel(enchant, item) > 0;
+    }
+
+
+    public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
+
+    public static int getMaxEnchantValue(ItemStack itemstack) {
+        String id = itemstack.getItem().getDescriptionId();
+        id = id.substring(id.indexOf(".") + 1).replaceAll("\\.", ":");
+        Sortilege.log(id);
+        int default_limit = new ModJsonConfigs.ConfigEntry<>(ENCHLIMIT_PATH + "default", 3).get();
+        boolean sum = new ModJsonConfigs.ConfigEntry<>
+                (ENCHLIMIT_PATH + "override_mode", "absolute").get().equals("relative");
+
+        int limit = new ModJsonConfigs.ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
+
+
+        if (sum)
+            return limit + default_limit;
+        return limit == -1 ? default_limit : limit;
     }
 }

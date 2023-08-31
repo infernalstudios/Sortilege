@@ -1,5 +1,6 @@
 package net.lyof.sortilege.items.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.utils.ItemHelper;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -62,10 +64,8 @@ public class StaffItem extends TieredItem {
 
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        list.add(Component.literal(String.valueOf(this.rawInfos)));
-        list.add(Component.literal(this.damage + " Magic Damage"));
-        list.add(Component.literal(this.pierce + " Pierce"));
-        list.add(Component.literal(this.range + " Range"));
+        super.appendHoverText(itemstack, level, list, flag);
+        //list.add(Component.literal(String.valueOf(this.rawInfos)));
     }
 
     @Override
@@ -73,6 +73,8 @@ public class StaffItem extends TieredItem {
         int cost = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, player.getItemInHand(hand)) + this.xp_cost;
         if (!player.isCreative() && player.totalExperience < cost)
             return super.use(world, player, hand);
+
+        Sortilege.log(ItemHelper.getMaxEnchantValue(player.getItemInHand(hand)));
 
         this.handSave = hand;
         player.startUsingItem(hand);

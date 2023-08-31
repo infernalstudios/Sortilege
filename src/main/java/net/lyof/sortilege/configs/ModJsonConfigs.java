@@ -1,6 +1,7 @@
 package net.lyof.sortilege.configs;
 
 import com.google.gson.Gson;
+import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Tier;
@@ -15,73 +16,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ModJsonConfigs {
-    public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 1d);
+    public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
     public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RELOAD", false);
+    public static final ConfigEntry<List<Map<String, Map<String, ?>>>> STAFF_ENTRIES =
+            new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList());
 
     public static Map CONFIG = new TreeMap<>();
-    public static final String DEFAULT_CONFIG = """
-{
-  "TECHNICAL": {
-    "VERSION_DO_NOT_EDIT": 1,
-    "FORCE_RELOAD": false
-  },
-  
-  "enchantments": {
-    "enchant_limiter": {
-      "default": 3,
-      "override_mode": "absolute",
-      "overrides": {
-      }
-    }
-  },
-  "staffs": {
-    "wooden_staff": {
-      "tier": "WOOD",
-      "damage": 3,
-      "pierce": 1,
-      "range": 6,
-      "cooldown": 15
-    },
-    "stone_staff": {
-      "tier": "STONE",
-      "damage": 4,
-      "pierce": 1,
-      "range": 8,
-      "cooldown": 20
-    },
-    "iron_staff": {
-      "tier": "IRON",
-      "damage": 5,
-      "pierce": 1,
-      "range": 10,
-      "cooldown": 15
-    },
-    "golden_staff": {
-      "tier": "GOLD",
-      "damage": 3,
-      "pierce": 2,
-      "range": 14,
-      "cooldown": 10
-    },
-    "diamond_staff": {
-      "tier": "DIAMOND",
-      "damage": 5,
-      "pierce": 2,
-      "range": 12,
-      "cooldown": 15
-    },
-    "netherite_staff": {
-      "tier": "NETHERITE",
-      "damage": 6,
-      "pierce": 3,
-      "range": 16,
-      "fire_resistant": true,
-      "cooldown": 20
-    }
-  }
-}""";
 
-    public static Map<String, StaffInfo> STAFFS = new HashMap<>();
+    public static List<Pair<String, StaffInfo>> STAFFS = new ArrayList<>();
 
 
     public static class ConfigEntry<T> {
@@ -126,8 +68,12 @@ public class ModJsonConfigs {
                 return (T) Double.valueOf(String.valueOf(result));
             if (fallback.getClass() == String.class)
                 return (T) String.valueOf(result);
+            if (fallback.getClass() == Boolean.class)
+                return (T) Boolean.valueOf(String.valueOf(result));
             if (fallback instanceof Map)
                 return (T) next;
+            if (fallback instanceof List)
+                return (T) result;
             return fallback;
         }
     }
@@ -235,8 +181,7 @@ public class ModJsonConfigs {
         catch (IOException e) {
             e.printStackTrace();
         }
-        Map<String, Map<String, Map<String, Map>>> json = new Gson().fromJson(configContent, Map.class);
-        CONFIG = json;
+        CONFIG = new Gson().fromJson(configContent, Map.class);
 
         if (!force && (RELOAD.get() || VERSION.get() < getVersion())) {
             register(true);
@@ -244,12 +189,16 @@ public class ModJsonConfigs {
         }
 
 
-        Map<String, StaffInfo> result = new HashMap<>();
-        for (String id : json.get("staffs").keySet()) {
-            result.put(id, new StaffInfo(json.get("staffs").get(id)));
+        Sortilege.log("STAFFS " + STAFF_ENTRIES.get());
+
+        List<Pair<String, StaffInfo>> result = new ArrayList<>();
+        for (Map<String, Map<String, ?>> staff : STAFF_ENTRIES.get()) {
+            String id = String.valueOf(List.of(staff.keySet().toArray()).get(0));
+            result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
 
         STAFFS = result;
+        Sortilege.log("STAFFS " + STAFFS);
     }
 
     public static double getVersion() {
@@ -266,4 +215,81 @@ public class ModJsonConfigs {
 
         return Double.parseDouble(text.substring(start, end));
     }
+
+
+    public static final String DEFAULT_CONFIG = """
+{
+  "TECHNICAL": {
+    "VERSION_DO_NOT_EDIT": 1,
+    "FORCE_RELOAD": false
+  },
+
+  "enchantments": {
+    "enchant_limiter": {
+      "default": 3,
+      "override_mode": "absolute",
+      "overrides": {
+      }
+    }
+  },
+  "staffs": {
+    "entries": [
+      {
+        "wooden_staff": {
+          "tier": "WOOD",
+          "damage": 3,
+          "pierce": 1,
+          "range": 6,
+          "cooldown": 15
+        }
+      },
+      {
+        "stone_staff": {
+          "tier": "STONE",
+          "damage": 4,
+          "pierce": 1,
+          "range": 8,
+          "cooldown": 20
+        }
+      },
+      {
+        "iron_staff": {
+          "tier": "IRON",
+          "damage": 5,
+          "pierce": 1,
+          "range": 10,
+          "cooldown": 15
+        }
+      },
+      {
+        "golden_staff": {
+          "tier": "GOLD",
+          "damage": 3,
+          "pierce": 2,
+          "range": 14,
+          "cooldown": 10
+        }
+      },
+      {
+        "diamond_staff": {
+          "tier": "DIAMOND",
+          "damage": 5,
+          "pierce": 2,
+          "range": 12,
+          "cooldown": 15
+        }
+      },
+      {
+        "netherite_staff": {
+          "tier": "NETHERITE",
+          "damage": 6,
+          "pierce": 3,
+          "range": 16,
+          "fire_resistant": true,
+          "cooldown": 20
+        }
+      }
+    ]
+  }
+}""";
 }

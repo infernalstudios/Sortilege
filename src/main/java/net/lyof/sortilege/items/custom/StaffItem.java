@@ -1,6 +1,5 @@
 package net.lyof.sortilege.items.custom;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.utils.ItemHelper;
@@ -9,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
@@ -26,9 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StaffItem extends TieredItem {
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;
@@ -143,9 +141,11 @@ public class StaffItem extends TieredItem {
             y = (float) (player.getY() + look.y * i/2 + player.getEyeHeight());
             z = (float) (player.getZ() + look.z * i/2);
 
-            world.addParticle(particle, x, y ,z, 0, 0, 0);
-            if (staff.isEnchanted() && Math.random() < 0.5)
-                player.getLevel().addParticle(ParticleTypes.ENCHANTED_HIT, x, y ,z, 0, 0, 0);
+            if (world instanceof ServerLevel serverworld) {
+                serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
+                if (staff.isEnchanted() && Math.random() < 0.5)
+                    serverworld.sendParticles(ParticleTypes.ENCHANTED_HIT, x, y, z, 1, 0, 0, 0, 0);
+            }
 
             pos = new BlockPos(Math.round(x-0.5), Math.round(y-0.5), Math.round(z-0.5));
             List<Entity> entities = player.getLevel().getEntities(null, new AABB(pos).inflate(0.1));

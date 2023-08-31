@@ -1,5 +1,6 @@
 package net.lyof.sortilege.items;
 
+import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.items.custom.StaffItem;
@@ -21,9 +22,11 @@ public class ModItems {
 
     public static void register(IEventBus eventbus) {
         // STAFF DATA REGISTRY
-        for (String id : ModJsonConfigs.STAFFS.keySet()) {
-            if (ModList.get().isLoaded(ModJsonConfigs.STAFFS.get(id).dependency))
-                STAFFS.put(id, ITEMS.register(id, () -> new StaffItem(ModJsonConfigs.STAFFS.get(id))));
+        for (Pair<String, ModJsonConfigs.StaffInfo> pair : ModJsonConfigs.STAFFS) {
+            String id = pair.getFirst();
+            ModJsonConfigs.StaffInfo staff = pair.getSecond();
+            if (ModList.get().isLoaded(staff.dependency))
+                STAFFS.put(id, ITEMS.register(id, () -> new StaffItem(staff)));
         }
 
         ITEMS.register(eventbus);

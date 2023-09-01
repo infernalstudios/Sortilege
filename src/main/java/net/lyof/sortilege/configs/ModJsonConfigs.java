@@ -148,9 +148,10 @@ public class ModJsonConfigs {
     }
 
     public static void register(boolean force) {
-        String path = Minecraft.getInstance().gameDirectory.getAbsolutePath();
-        while (path.length() > 0 && !path.endsWith("\\"))
-            path = path.substring(0, path.length() - 1);
+        //String path = Minecraft.getInstance().gameDirectory.getAbsolutePath();
+        //while (path.length() > 0 && !path.endsWith("\\"))
+        //    path = path.substring(0, path.length() - 1);
+        String path = System.getProperty("user.dir") + File.separator;
         path += "config\\" + Sortilege.MOD_ID + "-common.json";
         Sortilege.log("CONFIGG " + path);
 

@@ -3,6 +3,8 @@ package net.lyof.sortilege.items.custom;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.enchants.staff.StaffEnchantment;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.core.BlockPos;
@@ -19,7 +21,9 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.phys.AABB;
@@ -62,6 +66,11 @@ public class StaffItem extends TieredItem {
         this.xp_cost = xp_cost;
     }
 
+    public int getXPCost(ItemStack itemstack) {
+        return this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
+                - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack);
+    }
+
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
@@ -70,11 +79,9 @@ public class StaffItem extends TieredItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
-        int cost = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, player.getItemInHand(hand)) + this.xp_cost;
-        if (!player.isCreative() && player.totalExperience < cost)
+        ItemStack staff = player.getItemInHand(hand);
+        if (!player.isCreative() && player.totalExperience < this.getXPCost(staff))
             return super.use(world, player, hand);
-
-        Sortilege.log(ItemHelper.getMaxEnchantValue(player.getItemInHand(hand)));
 
         this.handSave = hand;
         player.startUsingItem(hand);
@@ -86,18 +93,29 @@ public class StaffItem extends TieredItem {
         if (!(entity instanceof Player player))
             return staff;
 
+        ElementalStaffEnchantment element = null;
+        if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, staff))
+            element = (ElementalStaffEnchantment) ModEnchants.BRAZIER.get();
+        else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, staff))
+            element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD.get();
+        else if (ItemHelper.hasEnchant(ModEnchants.KINESIS, staff))
+            element = (ElementalStaffEnchantment) ModEnchants.KINESIS.get();
+        else if (ItemHelper.hasEnchant(ModEnchants.BLAST, staff))
+            element = (ElementalStaffEnchantment) ModEnchants.BLAST.get();
+        else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, staff))
+            element = (ElementalStaffEnchantment) ModEnchants.BLITZ.get();
+        int element_level = element == null ? 0 : ItemHelper.getEnchantLevel(element, staff);
 
-        int ench_brazier = ItemHelper.getEnchantLevel(ModEnchants.BRAZIER, staff);
-        int ench_blizzard = ItemHelper.getEnchantLevel(ModEnchants.BLIZZARD, staff);
-        int ench_ignorance = ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, staff) + this.xp_cost;
-        int ench_potency = ItemHelper.getEnchantLevel(ModEnchants.POTENCY, staff);
+
+        int cost = this.getXPCost(staff);
+        float damage = this.damage + ItemHelper.getEnchantLevel(ModEnchants.POTENCY, staff);
         int range = this.range + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, staff)*2;
 
 
-        if (ench_ignorance > 0 && !player.isCreative()) {
-            if (player.totalExperience < ench_ignorance)
+        if (cost > 0 && !player.isCreative()) {
+            if (player.totalExperience < cost)
                 return staff;
-            player.giveExperiencePoints(-ench_ignorance);
+            player.giveExperiencePoints(-cost);
         }
 
         if (this.handSave != null)
@@ -119,23 +137,16 @@ public class StaffItem extends TieredItem {
         List<String> targetsHit = new ArrayList<>();
         int index;
 
-        float x;
-        float y;
-        float z;
+        float x = (float) player.getX();
+        float y = (float) player.getY();
+        float z = (float) player.getZ();
         BlockPos pos;
 
         DamageSource damagetype = DamageSource.indirectMagic(player, player);
-
-        ParticleOptions particle;
-        if (ench_brazier > 0) {
-            particle = ParticleTypes.FLAME;
+        if (element == ModEnchants.BRAZIER.get())
             damagetype.setIsFire();
-        }
-        else if (ench_blizzard > 0)
-            particle = ParticleTypes.SNOWFLAKE;
-        else
-            particle = ParticleTypes.INSTANT_EFFECT;
 
+        ParticleOptions particle = (element == null) ? ParticleTypes.INSTANT_EFFECT : element.particle;
 
         // Main loop, displaying particles and hurting mobs on its way
         for (int i = 1; i < range * 2; i++) {
@@ -161,13 +172,14 @@ public class StaffItem extends TieredItem {
 
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target.getStringUUID())) {
-                    target.hurt(damagetype, this.damage + ench_potency);
+                    target.hurt(damagetype, damage);
 
-                    if (ench_brazier > 0)
-                        target.setSecondsOnFire(ench_brazier * 4);
-                    else if (ench_blizzard > 0) {
-                        target.setTicksFrozen(target.getTicksFrozen() + 150*ench_blizzard);
-                    }
+                    if (element != null)
+                        element.triggerAttack(target, ItemHelper.getEnchantLevel(element, staff));
+                    if (element == ModEnchants.KINESIS.get())
+                        target.setDeltaMovement(look.scale(element_level));
+                    if (element == ModEnchants.BLAST.get() && element_level > 1)
+                        world.explode(player, x, y, z, 1, Explosion.BlockInteraction.NONE);
 
                     targetsHit.add(target.getStringUUID());
                     targetsLeft--;
@@ -175,6 +187,9 @@ public class StaffItem extends TieredItem {
                 index++;
             }
         }
+        if (element == ModEnchants.BLAST.get())
+            world.explode(player, x, y, z, 1, Explosion.BlockInteraction.NONE);
+
         return staff;
     }
 

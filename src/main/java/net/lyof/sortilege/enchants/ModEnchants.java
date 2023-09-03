@@ -6,6 +6,12 @@ import net.lyof.sortilege.enchants.staff.CurseStaffEnchantment;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.enchants.staff.StaffEnchantment;
 import net.lyof.sortilege.enchants.weapon.ArcaneEnchantment;
+import net.minecraft.core.particles.ParticleGroup;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,11 +35,29 @@ public class ModEnchants {
             () -> new StaffEnchantment(Enchantment.Rarity.COMMON, 5));
     public static RegistryObject<Enchantment> CHAINING = ENCHANTMENTS.register("chaining",
             () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 3));
+    public static RegistryObject<Enchantment> WISDOM = ENCHANTMENTS.register("wisdom",
+            () -> new StaffEnchantment(Enchantment.Rarity.RARE, 2));
 
     public static RegistryObject<Enchantment> BRAZIER = ENCHANTMENTS.register("brazier",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2));
+            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    ParticleTypes.FLAME, (target, level) -> target.setSecondsOnFire(level * 4)));
     public static RegistryObject<Enchantment> BLIZZARD = ENCHANTMENTS.register("blizzard",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2));
+            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    ParticleTypes.SNOWFLAKE, (target, level) -> target.setTicksFrozen(target.getTicksFrozen() + 150*level)));
+    public static RegistryObject<Enchantment> KINESIS = ENCHANTMENTS.register("kinesis",
+            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    ParticleTypes.CRIMSON_SPORE, null));
+    public static RegistryObject<Enchantment> BLAST = ENCHANTMENTS.register("blast",
+            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    ParticleTypes.CRIT, null));
+    public static RegistryObject<Enchantment> BLITZ = ENCHANTMENTS.register("blitz",
+            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    ParticleTypes.ELECTRIC_SPARK, (target, level) -> {
+                target.setDeltaMovement(0, -1, 0);
+                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40 * level));
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40 * level));
+            }));
+    //which particles should i use guys?
 
     public static RegistryObject<Enchantment> IGNORANCE_CURSE = ENCHANTMENTS.register("ignorance_curse",
             () -> new CurseStaffEnchantment(Enchantment.Rarity.RARE));

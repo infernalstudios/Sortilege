@@ -207,11 +207,11 @@ public class ModJsonConfigs {
         String text = DEFAULT_CONFIG;
         int start = 0;
 
-        while (!List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9').contains(text.charAt(start))) {
+        while (!List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.').contains(text.charAt(start))) {
             start++;
         }
         int end = start + 1;
-        while (List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9').contains(text.charAt(end))) {
+        while (List.of('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.').contains(text.charAt(end))) {
             end++;
         }
 

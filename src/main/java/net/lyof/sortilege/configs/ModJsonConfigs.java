@@ -18,6 +18,7 @@ import java.util.*;
 public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
     public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RELOAD", false);
+    public static final ConfigEntry<Integer> DEFAULT_COST = new ConfigEntry<>("staffs.default_xp_cost", 0);
     public static final ConfigEntry<List<Map<String, Map<String, ?>>>> STAFF_ENTRIES =
             new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList());
 
@@ -99,7 +100,7 @@ public class ModJsonConfigs {
                     dict.containsKey("durability") ? (int) Math.round((double) dict.get("durability")) : -1,
                     dict.containsKey("cooldown") ? (int) Math.round((double) dict.get("cooldown")) : 15,
                     dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : 1,
-                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : 0,
+                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : DEFAULT_COST.get(),
                     dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
                     dict.containsKey("dependency") ? String.valueOf(dict.get("dependency")) : "minecraft"
             );
@@ -245,6 +246,7 @@ public class ModJsonConfigs {
     }
   },
   "staffs": {
+    "default_xp_cost": 0,
     "entries": [
       {
         "wooden_staff": {

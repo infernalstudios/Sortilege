@@ -74,7 +74,7 @@ public class StaffItem extends TieredItem {
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
-        //list.add(Component.literal(String.valueOf(this.rawInfos)));
+        list.add(Component.literal(String.valueOf(this.rawInfos)));
     }
 
     @Override

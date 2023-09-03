@@ -1,6 +1,6 @@
 package net.lyof.sortilege.events;
 
-import net.lyof.sortilege.configs.ModCommonConfigs;
+import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
 import net.minecraft.world.entity.Entity;
@@ -12,7 +12,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerXpEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,18 +20,17 @@ import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class ModEvents {
+    public static final ModJsonConfigs.ConfigEntry<Double> WITCH_HAT_DROP_CHANCE =
+            new ModJsonConfigs.ConfigEntry<>("witch_hat.drop_chance", 0.1);
+    public static final ModJsonConfigs.ConfigEntry<Integer> WITCH_HAT_BONUS =
+            new ModJsonConfigs.ConfigEntry<>("witch_hat.xp_bonus", 3);
+
     @SubscribeEvent
-    public static void xpBoost(PlayerXpEvent.XpChange event) {
-        int amount = event.getAmount();
-        float multiplier = 1;
-        if (amount <= 0)
+    public static void xpBoost(LivingExperienceDropEvent event) {
+        if (event.getAttackingPlayer() == null)
             return;
-
-        if (event.getEntity().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.WITCH_HAT.get())
-            multiplier += 0.4;
-
-        if (multiplier != 1)
-            event.setAmount(Math.round(amount * multiplier));
+        if (event.getAttackingPlayer().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.WITCH_HAT.get())
+            event.setDroppedExperience(event.getOriginalExperience() + WITCH_HAT_BONUS.get());
     }
 
     @SubscribeEvent
@@ -41,10 +40,10 @@ public class ModEvents {
         if (world.isClientSide) return;
 
         if (Objects.equals(event.getEntity().getEncodeId(), "minecraft:witch")) {
-            if (Math.random() < ModCommonConfigs.WITCH_HAT_DROP.get()) {
-                ItemEntity hat = new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(),
-                        new ItemStack(ModItems.WITCH_HAT.get()));
-                event.getEntity().level.addFreshEntity(hat);
+            if (Math.random() < WITCH_HAT_DROP_CHANCE.get()) {
+                ItemStack hat = new ItemStack(ModItems.WITCH_HAT.get());
+                hat.setDamageValue((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);
+                event.getEntity().level.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), hat));
             }
         }
     }

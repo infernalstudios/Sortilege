@@ -3,7 +3,6 @@ package net.lyof.sortilege.configs;
 import com.google.gson.Gson;
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import org.apache.commons.io.FileUtils;
@@ -149,12 +148,8 @@ public class ModJsonConfigs {
     }
 
     public static void register(boolean force) {
-        //String path = Minecraft.getInstance().gameDirectory.getAbsolutePath();
-        //while (path.length() > 0 && !path.endsWith("\\"))
-        //    path = path.substring(0, path.length() - 1);
-        String path = System.getProperty("user.dir") + File.separator;
-        path += "config\\" + Sortilege.MOD_ID + "-common.json";
-        Sortilege.log("CONFIGG " + path);
+        String path = System.getProperty("user.dir") + File.separator +
+                "config" + File.separator + Sortilege.MOD_ID + "-common.json";
 
         // Create config file if it doesn't exist already
         File config = new File(path);
@@ -223,11 +218,16 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
 {
   "TECHNICAL": {
-    "VERSION_DO_NOT_EDIT": 1.1,
+    "VERSION_DO_NOT_EDIT": 1,
     "FORCE_RELOAD": false
   },
 
+  "witch_hat": {
+    "drop_chance": 0.1,
+    "xp_bonus": 3
+  },
   "enchantments": {
+    "magic_protection_protection_compatibility": false,
     "enchant_limiter": {
       "default": 3,
       "override_mode": "relative",

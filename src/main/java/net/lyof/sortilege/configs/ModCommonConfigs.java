@@ -1,8 +1,6 @@
 package net.lyof.sortilege.configs;
 
-import net.minecraftforge.common.ForgeConfigSpec;
-
-public class ModCommonConfigs {
+public class ModCommonConfigs {/*
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec SPEC;
 
@@ -31,5 +29,5 @@ public class ModCommonConfigs {
 
         BUILDER.pop();
         SPEC = BUILDER.build();
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
 package net.lyof.sortilege.mixins;
 
-import net.lyof.sortilege.configs.ModCommonConfigs;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.EnchantedBookItem;

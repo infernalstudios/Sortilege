@@ -1,15 +1,10 @@
 package net.lyof.sortilege.utils;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ItemHelper {
     public static int getEnchantLevel(RegistryObject<Enchantment> enchant, ItemStack item) {

@@ -222,15 +222,25 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
 {
   "TECHNICAL": {
-    "VERSION_DO_NOT_EDIT": 1,
+    "VERSION_DO_NOT_EDIT": 1.1,
     "FORCE_RELOAD": false
   },
 
   "enchantments": {
     "enchant_limiter": {
       "default": 3,
-      "override_mode": "absolute",
+      "override_mode": "relative",
       "overrides": {
+        "minecraft:golden_shovel": 2,
+        "minecraft:golden_pickaxe": 2,
+        "minecraft:golden_axe": 2,
+        "minecraft:golden_hoe": 2,
+        "minecraft:golden_sword": 2,
+        "minecraft:golden_helmet": 2,
+        "minecraft:golden_chestplate": 2,
+        "minecraft:golden_leggings": 2,
+        "minecraft:golden_boots": 2,
+        "sortilege:golden_staff": 2
       }
     }
   },

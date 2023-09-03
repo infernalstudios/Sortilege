@@ -34,7 +34,6 @@ public class ItemHelper {
     public static int getMaxEnchantValue(ItemStack itemstack) {
         String id = itemstack.getItem().getDescriptionId();
         id = id.substring(id.indexOf(".") + 1).replaceAll("\\.", ":");
-        Sortilege.log(id);
         int default_limit = new ModJsonConfigs.ConfigEntry<>(ENCHLIMIT_PATH + "default", 3).get();
         boolean sum = new ModJsonConfigs.ConfigEntry<>
                 (ENCHLIMIT_PATH + "override_mode", "absolute").get().equals("relative");

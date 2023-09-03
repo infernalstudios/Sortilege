@@ -5,6 +5,9 @@
     },
     "net/lyof/sortilege/mixins/MixinEnchantmentHelper": {
       "setEnchantments": "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;m_44865_(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"
+    },
+    "net/lyof/sortilege/mixins/MixinItemStack": {
+      "enchant": "Lnet/minecraft/world/item/ItemStack;m_41663_(Lnet/minecraft/world/item/enchantment/Enchantment;I)V"
     }
   },
   "data": {
@@ -14,6 +17,9 @@
       },
       "net/lyof/sortilege/mixins/MixinEnchantmentHelper": {
         "setEnchantments": "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;m_44865_(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"
+      },
+      "net/lyof/sortilege/mixins/MixinItemStack": {
+        "enchant": "Lnet/minecraft/world/item/ItemStack;m_41663_(Lnet/minecraft/world/item/enchantment/Enchantment;I)V"
       }
     }
   }

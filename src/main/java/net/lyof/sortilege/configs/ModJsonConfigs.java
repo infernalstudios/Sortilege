@@ -17,7 +17,10 @@ import java.util.*;
 public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
     public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RELOAD", false);
+
     public static final ConfigEntry<Integer> DEFAULT_COST = new ConfigEntry<>("staffs.default_xp_cost", 0);
+    public static final ConfigEntry<Integer> DEFAULT_CHARGE = new ConfigEntry<>("staffs.default_charge_time", 1);
+
     public static final ConfigEntry<List<Map<String, Map<String, ?>>>> STAFF_ENTRIES =
             new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList());
 
@@ -98,7 +101,7 @@ public class ModJsonConfigs {
                     dict.containsKey("range") ? (int) Math.round((double) dict.get("range")) : 8,
                     dict.containsKey("durability") ? (int) Math.round((double) dict.get("durability")) : -1,
                     dict.containsKey("cooldown") ? (int) Math.round((double) dict.get("cooldown")) : 15,
-                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : 1,
+                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : DEFAULT_CHARGE.get(),
                     dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : DEFAULT_COST.get(),
                     dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
                     dict.containsKey("dependency") ? String.valueOf(dict.get("dependency")) : "minecraft"
@@ -118,8 +121,8 @@ public class ModJsonConfigs {
             this.range = range;
             this.durability = (dura == -1) ?
                 (int) Math.round(this.tier.getUses() * 0.7) : dura;
-            this.cooldown = cooldown;
-            this.charge_time = charge_time;
+            this.cooldown = Math.max(cooldown, 0);
+            this.charge_time = Math.max(charge_time, 1);
             this.xp_cost = xp_cost;
             this.fireRes = fire_res;
             this.dependency = dependency;
@@ -216,94 +219,95 @@ public class ModJsonConfigs {
 
 
     public static final String DEFAULT_CONFIG = """
-{
-  "TECHNICAL": {
-    "VERSION_DO_NOT_EDIT": 1,
-    "FORCE_RELOAD": false
-  },
+    {
+      "TECHNICAL": {
+        "VERSION_DO_NOT_EDIT": 1,
+        "FORCE_RELOAD": false
+      },
 
-  "witch_hat": {
-    "drop_chance": 0.1,
-    "xp_bonus": 3
-  },
-  "enchantments": {
-    "magic_protection_protection_compatibility": false,
-    "enchant_limiter": {
-      "default": 3,
-      "override_mode": "relative",
-      "overrides": {
-        "minecraft:golden_shovel": 2,
-        "minecraft:golden_pickaxe": 2,
-        "minecraft:golden_axe": 2,
-        "minecraft:golden_hoe": 2,
-        "minecraft:golden_sword": 2,
-        "minecraft:golden_helmet": 2,
-        "minecraft:golden_chestplate": 2,
-        "minecraft:golden_leggings": 2,
-        "minecraft:golden_boots": 2,
-        "sortilege:golden_staff": 2
+      "witch_hat": {
+        "drop_chance": 0.1,
+        "xp_bonus": 3
+      },
+      "enchantments": {
+        "enchant_limiter": {
+          "default": 3,
+          "override_mode": "relative",
+          "overrides": {
+            "minecraft:golden_shovel": 2,
+            "minecraft:golden_pickaxe": 2,
+            "minecraft:golden_axe": 2,
+            "minecraft:golden_hoe": 2,
+            "minecraft:golden_sword": 2,
+            "minecraft:golden_helmet": 2,
+            "minecraft:golden_chestplate": 2,
+            "minecraft:golden_leggings": 2,
+            "minecraft:golden_boots": 2,
+            "sortilege:golden_staff": 2
+          }
+        },
+        "magic_protection_protection_compatibility": false
+      },
+      "staffs": {
+        "default_xp_cost": 0,
+        "default_charge_time": 1,
+        "entries": [
+          {
+            "wooden_staff": {
+              "tier": "WOOD",
+              "damage": 3,
+              "pierce": 1,
+              "range": 6,
+              "cooldown": 15
+            }
+          },
+          {
+            "stone_staff": {
+              "tier": "STONE",
+              "damage": 4,
+              "pierce": 1,
+              "range": 8,
+              "cooldown": 20
+            }
+          },
+          {
+            "iron_staff": {
+              "tier": "IRON",
+              "damage": 5,
+              "pierce": 1,
+              "range": 10,
+              "cooldown": 15
+            }
+          },
+          {
+            "golden_staff": {
+              "tier": "GOLD",
+              "damage": 3,
+              "pierce": 2,
+              "range": 14,
+              "cooldown": 10
+            }
+          },
+          {
+            "diamond_staff": {
+              "tier": "DIAMOND",
+              "damage": 5,
+              "pierce": 2,
+              "range": 12,
+              "cooldown": 15
+            }
+          },
+          {
+            "netherite_staff": {
+              "tier": "NETHERITE",
+              "damage": 6,
+              "pierce": 3,
+              "range": 16,
+              "fire_resistant": true,
+              "cooldown": 20
+            }
+          }
+        ]
       }
-    }
-  },
-  "staffs": {
-    "default_xp_cost": 0,
-    "entries": [
-      {
-        "wooden_staff": {
-          "tier": "WOOD",
-          "damage": 3,
-          "pierce": 1,
-          "range": 6,
-          "cooldown": 15
-        }
-      },
-      {
-        "stone_staff": {
-          "tier": "STONE",
-          "damage": 4,
-          "pierce": 1,
-          "range": 8,
-          "cooldown": 20
-        }
-      },
-      {
-        "iron_staff": {
-          "tier": "IRON",
-          "damage": 5,
-          "pierce": 1,
-          "range": 10,
-          "cooldown": 15
-        }
-      },
-      {
-        "golden_staff": {
-          "tier": "GOLD",
-          "damage": 3,
-          "pierce": 2,
-          "range": 14,
-          "cooldown": 10
-        }
-      },
-      {
-        "diamond_staff": {
-          "tier": "DIAMOND",
-          "damage": 5,
-          "pierce": 2,
-          "range": 12,
-          "cooldown": 15
-        }
-      },
-      {
-        "netherite_staff": {
-          "tier": "NETHERITE",
-          "damage": 6,
-          "pierce": 3,
-          "range": 16,
-          "fire_resistant": true,
-          "cooldown": 20
-        }
-      }
-    ]
-  }
-}""";
+    }""";
 }

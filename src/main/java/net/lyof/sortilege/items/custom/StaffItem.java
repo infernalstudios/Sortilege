@@ -1,10 +1,13 @@
 package net.lyof.sortilege.items.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
@@ -70,7 +73,25 @@ public class StaffItem extends TieredItem {
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
-        list.add(Component.literal(String.valueOf(this.rawInfos)));
+        //list.add(Component.literal(String.valueOf(this.rawInfos)));
+
+        if (Screen.hasShiftDown()) {
+            list.add(Component.literal(""));
+
+            list.add(Component.literal(this.damage + " ").append(Component.translatable("sortilege.staff.damage")));
+            list.add(Component.literal(this.pierce + " ").append(Component.translatable("sortilege.staff.damage")));
+            list.add(Component.literal(this.range + " ").append(Component.translatable("sortilege.staff.range")));
+
+            if (this.getXPCost(itemstack) > 0)
+            list.add(Component.translatable("sortilege.staff.cost")
+                    .append(" " + this.getXPCost(itemstack) + " ")
+                    .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.BLUE));
+        }
+        else
+            list.add(ItemHelper.getShiftTooltip());
+
+        if (itemstack.isEnchanted())
+            list.add(Component.literal(""));
     }
 
     @Override

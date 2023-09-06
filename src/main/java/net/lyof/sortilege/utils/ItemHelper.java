@@ -1,6 +1,8 @@
 package net.lyof.sortilege.utils;
 
 import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -39,5 +41,11 @@ public class ItemHelper {
         if (sum)
             return limit + default_limit;
         return limit == -1 ? default_limit : limit;
+    }
+
+    public static Component getShiftTooltip() {
+        return Component.translatable("tooltip.press_shift.left").withStyle(ChatFormatting.DARK_GRAY)
+                .append(Component.translatable("tooltip.press_shift.center").withStyle(ChatFormatting.GRAY))
+                .append(Component.translatable("tooltip.press_shift.right").withStyle(ChatFormatting.DARK_GRAY));
     }
 }

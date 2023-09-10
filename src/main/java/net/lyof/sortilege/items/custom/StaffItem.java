@@ -115,8 +115,6 @@ public class StaffItem extends TieredItem {
             element = (ElementalStaffEnchantment) ModEnchants.BRAZIER.get();
         else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, staff))
             element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD.get();
-        else if (ItemHelper.hasEnchant(ModEnchants.KINESIS, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.KINESIS.get();
         else if (ItemHelper.hasEnchant(ModEnchants.BLAST, staff))
             element = (ElementalStaffEnchantment) ModEnchants.BLAST.get();
         else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, staff))
@@ -127,6 +125,7 @@ public class StaffItem extends TieredItem {
         int cost = this.getXPCost(staff);
         float damage = this.damage + ItemHelper.getEnchantLevel(ModEnchants.POTENCY, staff);
         int range = this.range + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, staff)*2;
+        float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, staff) - ItemHelper.getEnchantLevel(ModEnchants.PULL, staff);
 
 
         if (cost > 0 && !player.isCreative()) {
@@ -193,10 +192,11 @@ public class StaffItem extends TieredItem {
 
                     if (element != null)
                         element.triggerAttack(target, ItemHelper.getEnchantLevel(element, staff));
-                    if (element == ModEnchants.KINESIS.get())
-                        target.setDeltaMovement(look.scale(element_level));
                     if (element == ModEnchants.BLAST.get() && element_level > 1)
                         world.explode(player, x, y, z, 1, Explosion.BlockInteraction.NONE);
+
+                    if (kinesis != 0)
+                        target.setDeltaMovement(look.scale(kinesis).add(0, 0.4, 0));
 
                     targetsHit.add(target.getStringUUID());
                     targetsLeft--;

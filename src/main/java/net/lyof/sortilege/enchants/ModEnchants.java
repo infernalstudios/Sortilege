@@ -35,15 +35,18 @@ public class ModEnchants {
     public static RegistryObject<Enchantment> WISDOM = ENCHANTMENTS.register("wisdom",
             () -> new StaffEnchantment(Enchantment.Rarity.RARE, 2));
 
+    public static RegistryObject<Enchantment> PUSH = ENCHANTMENTS.register("push",
+            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2));
+    public static RegistryObject<Enchantment> PULL = ENCHANTMENTS.register("pull",
+            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2));
+
+
     public static RegistryObject<Enchantment> BRAZIER = ENCHANTMENTS.register("brazier",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     ParticleTypes.FLAME, (target, level) -> target.setSecondsOnFire(level * 4)));
     public static RegistryObject<Enchantment> BLIZZARD = ENCHANTMENTS.register("blizzard",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     ParticleTypes.SNOWFLAKE, (target, level) -> target.setTicksFrozen(target.getTicksFrozen() + 150*level)));
-    public static RegistryObject<Enchantment> KINESIS = ENCHANTMENTS.register("kinesis",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    ParticleTypes.CRIMSON_SPORE, null));
     public static RegistryObject<Enchantment> BLAST = ENCHANTMENTS.register("blast",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     ParticleTypes.CRIT, null));

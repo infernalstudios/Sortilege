@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.commands.ReloadCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -73,13 +74,12 @@ public class StaffItem extends TieredItem {
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
-        //list.add(Component.literal(String.valueOf(this.rawInfos)));
 
         if (Screen.hasShiftDown()) {
             list.add(Component.literal(""));
 
             list.add(Component.literal(this.damage + " ").append(Component.translatable("sortilege.staff.damage")));
-            list.add(Component.literal(this.pierce + " ").append(Component.translatable("sortilege.staff.damage")));
+            list.add(Component.literal(this.pierce + " ").append(Component.translatable("sortilege.staff.pierce")));
             list.add(Component.literal(this.range + " ").append(Component.translatable("sortilege.staff.range")));
 
             if (this.getXPCost(itemstack) > 0)

@@ -16,7 +16,7 @@ public class ElementalStaffEnchantment extends StaffEnchantment {
     }
 
     public ElementalStaffEnchantment(Rarity pRarity, int maxLevel, ParticleOptions particle, BiConsumer<LivingEntity, Integer> effect) {
-        this(pRarity, maxLevel, ParticleTypes.INSTANT_EFFECT, effect, null);
+        this(pRarity, maxLevel, particle, effect, null);
     }
 
     public ElementalStaffEnchantment(Rarity pRarity, int maxLevel, ParticleOptions particle,

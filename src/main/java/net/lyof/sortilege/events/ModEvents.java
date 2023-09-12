@@ -1,5 +1,6 @@
 package net.lyof.sortilege.events;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
@@ -11,9 +12,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -58,5 +61,11 @@ public class ModEvents {
 
         if (EnchantmentHelper.getEnchantmentLevel(ModEnchants.ARCANE.get(), source) > 0)
             event.getSource().setMagic();
+    }
+
+    @SubscribeEvent
+    public static void reloadConfigs(PlayerEvent.PlayerLoggedInEvent event) {
+        Sortilege.log("SORTILEGE CONFIGS RELOADING");
+        ModJsonConfigs.register();
     }
 }

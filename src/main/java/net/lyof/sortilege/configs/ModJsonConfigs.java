@@ -16,7 +16,7 @@ import java.util.*;
 
 public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
-    public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RELOAD", false);
+    public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RESET", false);
 
     public static final ConfigEntry<Integer> DEFAULT_COST = new ConfigEntry<>("staffs.default_xp_cost", 0);
     public static final ConfigEntry<Integer> DEFAULT_CHARGE = new ConfigEntry<>("staffs.default_charge_time", 1);
@@ -171,7 +171,7 @@ public class ModJsonConfigs {
     {
       "TECHNICAL": {
         "VERSION_DO_NOT_EDIT": 1,
-        "FORCE_RELOAD": false
+        "FORCE_RESET": false
       },
 
       "witch_hat": {

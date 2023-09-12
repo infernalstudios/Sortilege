@@ -31,11 +31,14 @@ public class ItemHelper {
     public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
 
+    public static final ConfigEntry<Integer> ENCHLIMIT_DEFAULT = new ConfigEntry<>(ENCHLIMIT_PATH + "default", 3);
+    public static final ConfigEntry<String> ENCHLIMIT_MODE = new ConfigEntry<>(ENCHLIMIT_PATH + "override_mode", "relative");
+
     public static int getMaxEnchantValue(ItemStack itemstack) {
         String id = itemstack.getItem().getDescriptionId();
         id = id.substring(id.indexOf(".") + 1).replaceAll("\\.", ":");
-        int default_limit = new ConfigEntry<>(ENCHLIMIT_PATH + "default", 3).get();
-        boolean sum = new ConfigEntry<>(ENCHLIMIT_PATH + "override_mode", "relative").get().equals("relative");
+        int default_limit = ENCHLIMIT_DEFAULT.get();
+        boolean sum = ENCHLIMIT_MODE.get().equals("relative");
 
         int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
         if (sum)  limit += default_limit;

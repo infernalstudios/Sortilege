@@ -65,7 +65,6 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void reloadConfigs(PlayerEvent.PlayerLoggedInEvent event) {
-        Sortilege.log("SORTILEGE CONFIGS RELOADING");
         ModJsonConfigs.register();
     }
 }

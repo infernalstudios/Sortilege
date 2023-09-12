@@ -116,7 +116,7 @@ public class ModJsonConfigs {
                 writer.write(DEFAULT_CONFIG);
                 writer.close();
 
-                Sortilege.log("Staff Config file created");
+                Sortilege.log("Sortilege Config file created");
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -139,16 +139,12 @@ public class ModJsonConfigs {
         }
 
 
-        Sortilege.log("STAFFS " + STAFF_ENTRIES.get());
-
         List<Pair<String, StaffInfo>> result = new ArrayList<>();
         for (Map<String, Map<String, ?>> staff : STAFF_ENTRIES.get()) {
             String id = String.valueOf(List.of(staff.keySet().toArray()).get(0));
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
-
         STAFFS = result;
-        Sortilege.log("STAFFS " + STAFFS);
     }
 
     public static double getVersion() {

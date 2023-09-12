@@ -62,9 +62,4 @@ public class ModEvents {
         if (EnchantmentHelper.getEnchantmentLevel(ModEnchants.ARCANE.get(), source) > 0)
             event.getSource().setMagic();
     }
-
-    @SubscribeEvent
-    public static void reloadConfigs(PlayerEvent.PlayerLoggedInEvent event) {
-        ModJsonConfigs.register();
-    }
 }

@@ -1,6 +1,7 @@
 package net.lyof.sortilege;
 
 import com.mojang.logging.LogUtils;
+import net.lyof.sortilege.attributes.ModAttributes;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
@@ -28,6 +29,7 @@ public class Sortilege
 
         ModItems.register(eventBus);
         ModEnchants.register(eventBus);
+        ModAttributes.register(eventBus);
 
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, MOD_ID + "-common.toml");
         eventBus.addListener(this::commonSetup);

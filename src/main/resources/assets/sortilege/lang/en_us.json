@@ -6,14 +6,12 @@
   "item.sortilege.diamond_staff" : "Diamond Staff",
   "item.sortilege.netherite_staff" : "Netherite Staff",
 
-  "sortilege.staff.damage": "Magic Damage",
-  "sortilege.staff.pierce": "Pierce",
-  "sortilege.staff.range": "Blocks Range",
   "sortilege.staff.cost": "Costs",
   "sortilege.experience": "Experience",
-  "tooltip.press_shift.left": "Hold [",
-  "tooltip.press_shift.center": "Shift",
-  "tooltip.press_shift.right": "]",
+
+  "attribute.name.generic.staff_damage": "Magic Damage",
+  "attribute.name.generic.staff_pierce": "Pierce",
+  "attribute.name.generic.staff_range": "Range",
 
   "enchantment.sortilege.potency": "Potency",
   "enchantment.sortilege.potency.desc": "Increases Staff damage.",

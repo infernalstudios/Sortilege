@@ -1,6 +1,10 @@
 package net.lyof.sortilege.items.custom;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.attributes.ModAttributes;
+import net.lyof.sortilege.attributes.StaffAttribute;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
@@ -22,6 +26,9 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
@@ -67,31 +74,20 @@ public class StaffItem extends TieredItem {
     }
 
     public int getXPCost(ItemStack itemstack) {
-        return this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
-                - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack);
+        return Math.max(this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
+                - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack), 0);
     }
 
     @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
 
-        if (Screen.hasShiftDown()) {
-            list.add(Component.literal(""));
-
-            list.add(Component.literal(this.damage + " ").append(Component.translatable("sortilege.staff.damage")));
-            list.add(Component.literal(this.pierce + " ").append(Component.translatable("sortilege.staff.pierce")));
-            list.add(Component.literal(this.range + " ").append(Component.translatable("sortilege.staff.range")));
-
-            if (this.getXPCost(itemstack) > 0)
+        if (this.getXPCost(itemstack) > 0) {
             list.add(Component.translatable("sortilege.staff.cost")
                     .append(" " + this.getXPCost(itemstack) + " ")
-                    .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.BLUE));
-        }
-        else
-            list.add(ItemHelper.getShiftTooltip());
-
-        if (itemstack.isEnchanted())
+                    .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.GREEN));
             list.add(Component.literal(""));
+        }
     }
 
     @Override

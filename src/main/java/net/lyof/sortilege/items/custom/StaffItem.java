@@ -8,6 +8,8 @@ import net.lyof.sortilege.attributes.StaffAttribute;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.particles.ModParticles;
+import net.lyof.sortilege.particles.custom.WispParticle;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.ChatFormatting;
@@ -35,11 +37,13 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.antlr.v4.runtime.misc.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class StaffItem extends TieredItem {
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;
@@ -158,19 +162,25 @@ public class StaffItem extends TieredItem {
         if (element == ModEnchants.BRAZIER.get())
             damagetype.setIsFire();
 
-        ParticleOptions particle = (element == null) ? ParticleTypes.INSTANT_EFFECT : element.particle;
+        List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
+        if (staff.isEnchanted())
+            colors.add(new Triple<>(0.9f, 0f, 1f));
 
+
+        int step = 5;
         // Main loop, displaying particles and hurting mobs on its way
-        for (int i = 1; i < range * 2; i++) {
-            x = (float) (player.getX() + look.x * i/2);
-            y = (float) (player.getY() + look.y * i/2 + player.getEyeHeight());
-            z = (float) (player.getZ() + look.z * i/2);
+        for (int i = 1; i < range * step; i++) {
+            x = (float) (player.getX() + look.x * i/step);
+            y = (float) (player.getY() + look.y * i/step + player.getEyeHeight() - 0.5);
+            z = (float) (player.getZ() + look.z * i/step);
 
             if (world instanceof ServerLevel serverworld) {
-                serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
-                if (staff.isEnchanted() && Math.random() < 0.5)
-                    serverworld.sendParticles(ParticleTypes.ENCHANTED_HIT, x, y, z, 1, 0, 0, 0, 0);
+                WispParticle.COLOR = MathHelper.randi(colors);
+                serverworld.sendParticles(ModParticles.WISP_PARTICLE.get(), x, y, z, 1, 0, 0, 0, 0);
             }
+
+            if (i*2 % step != 0)
+                continue;
 
             pos = new BlockPos(Math.round(x-0.5), Math.round(y-0.5), Math.round(z-0.5));
             List<Entity> entities = player.getLevel().getEntities(null, new AABB(pos).inflate(0.1));

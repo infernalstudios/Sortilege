@@ -14,6 +14,9 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import org.antlr.v4.runtime.misc.Triple;
+
+import java.util.List;
 
 public class ModEnchants {
     public static final DeferredRegister<Enchantment> ENCHANTMENTS =
@@ -44,21 +47,23 @@ public class ModEnchants {
 
     public static RegistryObject<Enchantment> BRAZIER = ENCHANTMENTS.register("brazier",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    ParticleTypes.FLAME, (target, level) -> target.setSecondsOnFire(level * 4)));
+                    List.of(new Triple<>(1f, 0.7f, 0f), new Triple<>(1f, 1f, 0f), new Triple<>(1f, 0.85f, 0f)),
+                    (target, level) -> target.setSecondsOnFire(level * 4)));
     public static RegistryObject<Enchantment> BLIZZARD = ENCHANTMENTS.register("blizzard",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    ParticleTypes.SNOWFLAKE, (target, level) -> target.setTicksFrozen(target.getTicksFrozen() + 150*level)));
+                    List.of(new Triple<>(0.7f, 0.7f, 1f), new Triple<>(0.8f, 0.9f, 1f)),
+                    (target, level) -> target.setTicksFrozen(target.getTicksFrozen() + 150*level)));
     public static RegistryObject<Enchantment> BLAST = ENCHANTMENTS.register("blast",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    ParticleTypes.CRIT, null));
+                    List.of(new Triple<>(0.5f, 0.25f, 0f), new Triple<>(0.8f, 0.2f, 0f), new Triple<>(1f, 0.4f, 0f)),
+                    null));
     public static RegistryObject<Enchantment> BLITZ = ENCHANTMENTS.register("blitz",
             () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    ParticleTypes.ELECTRIC_SPARK, (target, level) -> {
+                    List.of(new Triple<>(1f, 1f, 0f), new Triple<>(1f, 1f, 0.5f), new Triple<>(1f, 1f, 0.75f)), (target, level) -> {
                 target.setDeltaMovement(0, -1, 0);
                 target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40 * level));
                 target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40 * level));
             }));
-    //which particles should i use guys?
 
     public static RegistryObject<Enchantment> IGNORANCE_CURSE = ENCHANTMENTS.register("ignorance_curse",
             () -> new CurseStaffEnchantment(Enchantment.Rarity.RARE));

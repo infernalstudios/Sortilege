@@ -1,28 +1,29 @@
 package net.lyof.sortilege.enchants.staff;
 
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.Enchantment;
+import org.antlr.v4.runtime.misc.Triple;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class ElementalStaffEnchantment extends StaffEnchantment {
-    public ParticleOptions particle;
+    public List<Triple<Float, Float, Float>> colors;
 
     public ElementalStaffEnchantment(Rarity pRarity, int maxLevel) {
-        this(pRarity, maxLevel, ParticleTypes.INSTANT_EFFECT, null, null);
+        this(pRarity, maxLevel, List.of(new Triple<>(1f, 1f, 1f)), null, null);
     }
 
-    public ElementalStaffEnchantment(Rarity pRarity, int maxLevel, ParticleOptions particle, BiConsumer<LivingEntity, Integer> effect) {
-        this(pRarity, maxLevel, particle, effect, null);
+    public ElementalStaffEnchantment(Rarity pRarity, int maxLevel,
+                                     List<Triple<Float, Float, Float>> colors, BiConsumer<LivingEntity, Integer> effect) {
+        this(pRarity, maxLevel, colors, effect, null);
     }
 
-    public ElementalStaffEnchantment(Rarity pRarity, int maxLevel, ParticleOptions particle,
+    public ElementalStaffEnchantment(Rarity pRarity, int maxLevel, List<Triple<Float, Float, Float>> colors,
                                      BiConsumer<LivingEntity, Integer> effect, Predicate<Enchantment> condition) {
         super(pRarity, maxLevel, effect, condition);
-        this.particle = particle;
+        this.colors = colors;
     }
 
     @Override

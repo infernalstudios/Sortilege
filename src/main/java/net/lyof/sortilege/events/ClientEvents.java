@@ -4,9 +4,12 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.items.armor.rendering.WitchHatModel;
 import net.lyof.sortilege.items.custom.potion.AntidotePotionItem;
+import net.lyof.sortilege.particles.ModParticles;
+import net.lyof.sortilege.particles.custom.WispParticle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,5 +23,10 @@ public class ClientEvents {
     @SubscribeEvent
     public static void registerItemColor(RegisterColorHandlersEvent.Item event) {
         event.getItemColors().register(AntidotePotionItem::getItemColor, ModItems.ANTIDOTE.get());
+    }
+
+    @SubscribeEvent
+    public static void registerParticles(RegisterParticleProvidersEvent event) {
+        event.register(ModParticles.WISP_PARTICLE.get(), WispParticle::provider);
     }
 }

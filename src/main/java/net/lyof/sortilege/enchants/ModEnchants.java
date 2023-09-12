@@ -36,9 +36,11 @@ public class ModEnchants {
             () -> new StaffEnchantment(Enchantment.Rarity.RARE, 2));
 
     public static RegistryObject<Enchantment> PUSH = ENCHANTMENTS.register("push",
-            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2));
+            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    null, (candidate) -> !candidate.getDescriptionId().equals("enchantment.sortilege.pull")));
     public static RegistryObject<Enchantment> PULL = ENCHANTMENTS.register("pull",
-            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2));
+            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    null, (candidate) -> !candidate.getDescriptionId().equals("enchantment.sortilege.push")));
 
 
     public static RegistryObject<Enchantment> BRAZIER = ENCHANTMENTS.register("brazier",

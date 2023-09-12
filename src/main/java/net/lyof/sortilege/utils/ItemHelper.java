@@ -1,5 +1,7 @@
 package net.lyof.sortilege.utils;
 
+import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.configs.ConfigEntry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -27,20 +29,20 @@ public class ItemHelper {
 
 
     public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
+    public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
 
     public static int getMaxEnchantValue(ItemStack itemstack) {
         String id = itemstack.getItem().getDescriptionId();
         id = id.substring(id.indexOf(".") + 1).replaceAll("\\.", ":");
-        int default_limit = new ModJsonConfigs.ConfigEntry<>(ENCHLIMIT_PATH + "default", 3).get();
-        boolean sum = new ModJsonConfigs.ConfigEntry<>
-                (ENCHLIMIT_PATH + "override_mode", "absolute").get().equals("relative");
+        int default_limit = new ConfigEntry<>(ENCHLIMIT_PATH + "default", 3).get();
+        boolean sum = new ConfigEntry<>(ENCHLIMIT_PATH + "override_mode", "relative").get().equals("relative");
 
-        int limit = new ModJsonConfigs.ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
-
-
-        if (sum)
-            return limit + default_limit;
-        return limit == -1 ? default_limit : limit;
+        int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
+        if (sum)  limit += default_limit;
+        
+        if (limit == -1)
+            return default_limit;
+        return limit + itemstack.getOrCreateTag().getInt(ENCHLIMIT_NBT);
     }
 
     public static Component getShiftTooltip() {

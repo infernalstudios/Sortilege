@@ -1,5 +1,6 @@
 package net.lyof.sortilege.events;
 
+import net.lyof.sortilege.configs.ConfigEntry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
@@ -20,10 +21,10 @@ import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class ModEvents {
-    public static final ModJsonConfigs.ConfigEntry<Double> WITCH_HAT_DROP_CHANCE =
-            new ModJsonConfigs.ConfigEntry<>("witch_hat.drop_chance", 0.1);
-    public static final ModJsonConfigs.ConfigEntry<Integer> WITCH_HAT_BONUS =
-            new ModJsonConfigs.ConfigEntry<>("witch_hat.xp_bonus", 3);
+    public static final ConfigEntry<Double> WITCH_HAT_DROP_CHANCE =
+            new ConfigEntry<>("witch_hat.drop_chance", 0.1);
+    public static final ConfigEntry<Integer> WITCH_HAT_BONUS =
+            new ConfigEntry<>("witch_hat.xp_bonus", 3);
 
     @SubscribeEvent
     public static void xpBoost(LivingExperienceDropEvent event) {

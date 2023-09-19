@@ -1,9 +1,6 @@
 package net.lyof.sortilege.particles.custom;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.lyof.sortilege.events.ClientEvents;
 import net.lyof.sortilege.particles.amo.ParticleShaders;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -37,7 +34,7 @@ public class GenericParticle extends TextureSheetParticle {
     public void tick() {
         float ratio = (float) (this.getLifetime() - this.age) / this.getLifetime();
         this.setAlpha(ratio);
-        this.setSize(this.bbWidth * ratio, this.bbHeight * ratio);
+        //this.setSize(this.bbWidth * ratio, this.bbHeight * ratio);
         super.tick();
     }
 }

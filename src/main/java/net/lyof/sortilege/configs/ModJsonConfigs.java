@@ -6,13 +6,15 @@ import net.lyof.sortilege.Sortilege;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);

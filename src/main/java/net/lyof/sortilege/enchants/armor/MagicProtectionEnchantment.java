@@ -1,7 +1,6 @@
 package net.lyof.sortilege.enchants.armor;
 
 import net.lyof.sortilege.configs.ConfigEntry;
-import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;

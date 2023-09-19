@@ -1,6 +1,5 @@
 package net.lyof.sortilege.particles.custom;
 
-import net.lyof.sortilege.particles.ModParticles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;

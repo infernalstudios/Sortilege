@@ -1,6 +1,5 @@
 package net.lyof.sortilege.utils;
 
-import net.lyof.sortilege.Sortilege;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 

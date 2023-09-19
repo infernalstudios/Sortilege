@@ -1,8 +1,6 @@
 package net.lyof.sortilege.events;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntry;
-import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
 import net.minecraft.world.entity.Entity;
@@ -12,11 +10,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 

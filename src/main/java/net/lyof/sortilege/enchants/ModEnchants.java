@@ -6,7 +6,6 @@ import net.lyof.sortilege.enchants.staff.CurseStaffEnchantment;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.enchants.staff.StaffEnchantment;
 import net.lyof.sortilege.enchants.weapon.ArcaneEnchantment;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.enchantment.Enchantment;

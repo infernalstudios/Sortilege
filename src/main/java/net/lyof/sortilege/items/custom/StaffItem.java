@@ -1,10 +1,5 @@
 package net.lyof.sortilege.items.custom;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.attributes.ModAttributes;
-import net.lyof.sortilege.attributes.StaffAttribute;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
@@ -13,12 +8,8 @@ import net.lyof.sortilege.particles.custom.WispParticle;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.commands.ReloadCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,9 +19,6 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
@@ -43,7 +31,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class StaffItem extends TieredItem {
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;

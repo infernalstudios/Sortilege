@@ -2,7 +2,6 @@ package net.lyof.sortilege.utils;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntry;
-import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

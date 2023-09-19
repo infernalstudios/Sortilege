@@ -3,13 +3,11 @@ package net.lyof.sortilege.enchants.staff;
 import net.lyof.sortilege.items.custom.StaffItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 public class StaffEnchantment extends Enchantment {

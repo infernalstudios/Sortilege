@@ -54,16 +54,9 @@ public class ClientEvents {
         event.registerShader(new ShaderInstance(event.getResourceManager(), new ResourceLocation(Sortilege.MOD_ID, id), format), callback);
     }
 
-    public static void init(FMLClientSetupEvent ignored) {
-        ignored.enqueueWork(() -> {
-            MinecraftForge.EVENT_BUS.addListener(ClientEvents::onLevelRender);
-        });
-    }
-
     public static final List<Consumer<PoseStack>> delayedRenders = new ArrayList<>();
 
     public static void onLevelRender(RenderLevelStageEvent event) {
-        Sortilege.log("render");
         if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
             PoseStack stack = event.getPoseStack();
             stack.pushPose();

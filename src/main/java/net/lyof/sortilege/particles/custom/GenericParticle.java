@@ -1,5 +1,8 @@
 package net.lyof.sortilege.particles.custom;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.lyof.sortilege.events.ClientEvents;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -36,5 +39,12 @@ public class GenericParticle extends TextureSheetParticle {
         this.setAlpha(ratio);
         this.setSize(this.bbWidth * ratio, this.bbHeight * ratio);
         super.tick();
+    }
+
+    @Override
+    public void render(VertexConsumer p_107678_, Camera p_107679_, float p_107680_) {
+        ClientEvents.delayedRenders.add(ps -> {
+            super.render(p_107678_, p_107679_, p_107680_);
+        });
     }
 }

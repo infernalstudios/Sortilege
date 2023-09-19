@@ -29,7 +29,6 @@ public class MathHelper {
     }
 
     public static <T> T randi(List<T> list) {
-        Sortilege.log(list.size() + " " + list);
         if (list.size() == 1) return list.get(0);
         return list.get(randint(list.size() - 1));
     }

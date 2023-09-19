@@ -62,3 +62,9 @@ description='''Simple magic staffs, enchanting and brewing tweaks, and more!'''
     versionRange="[1.19.2,1.20)"
     ordering="NONE"
     side="BOTH"
+#[[dependencies.sortilege]]
+#    modId="lodestone"
+#    mandatory=true
+#    versionRange="[FORGE-1.19.2-1.4.2,)"
+#    ordering="AFTER"
+#    side="BOTH"

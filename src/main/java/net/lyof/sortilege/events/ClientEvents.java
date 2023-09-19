@@ -53,20 +53,4 @@ public class ClientEvents {
     private static void registerShader(RegisterShadersEvent event, String id, VertexFormat format, Consumer<ShaderInstance> callback) throws IOException {
         event.registerShader(new ShaderInstance(event.getResourceManager(), new ResourceLocation(Sortilege.MOD_ID, id), format), callback);
     }
-
-    public static final List<Consumer<PoseStack>> delayedRenders = new ArrayList<>();
-
-    public static void onLevelRender(RenderLevelStageEvent event) {
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
-            PoseStack stack = event.getPoseStack();
-            stack.pushPose();
-            Vec3 pos = event.getCamera().getPosition();
-            stack.translate(-pos.x, -pos.y, -pos.z);
-            delayedRenders.forEach(consumer -> consumer.accept(stack));
-            stack.popPose();
-        }
-        if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-            delayedRenders.clear();
-        }
-    }
 }

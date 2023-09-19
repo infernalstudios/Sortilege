@@ -2,6 +2,7 @@ package net.lyof.sortilege.particles.custom;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.lyof.sortilege.events.ClientEvents;
+import net.lyof.sortilege.particles.amo.ParticleShaders;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -10,7 +11,6 @@ import net.minecraft.client.particle.TextureSheetParticle;
 
 public class GenericParticle extends TextureSheetParticle {
     public SpriteSet spriteset;
-    public static ParticleRenderType TRANSLUCENT = new WispRenderType();
 
     public GenericParticle(ClientLevel world, double x, double y, double z, float r, float g, float b, SpriteSet spriteset) {
         super(world, x, y, z, 0, 0, 0);
@@ -30,7 +30,7 @@ public class GenericParticle extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return TRANSLUCENT;
+        return ParticleShaders.PARTICLE_SHEET_ADDITIVE_MULTIPLY;
     }
 
     @Override
@@ -39,12 +39,5 @@ public class GenericParticle extends TextureSheetParticle {
         this.setAlpha(ratio);
         this.setSize(this.bbWidth * ratio, this.bbHeight * ratio);
         super.tick();
-    }
-
-    @Override
-    public void render(VertexConsumer p_107678_, Camera p_107679_, float p_107680_) {
-        ClientEvents.delayedRenders.add(ps -> {
-            super.render(p_107678_, p_107679_, p_107680_);
-        });
     }
 }

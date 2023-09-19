@@ -37,7 +37,6 @@ public class Sortilege
 
         //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, MOD_ID + "-common.toml");
         eventBus.addListener(this::commonSetup);
-        eventBus.addListener(this::clientSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -47,11 +46,7 @@ public class Sortilege
         event.enqueueWork(() -> BrewingRecipeRegistry.addRecipe(new PotionBrewingRecipe()));
     }
 
-    private void clientSetup(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> MinecraftForge.EVENT_BUS.addListener(ClientEvents::onLevelRender));
-    }
-
-    public static Object log(Object message) {
+    public static <T> T log(T message) {
         LOGGER.debug(String.valueOf(message));
         return message;
     }

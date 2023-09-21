@@ -20,7 +20,7 @@ public class MathHelper {
     }
 
     public static int randint(int max) {
-        return randint(0, max);
+        return randint(0, max + 1);
     }
 
     public static int randint(int min, int max) {
@@ -29,6 +29,7 @@ public class MathHelper {
 
     public static <T> T randi(List<T> list) {
         if (list.size() == 1) return list.get(0);
+        if (list.size() == 0) return null;
         return list.get(randint(list.size() - 1));
     }
 }

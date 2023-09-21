@@ -196,6 +196,7 @@ public class ModJsonConfigs {
         "magic_protection_protection_compatibility": false
       },
       "staffs": {
+        "use_hd_particles": false,
         "default_xp_cost": 0,
         "default_charge_time": 1,
         "entries": [

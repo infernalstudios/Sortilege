@@ -168,7 +168,7 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
     {
       "TECHNICAL": {
-        "VERSION_DO_NOT_EDIT": 1,
+        "VERSION_DO_NOT_EDIT": 1.2,
         "FORCE_RESET": false
       },
 

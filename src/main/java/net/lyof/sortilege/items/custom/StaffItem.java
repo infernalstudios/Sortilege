@@ -151,7 +151,7 @@ public class StaffItem extends TieredItem {
 
         List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
         if (staff.isEnchanted())
-            colors.add(new Triple<>(0.9f, 0f, 1f));
+            colors.add(new Triple<>(0.7f, 0f, 1f));
 
 
         int step = 5;

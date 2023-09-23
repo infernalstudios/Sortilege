@@ -42,13 +42,13 @@ public class ConfigEntry<T> {
                 return fallback;
         }
 
-        if (fallback.getClass() == Integer.class)
+        if (fallback instanceof Integer)
             return (T) (Integer) Long.valueOf(Math.round(Double.parseDouble(String.valueOf(result)))).intValue();
-        if (fallback.getClass() == Double.class)
+        if (fallback instanceof Double)
             return (T) Double.valueOf(String.valueOf(result));
-        if (fallback.getClass() == String.class)
+        if (fallback instanceof String)
             return (T) String.valueOf(result);
-        if (fallback.getClass() == Boolean.class)
+        if (fallback instanceof Boolean)
             return (T) Boolean.valueOf(String.valueOf(result));
         if (fallback instanceof Map)
             return (T) next;

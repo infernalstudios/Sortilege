@@ -1,5 +1,6 @@
 package net.lyof.sortilege.items.custom;
 
+import net.lyof.sortilege.configs.ConfigEntry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
@@ -9,6 +10,8 @@ import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -33,6 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffItem extends TieredItem {
+    public static final ConfigEntry<Boolean> HD_PARTICLES = new ConfigEntry<>("staffs.use_hd_particles", false);
+
+
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;
     public float damage;
     public int pierce;
@@ -152,6 +158,7 @@ public class StaffItem extends TieredItem {
         List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
         if (staff.isEnchanted())
             colors.add(new Triple<>(0.7f, 0f, 1f));
+        ParticleOptions particle = HD_PARTICLES.get() ? ModParticles.WISP.get() : ModParticles.WISP_PIXEL.get();
 
 
         int step = 5;
@@ -163,7 +170,7 @@ public class StaffItem extends TieredItem {
 
             if (world instanceof ServerLevel serverworld) {
                 WispParticle.COLOR = MathHelper.randi(colors);
-                serverworld.sendParticles(ModParticles.WISP_PARTICLE.get(), x, y, z, 1, 0, 0, 0, 0);
+                serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
             }
 
             if (i*2 % step != 0)

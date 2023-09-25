@@ -1,7 +1,6 @@
 package net.lyof.sortilege.particles;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.configs.ConfigEntry;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraftforge.eventbus.api.IEventBus;

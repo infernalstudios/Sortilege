@@ -97,6 +97,10 @@ public class ModJsonConfigs {
     }
 
 
+    public static <T> T get(String path, T fallback) {
+        return new ConfigEntry<>(path, fallback).get();
+    }
+
     public static void register() {
         register(false);
     }
@@ -193,6 +197,7 @@ public class ModJsonConfigs {
             "sortilege:golden_staff": 2
           }
         },
+        "increased_costs": false,
         "magic_protection_protection_compatibility": false
       },
       "staffs": {

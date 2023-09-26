@@ -1,9 +1,7 @@
 package net.lyof.sortilege.mixins;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.utils.MathHelper;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;

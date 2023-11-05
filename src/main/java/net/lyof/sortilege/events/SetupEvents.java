@@ -25,21 +25,21 @@ public class SetupEvents {
 
     @SubscribeEvent
     public static void itemEvent(ItemAttributeModifierEvent event) {
-        ItemStack itemStack = event.getItemStack();
-        Item item = itemStack.getItem();
+        ItemStack stack = event.getItemStack();
+        Item item = stack.getItem();
 
         if (!(item instanceof StaffItem staff)) return;
         if (event.getSlotType() != EquipmentSlot.MAINHAND) return;
 
         event.addModifier(ModAttributes.STAFF_DAMAGE.get(),
                 new AttributeModifier(ModAttributes.DAMAGE_UUID, "Staff modifier",
-                        staff.damage, AttributeModifier.Operation.ADDITION));
+                        staff.getAttackDamage(stack), AttributeModifier.Operation.ADDITION));
         event.addModifier(ModAttributes.STAFF_PIERCE.get(),
                 new AttributeModifier(ModAttributes.PIERCE_UUID, "Staff modifier",
-                        staff.pierce, AttributeModifier.Operation.ADDITION));
+                        staff.getPierce(stack), AttributeModifier.Operation.ADDITION));
         event.addModifier(ModAttributes.STAFF_RANGE.get(),
                 new AttributeModifier(ModAttributes.RANGE_UUID, "Staff modifier",
-                        staff.range, AttributeModifier.Operation.ADDITION));
+                        staff.getAttackRange(stack), AttributeModifier.Operation.ADDITION));
     }
 
     @SubscribeEvent

@@ -1,6 +1,6 @@
 package net.lyof.sortilege.enchants.armor;
 
-import net.lyof.sortilege.configs.ConfigEntry;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -8,9 +8,6 @@ import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.item.enchantment.ProtectionEnchantment;
 
 public class MagicProtectionEnchantment extends Enchantment {
-    public static ConfigEntry<Boolean> COMPATIBLE =
-            new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false);
-
     public MagicProtectionEnchantment(Rarity pRarity) {
         super(pRarity, EnchantmentCategory.ARMOR, EquipmentSlot.values());
     }
@@ -24,7 +21,7 @@ public class MagicProtectionEnchantment extends Enchantment {
 
     @Override
     protected boolean checkCompatibility(Enchantment other) {
-        return (!(other instanceof ProtectionEnchantment) || COMPATIBLE.get()) && super.checkCompatibility(other);
+        return (!(other instanceof ProtectionEnchantment) || ConfigEntries.MagicProtCompatibility) && super.checkCompatibility(other);
     }
 
     @Override

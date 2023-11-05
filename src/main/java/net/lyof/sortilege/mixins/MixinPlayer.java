@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixins;
 
-import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +22,7 @@ public abstract class MixinPlayer {
      */
     @Overwrite
     public void onEnchantmentPerformed(ItemStack itemstack, int levelcost) {
-        if (ModJsonConfigs.get("enchantments.increased_costs", false)) {
+        if (ConfigEntries.IncreasedEnchantCosts) {
             if (levelcost == 1) levelcost = 5;
             else if (levelcost == 2) levelcost = 15;
             else if (levelcost == 3) levelcost = 30;

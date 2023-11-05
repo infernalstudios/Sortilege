@@ -1,6 +1,7 @@
 package net.lyof.sortilege.utils;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ConfigEntry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -30,14 +31,11 @@ public class ItemHelper {
     public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
 
-    public static final ConfigEntry<Integer> ENCHLIMIT_DEFAULT = new ConfigEntry<>(ENCHLIMIT_PATH + "default", 3);
-    public static final ConfigEntry<String> ENCHLIMIT_MODE = new ConfigEntry<>(ENCHLIMIT_PATH + "override_mode", "relative");
-
     public static int getMaxEnchantValue(ItemStack itemstack) {
         String id = itemstack.getItem().getDescriptionId();
         id = id.substring(id.indexOf(".") + 1).replaceAll("\\.", ":");
-        int default_limit = ENCHLIMIT_DEFAULT.get();
-        boolean sum = ENCHLIMIT_MODE.get().equals("relative");
+        int default_limit = ConfigEntries.EnchantLimiterDefault;
+        boolean sum = ConfigEntries.EnchantLimiterMode.equals("relative");
 
         int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
         if (sum)  limit += default_limit;

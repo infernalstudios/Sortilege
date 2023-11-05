@@ -20,12 +20,6 @@ public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
     public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RESET", false);
 
-    public static final ConfigEntry<Integer> DEFAULT_COST = new ConfigEntry<>("staffs.default_xp_cost", 0);
-    public static final ConfigEntry<Integer> DEFAULT_CHARGE = new ConfigEntry<>("staffs.default_charge_time", 1);
-
-    public static final ConfigEntry<List<Map<String, Map<String, ?>>>> STAFF_ENTRIES =
-            new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList());
-
     public static Map CONFIG = new TreeMap<>();
 
     public static List<Pair<String, StaffInfo>> STAFFS = new ArrayList<>();
@@ -52,8 +46,8 @@ public class ModJsonConfigs {
                     dict.containsKey("range") ? (int) Math.round((double) dict.get("range")) : 8,
                     dict.containsKey("durability") ? (int) Math.round((double) dict.get("durability")) : -1,
                     dict.containsKey("cooldown") ? (int) Math.round((double) dict.get("cooldown")) : 15,
-                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : DEFAULT_CHARGE.get(),
-                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : DEFAULT_COST.get(),
+                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : ConfigEntries.StaffsDefaultCharge,
+                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : ConfigEntries.StaffsDefaultCost,
                     dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
                     dict.containsKey("dependency") ? String.valueOf(dict.get("dependency")) : "minecraft"
             );
@@ -109,6 +103,8 @@ public class ModJsonConfigs {
         String path = System.getProperty("user.dir") + File.separator +
                 "config" + File.separator + Sortilege.MOD_ID + "-common.json";
 
+        Sortilege.log("Loading Configs for Sortilege");
+
         // Create config file if it doesn't exist already
         File config = new File(path);
         boolean create = !config.isFile();
@@ -138,6 +134,7 @@ public class ModJsonConfigs {
             e.printStackTrace();
         }
         CONFIG = new Gson().fromJson(configContent, Map.class);
+        ConfigEntries.reload();
 
         if (!force && (RELOAD.get() || VERSION.get() < getVersion())) {
             register(true);
@@ -146,7 +143,7 @@ public class ModJsonConfigs {
 
 
         List<Pair<String, StaffInfo>> result = new ArrayList<>();
-        for (Map<String, Map<String, ?>> staff : STAFF_ENTRIES.get()) {
+        for (Map<String, Map<String, ?>> staff : ConfigEntries.StaffEntries) {
             String id = String.valueOf(List.of(staff.keySet().toArray()).get(0));
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
@@ -172,7 +169,7 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
     {
       "TECHNICAL": {
-        "VERSION_DO_NOT_EDIT": 1.2,
+        "VERSION_DO_NOT_EDIT": 1.3,
         "FORCE_RESET": false
       },
 
@@ -197,8 +194,11 @@ public class ModJsonConfigs {
             "sortilege:golden_staff": 2
           }
         },
-        "increased_costs": false,
         "magic_protection_protection_compatibility": false
+      },
+      "experience": {
+        "increased_enchant_costs": false,
+        "level_cap": 100
       },
       "staffs": {
         "use_hd_particles": false,

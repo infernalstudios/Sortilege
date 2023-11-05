@@ -2,14 +2,13 @@ package net.lyof.sortilege.configs;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class ConfigEntry<T> {
-    public List<String> path;
-    public T fallback;
+    private final List<String> path;
+    private final T fallback;
 
     public ConfigEntry(String path) {
         this(path, null);

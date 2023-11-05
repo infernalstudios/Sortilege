@@ -1,6 +1,6 @@
 package net.lyof.sortilege.items.custom;
 
-import net.lyof.sortilege.configs.ConfigEntry;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
@@ -35,9 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffItem extends TieredItem {
-    public static final ConfigEntry<Boolean> HD_PARTICLES = new ConfigEntry<>("staffs.use_hd_particles", false);
-
-
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;
     public float damage;
     public int pierce;
@@ -72,6 +69,18 @@ public class StaffItem extends TieredItem {
     public int getXPCost(ItemStack itemstack) {
         return Math.max(this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
                 - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack), 0);
+    }
+
+    public float getAttackDamage(ItemStack stack) {
+        return this.damage + ItemHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
+    }
+
+    public int getAttackRange(ItemStack stack) {
+        return this.range + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
+    }
+
+    public int getPierce(ItemStack stack) {
+        return this.pierce + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
     }
 
     @Override
@@ -115,8 +124,9 @@ public class StaffItem extends TieredItem {
 
 
         int cost = this.getXPCost(staff);
-        float damage = this.damage + ItemHelper.getEnchantLevel(ModEnchants.POTENCY, staff);
-        int range = this.range + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, staff)*2;
+        float damage = this.getAttackDamage(staff);
+        int range = this.getAttackRange(staff);
+        int targetsLeft = this.getPierce(staff);
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, staff) - ItemHelper.getEnchantLevel(ModEnchants.PULL, staff);
 
 
@@ -141,7 +151,6 @@ public class StaffItem extends TieredItem {
         Vec3 look = MathHelper.getLookVector(player);
 
         // Initialising variables to be used in the loop
-        int targetsLeft = this.pierce + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, staff);
         List<String> targetsHit = new ArrayList<>();
         int index;
 
@@ -157,7 +166,7 @@ public class StaffItem extends TieredItem {
         List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
         if (staff.isEnchanted())
             colors.add(new Triple<>(0.7f, 0f, 1f));
-        ParticleOptions particle = HD_PARTICLES.get() ? ModParticles.WISP.get() : ModParticles.WISP_PIXEL.get();
+        ParticleOptions particle = ConfigEntries.StaffsHdParticles ? ModParticles.WISP.get() : ModParticles.WISP_PIXEL.get();
 
 
         int step = 5;

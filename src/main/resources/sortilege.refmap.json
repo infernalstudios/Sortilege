@@ -13,7 +13,7 @@
       "renderExperienceBar": "Lnet/minecraft/client/gui/Gui;m_93071_(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"
     },
     "net/lyof/sortilege/mixins/MixinDeathScreen": {
-      "init": "Lnet/minecraft/client/gui/screens;m_7856_()V"
+      "init": "Lnet/minecraft/client/gui/screens/DeathScreen;m_7856_()V"
     }
   },
   "data": {
@@ -31,7 +31,7 @@
         "renderExperienceBar": "Lnet/minecraft/client/gui/Gui;m_93071_(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"
       },
       "net/lyof/sortilege/mixins/MixinDeathScreen": {
-        "init": "Lnet/minecraft/client/gui/screens;m_7856_()V"
+        "init": "Lnet/minecraft/client/gui/screens/DeathScreen;m_7856_()V"
       }
     }
   }

@@ -1,7 +1,5 @@
 package net.lyof.sortilege.configs;
 
-import org.spongepowered.asm.mixin.Shadow;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,8 @@ public class ConfigEntries {
 
         MagicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
 
-        IncreasedEnchantCosts = new ConfigEntry<>("experience.increased_enchant_costs", true).get();
+        DoIncreasedEnchantCosts = new ConfigEntry<>("experience.increased_enchant_costs", true).get();
+        IncreasedEnchantCosts = new ConfigEntry<>("experience.costs", List.of(5d, 15d, 30d)).get();
         xpLevelCap = new ConfigEntry<>("experience.level_cap", 100).get();
 
         ShowDeathCoordinates = new ConfigEntry<>("show_coordinates_on_death", true).get();
@@ -36,7 +35,8 @@ public class ConfigEntries {
 
     public static boolean MagicProtCompatibility;
 
-    public static boolean IncreasedEnchantCosts;
+    public static boolean DoIncreasedEnchantCosts;
+    public static List<Double> IncreasedEnchantCosts;
     public static int xpLevelCap;
 
     public static boolean ShowDeathCoordinates;

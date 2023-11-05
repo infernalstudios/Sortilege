@@ -198,6 +198,7 @@ public class ModJsonConfigs {
       },
       "experience": {
         "increased_enchant_costs": true,
+        "costs": [5, 15, 30],
         "level_cap": 100
       },
       "show_coordinates_on_death": true,

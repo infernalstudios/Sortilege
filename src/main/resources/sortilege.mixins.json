@@ -10,7 +10,6 @@
     "MixinPlayer"
   ],
   "client": [
-    "GuiAccessor",
     "MixinGui",
     "MixinItem"
   ],

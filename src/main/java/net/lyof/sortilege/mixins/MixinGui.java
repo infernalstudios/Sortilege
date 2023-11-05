@@ -6,6 +6,7 @@ import net.lyof.sortilege.configs.ConfigEntries;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,12 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MixinGui {
     @Shadow protected int screenHeight;
     @Shadow protected int screenWidth;
+    @Final @Shadow protected Minecraft minecraft;
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     public void renderExperienceBar(PoseStack poseStack, int n, CallbackInfo ci) {
         if (ConfigEntries.xpLevelCap > -1) {
             Gui self = (Gui) (Object) this;
-            Minecraft minecraft = ((GuiAccessor) self).getMinecraft();
+            Minecraft minecraft = this.minecraft;
             
             minecraft.getProfiler().push("expBar");
             RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);

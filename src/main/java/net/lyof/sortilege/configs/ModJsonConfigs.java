@@ -197,9 +197,10 @@ public class ModJsonConfigs {
         "magic_protection_protection_compatibility": false
       },
       "experience": {
-        "increased_enchant_costs": false,
+        "increased_enchant_costs": true,
         "level_cap": 100
       },
+      "show_coordinates_on_death": true,
       "staffs": {
         "use_hd_particles": false,
         "default_xp_cost": 0,

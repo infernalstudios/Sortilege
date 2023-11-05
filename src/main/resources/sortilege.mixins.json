@@ -10,6 +10,7 @@
     "MixinPlayer"
   ],
   "client": [
+    "MixinDeathScreen",
     "MixinGui",
     "MixinItem"
   ],

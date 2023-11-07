@@ -14,6 +14,12 @@
     },
     "net/lyof/sortilege/mixins/MixinDeathScreen": {
       "init": "Lnet/minecraft/client/gui/screens/DeathScreen;m_7856_()V"
+    },
+    "net/lyof/sortilege/mixins/MixinUpgradeRecipe": {
+      "assemble": "Lnet/minecraft/world/item/crafting/UpgradeRecipe;m_5874_(Lnet/minecraft/world/Container;)Lnet/minecraft/world/item/ItemStack;"
+    },
+    "net/lyof/sortilege/mixins/MixinRecipeManager": {
+      "byType": "Lnet/minecraft/world/item/crafting/RecipeManager;m_44054_(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map;"
     }
   },
   "data": {
@@ -32,6 +38,12 @@
       },
       "net/lyof/sortilege/mixins/MixinDeathScreen": {
         "init": "Lnet/minecraft/client/gui/screens/DeathScreen;m_7856_()V"
+      },
+      "net/lyof/sortilege/mixins/MixinUpgradeRecipe": {
+        "assemble": "Lnet/minecraft/world/item/crafting/UpgradeRecipe;m_5874_(Lnet/minecraft/world/Container;)Lnet/minecraft/world/item/ItemStack;"
+      },
+      "net/lyof/sortilege/mixins/MixinRecipeManager": {
+        "byType": "Lnet/minecraft/world/item/crafting/RecipeManager;m_44054_(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map;"
       }
     }
   }

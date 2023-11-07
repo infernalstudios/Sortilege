@@ -20,7 +20,10 @@ public class ConfigEntries {
         xpLevelCap = new ConfigEntry<>("experience.level_cap", 100).get();
         xpLinearCost = new ConfigEntry<>("experience.linear_xp_requirement", 40).get();
 
-        ShowDeathCoordinates = new ConfigEntry<>("show_coordinates_on_death", true).get();
+        DoXPBounty = new ConfigEntry<>("death.xp_bounty.enable", true).get();
+        SelfXPRatio = new ConfigEntry<>("death.xp_bounty.self_ratio", 0.3).get();
+        AttackerXPRatio = new ConfigEntry<>("death.xp_bounty.attacker_ratio", 0.6).get();
+        ShowDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
         StaffsHdParticles = new ConfigEntry<>("staffs.use_hd_particles", false).get();
         StaffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
@@ -38,12 +41,14 @@ public class ConfigEntries {
     public static double WitchHatDropChance;
     public static int WitchHatBonus;
 
-
     public static boolean DoIncreasedEnchantCosts;
     public static List<Double> IncreasedEnchantCosts;
     public static int xpLevelCap;
     public static int xpLinearCost;
 
+    public static boolean DoXPBounty;
+    public static double SelfXPRatio;
+    public static double AttackerXPRatio;
     public static boolean ShowDeathCoordinates;
 
     public static boolean StaffsHdParticles;

@@ -202,10 +202,17 @@ public class ModJsonConfigs {
         "increased_enchant_costs": true,
         "costs": [5, 15, 30],
         "level_cap": 100,
-        "linear_xp_requirement": 40
+        "linear_xp_requirement": 50
       },
       
-      "show_coordinates_on_death": true,
+      "death": {
+        "xp_bounty": {
+          "enable": true,
+          "self_ratio": 0.3,
+          "attacker_ratio": 0.6
+        },
+        "show_coordinates_on_death": true
+      },
       
       "staffs": {
         "use_hd_particles": false,

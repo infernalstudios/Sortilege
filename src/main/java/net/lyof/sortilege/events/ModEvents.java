@@ -5,8 +5,13 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
+import net.lyof.sortilege.utils.XPHelper;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -22,28 +27,15 @@ import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class ModEvents {
-    public static Map<String, Pair<Integer, Float>> PLAYER_XPS = new HashMap<>();
-
     @SubscribeEvent
     public static void xpBoost(LivingExperienceDropEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            float ratio = 0.5f;
-
-            Pair<Integer, Float> xp =
-                    new Pair<>(Math.round(player.experienceLevel * ratio), player.experienceProgress * ratio);
-
-            if (PLAYER_XPS.containsKey(player.getStringUUID()))
-                PLAYER_XPS.replace(player.getStringUUID(), xp);
-            else
-                PLAYER_XPS.put(player.getStringUUID(), xp);
-
-            event.setDroppedExperience(Math.round(event.getDroppedExperience() * (1 - ratio)));
+        if (event.getEntity() instanceof Player && ConfigEntries.DoXPBounty) {
+            event.setDroppedExperience(0);
+            return;
         }
 
         if (event.getAttackingPlayer() == null)
@@ -53,15 +45,53 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void xpRefill(PlayerEvent.PlayerRespawnEvent event) {
-        Player player = event.getEntity();
-        Sortilege.log(PLAYER_XPS);
-
-        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+    public static void xpSave(LivingDeathEvent event) {
+        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.DoXPBounty)
             return;
 
-        player.experienceLevel = PLAYER_XPS.getOrDefault(player.getStringUUID(), new Pair<>(0, 0f)).getFirst();
-        player.experienceProgress = PLAYER_XPS.getOrDefault(player.getStringUUID(), new Pair<>(0, 0f)).getSecond();
+        if (event.getEntity() instanceof Player player) {
+            int safe_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.SelfXPRatio);
+            int stolen_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.AttackerXPRatio);
+
+            if (XPHelper.XP_SAVES.containsKey(player.getStringUUID()))
+                XPHelper.XP_SAVES.replace(player.getStringUUID(), safe_xp);
+            else
+                XPHelper.XP_SAVES.put(player.getStringUUID(), safe_xp);
+            
+            if (event.getSource().getEntity() == null || !(event.getSource().getEntity() instanceof LivingEntity entity))
+                return;
+
+            XPHelper.XP_SAVES.putIfAbsent(entity.getStringUUID(), stolen_xp);
+            entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999));
+        }
+        
+        else if (XPHelper.XP_SAVES.containsKey(event.getEntity().getStringUUID())) {
+            LivingEntity entity = event.getEntity();
+            Sortilege.log("Retrieving " + XPHelper.XP_SAVES.get(entity.getStringUUID()) + " xp points!");
+
+            // Probably better: ExperienceOrb.award(server, entity.position(), amount);
+            for (int i = 0; i < XPHelper.XP_SAVES.get(entity.getStringUUID()) / 3; i++) {
+                entity.getLevel().addFreshEntity(new ExperienceOrb(
+                        entity.getLevel(),
+                        entity.getX(),
+                        entity.getY(),
+                        entity.getZ(),
+                        3));
+            }
+
+            XPHelper.XP_SAVES.remove(entity.getStringUUID());
+        }
+    }
+    
+    @SubscribeEvent
+    public static void xpRefill(PlayerEvent.PlayerRespawnEvent event) {
+        Player player = event.getEntity();
+        Sortilege.log(XPHelper.XP_SAVES);
+
+        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.DoXPBounty)
+            return;
+
+        player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));
     }
 
     @SubscribeEvent

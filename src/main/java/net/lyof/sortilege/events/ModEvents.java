@@ -1,5 +1,7 @@
 package net.lyof.sortilege.events;
 
+import com.mojang.datafixers.util.Pair;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
@@ -10,24 +12,56 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Mod.EventBusSubscriber
 public class ModEvents {
+    public static Map<String, Pair<Integer, Float>> PLAYER_XPS = new HashMap<>();
+
     @SubscribeEvent
     public static void xpBoost(LivingExperienceDropEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            float ratio = 0.5f;
+
+            Pair<Integer, Float> xp =
+                    new Pair<>(Math.round(player.experienceLevel * ratio), player.experienceProgress * ratio);
+
+            if (PLAYER_XPS.containsKey(player.getStringUUID()))
+                PLAYER_XPS.replace(player.getStringUUID(), xp);
+            else
+                PLAYER_XPS.put(player.getStringUUID(), xp);
+
+            event.setDroppedExperience(Math.round(event.getDroppedExperience() * (1 - ratio)));
+        }
+
         if (event.getAttackingPlayer() == null)
             return;
         if (event.getAttackingPlayer().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.WITCH_HAT.get())
-            event.setDroppedExperience(event.getOriginalExperience() + ConfigEntries.WitchHatBonus);
+            event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.WitchHatBonus);
+    }
+
+    @SubscribeEvent
+    public static void xpRefill(PlayerEvent.PlayerRespawnEvent event) {
+        Player player = event.getEntity();
+        Sortilege.log(PLAYER_XPS);
+
+        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
+            return;
+
+        player.experienceLevel = PLAYER_XPS.getOrDefault(player.getStringUUID(), new Pair<>(0, 0f)).getFirst();
+        player.experienceProgress = PLAYER_XPS.getOrDefault(player.getStringUUID(), new Pair<>(0, 0f)).getSecond();
     }
 
     @SubscribeEvent

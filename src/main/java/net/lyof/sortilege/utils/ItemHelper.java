@@ -51,8 +51,8 @@ public class ItemHelper {
     public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
 
-    public static int getMaxEnchantValue(ItemStack itemstack) {
-        String id = Registry.ITEM.getKey(itemstack.getItem()).toString();
+    public static int getMaxEnchantValue(ItemStack stack) {
+        String id = Registry.ITEM.getKey(stack.getItem()).toString();
 
         int default_limit = ConfigEntries.EnchantLimiterDefault;
         boolean sum = ConfigEntries.EnchantLimiterMode.equals("relative");
@@ -62,7 +62,11 @@ public class ItemHelper {
         
         if (limit == -1)
             return default_limit;
-        return limit + itemstack.getOrCreateTag().getInt(ENCHLIMIT_NBT);
+        return limit + getExtraEnchants(stack);
+    }
+
+    public static int getExtraEnchants(ItemStack stack) {
+        return stack.getOrCreateTag().getInt(ENCHLIMIT_NBT);
     }
 
     public static ItemStack addExtraEnchant(ItemStack stack) {

@@ -22,13 +22,12 @@ public class MixinItem {
     public void showEnchantLimit(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag, CallbackInfo ci) {
         int a = EnchantmentHelper.getEnchantments(itemstack).size();
         int m = ItemHelper.getMaxEnchantValue(itemstack);
-        if ((a > 0 || false) &&
+
+        if ((a > 0 || ItemHelper.getExtraEnchants(itemstack) > 0) &&
                 m > 0 && itemstack.getEnchantmentValue() > 0 && !itemstack.is(Items.ENCHANTED_BOOK))
+
             list.add(Component.literal(a + "/" + m).append(" ")
                     .append(Component.translatable("sortilege.enchantments"))
                     .withStyle(a >= m ? ChatFormatting.RED : ChatFormatting.WHITE));
-
-        if (itemstack.getOrCreateTag().getInt(ItemHelper.ENCHLIMIT_NBT) > 0)
-            list.add(Component.literal("Extra Enchants: " + itemstack.getOrCreateTag().getInt(ItemHelper.ENCHLIMIT_NBT)));
     }
 }

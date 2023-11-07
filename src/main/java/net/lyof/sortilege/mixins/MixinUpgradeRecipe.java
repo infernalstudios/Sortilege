@@ -28,9 +28,7 @@ public class MixinUpgradeRecipe {
         if (Arrays.stream(this.base.getItems()).anyMatch((stack) -> stack.is(this.result.getItem()))
                 && Arrays.stream(this.addition.getItems()).anyMatch((stack) -> stack.is(ItemHelper.LIMIT_BREAKER))) {
 
-            ItemStack result = cir.getReturnValue();
-            ItemHelper.addExtraEnchant(result);
-            cir.setReturnValue(result);
+            cir.setReturnValue(ItemHelper.addExtraEnchant(cir.getReturnValue()));
         }
     }
 }

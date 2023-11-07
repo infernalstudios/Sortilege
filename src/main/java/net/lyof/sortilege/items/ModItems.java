@@ -3,6 +3,7 @@ package net.lyof.sortilege.items;
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.lyof.sortilege.items.custom.LimititeItem;
 import net.lyof.sortilege.items.custom.StaffItem;
 import net.lyof.sortilege.items.custom.WitchHatItem;
 import net.lyof.sortilege.items.custom.potion.AntidotePotionItem;
@@ -44,12 +45,7 @@ public class ModItems {
     public static final RegistryObject<Item> WITCH_HAT = ITEMS.register("witch_hat",
             () -> new WitchHatItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
 
-    // LIMITE
+    // LIMITITE
     public static final RegistryObject<Item> LIMITITE = ITEMS.register("limitite",
-            () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)) {
-                @Override
-                public boolean isFoil(ItemStack stack) {
-                    return true;
-                }
-            });
+            () -> new LimititeItem(new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)));
 }

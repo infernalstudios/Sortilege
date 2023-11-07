@@ -1,4 +1,9 @@
 {
+  "tooltip.press_shift.left": "Press [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+
   "item.sortilege.wooden_staff" : "Wooden Staff",
   "item.sortilege.stone_staff" : "Stone Staff",
   "item.sortilege.iron_staff" : "Iron Staff",
@@ -51,5 +56,6 @@
   "sortilege.antidote.cures": "Cures:",
 
 
-  "item.sortilege.limitite": "Limitite"
+  "item.sortilege.limitite": "Limitite",
+  "sortilege.limitite.desc": "Combine with an item in a Smithing Table to increase its enchantability"
 }

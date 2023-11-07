@@ -7,14 +7,17 @@
   "mixins": [
     "MixinEnchantmentHelper",
     "MixinItemStack",
-    "MixinPlayer"
+    "MixinPlayer",
+    "MixinRecipeManager",
+    "MixinUpgradeRecipe"
   ],
   "client": [
     "MixinDeathScreen",
     "MixinGui",
     "MixinItem"
   ],
-  "server": [],
+  "server": [
+  ],
   "injectors": {
     "defaultRequire": 1
   }

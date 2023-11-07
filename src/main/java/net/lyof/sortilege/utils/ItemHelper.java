@@ -4,13 +4,41 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ConfigEntry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.UpgradeRecipe;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ItemHelper {
+    public static final Item LIMIT_BREAKER = Items.DIAMOND;
+    public static final List<Item> ENCHANTABLES = new ArrayList<>();
+
+    static {
+        for (Item item : Registry.ITEM) {
+            if (item.getEnchantmentValue(new ItemStack((item))) > 0) {
+                ENCHANTABLES.add(item);
+            }
+        }
+    }
+
+
+
     public static int getEnchantLevel(RegistryObject<Enchantment> enchant, ItemStack item) {
         return getEnchantLevel(enchant.get(), item);
     }
@@ -32,8 +60,8 @@ public class ItemHelper {
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
 
     public static int getMaxEnchantValue(ItemStack itemstack) {
-        String id = itemstack.getItem().getDescriptionId();
-        id = id.substring(id.indexOf(".") + 1).replaceAll("\\.", ":");
+        String id = Registry.ITEM.getKey(itemstack.getItem()).toString();
+
         int default_limit = ConfigEntries.EnchantLimiterDefault;
         boolean sum = ConfigEntries.EnchantLimiterMode.equals("relative");
 
@@ -43,6 +71,13 @@ public class ItemHelper {
         if (limit == -1)
             return default_limit;
         return limit + itemstack.getOrCreateTag().getInt(ENCHLIMIT_NBT);
+    }
+
+    public static ItemStack addExtraEnchant(ItemStack stack) {
+        CompoundTag tag = stack.getOrCreateTag();
+        tag.putInt(ENCHLIMIT_NBT, tag.getInt(ENCHLIMIT_NBT) + 1);
+        stack.setTag(tag);
+        return stack;
     }
 
     public static Component getShiftTooltip() {

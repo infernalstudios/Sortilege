@@ -177,6 +177,7 @@ public class ModJsonConfigs {
         "drop_chance": 0.1,
         "xp_bonus": 3
       },
+      
       "enchantments": {
         "enchant_limiter": {
           "default": 3,
@@ -196,12 +197,15 @@ public class ModJsonConfigs {
         },
         "magic_protection_protection_compatibility": false
       },
+      
       "experience": {
         "increased_enchant_costs": true,
         "costs": [5, 15, 30],
         "level_cap": 100
       },
+      
       "show_coordinates_on_death": true,
+      
       "staffs": {
         "use_hd_particles": false,
         "default_xp_cost": 0,

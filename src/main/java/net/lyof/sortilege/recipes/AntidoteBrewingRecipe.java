@@ -3,12 +3,14 @@ package net.lyof.sortilege.recipes;
 import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.items.custom.potion.AntidotePotionItem;
 import net.lyof.sortilege.utils.PotionHelper;
+import net.minecraft.world.inventory.SmithingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.brewing.IBrewingRecipe;
 import org.jetbrains.annotations.NotNull;
 

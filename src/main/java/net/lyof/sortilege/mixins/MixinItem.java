@@ -27,5 +27,8 @@ public class MixinItem {
             list.add(Component.literal(a + "/" + m).append(" ")
                     .append(Component.translatable("sortilege.enchantments"))
                     .withStyle(a >= m ? ChatFormatting.RED : ChatFormatting.WHITE));
+
+        if (itemstack.getOrCreateTag().getInt(ItemHelper.ENCHLIMIT_NBT) > 0)
+            list.add(Component.literal("Extra Enchants: " + itemstack.getOrCreateTag().getInt(ItemHelper.ENCHLIMIT_NBT)));
     }
 }

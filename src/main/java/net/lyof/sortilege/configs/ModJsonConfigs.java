@@ -188,7 +188,8 @@ public class ModJsonConfigs {
             "minecraft:golden_leggings": 2,
             "minecraft:golden_boots": 2,
             "sortilege:golden_staff": 2
-          }
+          },
+          "generate_limitite_loot": true
         },
         "magic_protection_protection_compatibility": false
       },

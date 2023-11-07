@@ -8,6 +8,7 @@ public class ConfigEntries {
     public static void reload() {
         EnchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
         EnchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
+        DoLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
 
         MagicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
 
@@ -30,6 +31,7 @@ public class ConfigEntries {
 
     public static int EnchantLimiterDefault;
     public static String EnchantLimiterMode;
+    public static boolean DoLimititeSpawn;
 
     public static boolean MagicProtCompatibility;
 

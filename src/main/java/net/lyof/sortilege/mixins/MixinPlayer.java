@@ -7,6 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class MixinPlayer {
@@ -33,5 +36,11 @@ public abstract class MixinPlayer {
         }
 
         this.enchantmentSeed = MathHelper.rnd.nextInt();
+    }
+
+    @Inject(method = "getXpNeededForNextLevel", at = @At("HEAD"), cancellable = true)
+    public void linearXpScaling(CallbackInfoReturnable<Integer> cir) {
+        if (ConfigEntries.xpLinearCost > 0)
+            cir.setReturnValue(ConfigEntries.xpLinearCost);
     }
 }

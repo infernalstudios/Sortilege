@@ -9,6 +9,9 @@
     "net/lyof/sortilege/mixins/MixinItemStack": {
       "enchant": "Lnet/minecraft/world/item/ItemStack;m_41663_(Lnet/minecraft/world/item/enchantment/Enchantment;I)V"
     },
+    "net/lyof/sortilege/mixins/MixinPlayer": {
+      "getXpNeededForNextLevel": "Lnet/minecraft/world/entity/player/Player;m_36323_()I"
+    },
     "net/lyof/sortilege/mixins/MixinGui": {
       "renderExperienceBar": "Lnet/minecraft/client/gui/Gui;m_93071_(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"
     },
@@ -32,6 +35,9 @@
       },
       "net/lyof/sortilege/mixins/MixinItemStack": {
         "enchant": "Lnet/minecraft/world/item/ItemStack;m_41663_(Lnet/minecraft/world/item/enchantment/Enchantment;I)V"
+      },
+      "net/lyof/sortilege/mixins/MixinPlayer": {
+        "getXpNeededForNextLevel": "Lnet/minecraft/world/entity/player/Player;m_36323_()I"
       },
       "net/lyof/sortilege/mixins/MixinGui": {
         "renderExperienceBar": "Lnet/minecraft/client/gui/Gui;m_93071_(Lcom/mojang/blaze3d/vertex/PoseStack;I)V"

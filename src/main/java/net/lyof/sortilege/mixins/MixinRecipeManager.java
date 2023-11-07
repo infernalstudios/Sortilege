@@ -34,8 +34,6 @@ public class MixinRecipeManager {
 
         ResourceLocation id;
         for (Item item : ItemHelper.ENCHANTABLES) {
-            Sortilege.log("Scanning candidiate : " + Registry.ITEM.getKey(item));
-
             if (item.getEnchantmentValue(new ItemStack((item))) > 0) {
                 id = new ResourceLocation(Sortilege.MOD_ID, Registry.ITEM.getKey(item).getPath() + "_limit_break");
 
@@ -44,11 +42,9 @@ public class MixinRecipeManager {
                         Ingredient.of(item),
                         Ingredient.of(ItemHelper.LIMIT_BREAKER),
                         new ItemStack(item)));
-                Sortilege.log("Added Limite recipe for item : " + Registry.ITEM.getKey(item));
             }
         }
 
-        Sortilege.log(recipes);
         cir.setReturnValue((Map<ResourceLocation, T>) recipes);
     }
 }

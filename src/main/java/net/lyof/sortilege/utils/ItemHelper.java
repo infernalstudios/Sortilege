@@ -3,30 +3,22 @@ package net.lyof.sortilege.utils;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ConfigEntry;
+import net.lyof.sortilege.items.ModItems;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.Potion;
-import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.UpgradeRecipe;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ItemHelper {
-    public static final Item LIMIT_BREAKER = Items.DIAMOND;
+    public static final Item LIMIT_BREAKER = ModItems.LIMITITE.get();
     public static final List<Item> ENCHANTABLES = new ArrayList<>();
 
     static {

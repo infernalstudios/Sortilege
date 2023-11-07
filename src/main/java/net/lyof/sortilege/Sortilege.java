@@ -5,6 +5,7 @@ import net.lyof.sortilege.attributes.ModAttributes;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
+import net.lyof.sortilege.loot.ModLootModifiers;
 import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.recipes.AntidoteBrewingRecipe;
 import net.lyof.sortilege.recipes.PotionBrewingRecipe;
@@ -18,8 +19,7 @@ import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(Sortilege.MOD_ID)
-public class Sortilege
-{
+public class Sortilege {
     public static final String MOD_ID = "sortilege";
 
     protected static final Logger LOGGER = LogUtils.getLogger();
@@ -32,8 +32,8 @@ public class Sortilege
         ModEnchants.register(eventBus);
         ModAttributes.register(eventBus);
         ModParticles.register(eventBus);
+        ModLootModifiers.register(eventBus);
 
-        //ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, MOD_ID + "-common.toml");
         eventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);

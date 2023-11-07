@@ -172,11 +172,6 @@ public class ModJsonConfigs {
         "VERSION_DO_NOT_EDIT": 1.3,
         "FORCE_RESET": false
       },
-
-      "witch_hat": {
-        "drop_chance": 0.1,
-        "xp_bonus": 3
-      },
       
       "enchantments": {
         "enchant_limiter": {
@@ -199,9 +194,14 @@ public class ModJsonConfigs {
       },
       
       "experience": {
+        "witch_hat": {
+          "drop_chance": 0.1,
+          "xp_bonus": 3
+        },
         "increased_enchant_costs": true,
         "costs": [5, 15, 30],
-        "level_cap": 100
+        "level_cap": 100,
+        "linear_xp_requirement": 40
       },
       
       "show_coordinates_on_death": true,

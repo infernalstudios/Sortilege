@@ -8,6 +8,7 @@ import net.lyof.sortilege.items.custom.WitchHatItem;
 import net.lyof.sortilege.items.custom.potion.AntidotePotionItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;
@@ -42,4 +43,13 @@ public class ModItems {
     // WITCH HAT
     public static final RegistryObject<Item> WITCH_HAT = ITEMS.register("witch_hat",
             () -> new WitchHatItem(new Item.Properties().tab(CreativeModeTab.TAB_COMBAT)));
+
+    // LIMITE
+    public static final RegistryObject<Item> LIMITITE = ITEMS.register("limitite",
+            () -> new Item(new Item.Properties().tab(CreativeModeTab.TAB_MATERIALS)) {
+                @Override
+                public boolean isFoil(ItemStack stack) {
+                    return true;
+                }
+            });
 }

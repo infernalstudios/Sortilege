@@ -3,7 +3,6 @@ package net.lyof.sortilege.mixins;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.UpgradeRecipe;
 import org.spongepowered.asm.mixin.Final;

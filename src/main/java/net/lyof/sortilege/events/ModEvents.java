@@ -7,9 +7,6 @@ import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -122,7 +119,6 @@ public class ModEvents {
     @SubscribeEvent
     public static void xpRefill(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getEntity();
-        Sortilege.log(XPHelper.XP_SAVES);
 
         if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.DoXPKeep)
             return;

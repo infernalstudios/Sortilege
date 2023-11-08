@@ -9,7 +9,6 @@ import net.lyof.sortilege.items.custom.WitchHatItem;
 import net.lyof.sortilege.items.custom.potion.AntidotePotionItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DeferredRegister;

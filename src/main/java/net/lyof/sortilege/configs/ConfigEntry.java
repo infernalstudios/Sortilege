@@ -1,5 +1,6 @@
 package net.lyof.sortilege.configs;
 
+import net.lyof.sortilege.Sortilege;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -35,11 +36,15 @@ public class ConfigEntry<T> {
             catch (Exception e) {
                 if (Objects.equals(step, this.path.get(this.path.size() - 1)))
                     result = next.get(step);
-                else
+                else {
+                    Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
                     return fallback;
+                }
             }
-            if (next == null)
+            if (next == null) {
+                Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
                 return fallback;
+            }
         }
 
         if (fallback instanceof Integer)
@@ -54,6 +59,8 @@ public class ConfigEntry<T> {
             return (T) next;
         if (fallback instanceof List)
             return (T) result;
+
+        Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
         return fallback;
     }
 }

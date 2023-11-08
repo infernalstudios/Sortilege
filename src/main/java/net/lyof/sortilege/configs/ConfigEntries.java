@@ -21,9 +21,9 @@ public class ConfigEntries {
         xpLevelCap = new ConfigEntry<>("experience.level_cap", 100).get();
         xpLinearCost = new ConfigEntry<>("experience.linear_xp_requirement", 40).get();
 
-        BountyWhitelist = new ConfigEntry<>("death.xp_bounty.tag_is_whitelist", false).get();
-        BountyValue = new ConfigEntry<>("death.xp_bounty.value", 20).get();
-        BountyChance = new ConfigEntry<>("death.xp_bounty.chance", 0.05).get();
+        BountyWhitelist = new ConfigEntry<>("experience.xp_bounty.tag_is_whitelist", false).get();
+        BountyValue = new ConfigEntry<>("experience.xp_bounty.value", 20).get();
+        BountyChance = new ConfigEntry<>("experience.xp_bounty.chance", 0.05).get();
 
         DoXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
         StealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();

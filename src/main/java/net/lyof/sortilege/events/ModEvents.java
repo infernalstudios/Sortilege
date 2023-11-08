@@ -7,6 +7,8 @@ import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -45,13 +47,11 @@ public class ModEvents {
             event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.WitchHatBonus);
 
         if (Math.random() < ConfigEntries.BountyChance && event.getEntity() instanceof Monster monster) {
-            Sortilege.log((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
-                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)));
-
             if ((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
-                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)))
+                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES))) {
 
                 XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
+            }
         }
     }
 

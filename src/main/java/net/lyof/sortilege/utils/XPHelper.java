@@ -3,7 +3,9 @@ package net.lyof.sortilege.utils;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -28,5 +30,16 @@ public class XPHelper {
         }
 
         return total;
+    }
+
+    public static void dropxpPinata(Level world, double x, double y, double z, int amount) {
+        for (int i = 0; i < amount; i++) {
+            world.addFreshEntity(new ExperienceOrb(
+                    world,
+                    x,
+                    y,
+                    z,
+                    1));
+        }
     }
 }

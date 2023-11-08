@@ -21,8 +21,11 @@ public class ConfigEntries {
         xpLinearCost = new ConfigEntry<>("experience.linear_xp_requirement", 40).get();
 
         DoXPBounty = new ConfigEntry<>("death.xp_bounty.enable", true).get();
+        StealFromPlayers = new ConfigEntry<>("death.xp_bounty.allow_stealing_from_players", true).get();
         SelfXPRatio = new ConfigEntry<>("death.xp_bounty.self_ratio", 0.3).get();
         AttackerXPRatio = new ConfigEntry<>("death.xp_bounty.attacker_ratio", 0.6).get();
+        DropXPRatio = new ConfigEntry<>("death.xp_bounty.drop_ratio", 0.1).get();
+
         ShowDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
         StaffsHdParticles = new ConfigEntry<>("staffs.use_hd_particles", false).get();
@@ -47,8 +50,11 @@ public class ConfigEntries {
     public static int xpLinearCost;
 
     public static boolean DoXPBounty;
+    public static boolean StealFromPlayers;
     public static double SelfXPRatio;
     public static double AttackerXPRatio;
+    public static double DropXPRatio;
+
     public static boolean ShowDeathCoordinates;
 
     public static boolean StaffsHdParticles;

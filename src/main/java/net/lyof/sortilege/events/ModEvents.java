@@ -49,36 +49,61 @@ public class ModEvents {
         if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.DoXPBounty)
             return;
 
+        // Player got killed
         if (event.getEntity() instanceof Player player) {
+            // Split the xp
             int safe_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.SelfXPRatio);
-            int stolen_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.AttackerXPRatio);
+            int steal_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.AttackerXPRatio);
+            int drop_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.DropXPRatio);
 
+            // Save a part for respawn
             if (XPHelper.XP_SAVES.containsKey(player.getStringUUID()))
                 XPHelper.XP_SAVES.replace(player.getStringUUID(), safe_xp);
             else
                 XPHelper.XP_SAVES.put(player.getStringUUID(), safe_xp);
-            
-            if (event.getSource().getEntity() == null || !(event.getSource().getEntity() instanceof LivingEntity entity))
-                return;
 
-            XPHelper.XP_SAVES.putIfAbsent(entity.getStringUUID(), stolen_xp);
-            entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999));
+            // If indirect death: add steal to drop
+            if (event.getSource().getEntity() == null || !(event.getSource().getEntity() instanceof LivingEntity entity)) {
+                drop_xp += steal_xp;
+                steal_xp = 0;
+                Sortilege.log("Indirect death");
+            }
+
+            // If killed by player: add steal to drop or give to attacker
+            else if (event.getSource().getEntity() instanceof Player attacker) {
+                if (!ConfigEntries.StealFromPlayers) {
+                    drop_xp += steal_xp;
+                    steal_xp = 0;
+                }
+                else {
+                    attacker.giveExperiencePoints(steal_xp);
+                }
+            }
+
+            // If killed by a living entity: make it a bounty
+            else {
+                Sortilege.log("Made a bounty of " + entity);
+                XPHelper.XP_SAVES.putIfAbsent(entity.getStringUUID(), steal_xp);
+                // Temporary: custom effect or something
+                entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999));
+            }
+
+            // Drop the last part
+            Sortilege.log("Dropping. Points: self:" + safe_xp + " stolen:" + steal_xp + " drop:" + drop_xp
+                    + " total:" + XPHelper.getTotalxp(player, server));
+            XPHelper.dropxpPinata(player.getLevel(), player.getX(), player.getY(), player.getZ(), drop_xp);
         }
-        
+
+        // Bounty got killed
         else if (XPHelper.XP_SAVES.containsKey(event.getEntity().getStringUUID())) {
             LivingEntity entity = event.getEntity();
             Sortilege.log("Retrieving " + XPHelper.XP_SAVES.get(entity.getStringUUID()) + " xp points!");
 
             // Probably better: ExperienceOrb.award(server, entity.position(), amount);
-            for (int i = 0; i < XPHelper.XP_SAVES.get(entity.getStringUUID()) / 3; i++) {
-                entity.getLevel().addFreshEntity(new ExperienceOrb(
-                        entity.getLevel(),
-                        entity.getX(),
-                        entity.getY(),
-                        entity.getZ(),
-                        3));
-            }
+            XPHelper.dropxpPinata(entity.getLevel(), entity.getX(), entity.getY(), entity.getZ(),
+                    XPHelper.XP_SAVES.get(entity.getStringUUID()));
 
+            // Remove the bounty
             XPHelper.XP_SAVES.remove(entity.getStringUUID());
         }
     }

@@ -208,8 +208,10 @@ public class ModJsonConfigs {
       "death": {
         "xp_bounty": {
           "enable": true,
+          "allow_stealing_from_players": true,
           "self_ratio": 0.3,
-          "attacker_ratio": 0.6
+          "attacker_ratio": 0.6,
+          "drop_ratio": 0.1
         },
         "show_coordinates_on_death": true
       },

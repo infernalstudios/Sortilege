@@ -4,14 +4,14 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
+import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +26,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.antlr.v4.runtime.misc.Triple;
 
 import java.util.Objects;
 
@@ -43,11 +44,15 @@ public class ModEvents {
         if (event.getAttackingPlayer().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.WITCH_HAT.get())
             event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.WitchHatBonus);
 
-        if (Math.random() < ConfigEntries.BountyChance && event.getEntity() instanceof Monster monster) {
+        if (Math.random() < ConfigEntries.BountyChance && event.getEntity() instanceof Monster monster
+                && monster.getLevel() instanceof ServerLevel server) {
             if ((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
                     || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES))) {
 
-                XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
+                //XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
+                ModParticles.spawnWisps(server, monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
+                        8, new Triple<>(0.5f, 1f, 0.2f));
+                ExperienceOrb.award(server, monster.position(), ConfigEntries.BountyValue);
             }
         }
     }
@@ -99,7 +104,8 @@ public class ModEvents {
             // Drop the last part
             Sortilege.log("Dropping. Points: self:" + safe_xp + " stolen:" + steal_xp + " drop:" + drop_xp
                     + " total:" + XPHelper.getTotalxp(player, server));
-            XPHelper.dropxpPinata(player.getLevel(), player.getX(), player.getY(), player.getZ(), drop_xp);
+            //XPHelper.dropxpPinata(player.getLevel(), player.getX(), player.getY(), player.getZ(), drop_xp);
+            ExperienceOrb.award(server, player.position(), drop_xp);
         }
 
         // Bounty got killed
@@ -108,8 +114,9 @@ public class ModEvents {
             Sortilege.log("Retrieving " + XPHelper.XP_SAVES.get(entity.getStringUUID()) + " xp points!");
 
             // Probably better: ExperienceOrb.award(server, entity.position(), amount);
-            XPHelper.dropxpPinata(entity.getLevel(), entity.getX(), entity.getY(), entity.getZ(),
-                    XPHelper.XP_SAVES.get(entity.getStringUUID()));
+            //XPHelper.dropxpPinata(entity.getLevel(), entity.getX(), entity.getY(), entity.getZ(),
+            //        XPHelper.XP_SAVES.get(entity.getStringUUID()));
+            ExperienceOrb.award(server, entity.position(), XPHelper.XP_SAVES.get(entity.getStringUUID()));
 
             // Remove the bounty
             XPHelper.XP_SAVES.remove(entity.getStringUUID());

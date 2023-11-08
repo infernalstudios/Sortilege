@@ -177,8 +177,9 @@ public class StaffItem extends TieredItem {
             z = (float) (player.getZ() + look.z * i/step);
 
             if (world instanceof ServerLevel serverworld) {
-                WispParticle.COLOR = MathHelper.randi(colors);
-                serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
+                ModParticles.spawnWisps(serverworld, x, y, z, 1, MathHelper.randi(colors));
+                //WispParticle.COLOR = MathHelper.randi(colors);
+                //serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
             }
 
             if (i*2 % step != 0)

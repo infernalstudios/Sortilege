@@ -189,6 +189,7 @@ public class ModJsonConfigs {
             "minecraft:golden_boots": 2,
             "sortilege:golden_staff": 2
           },
+          "always_show_limit": true,
           "generate_limitite_loot": true
         },
         "magic_protection_protection_compatibility": false
@@ -202,11 +203,16 @@ public class ModJsonConfigs {
         "increased_enchant_costs": true,
         "costs": [5, 15, 30],
         "level_cap": 100,
-        "linear_xp_requirement": 50
+        "linear_xp_requirement": 50,
+        "xp_bounty": {
+          "tag_is_whitelist": false,
+          "value": 20,
+          "chance": 0.05
+        }
       },
       
       "death": {
-        "xp_bounty": {
+        "xp_keeping": {
           "enable": true,
           "allow_stealing_from_players": true,
           "self_ratio": 0.3,

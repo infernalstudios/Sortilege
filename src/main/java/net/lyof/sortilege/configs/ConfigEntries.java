@@ -8,6 +8,7 @@ public class ConfigEntries {
     public static void reload() {
         EnchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
         EnchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
+        AlwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
         DoLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
 
         MagicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
@@ -20,11 +21,15 @@ public class ConfigEntries {
         xpLevelCap = new ConfigEntry<>("experience.level_cap", 100).get();
         xpLinearCost = new ConfigEntry<>("experience.linear_xp_requirement", 40).get();
 
-        DoXPBounty = new ConfigEntry<>("death.xp_bounty.enable", true).get();
-        StealFromPlayers = new ConfigEntry<>("death.xp_bounty.allow_stealing_from_players", true).get();
-        SelfXPRatio = new ConfigEntry<>("death.xp_bounty.self_ratio", 0.3).get();
-        AttackerXPRatio = new ConfigEntry<>("death.xp_bounty.attacker_ratio", 0.6).get();
-        DropXPRatio = new ConfigEntry<>("death.xp_bounty.drop_ratio", 0.1).get();
+        BountyWhitelist = new ConfigEntry<>("death.xp_bounty.tag_is_whitelist", false).get();
+        BountyValue = new ConfigEntry<>("death.xp_bounty.value", 20).get();
+        BountyChance = new ConfigEntry<>("death.xp_bounty.chance", 0.05).get();
+
+        DoXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
+        StealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();
+        SelfXPRatio = new ConfigEntry<>("death.xp_keeping.self_ratio", 0.3).get();
+        AttackerXPRatio = new ConfigEntry<>("death.xp_keeping.attacker_ratio", 0.6).get();
+        DropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
 
         ShowDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
@@ -37,6 +42,7 @@ public class ConfigEntries {
 
     public static int EnchantLimiterDefault;
     public static String EnchantLimiterMode;
+    public static boolean AlwaysShowEnchantLimit;
     public static boolean DoLimititeSpawn;
 
     public static boolean MagicProtCompatibility;
@@ -49,7 +55,11 @@ public class ConfigEntries {
     public static int xpLevelCap;
     public static int xpLinearCost;
 
-    public static boolean DoXPBounty;
+    public static boolean BountyWhitelist;
+    public static int BountyValue;
+    public static double BountyChance;
+
+    public static boolean DoXPKeep;
     public static boolean StealFromPlayers;
     public static double SelfXPRatio;
     public static double AttackerXPRatio;

@@ -1,19 +1,20 @@
 package net.lyof.sortilege.events;
 
-import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -33,7 +34,7 @@ import java.util.Objects;
 public class ModEvents {
     @SubscribeEvent
     public static void xpBoost(LivingExperienceDropEvent event) {
-        if (event.getEntity() instanceof Player && ConfigEntries.DoXPBounty) {
+        if (event.getEntity() instanceof Player && ConfigEntries.DoXPKeep) {
             event.setDroppedExperience(0);
             return;
         }
@@ -42,11 +43,21 @@ public class ModEvents {
             return;
         if (event.getAttackingPlayer().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.WITCH_HAT.get())
             event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.WitchHatBonus);
+
+        if (Math.random() < ConfigEntries.BountyChance && event.getEntity() instanceof Monster monster) {
+            Sortilege.log((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
+                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)));
+
+            if ((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
+                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)))
+
+                XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
+        }
     }
 
     @SubscribeEvent
     public static void xpSave(LivingDeathEvent event) {
-        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.DoXPBounty)
+        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.DoXPKeep)
             return;
 
         // Player got killed
@@ -113,7 +124,7 @@ public class ModEvents {
         Player player = event.getEntity();
         Sortilege.log(XPHelper.XP_SAVES);
 
-        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.DoXPBounty)
+        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.DoXPKeep)
             return;
 
         player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));

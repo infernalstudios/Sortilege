@@ -279,16 +279,26 @@ public class ModJsonConfigs {
                   {
                     // Example entry, not loaded in game as it's only for demonstration purposes
                     "example_staff": {
-                      "tier": "GOLD",      // Sets the repair material and the durability if not set
-                      "damage": 5,         // Half hearts of damage the staff deals
-                      "pierce": 2,         // Maximal number of targets the staff can pierce through
-                      "range": 10,         // Range of the staff, in half blocks
-                      "durability": 512,   // Durability of the staff. Defaults to tier's * 0.7
-                      "cooldown": 20,      // Amount of ticks to wait for between each shots
-                      "charge_time": 1,    // Amount of ticks of casting to shoot. Defaults to default_charge_time above
-                      "xp_cost": 0,        // Amount of xp points needed to shoot. Defaults to default_xp_cost above
-                      "fire_res": true,    // Whether the staff is resistant to fire like Netherite items. Defaults to false
-                      "dependency": "nah"  // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft
+                      // Sets the repair material and the durability if not set
+                      "tier": "GOLD",
+                      // Half hearts of damage the staff deals
+                      "damage": 5,
+                      // Maximal number of targets the staff can pierce through
+                      "pierce": 2,
+                      // Range of the staff, in half blocks
+                      "range": 10,
+                      // Durability of the staff. Defaults to tier's * 0.7
+                      "durability": 512,
+                      // Amount of ticks to wait for between each shots
+                      "cooldown": 20,
+                      // Amount of ticks of casting to shoot. Defaults to default_charge_time above
+                      "charge_time": 1,
+                      // Amount of xp points needed to shoot. Defaults to default_xp_cost above
+                      "xp_cost": 0,
+                      // Whether the staff is resistant to fire like Netherite items. Defaults to false
+                      "fire_res": true,
+                      // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft
+                      "dependency": "nah"
                     }
                   },
                   // Actual staffs

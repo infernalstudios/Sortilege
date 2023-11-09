@@ -158,7 +158,6 @@ public class ModJsonConfigs {
                 result.append("\n").append(line);
         }
 
-        Sortilege.log(result);
         return result.toString();
     }
 
@@ -195,8 +194,9 @@ public class ModJsonConfigs {
                   // Limits how many enchantments can be added to an item. Set it to -1 to disable the limiter, 
                   //    and to 0 to disable enchanting as a whole
                   "default": 3,
-                  // Either "relative" or "absolute". If relative, the overrides defined below will be summed with the default limit.
-                  //    If absolute, they'll replace it
+                  // Overide modes include "relative" and "absolute".
+                  //    If set to "relative", the overrides defined below will be added onto the default limit.
+                  //    If set to "absolute", they'll replace the default limits.
                   "override_mode": "relative",
                   // Overrides to the amount of enchantments an item can have. Must be of the form "itemid": value
                   "overrides": {
@@ -211,7 +211,7 @@ public class ModJsonConfigs {
                     "minecraft:golden_boots": 2,
                     "sortilege:golden_staff": 2
                   },
-                  // Should an item's maximum enchantments be displayed even when it is unenchanted
+                  // Should an item's maximum enchantments be displayed even when it is not enchanted
                   "always_show_limit": true,
                   // Should Limitite spawn in rare structures' chests
                   "generate_limitite_loot": true

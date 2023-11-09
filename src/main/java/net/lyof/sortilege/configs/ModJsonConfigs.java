@@ -133,7 +133,7 @@ public class ModJsonConfigs {
         catch (IOException e) {
             e.printStackTrace();
         }
-        CONFIG = new Gson().fromJson(configContent, Map.class);
+        CONFIG = new Gson().fromJson(parseJson(configContent), Map.class);
         ConfigEntries.reload();
 
         if (!force && (RELOAD.get() || VERSION.get() < getVersion())) {
@@ -148,6 +148,18 @@ public class ModJsonConfigs {
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
         STAFFS = result;
+    }
+
+    public static String parseJson(String text) {
+        StringBuilder result = new StringBuilder();
+
+        for (String line : text.split("\n")) {
+            if (!line.strip().startsWith("//"))
+                result.append("\n").append(line);
+        }
+
+        Sortilege.log(result);
+        return result.toString();
     }
 
     public static double getVersion() {
@@ -167,122 +179,175 @@ public class ModJsonConfigs {
 
 
     public static final String DEFAULT_CONFIG = """
-    {
-      "TECHNICAL": {
-        "VERSION_DO_NOT_EDIT": 1.3,
-        "FORCE_RESET": false
-      },
-      
-      "enchantments": {
-        "enchant_limiter": {
-          "default": 3,
-          "override_mode": "relative",
-          "overrides": {
-            "minecraft:golden_shovel": 2,
-            "minecraft:golden_pickaxe": 2,
-            "minecraft:golden_axe": 2,
-            "minecraft:golden_hoe": 2,
-            "minecraft:golden_sword": 2,
-            "minecraft:golden_helmet": 2,
-            "minecraft:golden_chestplate": 2,
-            "minecraft:golden_leggings": 2,
-            "minecraft:golden_boots": 2,
-            "sortilege:golden_staff": 2
-          },
-          "always_show_limit": true,
-          "generate_limitite_loot": true
-        },
-        "magic_protection_protection_compatibility": false
-      },
-      
-      "experience": {
-        "witch_hat": {
-          "drop_chance": 0.1,
-          "xp_bonus": 3
-        },
-        "increased_enchant_costs": true,
-        "costs": [5, 15, 30],
-        "level_cap": 100,
-        "linear_xp_requirement": 50,
-        "xp_bounty": {
-          "tag_is_whitelist": false,
-          "value": 20,
-          "chance": 0.05
-        }
-      },
-      
-      "death": {
-        "xp_keeping": {
-          "enable": true,
-          "allow_stealing_from_players": true,
-          "self_ratio": 0.3,
-          "attacker_ratio": 0.6,
-          "drop_ratio": 0.1
-        },
-        "show_coordinates_on_death": true
-      },
-      
-      "staffs": {
-        "use_hd_particles": false,
-        "default_xp_cost": 0,
-        "default_charge_time": 1,
-        "entries": [
-          {
-            "wooden_staff": {
-              "tier": "WOOD",
-              "damage": 3,
-              "pierce": 1,
-              "range": 6,
-              "cooldown": 15
-            }
-          },
-          {
-            "stone_staff": {
-              "tier": "STONE",
-              "damage": 4,
-              "pierce": 1,
-              "range": 8,
-              "cooldown": 20
-            }
-          },
-          {
-            "iron_staff": {
-              "tier": "IRON",
-              "damage": 5,
-              "pierce": 1,
-              "range": 10,
-              "cooldown": 15
-            }
-          },
-          {
-            "golden_staff": {
-              "tier": "GOLD",
-              "damage": 3,
-              "pierce": 2,
-              "range": 14,
-              "cooldown": 10
-            }
-          },
-          {
-            "diamond_staff": {
-              "tier": "DIAMOND",
-              "damage": 5,
-              "pierce": 2,
-              "range": 12,
-              "cooldown": 15
-            }
-          },
-          {
-            "netherite_staff": {
-              "tier": "NETHERITE",
-              "damage": 6,
-              "pierce": 3,
-              "range": 16,
-              "fire_resistant": true,
-              "cooldown": 20
-            }
-          }
-        ]
-      }
-    }""";
+            {
+              "TECHNICAL": {
+                "VERSION_DO_NOT_EDIT": 1.3,
+                "FORCE_RESET": false
+              },
+              
+              // This config file uses a custom defined parser. That's why there are comments here, they wouldn't be valid in any other .json file.
+              //    To add a comment yourself, just start a line with // like I did here
+              //    (although their main use is explaining you what the entries do)
+              
+              // CATEGORY: ENCHANTING
+              "enchantments": {
+                "enchant_limiter": {
+                  // Limits how many enchantments can be added to an item. Set it to -1 to disable the limiter, 
+                  //    and to 0 to disable enchanting as a whole
+                  "default": 3,
+                  // Either "relative" or "absolute". If relative, the overrides defined below will be summed with the default limit.
+                  //    If absolute, they'll replace it
+                  "override_mode": "relative",
+                  // Overrides to the amount of enchantments an item can have. Must be of the form "itemid": value
+                  "overrides": {
+                    "minecraft:golden_shovel": 2,
+                    "minecraft:golden_pickaxe": 2,
+                    "minecraft:golden_axe": 2,
+                    "minecraft:golden_hoe": 2,
+                    "minecraft:golden_sword": 2,
+                    "minecraft:golden_helmet": 2,
+                    "minecraft:golden_chestplate": 2,
+                    "minecraft:golden_leggings": 2,
+                    "minecraft:golden_boots": 2,
+                    "sortilege:golden_staff": 2
+                  },
+                  // Should an item's maximum enchantments be displayed even when it is unenchanted
+                  "always_show_limit": true,
+                  // Should Limitite spawn in rare structures' chests
+                  "generate_limitite_loot": true
+                },
+                // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments
+                "magic_protection_protection_compatibility": false
+              },
+              
+              // CATEGORY: EXPERIENCE
+              "experience": {
+                "witch_hat": {
+                  // Chance for the Witch Hat to drop when killing a Witch. Set to 0 to disable the drop
+                  "drop_chance": 0.1,
+                  // How many extra experience points should drop when killing a monster with the Witch Hat equipped
+                  "xp_bonus": 3
+                },
+                // Should enchanting in an enchanting table cost more xp than the default 1 2 3 levels
+                "increased_enchant_costs": true,
+                // If the above is true, defines the new costs to replace 1 2 3
+                "costs": [5, 15, 30],
+                // Maximum experience level a player can have before it can't increase anymore. Set to -1 to disable the limit,
+                //    and to 0 to disable experience
+                "level_cap": 100,
+                // How much xp points are needed to level up, in place of the exponential formula vanilla has.
+                //    Set to 0 or lower to use vanilla's formula
+                "linear_xp_requirement": 50,
+                // Should monsters have a chance to give a bunch of extra experience points when killed
+                "xp_bounty": {
+                  // Should the sortilege:bounties tag act as a whitelist instead of a blacklist. It defines which mobs can drop bounties
+                  "tag_is_whitelist": false,
+                  // Amount of xp points bounties drop
+                  "value": 20,
+                  // Chance for a bounty to happen
+                  "chance": 0.05
+                }
+              },
+              
+              // CATEGORY: DEATH
+              "death": {
+                // Enable a balanced keepInventory only for experience
+                "xp_keeping": {
+                  "enable": true,
+                  // Should players killed by players drop their xp or give it to their assassin directly
+                  "allow_stealing_from_players": true,
+                  // Ratio of xp kept on death
+                  "self_ratio": 0.3,
+                  // Ratio of xp stolen by the attacker, and dropped back when it's killed
+                  "attacker_ratio": 0.6,
+                  // Ratio of xp dropped on the ground on death
+                  "drop_ratio": 0.1
+                },
+                // Display death coordinates instead of the score from vanilla on the death screen
+                "show_coordinates_on_death": true
+              },
+              
+              // CATEGORY: STAFFS
+              "staffs": {
+                // Use high resolution particles instead of the default pixelated ones
+                "use_hd_particles": false,
+                // Amount of xp points needed to use a staff, if not set
+                "default_xp_cost": 0,
+                // Time staffs need to be held down (in ticks) before shooting, if not set
+                "default_charge_time": 1,
+                "entries": [
+                  {
+                    // Example entry, not loaded in game as it's only for demonstration purposes
+                    "example_staff": {
+                      "tier": "GOLD",      // Sets the repair material and the durability if not set
+                      "damage": 5,         // Half hearts of damage the staff deals
+                      "pierce": 2,         // Maximal number of targets the staff can pierce through
+                      "range": 10,         // Range of the staff, in half blocks
+                      "durability": 512,   // Durability of the staff. Defaults to tier's * 0.7
+                      "cooldown": 20,      // Amount of ticks to wait for between each shots
+                      "charge_time": 1,    // Amount of ticks of casting to shoot. Defaults to default_charge_time above
+                      "xp_cost": 0,        // Amount of xp points needed to shoot. Defaults to default_xp_cost above
+                      "fire_res": true,    // Whether the staff is resistant to fire like Netherite items. Defaults to false
+                      "dependency": "nah"  // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft
+                    }
+                  },
+                  // Actual staffs
+                  {
+                    "wooden_staff": {
+                      "tier": "WOOD",
+                      "damage": 3,
+                      "pierce": 1,
+                      "range": 6,
+                      "cooldown": 15
+                    }
+                  },
+                  {
+                    "stone_staff": {
+                      "tier": "STONE",
+                      "damage": 4,
+                      "pierce": 1,
+                      "range": 8,
+                      "cooldown": 20
+                    }
+                  },
+                  {
+                    "iron_staff": {
+                      "tier": "IRON",
+                      "damage": 5,
+                      "pierce": 1,
+                      "range": 10,
+                      "cooldown": 15
+                    }
+                  },
+                  {
+                    "golden_staff": {
+                      "tier": "GOLD",
+                      "damage": 3,
+                      "pierce": 2,
+                      "range": 14,
+                      "cooldown": 10
+                    }
+                  },
+                  {
+                    "diamond_staff": {
+                      "tier": "DIAMOND",
+                      "damage": 5,
+                      "pierce": 2,
+                      "range": 12,
+                      "cooldown": 15
+                    }
+                  },
+                  {
+                    "netherite_staff": {
+                      "tier": "NETHERITE",
+                      "damage": 6,
+                      "pierce": 3,
+                      "range": 16,
+                      "fire_resistant": true,
+                      "cooldown": 20
+                    }
+                  }
+                ]
+              }
+            }""";
 }

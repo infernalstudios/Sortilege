@@ -45,11 +45,11 @@ public class ModEvents {
             event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.WitchHatBonus);
 
         if (Math.random() < ConfigEntries.BountyChance && event.getEntity() instanceof Monster monster
-                && monster.getLevel() instanceof ServerLevel server) {
-            if ((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
-                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES))) {
+                && ((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
+                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)))) {
 
-                //XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
+            //XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
+            if (monster.getLevel() instanceof ServerLevel server) {
                 ModParticles.spawnWisps(server, monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
                         8, new Triple<>(0.5f, 1f, 0.2f));
                 ExperienceOrb.award(server, monster.position(), ConfigEntries.BountyValue);

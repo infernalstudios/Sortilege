@@ -198,7 +198,7 @@ public class ModJsonConfigs {
                   //    If set to "relative", the overrides defined below will be added onto the default limit.
                   //    If set to "absolute", they'll replace the default limits.
                   "override_mode": "relative",
-                  // Overrides to the amount of enchantments an item can have. Must be of the form "itemid": value
+                  // Overrides to the amount of enchantments an item can have. Must be of the form "modid:itemid": value
                   "overrides": {
                     "minecraft:golden_shovel": 2,
                     "minecraft:golden_pickaxe": 2,

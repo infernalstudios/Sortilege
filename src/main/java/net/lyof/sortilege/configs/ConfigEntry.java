@@ -37,14 +37,12 @@ public class ConfigEntry<T> {
                 if (Objects.equals(step, this.path.get(this.path.size() - 1)))
                     result = next.get(step);
                 else {
-                    if (!this.path.contains("overrides"))
-                        Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
+                    Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
                     return fallback;
                 }
             }
             if (next == null) {
-                if (!this.path.contains("overrides"))
-                    Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
+                Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
                 return fallback;
             }
         }
@@ -62,8 +60,7 @@ public class ConfigEntry<T> {
         if (fallback instanceof List)
             return (T) result;
 
-        if (!this.path.contains("overrides"))
-            Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
+        Sortilege.log("Couldn't find config value for path : \"" + this.path + "\", defaulting to " + fallback);
         return fallback;
     }
 }

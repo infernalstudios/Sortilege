@@ -1,6 +1,7 @@
 package net.lyof.sortilege.configs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -8,6 +9,8 @@ public class ConfigEntries {
     public static void reload() {
         enchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
         enchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
+        enchantLimiterOverrides = new ConfigEntry<Map<String, Double>>( "enchantments.enchant_limiter.overrides", new HashMap<>()).get();
+
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
         doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
 
@@ -44,6 +47,7 @@ public class ConfigEntries {
 
     public static int enchantLimiterDefault;
     public static String enchantLimiterMode;
+    public static Map<String, Double> enchantLimiterOverrides;
     public static boolean alwaysShowEnchantLimit;
     public static boolean doLimititeSpawn;
 

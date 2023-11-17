@@ -57,7 +57,8 @@ public class ItemHelper {
         int default_limit = ConfigEntries.enchantLimiterDefault;
         boolean sum = ConfigEntries.enchantLimiterMode.equals("relative");
 
-        int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
+        int limit = ConfigEntries.enchantLimiterOverrides.getOrDefault(id, sum ? 0.0 : -1.0).intValue();
+        //int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
         if (sum)  limit += default_limit;
         
         if (limit == -1)

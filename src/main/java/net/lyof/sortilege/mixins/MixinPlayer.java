@@ -25,8 +25,8 @@ public abstract class MixinPlayer {
      */
     @Overwrite
     public void onEnchantmentPerformed(ItemStack itemstack, int levelcost) {
-        if (ConfigEntries.DoIncreasedEnchantCosts && ConfigEntries.IncreasedEnchantCosts.size() == 3)
-            levelcost = (int) Math.round(ConfigEntries.IncreasedEnchantCosts.get(levelcost - 1));
+        if (ConfigEntries.doIncreasedEnchantCosts && ConfigEntries.increasedEnchantCosts.size() == 3)
+            levelcost = (int) Math.round(ConfigEntries.increasedEnchantCosts.get(levelcost - 1));
 
         this.giveExperienceLevels(-levelcost);
         if (this.experienceLevel < 0) {

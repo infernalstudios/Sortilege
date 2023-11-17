@@ -124,29 +124,4 @@ public class AntidotePotionItem extends PotionItem {
         }
         return -1;
     }
-/*
-    @Override
-    public boolean overrideOtherStackedOnMe(ItemStack self, ItemStack other, Slot slot, ClickAction action, Player player, SlotAccess access) {
-        if (!(self.getItem() instanceof AntidotePotionItem && other.getItem() instanceof AntidotePotionItem))
-            return false;
-        if (PotionUtils.getPotion(self) == Potions.EMPTY || PotionUtils.getPotion(other) == Potions.EMPTY)
-            return false;
-
-        MobEffect selfeffect = PotionUtils.getPotion(self).getEffects().get(0).getEffect();
-        MobEffect othereffect = PotionUtils.getPotion(other).getEffects().get(0).getEffect();
-        return (boolean) Sortilege.log(selfeffect == othereffect);
-    }
-/*
-    @Override
-    public boolean overrideStackedOnOther(ItemStack itemstack, Slot slot, ClickAction action, Player player) {
-        if (!(itemstack.getItem() instanceof AntidotePotionItem && slot.getItem().getItem() instanceof AntidotePotionItem))
-            return false;
-        if (PotionUtils.getPotion(itemstack) == Potions.EMPTY || PotionUtils.getPotion(slot.getItem()) == Potions.EMPTY)
-            return false;
-
-        MobEffect selfeffect = PotionUtils.getPotion(itemstack).getEffects().get(0).getEffect();
-        MobEffect othereffect = PotionUtils.getPotion(slot.getItem()).getEffects().get(0).getEffect();
-        Sortilege.log(selfeffect == othereffect);
-        return selfeffect == othereffect;
-    }*/
 }

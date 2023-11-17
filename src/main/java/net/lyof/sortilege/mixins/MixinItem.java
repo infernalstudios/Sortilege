@@ -24,7 +24,7 @@ public class MixinItem {
         int a = EnchantmentHelper.getEnchantments(itemstack).size();
         int m = ItemHelper.getMaxEnchantValue(itemstack);
 
-        if ((a > 0 || ItemHelper.getExtraEnchants(itemstack) > 0 || ConfigEntries.AlwaysShowEnchantLimit) &&
+        if ((a > 0 || ItemHelper.getExtraEnchants(itemstack) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&
                 m > 0 && itemstack.getEnchantmentValue() > 0 && !itemstack.is(Items.ENCHANTED_BOOK))
 
             list.add(Component.literal(a + "/" + m).append(" ")

@@ -21,7 +21,7 @@ public class MagicProtectionEnchantment extends Enchantment {
 
     @Override
     protected boolean checkCompatibility(Enchantment other) {
-        return (!(other instanceof ProtectionEnchantment) || ConfigEntries.MagicProtCompatibility) && super.checkCompatibility(other);
+        return (!(other instanceof ProtectionEnchantment) || ConfigEntries.magicProtCompatibility) && super.checkCompatibility(other);
     }
 
     @Override

@@ -54,8 +54,8 @@ public class ItemHelper {
     public static int getMaxEnchantValue(ItemStack stack) {
         String id = Registry.ITEM.getKey(stack.getItem()).toString();
 
-        int default_limit = ConfigEntries.EnchantLimiterDefault;
-        boolean sum = ConfigEntries.EnchantLimiterMode.equals("relative");
+        int default_limit = ConfigEntries.enchantLimiterDefault;
+        boolean sum = ConfigEntries.enchantLimiterMode.equals("relative");
 
         int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
         if (sum)  limit += default_limit;
@@ -66,7 +66,7 @@ public class ItemHelper {
     }
 
     public static int getExtraEnchants(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(ENCHLIMIT_NBT);
+        return stack.hasTag() ? stack.getOrCreateTag().getInt(ENCHLIMIT_NBT) : 0;
     }
 
     public static ItemStack addExtraEnchant(ItemStack stack) {

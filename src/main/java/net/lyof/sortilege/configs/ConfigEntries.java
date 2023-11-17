@@ -6,70 +6,74 @@ import java.util.Map;
 
 public class ConfigEntries {
     public static void reload() {
-        EnchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
-        EnchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
-        AlwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
-        DoLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
+        enchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
+        enchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
+        alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
+        doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
 
-        MagicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
+        magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
 
-        WitchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
-        WitchHatBonus = new ConfigEntry<>("experience.witch_hat.xp_bonus", 3).get();
+        witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
+        witchHatBonus = new ConfigEntry<>("experience.witch_hat.xp_bonus", 3).get();
 
-        DoIncreasedEnchantCosts = new ConfigEntry<>("experience.increased_enchant_costs", true).get();
-        IncreasedEnchantCosts = new ConfigEntry<>("experience.costs", List.of(5d, 15d, 30d)).get();
+        doIncreasedEnchantCosts = new ConfigEntry<>("experience.increased_enchant_costs", true).get();
+        increasedEnchantCosts = new ConfigEntry<>("experience.costs", List.of(5d, 15d, 30d)).get();
         xpLevelCap = new ConfigEntry<>("experience.level_cap", 100).get();
         xpLinearCost = new ConfigEntry<>("experience.linear_xp_requirement", 40).get();
 
-        BountyWhitelist = new ConfigEntry<>("experience.xp_bounty.tag_is_whitelist", false).get();
-        BountyValue = new ConfigEntry<>("experience.xp_bounty.value", 20).get();
-        BountyChance = new ConfigEntry<>("experience.xp_bounty.chance", 0.05).get();
+        bountyWhitelist = new ConfigEntry<>("experience.xp_bounty.tag_is_whitelist", false).get();
+        bountyValue = new ConfigEntry<>("experience.xp_bounty.value", 20).get();
+        bountyChance = new ConfigEntry<>("experience.xp_bounty.chance", 0.05).get();
 
-        DoXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
-        StealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();
-        SelfXPRatio = new ConfigEntry<>("death.xp_keeping.self_ratio", 0.3).get();
-        AttackerXPRatio = new ConfigEntry<>("death.xp_keeping.attacker_ratio", 0.6).get();
-        DropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
+        doXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
+        stealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();
+        selfXPRatio = new ConfigEntry<>("death.xp_keeping.self_ratio", 0.3).get();
+        attackerXPRatio = new ConfigEntry<>("death.xp_keeping.attacker_ratio", 0.6).get();
+        dropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
 
-        ShowDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
+        showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
-        StaffsHdParticles = new ConfigEntry<>("staffs.use_hd_particles", false).get();
-        StaffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
-        StaffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
+        antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
 
-        StaffEntries = new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList()).get();
+        staffsHdParticles = new ConfigEntry<>("staffs.use_hd_particles", false).get();
+        staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
+        staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
+
+        staffEntries = new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList()).get();
     }
 
-    public static int EnchantLimiterDefault;
-    public static String EnchantLimiterMode;
-    public static boolean AlwaysShowEnchantLimit;
-    public static boolean DoLimititeSpawn;
+    public static int enchantLimiterDefault;
+    public static String enchantLimiterMode;
+    public static boolean alwaysShowEnchantLimit;
+    public static boolean doLimititeSpawn;
 
-    public static boolean MagicProtCompatibility;
+    public static boolean magicProtCompatibility;
 
-    public static double WitchHatDropChance;
-    public static int WitchHatBonus;
+    public static double witchHatDropChance;
+    public static int witchHatBonus;
 
-    public static boolean DoIncreasedEnchantCosts;
-    public static List<Double> IncreasedEnchantCosts;
+    public static boolean doIncreasedEnchantCosts;
+    public static List<Double> increasedEnchantCosts;
     public static int xpLevelCap;
     public static int xpLinearCost;
 
-    public static boolean BountyWhitelist;
-    public static int BountyValue;
-    public static double BountyChance;
+    public static boolean bountyWhitelist;
+    public static int bountyValue;
+    public static double bountyChance;
 
-    public static boolean DoXPKeep;
-    public static boolean StealFromPlayers;
-    public static double SelfXPRatio;
-    public static double AttackerXPRatio;
-    public static double DropXPRatio;
+    public static boolean doXPKeep;
+    public static boolean stealFromPlayers;
+    public static double selfXPRatio;
+    public static double attackerXPRatio;
+    public static double dropXPRatio;
 
-    public static boolean ShowDeathCoordinates;
+    public static boolean showDeathCoordinates;
 
-    public static boolean StaffsHdParticles;
-    public static int StaffsDefaultCost;
-    public static int StaffsDefaultCharge;
+    public static List<String> antidoteBlacklist;
 
-    public static List<Map<String, Map<String, ?>>> StaffEntries;
+    public static boolean staffsHdParticles;
+    public static int staffsDefaultCost;
+    public static int staffsDefaultCharge;
+
+    public static List<Map<String, Map<String, ?>>> staffEntries;
 }

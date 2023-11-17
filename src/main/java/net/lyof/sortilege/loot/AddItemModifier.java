@@ -34,7 +34,7 @@ public class AddItemModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        if (ConfigEntries.DoLimititeSpawn && context.getRandom().nextFloat() <= this.chance)
+        if (ConfigEntries.doLimititeSpawn && context.getRandom().nextFloat() <= this.chance)
             generatedLoot.add(new ItemStack(this.item));
         return generatedLoot;
     }

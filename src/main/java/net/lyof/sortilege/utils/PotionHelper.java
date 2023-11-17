@@ -1,5 +1,6 @@
 package net.lyof.sortilege.utils;
 
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.minecraft.core.Registry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.item.alchemy.Potion;
@@ -7,6 +8,7 @@ import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PotionHelper {
     public static final Map<MobEffect, Potion> POTIONS = new HashMap<>();
@@ -16,7 +18,9 @@ public class PotionHelper {
             if (potion != Potions.EMPTY &&
                     potion.getEffects().size() == 1 &&
                     !potion.hasInstantEffects() &&
-                    potion.getEffects().get(0).getAmplifier() == 0) {
+                    potion.getEffects().get(0).getAmplifier() == 0 &&
+                    !ConfigEntries.antidoteBlacklist.contains(
+                            Objects.requireNonNull(Registry.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect())).toString())) {
 
                 MobEffect effect = potion.getEffects().get(0).getEffect();
                 int duration = potion.getEffects().get(0).getDuration();

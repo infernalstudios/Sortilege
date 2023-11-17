@@ -16,7 +16,7 @@ public class MixinDeathScreen {
 
     @Inject(method = "init", at = @At("TAIL"))
     public void replaceDeathScore(CallbackInfo ci) {
-        if (ConfigEntries.ShowDeathCoordinates) {
+        if (ConfigEntries.showDeathCoordinates) {
             DeathScreen self = (DeathScreen) (Object) this;
             this.deathScore = Component.translatable("sortilege.death_screen.position")
                     .append(Component.literal(" " + self.getMinecraft().player.blockPosition().toShortString())

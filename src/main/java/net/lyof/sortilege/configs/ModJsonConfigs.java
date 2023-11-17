@@ -46,8 +46,8 @@ public class ModJsonConfigs {
                     dict.containsKey("range") ? (int) Math.round((double) dict.get("range")) : 8,
                     dict.containsKey("durability") ? (int) Math.round((double) dict.get("durability")) : -1,
                     dict.containsKey("cooldown") ? (int) Math.round((double) dict.get("cooldown")) : 15,
-                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : ConfigEntries.StaffsDefaultCharge,
-                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : ConfigEntries.StaffsDefaultCost,
+                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : ConfigEntries.staffsDefaultCharge,
+                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : ConfigEntries.staffsDefaultCost,
                     dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
                     dict.containsKey("dependency") ? String.valueOf(dict.get("dependency")) : "minecraft"
             );
@@ -143,7 +143,7 @@ public class ModJsonConfigs {
 
 
         List<Pair<String, StaffInfo>> result = new ArrayList<>();
-        for (Map<String, Map<String, ?>> staff : ConfigEntries.StaffEntries) {
+        for (Map<String, Map<String, ?>> staff : ConfigEntries.staffEntries) {
             String id = String.valueOf(List.of(staff.keySet().toArray()).get(0));
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
@@ -265,6 +265,14 @@ public class ModJsonConfigs {
                 },
                 // Display death coordinates instead of the score from vanilla on the death screen
                 "show_coordinates_on_death": true
+              },
+              
+              // CATEGORY: BREWING
+              "brewing": {
+                // A list of potion effects for which Antidotes don't get registered
+                "antidote_blacklist": [
+                  "minecraft:speed"
+                ]
               },
               
               // CATEGORY: STAFFS

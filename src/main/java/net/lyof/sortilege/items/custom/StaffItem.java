@@ -5,7 +5,6 @@ import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.particles.ModParticles;
-import net.lyof.sortilege.particles.custom.WispParticle;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.ChatFormatting;
@@ -166,7 +165,7 @@ public class StaffItem extends TieredItem {
         List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
         if (staff.isEnchanted())
             colors.add(new Triple<>(0.7f, 0f, 1f));
-        ParticleOptions particle = ConfigEntries.StaffsHdParticles ? ModParticles.WISP.get() : ModParticles.WISP_PIXEL.get();
+        ParticleOptions particle = ConfigEntries.staffsHdParticles ? ModParticles.WISP.get() : ModParticles.WISP_PIXEL.get();
 
 
         int step = 5;

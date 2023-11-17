@@ -8,7 +8,6 @@ import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
@@ -34,7 +33,7 @@ import java.util.Objects;
 public class ModEvents {
     @SubscribeEvent
     public static void xpBoost(LivingExperienceDropEvent event) {
-        if (event.getEntity() instanceof Player && ConfigEntries.DoXPKeep) {
+        if (event.getEntity() instanceof Player && ConfigEntries.doXPKeep) {
             event.setDroppedExperience(0);
             return;
         }
@@ -42,32 +41,32 @@ public class ModEvents {
         if (event.getAttackingPlayer() == null)
             return;
         if (event.getAttackingPlayer().getItemBySlot(EquipmentSlot.HEAD).getItem() == ModItems.WITCH_HAT.get())
-            event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.WitchHatBonus);
+            event.setDroppedExperience(event.getDroppedExperience() + ConfigEntries.witchHatBonus);
 
-        if (Math.random() < ConfigEntries.BountyChance && event.getEntity() instanceof Monster monster
-                && ((ConfigEntries.BountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
-                    || (!ConfigEntries.BountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)))) {
+        if (Math.random() < ConfigEntries.bountyChance && event.getEntity() instanceof Monster monster
+                && ((ConfigEntries.bountyWhitelist && monster.getType().is(ModTags.Entities.BOUNTIES))
+                    || (!ConfigEntries.bountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)))) {
 
             //XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
             if (monster.getLevel() instanceof ServerLevel server) {
                 ModParticles.spawnWisps(server, monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
                         8, new Triple<>(0.5f, 1f, 0.2f));
-                ExperienceOrb.award(server, monster.position(), ConfigEntries.BountyValue);
+                ExperienceOrb.award(server, monster.position(), ConfigEntries.bountyValue);
             }
         }
     }
 
     @SubscribeEvent
     public static void xpSave(LivingDeathEvent event) {
-        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.DoXPKeep)
+        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.doXPKeep)
             return;
 
         // Player got killed
         if (event.getEntity() instanceof Player player) {
             // Split the xp
-            int safe_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.SelfXPRatio);
-            int steal_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.AttackerXPRatio);
-            int drop_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.DropXPRatio);
+            int safe_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.selfXPRatio);
+            int steal_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.attackerXPRatio);
+            int drop_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.dropXPRatio);
 
             // Save a part for respawn
             if (XPHelper.XP_SAVES.containsKey(player.getStringUUID()))
@@ -84,7 +83,7 @@ public class ModEvents {
 
             // If killed by player: add steal to drop or give to attacker
             else if (event.getSource().getEntity() instanceof Player attacker) {
-                if (!ConfigEntries.StealFromPlayers) {
+                if (!ConfigEntries.stealFromPlayers) {
                     drop_xp += steal_xp;
                     steal_xp = 0;
                 }
@@ -127,7 +126,7 @@ public class ModEvents {
     public static void xpRefill(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getEntity();
 
-        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.DoXPKeep)
+        if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.doXPKeep)
             return;
 
         player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));
@@ -150,7 +149,7 @@ public class ModEvents {
         if (world.isClientSide) return;
 
         if (Objects.equals(event.getEntity().getEncodeId(), "minecraft:witch")) {
-            if (Math.random() < ConfigEntries.WitchHatDropChance) {
+            if (Math.random() < ConfigEntries.witchHatDropChance) {
                 ItemStack hat = new ItemStack(ModItems.WITCH_HAT.get());
                 hat.setDamageValue((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);
                 event.getEntity().level.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), hat));

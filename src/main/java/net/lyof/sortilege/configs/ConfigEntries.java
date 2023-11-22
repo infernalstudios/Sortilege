@@ -38,7 +38,6 @@ public class ConfigEntries {
 
         antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
 
-        staffsHdParticles = new ConfigEntry<>("staffs.use_hd_particles", false).get();
         staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
         staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
 
@@ -75,7 +74,6 @@ public class ConfigEntries {
 
     public static List<String> antidoteBlacklist;
 
-    public static boolean staffsHdParticles;
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;
 

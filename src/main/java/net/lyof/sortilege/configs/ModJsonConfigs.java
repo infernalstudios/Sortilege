@@ -180,7 +180,7 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 1.3,
+                "VERSION_DO_NOT_EDIT": 1.31,
                 "FORCE_RESET": false
               },
               
@@ -277,8 +277,6 @@ public class ModJsonConfigs {
               
               // CATEGORY: STAFFS
               "staffs": {
-                // Use high resolution particles instead of the default pixelated ones
-                "use_hd_particles": false,
                 // Amount of xp points needed to use a staff, if not set
                 "default_xp_cost": 0,
                 // Time staffs need to be held down (in ticks) before shooting, if not set

@@ -30,8 +30,6 @@ public class ModParticles {
     }
 
 
-    //public static final RegistryObject<SimpleParticleType> WISP = PARTICLES_TYPES.register("wisp",
-    //        () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> WISP_PIXEL = PARTICLES_TYPES.register("wisp_pixel",
             () -> new SimpleParticleType(true));
 }

@@ -15,10 +15,10 @@ import org.antlr.v4.runtime.misc.Triple;
 
 public class ModParticles {
     public static void spawnWisps(ServerLevel world, double x, double y, double z, int amount, Triple<Float, Float, Float> color) {
-        ParticleOptions particle = ConfigEntries.staffsHdParticles ? WISP.get() : WISP_PIXEL.get();
+        //ParticleOptions particle = ConfigEntries.staffsHdParticles ? WISP.get() : WISP_PIXEL.get();
         double spread = amount > 1 ? 0.4 : 0;
         WispParticle.COLOR = color;
-        world.sendParticles(particle, x, y, z, amount, spread, spread, spread, 0);
+        world.sendParticles(WISP_PIXEL.get(), x, y, z, amount, spread, spread, spread, 0);
     }
 
 
@@ -30,8 +30,8 @@ public class ModParticles {
     }
 
 
-    public static final RegistryObject<SimpleParticleType> WISP = PARTICLES_TYPES.register("wisp",
-            () -> new SimpleParticleType(true));
+    //public static final RegistryObject<SimpleParticleType> WISP = PARTICLES_TYPES.register("wisp",
+    //        () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> WISP_PIXEL = PARTICLES_TYPES.register("wisp_pixel",
             () -> new SimpleParticleType(true));
 }

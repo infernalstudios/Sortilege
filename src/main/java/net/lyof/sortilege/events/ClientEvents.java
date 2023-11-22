@@ -35,7 +35,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        event.register(ModParticles.WISP.get(), WispParticle::provider);
+        //event.register(ModParticles.WISP.get(), WispParticle::provider);
         event.register(ModParticles.WISP_PIXEL.get(), WispParticle::provider);
     }
 

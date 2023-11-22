@@ -1,6 +1,7 @@
 package net.lyof.sortilege.configs;
 
 import net.lyof.sortilege.Sortilege;
+import net.minecraft.world.inventory.CraftingMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class ConfigEntry<T> {
                 return fallback;
             }
         }
+
 
         if (fallback instanceof Integer)
             return (T) (Integer) Long.valueOf(Math.round(Double.parseDouble(String.valueOf(result)))).intValue();

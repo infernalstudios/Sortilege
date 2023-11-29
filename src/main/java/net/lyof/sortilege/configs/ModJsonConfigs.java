@@ -3,6 +3,7 @@ package net.lyof.sortilege.configs;
 import com.google.gson.Gson;
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import org.apache.commons.io.FileUtils;
@@ -38,23 +39,30 @@ public class ModJsonConfigs {
         public boolean fireRes;
         public String dependency;
 
-        public StaffInfo(Map<String, ?> dict) {
+        public String on_shoot;
+        public String on_hit_self;
+        public String on_hit_target;
+
+        public StaffInfo(Map<String, Object> dict) {
             this(
-                    dict.containsKey("tier") ? (String) dict.get("tier") : "WOOD",
-                    dict.containsKey("damage") ?  (int) Math.round((double) dict.get("damage")) : 2,
-                    dict.containsKey("pierce") ? (int) Math.round((double) dict.get("pierce")) : 1,
-                    dict.containsKey("range") ? (int) Math.round((double) dict.get("range")) : 8,
-                    dict.containsKey("durability") ? (int) Math.round((double) dict.get("durability")) : -1,
-                    dict.containsKey("cooldown") ? (int) Math.round((double) dict.get("cooldown")) : 15,
-                    dict.containsKey("charge_time") ? (int) Math.round((double) dict.get("charge_time")) : ConfigEntries.staffsDefaultCharge,
-                    dict.containsKey("xp_cost") ? (int) Math.round((double) dict.get("xp_cost")) : ConfigEntries.staffsDefaultCost,
+                    (String) dict.getOrDefault("tier", "WOOD"),
+                    MathHelper.toInt(dict.getOrDefault("damage", 2)),
+                    MathHelper.toInt(dict.getOrDefault("pierce", 1)),
+                    MathHelper.toInt(dict.getOrDefault("range", 8)),
+                    MathHelper.toInt(dict.getOrDefault("durability", -1)),
+                    MathHelper.toInt(dict.getOrDefault("cooldown", 15)),
+                    MathHelper.toInt(dict.getOrDefault("charge_time", ConfigEntries.staffsDefaultCharge)),
+                    MathHelper.toInt(dict.getOrDefault("xp_cost", ConfigEntries.staffsDefaultCost)),
                     dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
-                    dict.containsKey("dependency") ? String.valueOf(dict.get("dependency")) : "minecraft"
+                    (String) dict.getOrDefault("dependency", "minecraft"),
+                    (String) dict.getOrDefault("on_shoot", ""),
+                    (String) dict.getOrDefault("on_hit_self", ""),
+                    (String) dict.getOrDefault("on_hit_target", "")
             );
         }
 
         public StaffInfo(String tier, int dmg, int pierce, int range, int dura, int cooldown, int charge_time,
-                         int xp_cost, boolean fire_res, String dependency) {
+                         int xp_cost, boolean fire_res, String dependency, String on_shoot, String on_hit_self, String on_hit_target) {
             try {
                 this.tier = Tiers.valueOf(tier);
             }
@@ -71,6 +79,10 @@ public class ModJsonConfigs {
             this.xp_cost = xp_cost;
             this.fireRes = fire_res;
             this.dependency = dependency;
+
+            this.on_shoot = on_shoot;
+            this.on_hit_self = on_hit_self;
+            this.on_hit_target = on_hit_target;
         }
 
         @Override
@@ -85,7 +97,10 @@ public class ModJsonConfigs {
                     ", charge_time=" + charge_time +
                     ", xp_cost=" + xp_cost +
                     ", fireRes=" + fireRes +
-                    ", dependency=" + dependency +
+                    ", dependency='" + dependency + '\'' +
+                    ", on_shoot='" + on_shoot + '\'' +
+                    ", on_hit_self='" + on_hit_self + '\'' +
+                    ", on_hit_target='" + on_hit_target + '\'' +
                     '}';
         }
     }
@@ -101,7 +116,7 @@ public class ModJsonConfigs {
 
     public static void register(boolean force) {
         String path = System.getProperty("user.dir") + File.separator +
-                "config" + File.separator + Sortilege.MOD_ID + "-common.json";
+                "config" + File.separator + Sortilege.MOD_ID + ".json";
 
         Sortilege.log("Loading Configs for Sortilege");
 
@@ -143,11 +158,12 @@ public class ModJsonConfigs {
 
 
         List<Pair<String, StaffInfo>> result = new ArrayList<>();
-        for (Map<String, Map<String, ?>> staff : ConfigEntries.staffEntries) {
+        for (Map<String, Map<String, Object>> staff : ConfigEntries.staffEntries) {
             String id = String.valueOf(List.of(staff.keySet().toArray()).get(0));
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
         STAFFS = result;
+        Sortilege.log(STAFFS);
     }
 
     public static String parseJson(String text) {
@@ -271,7 +287,6 @@ public class ModJsonConfigs {
               "brewing": {
                 // A list of potion effects for which Antidotes don't get registered
                 "antidote_blacklist": [
-                  "minecraft:speed"
                 ]
               },
               
@@ -304,7 +319,11 @@ public class ModJsonConfigs {
                       // Whether the staff is resistant to fire like Netherite items. Defaults to false
                       "fire_res": true,
                       // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft
-                      "dependency": "nah"
+                      "dependency": "nah",
+                      // Commands to be run when using the staff
+                      "on_shoot": "/give @s minecraft:lapis_lazuli",
+                      "on_hit_self": "/effect give @s minecraft:regeneration",
+                      "on_hit_target": "/tp @s ~ ~2 ~"
                     }
                   },
                   // Actual staffs
@@ -314,7 +333,8 @@ public class ModJsonConfigs {
                       "damage": 3,
                       "pierce": 1,
                       "range": 6,
-                      "cooldown": 15
+                      "cooldown": 15,
+                      "on_shoot": "/give @a minecraft:iron_ingot"
                     }
                   },
                   {

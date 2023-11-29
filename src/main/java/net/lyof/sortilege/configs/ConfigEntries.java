@@ -41,7 +41,7 @@ public class ConfigEntries {
         staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
         staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
 
-        staffEntries = new ConfigEntry<List<Map<String, Map<String, ?>>>>("staffs.entries", new ArrayList()).get();
+        staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("staffs.entries", new ArrayList()).get();
     }
 
     public static int enchantLimiterDefault;
@@ -77,5 +77,5 @@ public class ConfigEntries {
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;
 
-    public static List<Map<String, Map<String, ?>>> staffEntries;
+    public static List<Map<String, Map<String, Object>>> staffEntries;
 }

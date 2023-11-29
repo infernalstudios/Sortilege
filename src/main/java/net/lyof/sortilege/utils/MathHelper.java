@@ -32,4 +32,8 @@ public class MathHelper {
         if (list.size() == 0) return null;
         return list.get(randint(list.size() - 1));
     }
+
+    public static int toInt(Object x) {
+        return (int) Math.round(Double.parseDouble(String.valueOf(x)));
+    }
 }

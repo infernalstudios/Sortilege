@@ -1,5 +1,6 @@
 package net.lyof.sortilege.items.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
@@ -8,6 +9,8 @@ import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
@@ -25,6 +28,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.antlr.v4.runtime.misc.Triple;
 import org.jetbrains.annotations.NotNull;
@@ -158,6 +162,16 @@ public class StaffItem extends TieredItem {
         float z = (float) player.getZ();
         BlockPos pos;
 
+
+        if (world instanceof ServerLevel server && !(this.rawInfos == null)) {
+            server.getServer().getCommands().performPrefixedCommand(
+                    new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
+                            4, "", Component.literal(""), server.getServer(), player)
+                            .withSuppressedOutput(), this.rawInfos.on_shoot);
+            Sortilege.log("attempting to run command " + this.rawInfos.on_shoot);
+        }
+
+
         DamageSource damagetype = DamageSource.indirectMagic(player, player);
         if (element == ModEnchants.BRAZIER.get())
             damagetype.setIsFire();
@@ -195,7 +209,22 @@ public class StaffItem extends TieredItem {
 
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target.getStringUUID())) {
+
                     target.hurt(damagetype, damage);
+                    if (world instanceof ServerLevel server && !(this.rawInfos == null)) {
+                        server.getServer().getCommands().performPrefixedCommand(
+                                new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
+                                        4, "", Component.literal(""), server.getServer(), player)
+                                        .withSuppressedOutput(), this.rawInfos.on_hit_self);
+                        Sortilege.log("attempting to run command " + this.rawInfos.on_hit_self);
+
+                        server.getServer().getCommands().performPrefixedCommand(
+                                new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
+                                        4, "", Component.literal(""), server.getServer(), target)
+                                        .withSuppressedOutput(), this.rawInfos.on_hit_target);
+                        Sortilege.log("attempting to run command " + this.rawInfos.on_hit_target);
+                    }
+
 
                     if (element != null)
                         element.triggerAttack(target, ItemHelper.getEnchantLevel(element, staff));

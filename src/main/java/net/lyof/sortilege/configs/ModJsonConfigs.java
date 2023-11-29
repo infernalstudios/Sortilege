@@ -163,7 +163,6 @@ public class ModJsonConfigs {
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
         STAFFS = result;
-        Sortilege.log(STAFFS);
     }
 
     public static String parseJson(String text) {

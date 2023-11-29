@@ -168,7 +168,6 @@ public class StaffItem extends TieredItem {
                     new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
                             4, "", Component.literal(""), server.getServer(), player)
                             .withSuppressedOutput(), this.rawInfos.on_shoot);
-            Sortilege.log("attempting to run command " + this.rawInfos.on_shoot);
         }
 
 
@@ -216,13 +215,11 @@ public class StaffItem extends TieredItem {
                                 new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
                                         4, "", Component.literal(""), server.getServer(), player)
                                         .withSuppressedOutput(), this.rawInfos.on_hit_self);
-                        Sortilege.log("attempting to run command " + this.rawInfos.on_hit_self);
 
                         server.getServer().getCommands().performPrefixedCommand(
                                 new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
                                         4, "", Component.literal(""), server.getServer(), target)
                                         .withSuppressedOutput(), this.rawInfos.on_hit_target);
-                        Sortilege.log("attempting to run command " + this.rawInfos.on_hit_target);
                     }
 
 

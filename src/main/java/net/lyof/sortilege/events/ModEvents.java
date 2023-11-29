@@ -58,7 +58,8 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void xpSave(LivingDeathEvent event) {
-        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.doXPKeep)
+        if (!(event.getEntity().getLevel() instanceof ServerLevel server) || !ConfigEntries.doXPKeep
+                || event.getEntity().getLevel().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY))
             return;
 
         // Player got killed

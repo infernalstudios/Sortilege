@@ -72,7 +72,10 @@ public class ItemHelper {
 
     public static ItemStack addExtraEnchant(ItemStack stack) {
         CompoundTag tag = stack.getOrCreateTag();
-        tag.putInt(ENCHLIMIT_NBT, tag.getInt(ENCHLIMIT_NBT) + 1);
+        int current = tag.getInt(ENCHLIMIT_NBT);
+
+        if (current < ConfigEntries.maxLimitBreak)
+            tag.putInt(ENCHLIMIT_NBT, current + 1);
         stack.setTag(tag);
         return stack;
     }

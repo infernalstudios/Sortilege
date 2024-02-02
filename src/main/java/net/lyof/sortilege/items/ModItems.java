@@ -2,6 +2,7 @@ package net.lyof.sortilege.items;
 
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.items.custom.LimititeItem;
 import net.lyof.sortilege.items.custom.StaffItem;
@@ -38,7 +39,7 @@ public class ModItems {
 
     // POTIONS
     public static final RegistryObject<Item> ANTIDOTE = ITEMS.register("antidote",
-            () -> new AntidotePotionItem(new Item.Properties().tab(CreativeModeTab.TAB_BREWING).stacksTo(4)));
+            () -> new AntidotePotionItem(new Item.Properties().tab(CreativeModeTab.TAB_BREWING).stacksTo(ConfigEntries.antidoteStackSize)));
 
     // WITCH HAT
     public static final RegistryObject<Item> WITCH_HAT = ITEMS.register("witch_hat",

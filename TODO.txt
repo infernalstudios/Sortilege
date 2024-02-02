@@ -1,5 +1,3 @@
-- antidote stack size configuration
 - Username: SashaKYotoz, Color: Cyan
 - lock recipes behind xp levels (check usb: ResultContainer.stillValid)
-- staff commands on hit
 - staff configurable particles

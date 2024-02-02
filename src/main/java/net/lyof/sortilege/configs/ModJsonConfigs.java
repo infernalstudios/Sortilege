@@ -195,7 +195,7 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 1.31,
+                "VERSION_DO_NOT_EDIT": 1.4,
                 "FORCE_RESET": false
               },
               
@@ -206,7 +206,7 @@ public class ModJsonConfigs {
               // CATEGORY: ENCHANTING
               "enchantments": {
                 "enchant_limiter": {
-                  // Limits how many enchantments can be added to an item. Set it to -1 to disable the limiter, 
+                  // Limits how many enchantments can be added to an item. Set it to -1 to disable the limiter,
                   //    and to 0 to disable enchanting as a whole
                   "default": 3,
                   // Overide modes include "relative" and "absolute".
@@ -229,7 +229,9 @@ public class ModJsonConfigs {
                   // Should an item's maximum enchantments be displayed even when it is not enchanted
                   "always_show_limit": true,
                   // Should Limitite spawn in rare structures' chests
-                  "generate_limitite_loot": true
+                  "generate_limitite_loot": true,
+                  // How many Limitites can be applied to a single item
+                  "max_limit_break": 3
                 },
                 // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments
                 "magic_protection_protection_compatibility": false
@@ -286,7 +288,8 @@ public class ModJsonConfigs {
               "brewing": {
                 // A list of potion effects for which Antidotes don't get registered
                 "antidote_blacklist": [
-                ]
+                ],
+                "antidote_stack_size": 4
               },
               
               // CATEGORY: STAFFS

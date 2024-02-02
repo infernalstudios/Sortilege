@@ -13,6 +13,7 @@ public class ConfigEntries {
 
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
         doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
+        maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.max_limit_break", 3).get();
 
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
 
@@ -37,6 +38,7 @@ public class ConfigEntries {
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
         antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
+        antidoteStackSize = new ConfigEntry<>("brewing.antidote_stack_size", 4).get();
 
         staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
         staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
@@ -49,6 +51,7 @@ public class ConfigEntries {
     public static Map<String, Double> enchantLimiterOverrides;
     public static boolean alwaysShowEnchantLimit;
     public static boolean doLimititeSpawn;
+    public static int maxLimitBreak;
 
     public static boolean magicProtCompatibility;
 
@@ -73,6 +76,7 @@ public class ConfigEntries {
     public static boolean showDeathCoordinates;
 
     public static List<String> antidoteBlacklist;
+    public static int antidoteStackSize;
 
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;

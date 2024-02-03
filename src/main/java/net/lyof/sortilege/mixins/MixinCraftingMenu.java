@@ -2,8 +2,12 @@ package net.lyof.sortilege.mixins;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
@@ -39,8 +43,16 @@ public class MixinCraftingMenu {
                 int level = serverplayer.experienceLevel;
                 Double required = ConfigEntries.xpRequirements.getOrDefault(recipeid, -1.0);
 
-                if (level >= required.intValue() && resultContainer.setRecipeUsed(world, serverplayer, craftingrecipe)) {
-                    itemstack = craftingrecipe.assemble(craftingContainer);
+                if (level >= required.intValue()) {
+                    if (resultContainer.setRecipeUsed(world, serverplayer, craftingrecipe)) {
+                        itemstack = craftingrecipe.assemble(craftingContainer);
+                    }
+                }
+                else {
+                    serverplayer.sendSystemMessage(
+                            Component.translatable("sortilege.requires_level").append(" " + required.intValue() + "!")
+                                    .withStyle(ChatFormatting.YELLOW), true);
+                    world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
                 }
                 //
             }

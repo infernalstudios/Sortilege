@@ -12,8 +12,8 @@ public class ConfigEntries {
         enchantLimiterOverrides = new ConfigEntry<Map<String, Double>>( "enchantments.enchant_limiter.overrides", new HashMap<>()).get();
 
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
-        doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.generate_limitite_loot", true).get();
-        maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.max_limit_break", 3).get();
+        doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.limitite.generate_limitite_loot", true).get();
+        maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.limitite.max_limit_break", 3).get();
 
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
 

@@ -105,9 +105,6 @@ public class StaffItem extends TieredItem {
                     .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.GREEN));
             list.add(Component.literal(""));
         }
-
-        if (this.rawInfos != null)
-            list.add(Component.literal(Arrays.toString(this.rawInfos.repair.getItems())));
     }
 
     @Override

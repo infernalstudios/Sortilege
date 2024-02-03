@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.utils.MathHelper;
+import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
@@ -268,6 +269,12 @@ public class ModJsonConfigs {
                   "value": 20,
                   // Chance for a bounty to happen
                   "chance": 0.05
+                },
+                
+                // Locks certain recipes behind experience levels. Each entry must be of the form "modid:recipeid": minimalxplevel
+                //    The default config locks the crafting of Ender Eyes behind level 30, as an example
+                "xp_requirements": {
+                  "minecraft:ender_eye": 30
                 }
               },
               

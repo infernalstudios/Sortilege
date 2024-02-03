@@ -29,6 +29,8 @@ public class ConfigEntries {
         bountyValue = new ConfigEntry<>("experience.xp_bounty.value", 20).get();
         bountyChance = new ConfigEntry<>("experience.xp_bounty.chance", 0.05).get();
 
+        xpRequirements = new ConfigEntry<Map<String, Double>>( "experience.xp_requirements", new HashMap<>()).get();
+
         doXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
         stealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();
         selfXPRatio = new ConfigEntry<>("death.xp_keeping.self_ratio", 0.3).get();
@@ -66,6 +68,8 @@ public class ConfigEntries {
     public static boolean bountyWhitelist;
     public static int bountyValue;
     public static double bountyChance;
+
+    public static Map<String, Double> xpRequirements;
 
     public static boolean doXPKeep;
     public static boolean stealFromPlayers;

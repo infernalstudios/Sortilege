@@ -12,6 +12,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StaffItem extends TieredItem {
@@ -87,6 +89,13 @@ public class StaffItem extends TieredItem {
     }
 
     @Override
+    public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
+        if (this.rawInfos != null)
+            return this.rawInfos.repair.test(stack);
+        return super.isValidRepairItem(staff, stack);
+    }
+
+    @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
 
@@ -96,6 +105,9 @@ public class StaffItem extends TieredItem {
                     .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.GREEN));
             list.add(Component.literal(""));
         }
+
+        if (this.rawInfos != null)
+            list.add(Component.literal(Arrays.toString(this.rawInfos.repair.getItems())));
     }
 
     @Override

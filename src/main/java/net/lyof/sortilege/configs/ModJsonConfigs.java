@@ -4,18 +4,18 @@ import com.google.gson.Gson;
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.utils.MathHelper;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
@@ -33,6 +33,7 @@ public class ModJsonConfigs {
         public int pierce;
         public int range;
         public int durability;
+        public Ingredient repair;
         public int cooldown;
         public int charge_time;
         public int xp_cost;
@@ -50,6 +51,7 @@ public class ModJsonConfigs {
                     MathHelper.toInt(dict.getOrDefault("pierce", 1)),
                     MathHelper.toInt(dict.getOrDefault("range", 8)),
                     MathHelper.toInt(dict.getOrDefault("durability", -1)),
+                    (String) dict.getOrDefault("repair_item", ""),
                     MathHelper.toInt(dict.getOrDefault("cooldown", 15)),
                     MathHelper.toInt(dict.getOrDefault("charge_time", ConfigEntries.staffsDefaultCharge)),
                     MathHelper.toInt(dict.getOrDefault("xp_cost", ConfigEntries.staffsDefaultCost)),
@@ -61,7 +63,7 @@ public class ModJsonConfigs {
             );
         }
 
-        public StaffInfo(String tier, int dmg, int pierce, int range, int dura, int cooldown, int charge_time,
+        public StaffInfo(String tier, int dmg, int pierce, int range, int dura, String repair,  int cooldown, int charge_time,
                          int xp_cost, boolean fire_res, String dependency, String on_shoot, String on_hit_self, String on_hit_target) {
             try {
                 this.tier = Tiers.valueOf(tier);
@@ -74,6 +76,8 @@ public class ModJsonConfigs {
             this.range = range;
             this.durability = (dura == -1) ?
                 (int) Math.round(this.tier.getUses() * 0.7) : dura;
+            this.repair = (repair.equals("")) ?
+                this.tier.getRepairIngredient() : Ingredient.of(Registry.ITEM.get(new ResourceLocation(repair)));
             this.cooldown = Math.max(cooldown, 0);
             this.charge_time = Math.max(charge_time, 1);
             this.xp_cost = xp_cost;
@@ -93,6 +97,7 @@ public class ModJsonConfigs {
                     ", pierce=" + pierce +
                     ", range=" + range +
                     ", durability=" + durability +
+                    ", repair=" + Arrays.toString(repair.getItems()) +
                     ", cooldown=" + cooldown +
                     ", charge_time=" + charge_time +
                     ", xp_cost=" + xp_cost +
@@ -312,6 +317,8 @@ public class ModJsonConfigs {
                       "range": 10,
                       // Durability of the staff. Defaults to tier's * 0.7
                       "durability": 512,
+                      // Item to be used to repair the staff. Defaults to the tier's
+                      "repair_item": "minecraft:obsidian",
                       // Amount of ticks to wait for between each shots
                       "cooldown": 20,
                       // Amount of ticks of casting to shoot. Defaults to default_charge_time above
@@ -335,8 +342,7 @@ public class ModJsonConfigs {
                       "damage": 3,
                       "pierce": 1,
                       "range": 6,
-                      "cooldown": 15,
-                      "on_shoot": "/give @a minecraft:iron_ingot"
+                      "cooldown": 15
                     }
                   },
                   {

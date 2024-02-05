@@ -23,6 +23,9 @@
     },
     "net/lyof/sortilege/mixins/MixinRecipeManager": {
       "byType": "Lnet/minecraft/world/item/crafting/RecipeManager;m_44054_(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map;"
+    },
+    "net/lyof/sortilege/mixins/MixinCraftingMenu": {
+      "slotChangedCraftingGrid": "Lnet/minecraft/world/inventory/CraftingMenu;m_150546_(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultContainer;)V"
     }
   },
   "data": {
@@ -50,6 +53,9 @@
       },
       "net/lyof/sortilege/mixins/MixinRecipeManager": {
         "byType": "Lnet/minecraft/world/item/crafting/RecipeManager;m_44054_(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map;"
+      },
+      "net/lyof/sortilege/mixins/MixinCraftingMenu": {
+        "slotChangedCraftingGrid": "Lnet/minecraft/world/inventory/CraftingMenu;m_150546_(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultContainer;)V"
       }
     }
   }

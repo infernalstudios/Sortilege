@@ -1,7 +1,6 @@
 package net.lyof.sortilege.configs;
 
 import net.lyof.sortilege.Sortilege;
-import net.minecraft.world.inventory.CraftingMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

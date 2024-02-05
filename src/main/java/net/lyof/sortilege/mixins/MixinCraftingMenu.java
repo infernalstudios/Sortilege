@@ -1,6 +1,5 @@
 package net.lyof.sortilege.mixins;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -19,6 +18,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
@@ -28,9 +30,9 @@ public class MixinCraftingMenu {
      * @author Lyof (Sortilege)
      * @reason Locking recipes behind xp levels
      */
-    @Overwrite
-    protected static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level world, Player player, 
-                                                  CraftingContainer craftingContainer, ResultContainer resultContainer) {
+    @Inject(method = "slotChangedCraftingGrid", at = @At("HEAD"), cancellable = true)
+    private static void slotChangedCraftingGrid(AbstractContainerMenu menu, Level world, Player player,
+                                                  CraftingContainer craftingContainer, ResultContainer resultContainer, CallbackInfo ci) {
         if (!world.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer)player;
             ItemStack itemstack = ItemStack.EMPTY;
@@ -60,6 +62,8 @@ public class MixinCraftingMenu {
             resultContainer.setItem(0, itemstack);
             menu.setRemoteSlot(0, itemstack);
             serverplayer.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.incrementStateId(), 0, itemstack));
+
+            ci.cancel();
         }
     }
 }

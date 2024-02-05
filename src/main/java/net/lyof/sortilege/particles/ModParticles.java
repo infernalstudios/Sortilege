@@ -1,9 +1,7 @@
 package net.lyof.sortilege.particles;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.particles.custom.WispParticle;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;

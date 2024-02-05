@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.utils.MathHelper;
-import net.minecraft.client.gui.screens.inventory.CraftingScreen;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;

@@ -3,6 +3,8 @@ package net.lyof.sortilege.events;
 import net.lyof.sortilege.attributes.ModAttributes;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.items.custom.StaffItem;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -45,5 +47,9 @@ public class SetupEvents {
     @SubscribeEvent
     public static void reloadConfigs(PlayerEvent.PlayerLoggedInEvent event) {
         ModJsonConfigs.register();
+        if (ModJsonConfigs.VERSION.get() < ModJsonConfigs.getVersion())
+            event.getEntity().sendSystemMessage(
+                    Component.literal("Your Sortilege configs are outdated! Backup them, and set \"FORCE_RESET\" to true to let them regenerate.")
+                            .withStyle(ChatFormatting.RED));
     }
 }

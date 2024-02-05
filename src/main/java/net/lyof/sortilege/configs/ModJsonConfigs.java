@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.antlr.v4.runtime.misc.Triple;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -37,6 +38,7 @@ public class ModJsonConfigs {
         public int cooldown;
         public int charge_time;
         public int xp_cost;
+        public List<Triple<Float, Float, Float>> colors = new ArrayList<>();
         public boolean fireRes;
         public String dependency;
 
@@ -55,6 +57,7 @@ public class ModJsonConfigs {
                     MathHelper.toInt(dict.getOrDefault("cooldown", 15)),
                     MathHelper.toInt(dict.getOrDefault("charge_time", ConfigEntries.staffsDefaultCharge)),
                     MathHelper.toInt(dict.getOrDefault("xp_cost", ConfigEntries.staffsDefaultCost)),
+                    (List<List<Double>>) dict.getOrDefault("beam_color", new ArrayList<>()),
                     dict.containsKey("fire_resistant") && (boolean) dict.get("fire_resistant"),
                     (String) dict.getOrDefault("dependency", "minecraft"),
                     (String) dict.getOrDefault("on_shoot", ""),
@@ -64,7 +67,7 @@ public class ModJsonConfigs {
         }
 
         public StaffInfo(String tier, int dmg, int pierce, int range, int dura, String repair,  int cooldown, int charge_time,
-                         int xp_cost, boolean fire_res, String dependency, String on_shoot, String on_hit_self, String on_hit_target) {
+                         int xp_cost, List<List<Double>> colors, boolean fire_res, String dependency, String on_shoot, String on_hit_self, String on_hit_target) {
             try {
                 this.tier = Tiers.valueOf(tier);
             }
@@ -81,6 +84,13 @@ public class ModJsonConfigs {
             this.cooldown = Math.max(cooldown, 0);
             this.charge_time = Math.max(charge_time, 1);
             this.xp_cost = xp_cost;
+            try {
+                for (List<Double> triple : colors)
+                    this.colors.add(new Triple<>(triple.get(0).floatValue(), triple.get(1).floatValue(), triple.get(2).floatValue()));
+            }
+            catch (Exception e) {
+                Sortilege.log("Encountered an error while parsing a Staff's beam color");
+            }
             this.fireRes = fire_res;
             this.dependency = dependency;
 
@@ -101,7 +111,8 @@ public class ModJsonConfigs {
                     ", cooldown=" + cooldown +
                     ", charge_time=" + charge_time +
                     ", xp_cost=" + xp_cost +
-                    ", fireRes=" + fireRes +
+                    ", color=" + colors +
+                    ", fire_res=" + fireRes +
                     ", dependency='" + dependency + '\'' +
                     ", on_shoot='" + on_shoot + '\'' +
                     ", on_hit_self='" + on_hit_self + '\'' +
@@ -156,7 +167,7 @@ public class ModJsonConfigs {
         CONFIG = new Gson().fromJson(parseJson(configContent), Map.class);
         ConfigEntries.reload();
 
-        if (!force && (RELOAD.get() || VERSION.get() < getVersion())) {
+        if (!force && RELOAD.get()) {
             register(true);
             return;
         }
@@ -333,6 +344,12 @@ public class ModJsonConfigs {
                       "charge_time": 1,
                       // Amount of xp points needed to shoot. Defaults to default_xp_cost above
                       "xp_cost": 0,
+                      // Custom RGB colors to be used for the staff's beam. If unset, the beam will be white unless the staff has enchantments
+                      "beam_color": [
+                        [0.5, 0, 0],
+                        [0, 0.5, 0],
+                        [0, 0, 0.5]
+                      ],
                       // Whether the staff is resistant to fire like Netherite items. Defaults to false
                       "fire_res": true,
                       // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft

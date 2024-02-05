@@ -99,6 +99,8 @@ public class StaffItem extends TieredItem {
                     .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.GREEN));
             list.add(Component.literal(""));
         }
+
+        list.add(Component.literal("" + this.rawInfos));
     }
 
     @Override
@@ -181,6 +183,8 @@ public class StaffItem extends TieredItem {
         List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
         if (staff.isEnchanted())
             colors.add(new Triple<>(0.7f, 0f, 1f));
+        if (this.rawInfos != null && this.rawInfos.colors.size() > 0)
+            colors = this.rawInfos.colors;
 
 
         int step = 5;

@@ -10,9 +10,10 @@ public class ConfigEntries {
         enchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
         enchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
         enchantLimiterOverrides = new ConfigEntry<Map<String, Double>>( "enchantments.enchant_limiter.overrides", new HashMap<>()).get();
-
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
-        doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.limitite.generate_limitite_loot", true).get();
+
+        isLimititeFoil = new ConfigEntry<>("enchantments.enchant_limiter.limitite.is_foil", true).get();
+        doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.limitite.generate_as_loot", true).get();
         maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.limitite.max_limit_break", 3).get();
 
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
@@ -52,6 +53,8 @@ public class ConfigEntries {
     public static String enchantLimiterMode;
     public static Map<String, Double> enchantLimiterOverrides;
     public static boolean alwaysShowEnchantLimit;
+
+    public static boolean isLimititeFoil;
     public static boolean doLimititeSpawn;
     public static int maxLimitBreak;
 

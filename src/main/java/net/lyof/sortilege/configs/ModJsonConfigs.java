@@ -245,10 +245,12 @@ public class ModJsonConfigs {
                   // Should an item's maximum enchantments be displayed even when it is not enchanted
                   "always_show_limit": true,
                   "limitite": {
-                      // Should Limitite spawn in rare structures' chests
-                      "generate_limitite_loot": true,
-                      // How many Limitites can be applied to a single item
-                      "max_limit_break": 3
+                    // Should Limitite have an enchantment glint
+                    "is_foil": true,
+                    // Should Limitite spawn in rare structures' chests
+                    "generate_as_loot": true,
+                    // How many Limitites can be applied to a single item
+                    "max_limit_break": 3
                   }
                 },
                 // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments

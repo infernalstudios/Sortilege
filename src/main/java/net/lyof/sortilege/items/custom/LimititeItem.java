@@ -1,5 +1,7 @@
 package net.lyof.sortilege.items.custom;
 
+import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,7 +21,7 @@ public class LimititeItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return true;
+        return ConfigEntries.isLimititeFoil;
     }
 
     @Override

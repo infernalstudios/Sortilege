@@ -3,6 +3,7 @@ package net.lyof.sortilege.particles;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.particles.custom.WispParticle;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -16,7 +17,7 @@ public class ModParticles {
         //ParticleOptions particle = ConfigEntries.staffsHdParticles ? WISP.get() : WISP_PIXEL.get();
         double spread = amount > 1 ? 0.4 : 0;
         WispParticle.COLOR = color;
-        world.sendParticles(WISP_PIXEL.get(), x, y, z, amount, spread, spread, spread, 0);
+        world.sendParticles(ParticleTypes.INSTANT_EFFECT, x, y, z, amount, spread, spread, spread, 0);
     }
 
 

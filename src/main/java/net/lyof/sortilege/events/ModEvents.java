@@ -4,6 +4,7 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
+import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.core.particles.ParticleTypes;
@@ -28,6 +29,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.antlr.v4.runtime.misc.Triple;
 
 import java.util.Objects;
 
@@ -51,10 +53,8 @@ public class ModEvents {
 
             //XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
             if (monster.getLevel() instanceof ServerLevel server) {
-                //ModParticles.spawnWisps(server, monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
-                //        8, new Triple<>(0.5f, 1f, 0.2f));
-                server.sendParticles(ParticleTypes.TOTEM_OF_UNDYING, monster.getX(), monster.getY() + monster.getEyeHeight() / 2,
-                        monster.getZ(), 8, 0.4, 0.4, 0.4, 0);
+                ModParticles.spawnWisps(server, monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
+                        8, new Triple<>(0.5f, 1f, 0.2f));
                 ExperienceOrb.award(server, monster.position(), ConfigEntries.bountyValue);
             }
         }

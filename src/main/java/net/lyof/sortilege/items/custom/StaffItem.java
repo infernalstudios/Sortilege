@@ -100,7 +100,7 @@ public class StaffItem extends TieredItem {
             list.add(Component.literal(""));
         }
 
-        list.add(Component.literal("" + this.rawInfos));
+        //list.add(Component.literal("" + this.rawInfos));
     }
 
     @Override
@@ -194,11 +194,10 @@ public class StaffItem extends TieredItem {
             y = (float) (player.getY() + look.y * i/step + player.getEyeHeight() - 0.5);
             z = (float) (player.getZ() + look.z * i/step);
 
-            if (world instanceof ServerLevel serverworld) {
-                ModParticles.spawnWisps(serverworld, x, y, z, 1, MathHelper.randi(colors));
+            if (world.isClientSide())
+                ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
                 //WispParticle.COLOR = MathHelper.randi(colors);
                 //serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
-            }
 
             if (i*2 % step != 0)
                 continue;

@@ -52,10 +52,11 @@ public class ModEvents {
                     || (!ConfigEntries.bountyWhitelist && !monster.getType().is(ModTags.Entities.BOUNTIES)))) {
 
             //XPHelper.dropxpPinata(monster.getLevel(), monster.getX(), monster.getY(), monster.getZ(), ConfigEntries.BountyValue);
-            if (monster.getLevel() instanceof ServerLevel server) {
-                ModParticles.spawnWisps(server, monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
-                        8, new Triple<>(0.5f, 1f, 0.2f));
+            if (monster.getLevel() instanceof ServerLevel server)
                 ExperienceOrb.award(server, monster.position(), ConfigEntries.bountyValue);
+            else {
+                ModParticles.spawnWisps(monster.getLevel(), monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
+                        8, new Triple<>(0.5f, 1f, 0.2f));
             }
         }
     }

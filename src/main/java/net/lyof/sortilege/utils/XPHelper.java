@@ -24,7 +24,7 @@ public class XPHelper {
         int total = 0;
 
         if (totalxpCache.containsKey(level)) {
-            Sortilege.log("XP total already known for level " + level);
+            dummy.experienceLevel = level;
             return (int) (totalxpCache.get(level) + dummy.getXpNeededForNextLevel() * progress);
         }
 

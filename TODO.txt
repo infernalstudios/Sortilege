@@ -1,3 +1,2 @@
 - Username: SashaKYotoz, Color: Cyan
-- lock recipes behind xp levels (check usb: ResultContainer.stillValid)
 - staff configurable particles

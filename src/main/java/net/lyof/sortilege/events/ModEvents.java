@@ -55,7 +55,7 @@ public class ModEvents {
             if (monster.getLevel() instanceof ServerLevel server)
                 ExperienceOrb.award(server, monster.position(), ConfigEntries.bountyValue);
             else {
-                ModParticles.spawnWisps(monster.getLevel(), monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
+                ModParticles.spawnWisps(event.getAttackingPlayer().getLevel(), monster.getX(), monster.getY() + monster.getEyeHeight() / 2, monster.getZ(),
                         8, new Triple<>(0.5f, 1f, 0.2f));
             }
         }
@@ -84,7 +84,6 @@ public class ModEvents {
             if (event.getSource().getEntity() == null || !(event.getSource().getEntity() instanceof LivingEntity entity)) {
                 drop_xp += steal_xp;
                 steal_xp = 0;
-                Sortilege.log("Indirect death");
             }
 
             // If killed by player: add steal to drop or give to attacker
@@ -100,15 +99,12 @@ public class ModEvents {
 
             // If killed by a living entity: make it a bounty
             else {
-                Sortilege.log("Made a bounty of " + entity);
                 XPHelper.XP_SAVES.putIfAbsent(entity.getStringUUID(), steal_xp);
                 // Temporary: custom effect or something
                 entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999));
             }
 
             // Drop the last part
-            Sortilege.log("Dropping. Points: self:" + safe_xp + " stolen:" + steal_xp + " drop:" + drop_xp
-                    + " total:" + XPHelper.getTotalxp(player, server));
             //XPHelper.dropxpPinata(player.getLevel(), player.getX(), player.getY(), player.getZ(), drop_xp);
             ExperienceOrb.award(server, player.position(), drop_xp);
         }
@@ -116,7 +112,6 @@ public class ModEvents {
         // Bounty got killed
         else if (XPHelper.XP_SAVES.containsKey(event.getEntity().getStringUUID())) {
             LivingEntity entity = event.getEntity();
-            Sortilege.log("Retrieving " + XPHelper.XP_SAVES.get(entity.getStringUUID()) + " xp points!");
 
             // Probably better: ExperienceOrb.award(server, entity.position(), amount);
             //XPHelper.dropxpPinata(entity.getLevel(), entity.getX(), entity.getY(), entity.getZ(),

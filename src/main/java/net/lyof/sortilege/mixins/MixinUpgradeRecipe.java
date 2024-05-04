@@ -1,6 +1,9 @@
 package net.lyof.sortilege.mixins;
 
+import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.ItemHelper;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -28,6 +31,15 @@ public class MixinUpgradeRecipe {
                 && Arrays.stream(this.addition.getItems()).anyMatch((stack) -> stack.is(ItemHelper.LIMIT_BREAKER))) {
 
             cir.setReturnValue(ItemHelper.addExtraEnchant(cir.getReturnValue()));
+        }
+
+        if (Arrays.stream(this.base.getItems()).anyMatch((stack) -> stack.is(this.result.getItem()))
+                && Arrays.stream(this.addition.getItems()).anyMatch((stack) -> stack.is(ModTags.Items.SOULBINDERS))) {
+
+            ItemStack result = cir.getReturnValue();
+            if (!ItemHelper.hasEnchant(ModEnchants.SOULBOUND, result))
+                result.enchant(ModEnchants.SOULBOUND.get(), 1);
+            cir.setReturnValue(result);
         }
     }
 }

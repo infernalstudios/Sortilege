@@ -211,7 +211,7 @@ public class ModJsonConfigs {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 1.4,
+                "VERSION_DO_NOT_EDIT": 1.5,
                 "FORCE_RESET": false
               },
               
@@ -306,6 +306,8 @@ public class ModJsonConfigs {
                   // Ratio of xp dropped on the ground on death
                   "drop_ratio": 0.1
                 },
+                // Keep equipped items (armor and hotbar) on death
+                "keep_equipped": false,
                 // Display death coordinates instead of the score from vanilla on the death screen
                 "show_coordinates_on_death": true
               },

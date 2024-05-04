@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixins;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -31,15 +32,23 @@ public class MixinRecipeManager {
 
         ResourceLocation id;
         for (Item item : ItemHelper.ENCHANTABLES) {
-            if (item.getEnchantmentValue(new ItemStack((item))) > 0) {
-                id = new ResourceLocation(Sortilege.MOD_ID, Registry.ITEM.getKey(item).getPath() + "_limit_break");
+            id = new ResourceLocation(Sortilege.MOD_ID, Registry.ITEM.getKey(item).getPath() + "_limit_break");
 
-                recipes.put(id, new UpgradeRecipe(
-                        id,
-                        Ingredient.of(item),
-                        Ingredient.of(ItemHelper.LIMIT_BREAKER),
-                        new ItemStack(item)));
-            }
+            recipes.put(id, new UpgradeRecipe(
+                    id,
+                    Ingredient.of(item),
+                    Ingredient.of(ItemHelper.LIMIT_BREAKER),
+                    new ItemStack(item)));
+        }
+
+        for (Item item : ItemHelper.SOULBINDABLES) {
+            id = new ResourceLocation(Sortilege.MOD_ID, Registry.ITEM.getKey(item).getPath() + "_soulbind");
+
+            recipes.put(id, new UpgradeRecipe(
+                    id,
+                    Ingredient.of(item),
+                    Ingredient.of(ModTags.Items.SOULBINDERS),
+                    new ItemStack(item)));
         }
 
         cir.setReturnValue((Map<ResourceLocation, T>) recipes);

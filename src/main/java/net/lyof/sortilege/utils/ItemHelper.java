@@ -7,6 +7,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -18,13 +19,17 @@ import java.util.List;
 
 public class ItemHelper {
     public static final Item LIMIT_BREAKER = ModItems.LIMITITE.get();
+
     public static final List<Item> ENCHANTABLES = new ArrayList<>();
+    public static final List<Item> SOULBINDABLES = new ArrayList<>();
 
     static {
         for (Item item : Registry.ITEM) {
-            if (item.getEnchantmentValue(new ItemStack((item))) > 0) {
+            if (item.getEnchantmentValue(item.getDefaultInstance()) > 0)
                 ENCHANTABLES.add(item);
-            }
+
+            if (item.getDefaultInstance().getMaxStackSize() == 1 && !item.isEdible() && !(item instanceof BucketItem))
+                SOULBINDABLES.add(item);
         }
     }
 

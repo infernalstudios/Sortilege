@@ -48,6 +48,8 @@
   "enchantment.sortilege.magic_protection.desc": "Reduces damage from magic.",
   "enchantment.sortilege.arcane": "Arcane",
   "enchantment.sortilege.arcane.desc": "Converts damage dealt to magic type.",
+  "enchantment.sortilege.soulbound": "Soulbound",
+  "enchantment.sortilege.soulbound.desc": "Stays after death.",
 
   "sortilege.enchantments": "Enchantments",
 

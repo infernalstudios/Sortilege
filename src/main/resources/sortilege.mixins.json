@@ -7,9 +7,11 @@
   "mixins": [
     "MixinCraftingMenu",
     "MixinEnchantmentHelper",
+    "MixinInventory",
     "MixinItemStack",
     "MixinPlayer",
     "MixinRecipeManager",
+    "MixinServerPlayer",
     "MixinUpgradeRecipe"
   ],
   "client": [

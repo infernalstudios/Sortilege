@@ -38,6 +38,8 @@ public class ConfigEntries {
         attackerXPRatio = new ConfigEntry<>("death.xp_keeping.attacker_ratio", 0.6).get();
         dropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
 
+        keepEquipped = new ConfigEntry<>("death.keep_equipped", false).get();
+
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
         antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
@@ -79,6 +81,8 @@ public class ConfigEntries {
     public static double selfXPRatio;
     public static double attackerXPRatio;
     public static double dropXPRatio;
+
+    public static boolean keepEquipped;
 
     public static boolean showDeathCoordinates;
 

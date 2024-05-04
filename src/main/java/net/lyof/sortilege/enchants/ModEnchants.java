@@ -2,6 +2,7 @@ package net.lyof.sortilege.enchants;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchants.armor.MagicProtectionEnchantment;
+import net.lyof.sortilege.enchants.common.SoulboundEnchantment;
 import net.lyof.sortilege.enchants.staff.CurseStaffEnchantment;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.enchants.staff.StaffEnchantment;
@@ -73,4 +74,7 @@ public class ModEnchants {
             () -> new MagicProtectionEnchantment(Enchantment.Rarity.UNCOMMON));
     public static RegistryObject<Enchantment> ARCANE = ENCHANTMENTS.register("arcane",
             () -> new ArcaneEnchantment(Enchantment.Rarity.RARE));
+
+    public static RegistryObject<Enchantment> SOULBOUND = ENCHANTMENTS.register("soulbound",
+            SoulboundEnchantment::new);
 }

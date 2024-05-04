@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "Appuyez sur [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Position:",
+  "sortilege.requires_level": "Vous devez être au moins niveau",
+
+
+  "item.sortilege.wooden_staff" : "Sceptre en Bois",
+  "item.sortilege.stone_staff" : "Sceptre en Pierre",
+  "item.sortilege.iron_staff" : "Sceptre en Fer",
+  "item.sortilege.golden_staff" : "Sceptre en Or",
+  "item.sortilege.diamond_staff" : "Sceptre en Diamant",
+  "item.sortilege.netherite_staff" : "Sceptre en Netherite",
+
+  "sortilege.staff.cost": "Utilise",
+  "sortilege.experience": "XP",
+
+  "attribute.name.generic.staff_damage": "Dégâts Magiques",
+  "attribute.name.generic.staff_pierce": "Transpercement",
+  "attribute.name.generic.staff_range": "Portée",
+
+  "enchantment.sortilege.potency": "Pouvoir",
+  "enchantment.sortilege.potency.desc": "Augmente les dégâts du Sceptre.",
+  "enchantment.sortilege.stability": "Stabilité",
+  "enchantment.sortilege.stability.desc": "Augmente la portée du Sceptre.",
+  "enchantment.sortilege.chaining": "Enchaînement",
+  "enchantment.sortilege.chaining.desc": "Augmente le nombre de cibles du Sceptre.",
+  "enchantment.sortilege.wisdom": "Sagesse",
+  "enchantment.sortilege.wisdom.desc": "Réduit le coût en XP du Sceptre.",
+  "enchantment.sortilege.push": "Poussée",
+  "enchantment.sortilege.push.desc": "Ejecte les cibles le long du rayon.",
+  "enchantment.sortilege.pull": "Attirance",
+  "enchantment.sortilege.pull.desc": "Attire les cibles le long du rayon.",
+  "enchantment.sortilege.brazier": "Brazier",
+  "enchantment.sortilege.brazier.desc": "Brûle les cibles.",
+  "enchantment.sortilege.blizzard": "Blizzard",
+  "enchantment.sortilege.blizzard.desc": "Gèle les cibles.",
+  "enchantment.sortilege.blast": "Blast",
+  "enchantment.sortilege.blast.desc": "Provoque des explosions le long du rayon.",
+  "enchantment.sortilege.blitz": "Blitz",
+  "enchantment.sortilege.blitz.desc": "Electrocute les cibles.",
+  "enchantment.sortilege.ignorance_curse": "Malédiction d'Ignorance",
+  "enchantment.sortilege.ignorance_curse.desc": "Augmente le coût en XP de Sceptre.",
+
+  "enchantment.sortilege.magic_protection": "Protection Magique",
+  "enchantment.sortilege.magic_protection.desc": "Réduit les dégâts magiques subits.",
+  "enchantment.sortilege.arcane": "Arcane",
+  "enchantment.sortilege.arcane.desc": "Covertit les dégâts en dégâts magiques.",
+  "enchantment.sortilege.soulbound": "Héritage",
+  "enchantment.sortilege.soulbound.desc": "L'objet n'est pas laché lors de la mort.",
+
+  "sortilege.enchantments": "Enchantements",
+
+
+  "item.sortilege.witch_hat": "Chapeau de Sorcière",
+
+
+  "item.sortilege.antidote": "Antidote",
+  "sortilege.antidote.cures": "Guérit:",
+
+
+  "item.sortilege.limitite": "Limitite",
+  "sortilege.limitite.desc": "Combine avec un outil dans une Table de Forgeage pour augmenter sa limite d'enchantements!"
+}

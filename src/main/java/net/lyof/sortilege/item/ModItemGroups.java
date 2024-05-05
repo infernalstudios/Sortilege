@@ -14,10 +14,8 @@ public class ModItemGroups {
             entries.add(ModItems.LIMITITE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
-            Sortilege.log(ModItems.STAFFS);
-            for (Pair<String, ModJsonConfigs.StaffInfo> staff : ModJsonConfigs.STAFFS) {
-                Sortilege.log(staff.getFirst());
-            }
+            for (Item staff : ModItems.STAFFS)
+                entries.add(staff);
         });
     }
 }

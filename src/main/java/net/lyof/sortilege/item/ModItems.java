@@ -11,18 +11,20 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ModItems {
-    public static Map<String, Item> STAFFS = new HashMap<>();
+    public static List<Item> STAFFS = new ArrayList<>();
 
     public static void register() {
         for (Pair<String, ModJsonConfigs.StaffInfo> pair : ModJsonConfigs.STAFFS) {
             String id = pair.getFirst();
             ModJsonConfigs.StaffInfo staff = pair.getSecond();
             if (FabricLoader.getInstance().isModLoaded(staff.dependency))
-                STAFFS.put(id, register(id, new StaffItem(staff, new FabricItemSettings().maxCount(1))));
+                STAFFS.add(register(id, new StaffItem(staff, new FabricItemSettings().maxCount(1))));
         }
     }
 

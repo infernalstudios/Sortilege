@@ -12,6 +12,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,7 +40,7 @@ public class ModJsonConfigs {
         public int cooldown;
         public int charge_time;
         public int xp_cost;
-        public List<MutableTriple<Float, Float, Float>> colors = new ArrayList<>();
+        public List<Triple<Float, Float, Float>> colors = new ArrayList<>();
         public boolean fireRes;
         public String dependency;
 

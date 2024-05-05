@@ -3,10 +3,19 @@ package net.lyof.sortilege.enchants;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchants.armor.MagicProtectionEnchantment;
 import net.lyof.sortilege.enchants.common.SoulboundEnchantment;
+import net.lyof.sortilege.enchants.staff.CurseStaffEnchantment;
+import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.enchants.staff.StaffEnchantment;
 import net.lyof.sortilege.enchants.weapon.ArcaneEnchantment;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+
+import java.util.List;
 
 public class ModEnchants {
     public static void register() {}
@@ -15,7 +24,7 @@ public class ModEnchants {
         return Registry.register(Registries.ENCHANTMENT, Sortilege.makeID(name), enchant);
     }
 
-/*
+
     // STAFF ENCHANTS
     public static Enchantment POTENCY = register("potency",
             new StaffEnchantment(Enchantment.Rarity.COMMON, 5));
@@ -28,35 +37,43 @@ public class ModEnchants {
 
     public static Enchantment PUSH = register("push",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, (candidate) -> !candidate.getDescriptionId().equals("enchantment.sortilege.pull")));
+                    null, (candidate) -> !candidate.getTranslationKey().equals("enchantment.sortilege.pull")));
     public static Enchantment PULL = register("pull",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, (candidate) -> !candidate.getDescriptionId().equals("enchantment.sortilege.push")));
+                    null, (candidate) -> !candidate.getTranslationKey().equals("enchantment.sortilege.push")));
 
 
     public static Enchantment BRAZIER = register("brazier",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new Triple<>(1f, 0.7f, 0f), new Triple<>(1f, 1f, 0f), new Triple<>(1f, 0.85f, 0f)),
-                    (target, level) -> target.setSecondsOnFire(level * 4)));
+                    List.of(new MutableTriple<>(1f, 0.7f, 0f),
+                            new MutableTriple<>(1f, 1f, 0f),
+                            new MutableTriple<>(1f, 0.85f, 0f)),
+                    (target, level) -> target.setOnFireFor(level * 4)));
     public static Enchantment BLIZZARD = register("blizzard",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new Triple<>(0.7f, 0.7f, 1f), new Triple<>(0.8f, 0.9f, 1f)),
-                    (target, level) -> target.setTicksFrozen(target.getTicksFrozen() + 150*level)));
+                    List.of(new MutableTriple<>(0.7f, 0.7f, 1f),
+                            new MutableTriple<>(0.8f, 0.9f, 1f)),
+                    (target, level) -> target.setFrozenTicks(target.getFrozenTicks() + 150*level)));
     public static Enchantment BLAST = register("blast",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new Triple<>(0.5f, 0.25f, 0f), new Triple<>(0.8f, 0.2f, 0f), new Triple<>(1f, 0.4f, 0f)),
+                    List.of(new MutableTriple<>(0.5f, 0.25f, 0f),
+                            new MutableTriple<>(0.8f, 0.2f, 0f),
+                            new MutableTriple<>(1f, 0.4f, 0f)),
                     null));
     public static Enchantment BLITZ = register("blitz",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new Triple<>(1f, 1f, 0f), new Triple<>(1f, 1f, 0.5f), new Triple<>(1f, 1f, 0.75f)), (target, level) -> {
-                target.setDeltaMovement(0, -1, 0);
-                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40 * level));
-                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40 * level));
+                    List.of(new MutableTriple<>(1f, 1f, 0f),
+                            new MutableTriple<>(1f, 1f, 0.5f),
+                            new MutableTriple<>(1f, 1f, 0.75f)),
+                    (target, level) -> {
+                target.setVelocity(0, -1, 0);
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40 * level));
             }));
 
     public static Enchantment IGNORANCE_CURSE = register("ignorance_curse",
             new CurseStaffEnchantment(Enchantment.Rarity.RARE));
-*/
+
 
     // EXTRA ENCHANTS
     public static Enchantment MAGIC_PROTECTION = register("magic_protection",

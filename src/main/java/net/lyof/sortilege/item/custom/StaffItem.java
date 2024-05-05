@@ -2,12 +2,43 @@ package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.utils.MathHelper;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.PotionItem;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.command.CommandOutput;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class StaffItem extends ToolItem {
     public @Nullable ModJsonConfigs.StaffInfo rawInfos;
@@ -39,7 +70,7 @@ public class StaffItem extends ToolItem {
         this.charge = charge;
         this.xp_cost = xp_cost;
     }
-/*
+
     public int getXPCost(ItemStack itemstack) {
         return Math.max(this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
                 - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack), 0);
@@ -58,51 +89,51 @@ public class StaffItem extends ToolItem {
     }
 
     @Override
-    public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
+    public boolean canRepair(ItemStack staff, ItemStack stack) {
         if (this.rawInfos != null)
             return this.rawInfos.repair.test(stack);
-        return super.isValidRepairItem(staff, stack);
+        return super.canRepair(staff, stack);
     }
 
     @Override
-    public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
-        super.appendHoverText(itemstack, level, list, flag);
+    public void appendTooltip(ItemStack itemstack, @Nullable World level, List<Text> list, TooltipContext flag) {
+        super.appendTooltip(itemstack, level, list, flag);
 
         if (this.getXPCost(itemstack) > 0) {
-            list.add(Component.translatable("sortilege.staff.cost")
+            list.add(Text.translatable("sortilege.staff.cost")
                     .append(" " + this.getXPCost(itemstack) + " ")
-                    .append(Component.translatable("sortilege.experience")).withStyle(ChatFormatting.GREEN));
-            list.add(Component.literal(""));
+                    .append(Text.translatable("sortilege.experience")).formatted(Formatting.GREEN));
+            list.add(Text.literal(""));
         }
 
         //list.add(Component.literal("" + this.rawInfos));
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
-        ItemStack staff = player.getItemInHand(hand);
+    public @NotNull TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity player, @NotNull Hand hand) {
+        ItemStack staff = player.getStackInHand(hand);
         if (!player.isCreative() && player.totalExperience < this.getXPCost(staff))
             return super.use(world, player, hand);
 
         this.handSave = hand;
-        player.startUsingItem(hand);
+        player.setCurrentHand(hand);
         return super.use(world, player, hand);
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack staff, Level world, LivingEntity entity) {
-        if (!(entity instanceof Player player))
+    public ItemStack finishUsing(ItemStack staff, World world, LivingEntity entity) {
+        if (!(entity instanceof PlayerEntity player))
             return staff;
 
         ElementalStaffEnchantment element = null;
         if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BRAZIER.get();
+            element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
         else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD.get();
+            element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD;
         else if (ItemHelper.hasEnchant(ModEnchants.BLAST, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BLAST.get();
+            element = (ElementalStaffEnchantment) ModEnchants.BLAST;
         else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BLITZ.get();
+            element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
         int element_level = element == null ? 0 : ItemHelper.getEnchantLevel(element, staff);
 
 
@@ -116,22 +147,22 @@ public class StaffItem extends ToolItem {
         if (cost > 0 && !player.isCreative()) {
             if (player.totalExperience < cost)
                 return staff;
-            player.giveExperiencePoints(-cost);
+            player.addExperience(-cost);
         }
 
         if (this.handSave != null)
-            player.swing(this.handSave, true);
+            player.swingHand(this.handSave, true);
 
-        world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
-        player.getCooldowns().addCooldown(staff.getItem(), this.cooldown);
-        if (!player.getAbilities().instabuild && staff.hurt(1, RandomSource.create(), null)) {
-            staff.shrink(1);
-            staff.setDamageValue(0);
+        world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
+        player.getItemCooldownManager().set(staff.getItem(), this.cooldown);
+        if (!player.getAbilities().creativeMode && staff.damage(1, Random.create(), null)) {
+            staff.decrement(1);
+            staff.setDamage(0);
         }
 
 
         // Getting the look vector to shoot the ray along
-        Vec3 look = MathHelper.getLookVector(player);
+        Vec3d look = MathHelper.getLookVector(player);
 
         // Initialising variables to be used in the loop
         List<String> targetsHit = new ArrayList<>();
@@ -143,21 +174,23 @@ public class StaffItem extends ToolItem {
         BlockPos pos;
 
 
-        if (world instanceof ServerLevel server && !(this.rawInfos == null)) {
-            server.getServer().getCommands().performPrefixedCommand(
-                    new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
-                            4, "", Component.literal(""), server.getServer(), player)
-                            .withSuppressedOutput(), this.rawInfos.on_shoot);
+        if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
+            server.getServer().getCommandManager().executeWithPrefix(
+                    new ServerCommandSource(player, new Vec3d(x, y, z), Vec2f.ZERO, server,
+                            4, "", Text.literal(""), server.getServer(), player)
+                            .withOutput(CommandOutput.DUMMY),
+                    this.rawInfos.on_shoot);
         }
 
 
-        DamageSource damagetype = DamageSource.indirectMagic(player, player);
-        if (element == ModEnchants.BRAZIER.get())
-            damagetype.setIsFire();
+        DamageSource damagetype = player.getDamageSources().magic();
+        //if (element == ModEnchants.BRAZIER)
+        //    damagetype.setIsFire();
 
-        List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new Triple<>(1f, 1f, 1f)) : element.colors);
-        if (staff.isEnchanted())
-            colors.add(new Triple<>(0.7f, 0f, 1f));
+        List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new MutableTriple<>(1f, 1f, 1f)) : element.colors);
+
+        if (staff.hasEnchantments())
+            colors.add(new MutableTriple<>(0.7f, 0f, 1f));
         if (this.rawInfos != null && this.rawInfos.colors.size() > 0)
             colors = this.rawInfos.colors;
 
@@ -166,68 +199,71 @@ public class StaffItem extends ToolItem {
         // Main loop, displaying particles and hurting mobs on its way
         for (int i = 1; i < range * step; i++) {
             x = (float) (player.getX() + look.x * i/step);
-            y = (float) (player.getY() + look.y * i/step + player.getEyeHeight() - 0.5);
+            y = (float) (player.getY() + look.y * i/step + player.getEyeHeight(player.getPose()) - 0.5);
             z = (float) (player.getZ() + look.z * i/step);
 
-            if (world.isClientSide())
-                ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
+            if (world.isClient())
+                world.addParticle(ParticleTypes.CRIT, x, y, z, 0, 0, 0);
+                //ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
                 //WispParticle.COLOR = MathHelper.randi(colors);
                 //serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
 
             if (i*2 % step != 0)
                 continue;
 
-            pos = new BlockPos(Math.round(x-0.5), Math.round(y-0.5), Math.round(z-0.5));
-            List<Entity> entities = player.getLevel().getEntities(null, new AABB(pos).inflate(0.1));
+            pos = new BlockPos((int) Math.round(x-0.5), (int) Math.round(y-0.5), (int) Math.round(z-0.5));
+            List<Entity> entities = player.getWorld().getOtherEntities(player, new Box(pos).expand(0.1));
 
-            if (targetsLeft <= 0 || player.level.getBlockState(pos).canOcclude())
+            if (targetsLeft <= 0 || world.getBlockState(pos).isSolid())
                 break;
 
             index = 0;
             while (!entities.isEmpty() && entities.size() > index
-                    && !entities.get(index).equals(player) && targetsLeft > 0) {
+                    && targetsLeft > 0) {
 
                 if (entities.get(index) instanceof LivingEntity target
-                        && !targetsHit.contains(target.getStringUUID())) {
+                        && !targetsHit.contains(target.getUuidAsString())) {
 
-                    target.hurt(damagetype, damage);
-                    if (world instanceof ServerLevel server && !(this.rawInfos == null)) {
-                        server.getServer().getCommands().performPrefixedCommand(
-                                new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
-                                        4, "", Component.literal(""), server.getServer(), player)
-                                        .withSuppressedOutput(), this.rawInfos.on_hit_self);
+                    target.damage(damagetype, damage);
+                    if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
+                        server.getServer().getCommandManager().executeWithPrefix(
+                                new ServerCommandSource(player, new Vec3d(x, y, z), Vec2f.ZERO, server,
+                                        4, "", Text.literal(""), server.getServer(), player)
+                                        .withOutput(CommandOutput.DUMMY),
+                                this.rawInfos.on_hit_self);
 
-                        server.getServer().getCommands().performPrefixedCommand(
-                                new CommandSourceStack(player, new Vec3(x, y, z), Vec2.ZERO, server,
-                                        4, "", Component.literal(""), server.getServer(), target)
-                                        .withSuppressedOutput(), this.rawInfos.on_hit_target);
+                        server.getServer().getCommandManager().executeWithPrefix(
+                                new ServerCommandSource(player, new Vec3d(x, y, z), Vec2f.ZERO, server,
+                                        4, "", Text.literal(""), server.getServer(), target)
+                                        .withOutput(CommandOutput.DUMMY),
+                                this.rawInfos.on_hit_target);
                     }
 
 
                     if (element != null)
                         element.triggerAttack(target, ItemHelper.getEnchantLevel(element, staff));
-                    if (element == ModEnchants.BLAST.get() && element_level > 1)
-                        world.explode(player, x, y, z, 1, Explosion.BlockInteraction.NONE);
+                    if (element == ModEnchants.BLAST && element_level > 1)
+                        world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
                     if (kinesis != 0)
-                        target.setDeltaMovement(look.scale(kinesis).add(0, 0.4, 0));
+                        target.setVelocity(look.multiply(kinesis).add(0, 0.4, 0));
 
-                    targetsHit.add(target.getStringUUID());
+                    targetsHit.add(target.getUuidAsString());
                     targetsLeft--;
                 }
                 index++;
             }
         }
-        if (element == ModEnchants.BLAST.get())
-            world.explode(player, x, y, z, 1, Explosion.BlockInteraction.NONE);
+        if (element == ModEnchants.BLAST)
+            world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
         return staff;
     }
 
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getMaxUseTime(ItemStack stack) {
         return this.charge;
-    }*/
+    }
 
     @Override
     public UseAction getUseAction(ItemStack stack) {

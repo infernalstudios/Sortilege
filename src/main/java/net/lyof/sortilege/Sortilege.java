@@ -2,6 +2,7 @@ package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
 import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
 import net.minecraft.util.Identifier;
@@ -18,6 +19,8 @@ public class Sortilege implements ModInitializer {
 
 		ModItems.register();
 		ModItemGroups.register();
+
+		ModEnchants.register();
 	}
 
 	public static Identifier makeID(String name) {

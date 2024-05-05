@@ -1,0 +1,11 @@
+{
+  "type": "sortilege:add_item",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:chests/stronghold_library"
+    }
+  ],
+  "item": "sortilege:limitite",
+  "chance": 1
+}

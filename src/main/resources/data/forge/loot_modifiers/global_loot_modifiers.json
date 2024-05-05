@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "entries": [
+    "sortilege:limitite_in_ancient_city",
+    "sortilege:limitite_in_bastion_treasure",
+    "sortilege:limitite_in_desert_pyramid",
+    "sortilege:limitite_in_end_city_treasure",
+    "sortilege:limitite_in_stronghold_corridor",
+    "sortilege:limitite_in_stronghold_library",
+    "sortilege:limitite_in_village_temple",
+    "sortilege:limitite_in_woodland_mansion"
+  ]
+}

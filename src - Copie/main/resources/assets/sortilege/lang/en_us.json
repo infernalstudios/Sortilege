@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "Press [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Position:",
+  "sortilege.requires_level": "You need to be at least level",
+
+
+  "item.sortilege.wooden_staff" : "Wooden Staff",
+  "item.sortilege.stone_staff" : "Stone Staff",
+  "item.sortilege.iron_staff" : "Iron Staff",
+  "item.sortilege.golden_staff" : "Golden Staff",
+  "item.sortilege.diamond_staff" : "Diamond Staff",
+  "item.sortilege.netherite_staff" : "Netherite Staff",
+
+  "sortilege.staff.cost": "Costs",
+  "sortilege.experience": "Experience",
+
+  "attribute.name.generic.staff_damage": "Magic Damage",
+  "attribute.name.generic.staff_pierce": "Pierce",
+  "attribute.name.generic.staff_range": "Range",
+
+  "enchantment.sortilege.potency": "Potency",
+  "enchantment.sortilege.potency.desc": "Increases Staff damage.",
+  "enchantment.sortilege.stability": "Stability",
+  "enchantment.sortilege.stability.desc": "Increases Staff range.",
+  "enchantment.sortilege.chaining": "Chaining",
+  "enchantment.sortilege.chaining.desc": "Increases Staff pierce.",
+  "enchantment.sortilege.wisdom": "Wisdom",
+  "enchantment.sortilege.wisdom.desc": "Decreases Staff XP cost.",
+  "enchantment.sortilege.push": "Push",
+  "enchantment.sortilege.push.desc": "Launches targets hit with the Staff along the beam.",
+  "enchantment.sortilege.pull": "Pull",
+  "enchantment.sortilege.pull.desc": "Attracts targets hit with the Staff along the beam.",
+  "enchantment.sortilege.brazier": "Brazier",
+  "enchantment.sortilege.brazier.desc": "Burns targets hit with the Staff.",
+  "enchantment.sortilege.blizzard": "Blizzard",
+  "enchantment.sortilege.blizzard.desc": "Freezes targets hit with the Staff.",
+  "enchantment.sortilege.blast": "Blast",
+  "enchantment.sortilege.blast.desc": "Make the Staff's beam explode on impact.",
+  "enchantment.sortilege.blitz": "Blitz",
+  "enchantment.sortilege.blitz.desc": "Shocks targets hit with the staff.",
+  "enchantment.sortilege.ignorance_curse": "Curse of Ignorance",
+  "enchantment.sortilege.ignorance_curse.desc": "Makes the Staff use XP to cast.",
+
+  "enchantment.sortilege.magic_protection": "Magic Protection",
+  "enchantment.sortilege.magic_protection.desc": "Reduces damage from magic.",
+  "enchantment.sortilege.arcane": "Arcane",
+  "enchantment.sortilege.arcane.desc": "Converts damage dealt to magic type.",
+  "enchantment.sortilege.soulbound": "Soulbound",
+  "enchantment.sortilege.soulbound.desc": "Stays after death.",
+
+  "sortilege.enchantments": "Enchantments",
+
+
+  "item.sortilege.witch_hat": "Witch Hat",
+
+
+  "item.sortilege.antidote": "Antidote",
+  "sortilege.antidote.cures": "Cures:",
+
+
+  "item.sortilege.limitite": "Limitite",
+  "sortilege.limitite.desc": "Combine with an item on a Smithing Table to increase its maximum number of enchantments!"
+}

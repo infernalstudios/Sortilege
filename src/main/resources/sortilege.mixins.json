@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "package": "net.lyof.sortilege.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "CraftingScreenHandlerMixin",
+    "EnchantmentHelperMixin",
+    "ItemStackMixin",
+    "PlayerEntityMixin",
+    "PlayerInventoryMixin",
+    "RecipeManagerMixin",
+    "ServerPlayerEntityMixin",
+    "ServerWorldMixin",
+    "SmithingTransformRecipeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "DeathScreenMixin",
+    "InGameHudMixin",
+    "ItemMixin",
+    "accessor.ScreenAccessor"
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "Натисніть [",
+  "tooltip.press_shift.center": "Крастися",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Місцезнаходження:",
+  "sortilege.requires_level": "Вам треба хочаб рівень",
+
+
+  "item.sortilege.wooden_staff" : "Дерев'яна патериця",
+  "item.sortilege.stone_staff" : "Кам'яна патериця",
+  "item.sortilege.iron_staff" : "Залізна патериця",
+  "item.sortilege.golden_staff" : "Золота патериця",
+  "item.sortilege.diamond_staff" : "Діамантова патериця",
+  "item.sortilege.netherite_staff" : "Незеритова патериця",
+
+  "sortilege.staff.cost": "Коштує",
+  "sortilege.experience": "Досвід",
+
+  "attribute.name.generic.staff_damage": "Магічна шкода",
+  "attribute.name.generic.staff_pierce": "Пробивання",
+  "attribute.name.generic.staff_range": "Дальність",
+
+  "enchantment.sortilege.potency": "Потенція",
+  "enchantment.sortilege.potency.desc": "Збільшує патеричну шкоду.",
+  "enchantment.sortilege.stability": "Стабільність",
+  "enchantment.sortilege.stability.desc": "Збільшує патеричну дальність.",
+  "enchantment.sortilege.chaining": "Кайданування",
+  "enchantment.sortilege.chaining.desc": "Збільшує патеричне пробиття.",
+  "enchantment.sortilege.wisdom": "Мудрість",
+  "enchantment.sortilege.wisdom.desc": "Зменує використання досвіду патерицею.",
+  "enchantment.sortilege.push": "Штовхнути",
+  "enchantment.sortilege.push.desc": "Гатить ціль вперед, уражені патерицею уздовж променя.",
+  "enchantment.sortilege.pull": "Тягнути",
+  "enchantment.sortilege.pull.desc": "Волочить ціль, уражені патерицею уздовж променя.",
+  "enchantment.sortilege.brazier": "Мангал",
+  "enchantment.sortilege.brazier.desc": "Патериця підпалює ціль",
+  "enchantment.sortilege.blizzard": "Завірюха",
+  "enchantment.sortilege.blizzard.desc": "Патериця зморожує ціль",
+  "enchantment.sortilege.blast": "Вибух",
+  "enchantment.sortilege.blast.desc": "Змушує промінь патериці вибухнути при ударі.",
+  "enchantment.sortilege.blitz": "Бліц",
+  "enchantment.sortilege.blitz.desc": "Патериця разить ціль шоком.",
+  "enchantment.sortilege.ignorance_curse": "Прокляття невігластва",
+  "enchantment.sortilege.ignorance_curse.desc": "Змушує патерицю використовувати XP задля використання.",
+
+  "enchantment.sortilege.magic_protection": "Магічний захист",
+  "enchantment.sortilege.magic_protection.desc": "Зменшує шкоду заподіяною магією.",
+  "enchantment.sortilege.arcane": "Аркана",
+  "enchantment.sortilege.arcane.desc": "Конвертує завдану шкоду на тип магії.",
+  "enchantment.sortilege.soulbound": "Прикутий душею",
+  "enchantment.sortilege.soulbound.desc": "Залишається після смерті.",
+
+  "sortilege.enchantments": "Зачарування",
+
+
+  "item.sortilege.witch_hat": "Капелюх відьми",
+
+
+  "item.sortilege.antidote": "Антидот",
+  "sortilege.antidote.cures": "Лікує:",
+
+
+  "item.sortilege.limitite": "Лімінит",
+  "sortilege.limitite.desc": "Поєднайте з предметом на столі коваля, щоб його максимальне число зачарувань!"
+}

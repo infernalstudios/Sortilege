@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "דריק [",
+  "tooltip.press_shift.center": "שיפֿט",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": ":שטעלע",
+  "sortilege.requires_level": ":איר דאַרפֿן צו זיין בייַ מינדסטער מדרגה",
+
+
+  "item.sortilege.wooden_staff" : "האָלצשטעקן",
+  "item.sortilege.stone_staff" : "שטיינשטעקן",
+  "item.sortilege.iron_staff" : "אייַזנשטעקן",
+  "item.sortilege.golden_staff" : "גאָלדשטעקן",
+  "item.sortilege.diamond_staff" : "דימענדשטעקן",
+  "item.sortilege.netherite_staff" : "נעטהעריטע שטעקן",
+
+  "sortilege.staff.cost": "פּרייַז",
+  "sortilege.experience": "דערפֿאַרונג",
+
+  "attribute.name.generic.staff_damage": "מאַגיש אַנגריפסשאָדן",
+  "attribute.name.generic.staff_pierce": "דורכשאָס",
+  "attribute.name.generic.staff_range": "גאַמע",
+
+  "enchantment.sortilege.potency": "פּאָטענציעל",
+  "enchantment.sortilege.potency.desc": ".פֿאַרהעכערט אַנגריפסשאד פֿון די שטעקן",
+  "enchantment.sortilege.stability": "פעסטקייַט",
+  "enchantment.sortilege.stability.desc": ".פֿאַרהעכערט גאַמע פֿון די שטעקן",
+  "enchantment.sortilege.chaining": "קייט",
+  "enchantment.sortilege.chaining.desc": ".פֿאַרהעכערט דורכשאָס פֿון די שטעקן",
+  "enchantment.sortilege.wisdom": "חכמה",
+  "enchantment.sortilege.wisdom.desc": ".פֿאַרקלענערט דערפאַרונגפּרייַז פֿון די שטעקן",
+  "enchantment.sortilege.push": "שלאַגער",
+  "enchantment.sortilege.push.desc": ".לאַנצירט קרבנות פּאַזע די שטראַל",
+  "enchantment.sortilege.pull": "ציעניש",
+  "enchantment.sortilege.pull.desc": ".ציט קרבנות פּאַזע די שטראַל",
+  "enchantment.sortilege.brazier": "ברענער",
+  "enchantment.sortilege.brazier.desc": ".ברענט קרבנות",
+  "enchantment.sortilege.blizzard": "זאַווערוכע",
+  "enchantment.sortilege.blizzard.desc": ".פֿאַרפֿרירט קרבנות",
+  "enchantment.sortilege.blast": "עקספּלאָזיע",
+  "enchantment.sortilege.blast.desc": ".מאַכט שטראַל פֿון די שטעקן עקספּלאָדיר",
+  "enchantment.sortilege.blitz": "שטאַמלער",
+  "enchantment.sortilege.blitz.desc": ".שאָקירט קרבנות",
+  "enchantment.sortilege.ignorance_curse": "לעכערפֿלוך",
+  "enchantment.sortilege.ignorance_curse.desc": ".מאַכט די שטעקן פֿאַרשווענד אָפּ דערפֿאַרונג",
+
+  "enchantment.sortilege.magic_protection": "מאַגיש באַשיצונג",
+  "enchantment.sortilege.magic_protection.desc": ".פֿאַרקלענערט אַנגריפסשאָדן פֿון מאַגיש",
+  "enchantment.sortilege.arcane": "אַרקאַן",
+  "enchantment.sortilege.arcane.desc": ".אויסבייַט שאָדן צו אַ מאַגיש טיפּ",
+  "enchantment.sortilege.soulbound": "געבונדן",
+  "enchantment.sortilege.soulbound.desc": ".בלײַבט אַחרי מװת",
+
+  "sortilege.enchantments": "צויבער",
+
+
+  "item.sortilege.witch_hat": "הוט פֿון מכשפֿה",
+
+
+  "item.sortilege.antidote": "קעגנגיפֿט",
+  "sortilege.antidote.cures": ":היילט",
+
+
+  "item.sortilege.limitite": "שיעוריט",
+  "sortilege.limitite.desc": "!קאָמביניר מיט עפּעס אויף שמידטיש צו פֿאַרהעכער זייַן בנימצא צויבער"
+}

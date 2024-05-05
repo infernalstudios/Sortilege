@@ -17,7 +17,7 @@ public class ModTags {
     }
 
     public static class Items {
-        public static TagKey<Item> SOULBINDERS = create("soulbinders");
+        public static TagKey<Item> SOULBINDERS = create("is_soulbind_material");
 
         private static TagKey<Item> create(String name) {
             return TagKey.create(Registry.ITEM_REGISTRY, new ResourceLocation(Sortilege.MOD_ID, name));

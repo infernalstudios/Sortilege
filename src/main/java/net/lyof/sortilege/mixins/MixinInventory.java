@@ -6,11 +6,14 @@ import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
+import java.util.Map;
 
 @Mixin(Inventory.class)
 public class MixinInventory {
@@ -32,6 +35,13 @@ public class MixinInventory {
 
     @Redirect(method = "dropAll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z"))
     public boolean skipSoulbound(ItemStack stack) {
-        return stack.isEmpty() || ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack);
+        if (ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
+            if (ConfigEntries.consumeSoulbound) {
+                Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
+                enchants.remove(ModEnchants.SOULBOUND.get());
+            }
+            return true;
+        }
+        return stack.isEmpty();
     }
 }

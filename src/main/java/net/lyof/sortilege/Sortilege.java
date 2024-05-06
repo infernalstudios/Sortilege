@@ -1,6 +1,7 @@
 package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
+import net.lyof.sortilege.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
@@ -21,6 +22,8 @@ public class Sortilege implements ModInitializer {
 		ModItemGroups.register();
 
 		ModEnchants.register();
+
+		BetterBrewingRegistry.register();
 	}
 
 	public static Identifier makeID(String name) {

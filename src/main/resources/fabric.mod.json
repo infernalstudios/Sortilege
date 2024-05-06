@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"net.lyof.sortilege.Sortilege"
+		],
+		"client": [
+			"net.lyof.sortilege.SortilegeClient"
 		]
 	},
 	"mixins": [

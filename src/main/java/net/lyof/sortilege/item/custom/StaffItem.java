@@ -199,7 +199,7 @@ public class StaffItem extends ToolItem {
         // Main loop, displaying particles and hurting mobs on its way
         for (int i = 1; i < range * step; i++) {
             x = (float) (player.getX() + look.x * i/step);
-            y = (float) (player.getY() + look.y * i/step + player.getEyeHeight(player.getPose()) - 0.5);
+            y = (float) (player.getY() + look.y * i/step + player.getEyeHeight(player.getPose()) - 0.2);
             z = (float) (player.getZ() + look.z * i/step);
 
             if (world.isClient())

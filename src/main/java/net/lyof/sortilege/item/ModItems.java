@@ -4,9 +4,11 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.item.custom.LimititeItem;
 import net.lyof.sortilege.item.custom.StaffItem;
+import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -32,5 +34,9 @@ public class ModItems {
         return Registry.register(Registries.ITEM, Sortilege.makeID(name), item);
     }
 
+
     public static final Item LIMITITE = register("limitite", new LimititeItem(new FabricItemSettings()));
+
+    public static final Item ANTIDOTE = register("antidote",
+            new AntidotePotionItem(new FabricItemSettings().maxCount(ConfigEntries.antidoteStackSize)));
 }

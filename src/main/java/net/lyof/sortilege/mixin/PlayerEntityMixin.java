@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
@@ -42,5 +43,21 @@ public abstract class PlayerEntityMixin {
     public void linearXpScaling(CallbackInfoReturnable<Integer> cir) {
         if (ConfigEntries.xpLinearCost > 0)
             cir.setReturnValue(ConfigEntries.xpLinearCost);
+    }
+
+    @Inject(method = "addExperienceLevels", at = @At("TAIL"))
+    public void xpCapLevel(int levels, CallbackInfo ci) {
+        if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel > ConfigEntries.xpLevelCap) {
+            this.experienceLevel = ConfigEntries.xpLevelCap;
+            this.experienceProgress = 0f;
+        }
+    }
+
+    @Inject(method = "addExperience", at = @At("TAIL"))
+    public void xpCap(int experience, CallbackInfo ci) {
+        if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel > ConfigEntries.xpLevelCap) {
+            this.experienceLevel = ConfigEntries.xpLevelCap;
+            this.experienceProgress = 0f;
+        }
     }
 }

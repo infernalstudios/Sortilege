@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.brewing.custom.BrewingRecipe;
+import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -22,6 +23,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
     @Override
     public void reload(ResourceManager manager) {
+        ModJsonConfigs.register();
+
         BetterBrewingRegistry.clear();
         BetterBrewingRegistry.register();
 

@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.brewing.BetterBrewingRecipe;
+import net.lyof.sortilege.brewing.IBetterBrewingRecipe;
 import net.lyof.sortilege.brewing.BetterBrewingRegistry;
 import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.item.ItemStack;
@@ -14,7 +14,7 @@ public class BrewingStandBlockEntityMixin {
     @Inject(method = "isValid", at = @At("RETURN"), cancellable = true)
     public void isValid(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (slot != 3 && slot != 4) {
-            for (BetterBrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
+            for (IBetterBrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
                 if (recipe.isInput(stack)) cir.setReturnValue(true);
             }
         }

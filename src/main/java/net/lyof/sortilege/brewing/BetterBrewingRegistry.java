@@ -15,22 +15,28 @@ public class BetterBrewingRegistry {
     }
 
 
-    private static List<BetterBrewingRecipe> RECIPES = new ArrayList<>();
+    private static List<IBetterBrewingRecipe> RECIPES = new ArrayList<>();
 
-    public static List<BetterBrewingRecipe> getAll() {
+    public static List<IBetterBrewingRecipe> getAll() {
         return RECIPES;
     }
 
-    public static void register(BetterBrewingRecipe recipe) {
-        RECIPES.add(recipe);
+    public static void clear() {
+        RECIPES.clear();
     }
+
+    public static void register(IBetterBrewingRecipe recipe) {
+        RECIPES.add(recipe);
+        Sortilege.log(RECIPES);
+    }
+
 
     public static boolean isRecipe(ItemStack input, ItemStack ingredient) {
         return findRecipe(input, ingredient) != null;
     }
 
-    public static BetterBrewingRecipe findRecipe(ItemStack input, ItemStack ingredient) {
-        for (BetterBrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
+    public static IBetterBrewingRecipe findRecipe(ItemStack input, ItemStack ingredient) {
+        for (IBetterBrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
             if (recipe.isIngredient(ingredient) && recipe.isInput(input)) return recipe;
         }
         return null;

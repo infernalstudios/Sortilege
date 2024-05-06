@@ -1,6 +1,6 @@
 package net.lyof.sortilege.brewing.custom;
 
-import net.lyof.sortilege.brewing.BetterBrewingRecipe;
+import net.lyof.sortilege.brewing.IBetterBrewingRecipe;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.lyof.sortilege.utils.PotionHelper;
@@ -11,7 +11,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 
-public class AntidoteBrewingRecipe implements BetterBrewingRecipe {
+public class AntidoteBrewingRecipe implements IBetterBrewingRecipe {
     @Override
     public boolean isInput(ItemStack stack) {
         return stack.getItem() instanceof PotionItem &&

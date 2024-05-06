@@ -1,11 +1,14 @@
 package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lyof.sortilege.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.setup.ReloadListener;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +26,7 @@ public class Sortilege implements ModInitializer {
 
 		ModEnchants.register();
 
-		BetterBrewingRegistry.register();
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new ReloadListener());
 	}
 
 	public static Identifier makeID(String name) {

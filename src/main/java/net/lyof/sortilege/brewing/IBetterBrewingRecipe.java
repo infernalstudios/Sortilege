@@ -2,7 +2,7 @@ package net.lyof.sortilege.brewing;
 
 import net.minecraft.item.ItemStack;
 
-public interface BetterBrewingRecipe {
+public interface IBetterBrewingRecipe {
     // Bottom Slots
     boolean isInput(ItemStack stack);
     // Top Slot

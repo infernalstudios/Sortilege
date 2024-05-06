@@ -39,6 +39,7 @@ public class MixinInventory {
             if (ConfigEntries.consumeSoulbound) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
                 enchants.remove(ModEnchants.SOULBOUND.get());
+                EnchantmentHelper.setEnchantments(enchants, stack);
             }
             return true;
         }

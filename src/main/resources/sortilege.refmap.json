@@ -25,7 +25,8 @@
       "byType": "Lnet/minecraft/world/item/crafting/RecipeManager;m_44054_(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map;"
     },
     "net/lyof/sortilege/mixins/MixinCraftingMenu": {
-      "slotChangedCraftingGrid": "Lnet/minecraft/world/inventory/CraftingMenu;m_150546_(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultContainer;)V"
+      "slotChangedCraftingGrid": "Lnet/minecraft/world/inventory/CraftingMenu;m_150546_(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultContainer;)V",
+      "setRecipeUsed": "Lnet/minecraft/world/inventory/ResultContainer;m_40135_(Lnet/minecraft/world/level/Level;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/crafting/Recipe;)Z"
     }
   },
   "data": {
@@ -55,7 +56,8 @@
         "byType": "Lnet/minecraft/world/item/crafting/RecipeManager;m_44054_(Lnet/minecraft/world/item/crafting/RecipeType;)Ljava/util/Map;"
       },
       "net/lyof/sortilege/mixins/MixinCraftingMenu": {
-        "slotChangedCraftingGrid": "Lnet/minecraft/world/inventory/CraftingMenu;m_150546_(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultContainer;)V"
+        "slotChangedCraftingGrid": "Lnet/minecraft/world/inventory/CraftingMenu;m_150546_(Lnet/minecraft/world/inventory/AbstractContainerMenu;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/inventory/CraftingContainer;Lnet/minecraft/world/inventory/ResultContainer;)V",
+        "setRecipeUsed": "Lnet/minecraft/world/inventory/ResultContainer;m_40135_(Lnet/minecraft/world/level/Level;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/crafting/Recipe;)Z"
       }
     }
   }

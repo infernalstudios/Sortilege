@@ -17,6 +17,7 @@ public class ModItemGroups {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             for (Item staff : ModItems.STAFFS)
                 entries.add(staff);
+            entries.add(ModItems.WITCH_HAT);
             AntidotePotionItem.fillItemGroup(entries, (AntidotePotionItem) ModItems.ANTIDOTE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {

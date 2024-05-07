@@ -8,6 +8,7 @@ import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.item.custom.LimititeItem;
 import net.lyof.sortilege.item.custom.StaffItem;
+import net.lyof.sortilege.item.custom.armor.WitchHatItem;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
@@ -39,4 +40,7 @@ public class ModItems {
 
     public static final Item ANTIDOTE = register("antidote",
             new AntidotePotionItem(new FabricItemSettings().maxCount(ConfigEntries.antidoteStackSize)));
+
+    public static final Item WITCH_HAT = register("witch_hat",
+            new WitchHatItem(new FabricItemSettings()));
 }

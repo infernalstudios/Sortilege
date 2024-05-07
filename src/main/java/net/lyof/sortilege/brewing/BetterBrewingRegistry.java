@@ -27,7 +27,6 @@ public class BetterBrewingRegistry {
 
     public static void register(IBetterBrewingRecipe recipe) {
         RECIPES.add(recipe);
-        Sortilege.log(RECIPES);
     }
 
 

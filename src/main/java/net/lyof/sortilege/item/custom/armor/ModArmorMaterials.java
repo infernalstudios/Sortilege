@@ -1,5 +1,6 @@
 package net.lyof.sortilege.item.custom.armor;
 
+import net.lyof.sortilege.Sortilege;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Items;
@@ -53,7 +54,7 @@ public enum ModArmorMaterials implements ArmorMaterial {
     }
 
     public String getName() {
-        return this.name;
+        return Sortilege.MOD_ID + ":" + this.name;
     }
 
     public float getToughness() {
@@ -62,9 +63,5 @@ public enum ModArmorMaterials implements ArmorMaterial {
 
     public float getKnockbackResistance() {
         return this.knockbackResistance;
-    }
-
-    public String asString() {
-        return this.name;
     }
 }

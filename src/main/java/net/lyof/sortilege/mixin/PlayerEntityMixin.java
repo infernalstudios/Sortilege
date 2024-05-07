@@ -55,7 +55,7 @@ public abstract class PlayerEntityMixin {
 
     @Inject(method = "addExperience", at = @At("TAIL"))
     public void xpCap(int experience, CallbackInfo ci) {
-        if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel > ConfigEntries.xpLevelCap) {
+        if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel >= ConfigEntries.xpLevelCap) {
             this.experienceLevel = ConfigEntries.xpLevelCap;
             this.experienceProgress = 0f;
         }

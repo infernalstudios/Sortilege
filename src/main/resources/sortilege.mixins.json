@@ -9,6 +9,7 @@
     "CraftingScreenHandlerMixin",
     "EnchantmentHelperMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
     "RecipeManagerMixin",

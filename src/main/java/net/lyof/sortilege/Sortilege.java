@@ -2,7 +2,6 @@ package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.lyof.sortilege.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;

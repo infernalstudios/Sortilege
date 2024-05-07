@@ -37,6 +37,8 @@ public abstract class InGameHudMixin {
             if (i > 0) {
                 boolean j = true;
                 k = (int) (this.client.player.experienceProgress * 183.0F);
+                if (this.client.player.experienceLevel >= ConfigEntries.xpLevelCap)
+                    k = 183;
                 l = this.scaledHeight - 32 + 3;
                 context.drawTexture(ICONS, x, l, 0, 64, 182, 5);
                 if (k > 0) {

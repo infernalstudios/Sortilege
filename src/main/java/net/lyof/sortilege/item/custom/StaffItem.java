@@ -7,6 +7,7 @@ import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.enchantment.FireAspectEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -182,8 +183,7 @@ public class StaffItem extends ToolItem {
                     this.rawInfos.on_shoot);
         }
 
-
-        DamageSource damagetype = player.getDamageSources().magic();
+        DamageSource damagetype = player.getDamageSources().indirectMagic(player, player);
         //if (element == ModEnchants.BRAZIER)
         //    damagetype.setIsFire();
 

@@ -18,10 +18,10 @@ public class ModItemGroups {
             for (Item staff : ModItems.STAFFS)
                 entries.add(staff);
             entries.add(ModItems.WITCH_HAT);
-            AntidotePotionItem.fillItemGroup(entries, (AntidotePotionItem) ModItems.ANTIDOTE);
+            AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
-            AntidotePotionItem.fillItemGroup(entries, (AntidotePotionItem) ModItems.ANTIDOTE);
+            AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });
     }
 }

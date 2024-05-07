@@ -31,7 +31,7 @@ public class AntidotePotionItem extends PotionItem {
         super(settings);
     }
 
-    public static void fillItemGroup(FabricItemGroupEntries entries, AntidotePotionItem antidote) {
+    public static void fillItemGroup(FabricItemGroupEntries entries, Item antidote) {
         for (Potion potion : PotionHelper.POTIONS.values())
             entries.add(PotionUtil.setPotion(antidote.getDefaultStack(), potion));
     }

@@ -309,7 +309,7 @@ public class ModJsonConfigs {
                 // Keep equipped items (armor and hotbar) on death
                 "keep_equipped": false,
                 // Should the Soulbound enchantment be removed on use
-                "consume_soulbound": false,
+                "consume_soulbound": true,
                 // Display death coordinates instead of the score from vanilla on the death screen
                 "show_coordinates_on_death": true
               },

@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "Нажмите [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Мѣсто гибели:",
+  "sortilege.requires_level": "Необходимъ уровень не меньше, чѣмъ:",
+
+
+  "item.sortilege.wooden_staff" : "Деревянный жезлъ",
+  "item.sortilege.stone_staff" : "Каменный жезлъ",
+  "item.sortilege.iron_staff" : "Желѣзный жезлъ",
+  "item.sortilege.golden_staff" : "Златой жезлъ",
+  "item.sortilege.diamond_staff" : "Діамантовый жезлъ",
+  "item.sortilege.netherite_staff" : "Незеритовый жезлъ",
+
+  "sortilege.staff.cost": "Требуетъ",
+  "sortilege.experience": "Опытъ",
+
+  "attribute.name.generic.staff_damage": "Колдовской уронъ",
+  "attribute.name.generic.staff_pierce": "Пронзанiе",
+  "attribute.name.generic.staff_range": "Дальность",
+
+  "enchantment.sortilege.potency": "Ядреность",
+  "enchantment.sortilege.potency.desc": "Увеличиваетъ уронъ жезловъ",
+  "enchantment.sortilege.stability": "Стабильность",
+  "enchantment.sortilege.stability.desc": "Увеличиваетъ дальность лучей жезловъ",
+  "enchantment.sortilege.chaining": "Цѣпочка",
+  "enchantment.sortilege.chaining.desc": "Увеличиваетъ пронзаніе лучей жезловъ",
+  "enchantment.sortilege.wisdom": "Мудрость",
+  "enchantment.sortilege.wisdom.desc": "Жезлы тратятъ меньше очковъ опыта",
+  "enchantment.sortilege.push": "Отталкиваніе",
+  "enchantment.sortilege.push.desc": "Лучи жезловъ отталкиваютъ недруговъ",
+  "enchantment.sortilege.pull": "Притягиваніе",
+  "enchantment.sortilege.pull.desc": "Лучи жезловъ притягиваютъ недруговъ",
+  "enchantment.sortilege.brazier": "Горынычъ",
+  "enchantment.sortilege.brazier.desc": "Лучи жезловъ зажариваютъ недруговъ",
+  "enchantment.sortilege.blizzard": "Метелица",
+  "enchantment.sortilege.blizzard.desc": "Лучи жезловъ морозят недруговъ",
+  "enchantment.sortilege.blast": "Взрывъ",
+  "enchantment.sortilege.blast.desc": "Лучи жезловъ сотворяютъ взрывы",
+  "enchantment.sortilege.blitz": "Перун",
+  "enchantment.sortilege.blitz.desc": "Лучи жезловъ разятъ громомъ враговъ",
+  "enchantment.sortilege.ignorance_curse": "Проклятье невѣжества",
+  "enchantment.sortilege.ignorance_curse.desc": "Жезлы тратят очки опыта",
+
+  "enchantment.sortilege.magic_protection": "Защита отъ колдовства",
+  "enchantment.sortilege.magic_protection.desc": "Уменьшаетъ вредъ, причиненный вамъ колдовствомъ",
+  "enchantment.sortilege.arcane": "Таинство",
+  "enchantment.sortilege.arcane.desc": "Всѣ ваши атаки обращаются въ колдовство",
+  "enchantment.sortilege.soulbound": "Положенный судьбой",
+  "enchantment.sortilege.soulbound.desc": "Слѣдуетъ за вами въ міръ иной",
+
+  "sortilege.enchantments": "Зачарованія",
+
+
+  "item.sortilege.witch_hat": "Вѣдьмина шляпа",
+
+
+  "item.sortilege.antidote": "Противоядіе",
+  "sortilege.antidote.cures": "Лѣчитъ:",
+
+
+  "item.sortilege.limitite": "Предельникъ",
+  "sortilege.limitite.desc": "Совмѣстите съ предметомъ на кузнечномъ столѣ, чтобы увеличить предѣлъ зачарованій на этомъ предметѣ!"
+}

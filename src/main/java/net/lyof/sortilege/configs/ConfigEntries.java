@@ -39,7 +39,7 @@ public class ConfigEntries {
         dropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
 
         keepEquipped = new ConfigEntry<>("death.keep_equipped", false).get();
-        consumeSoulbound = new ConfigEntry<>("death.consume_soulbound", false).get();
+        consumeSoulbound = new ConfigEntry<>("death.consume_soulbound", true).get();
 
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 

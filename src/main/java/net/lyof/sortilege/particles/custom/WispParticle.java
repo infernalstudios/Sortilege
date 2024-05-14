@@ -2,6 +2,7 @@ package net.lyof.sortilege.particles.custom;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.lyof.sortilege.particles.amo.ParticleShaders;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
@@ -21,7 +22,6 @@ public class WispParticle extends SpriteBillboardParticle {
         this.gravityStrength = 0;
         this.velocityMultiplier = 0f;
         this.maxAge = 10;
-        this.scale = 1;
 
         this.velocityX = 0;
         this.velocityY = 0;
@@ -29,8 +29,15 @@ public class WispParticle extends SpriteBillboardParticle {
     }
 
     @Override
+    public void tick() {
+        float ratio = (float) (this.maxAge - this.age) / this.maxAge;
+        this.setAlpha(ratio);
+        super.tick();
+    }
+
+    @Override
     public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleShaders.PARTICLE_SHEET_ADDITIVE_MULTIPLY;
     }
 
     @Environment(EnvType.CLIENT)

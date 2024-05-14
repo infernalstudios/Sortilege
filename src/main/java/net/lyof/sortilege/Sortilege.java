@@ -6,6 +6,7 @@ import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Recipe;
@@ -29,6 +30,7 @@ public class Sortilege implements ModInitializer {
 		ModItemGroups.register();
 
 		ModEnchants.register();
+		ModParticles.register();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new ReloadListener());
 	}

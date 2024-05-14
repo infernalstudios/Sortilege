@@ -2,6 +2,7 @@ package net.lyof.sortilege.particles;
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.lyof.sortilege.Sortilege;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -14,7 +15,10 @@ public class ModParticles {
             //WispParticle.COLOR = color;
             double spread = amount == 1 ? 0: 1;
             for (int i = 0; i < amount; i++)
-                level.addParticle(WISP_PIXEL, x, y, z, (Math.random() - 0.5) * spread, spread, (Math.random() - 0.5) * spread);
+                level.addParticle(WISP_PIXEL, x + (0.5 - Math.random()) * spread,
+                        y + (0.5 - Math.random()) * spread,
+                        z + (0.5 - Math.random()) * spread,
+                        color.getLeft(), color.getMiddle(), color.getRight());
         }
     }
 

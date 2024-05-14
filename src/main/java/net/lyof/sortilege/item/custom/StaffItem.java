@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
 import net.minecraft.client.item.TooltipContext;
@@ -203,8 +204,8 @@ public class StaffItem extends ToolItem {
             z = (float) (player.getZ() + look.z * i/step);
 
             if (world.isClient())
-                world.addParticle(ParticleTypes.CRIT, x, y, z, 0, 0, 0);
-                //ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
+                //world.addParticle(ParticleTypes.CRIT, x, y, z, 0, 0, 0);
+                ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
                 //WispParticle.COLOR = MathHelper.randi(colors);
                 //serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
 

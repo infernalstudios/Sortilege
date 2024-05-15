@@ -2,23 +2,40 @@ package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.utils.MathHelper;
+import net.lyof.sortilege.utils.XPHelper;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.GameRules;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin {
+public abstract class PlayerEntityMixin extends LivingEntity {
+    protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
+    }
+
+
     @Shadow public int experienceLevel;
     @Shadow public float experienceProgress;
     @Shadow public int totalExperience;
 
     @Shadow protected int enchantmentTableSeed;
+
+    @Shadow public abstract boolean isCreative();
+
+    @Shadow public abstract void addExperience(int experience);
 
     /**
      * @author Lyof - Sortilege
@@ -58,6 +75,28 @@ public abstract class PlayerEntityMixin {
         if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel >= ConfigEntries.xpLevelCap) {
             this.experienceLevel = ConfigEntries.xpLevelCap;
             this.experienceProgress = 0f;
+        }
+    }
+
+    @Redirect(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"))
+    public boolean keepInventory(GameRules instance, GameRules.Key<GameRules.BooleanRule> rule) {
+        if (rule == GameRules.KEEP_INVENTORY && this.isCreative())
+            return true;
+        return instance.getBoolean(rule);
+    }
+
+    @Inject(method = "getXpToDrop", at = @At("HEAD"), cancellable = true)
+    public void keepXP(CallbackInfoReturnable<Integer> cir) {
+        if (ConfigEntries.doXPKeep && this.getWorld() instanceof ServerWorld world) {
+            int safe_xp = (int) Math.round(XPHelper.getTotalxp(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.selfXPRatio);
+            int drop_xp = (int) Math.round(XPHelper.getTotalxp(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.dropXPRatio);
+
+            this.experienceLevel = 0;
+            this.experienceProgress = 0f;
+            this.addExperience(safe_xp);
+
+            cir.setReturnValue(drop_xp);
+            cir.cancel();
         }
     }
 }

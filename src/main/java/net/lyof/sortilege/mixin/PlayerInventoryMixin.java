@@ -2,6 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -24,7 +25,7 @@ public class PlayerInventoryMixin {
     @Redirect(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))
     public int skipEquipped(List<ItemStack> list) {
         PlayerInventoryMixin self = (PlayerInventoryMixin) (Object) this;
-        if (list != self.main && ConfigEntries.keepEquipped) {
+        if ((list != self.main && ConfigEntries.keepEquipped)) {
             return 0;
         }
         return list.size();
@@ -46,6 +47,7 @@ public class PlayerInventoryMixin {
             }
             return true;
         }
+        if (stack.isIn(ModTags.Items.KEEP_ON_DEATH)) return true;
         return stack.isEmpty();
     }
 }

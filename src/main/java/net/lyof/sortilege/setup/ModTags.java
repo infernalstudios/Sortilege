@@ -17,6 +17,7 @@ public class ModTags {
 
     public static class Items {
         public static TagKey<Item> SOULBINDERS = create("is_soulbind_material");
+        public static TagKey<Item> KEEP_ON_DEATH = create("keep_on_death");
 
         private static TagKey<Item> create(String name) {
             return TagKey.of(RegistryKeys.ITEM, Sortilege.makeID(name));

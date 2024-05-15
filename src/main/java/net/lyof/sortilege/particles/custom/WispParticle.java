@@ -37,7 +37,7 @@ public class WispParticle extends SpriteBillboardParticle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleShaders.PARTICLE_SHEET_ADDITIVE_MULTIPLY;
+        return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @Environment(EnvType.CLIENT)

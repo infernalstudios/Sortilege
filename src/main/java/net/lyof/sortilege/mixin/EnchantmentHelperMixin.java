@@ -1,18 +1,27 @@
 package net.lyof.sortilege.mixin;
 
+import com.google.common.collect.Lists;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 @Mixin(EnchantmentHelper.class)
@@ -43,6 +52,45 @@ public class EnchantmentHelperMixin {
                 itemstack.setSubNbt("Enchantments", listtag);
             }
             ci.cancel();
+        }
+    }
+
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public static List<EnchantmentLevelEntry> getPossibleEntries(int power, ItemStack stack, boolean treasureAllowed) {
+        List<EnchantmentLevelEntry> list = Lists.newArrayList();
+        boolean book = stack.isOf(Items.BOOK);
+        Iterator<Enchantment> iterator = Registries.ENCHANTMENT.iterator();
+
+        while (true) {
+            Enchantment enchantment;
+            do {
+                do {
+                    do {
+                        if (!iterator.hasNext())
+                            return list;
+
+                        enchantment = iterator.next();
+                    } while (enchantment.isTreasure() && !treasureAllowed);
+                } while (!enchantment.isAvailableForRandomSelection());
+            } while (!enchantment.isAcceptableItem(stack) && !book);
+
+            for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
+                if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
+                    list.add(new EnchantmentLevelEntry(enchantment, i));
+                    break;
+                }
+            }
+        }
+    }
+
+    @Inject(method = "calculateRequiredExperienceLevel", at = @At("RETURN"), cancellable = true)
+    private static void betterEnchantingCosts(Random random, int slotIndex, int bookshelfCount, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+        if (ConfigEntries.doIncreasedEnchantCosts) {
+            cir.setReturnValue(ConfigEntries.increasedEnchantCosts.get(slotIndex).intValue());
         }
     }
 }

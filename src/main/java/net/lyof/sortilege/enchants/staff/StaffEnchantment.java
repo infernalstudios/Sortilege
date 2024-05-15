@@ -29,7 +29,7 @@ public class StaffEnchantment extends Enchantment {
 
     @Override
     protected boolean canAccept(Enchantment candidate) {
-        return this.condition == null || this.condition.test(candidate);
+        return (this.condition == null || this.condition.test(candidate)) && super.canAccept(candidate);
     }
 
     public void triggerAttack(LivingEntity target, int level) {

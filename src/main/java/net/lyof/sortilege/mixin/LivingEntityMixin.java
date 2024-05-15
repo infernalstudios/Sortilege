@@ -3,9 +3,12 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.particles.ModParticles;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.mob.PiglinEntity;
 import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.entity.mob.ZombifiedPiglinEntity;
@@ -14,6 +17,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.MutableTriple;
+import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,11 +40,6 @@ public abstract class LivingEntityMixin extends Entity {
     public void xpDropBonus(ServerWorld world, Vec3d pos, int amount) {
         if (this.attackingPlayer != null && this.attackingPlayer.getEquippedStack(EquipmentSlot.HEAD).isOf(ModItems.WITCH_HAT))
             amount += ConfigEntries.witchHatBonus;
-
-        if (this.getDataTracker().containsKey(XPHelper.BOUNTY)) {
-            Sortilege.log(" + " + this.getDataTracker().get(XPHelper.BOUNTY));
-            amount += this.getDataTracker().get(XPHelper.BOUNTY);
-        }
 
         ExperienceOrbEntity.spawn(world, pos, amount);
     }
@@ -67,6 +67,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "drop", at = @At("HEAD"))
     public void giveKillXP(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
+
         if (self instanceof PlayerEntity player && this.getWorld() instanceof ServerWorld world) {
             int steal_xp = (int) Math.round(XPHelper.getTotalxp(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);
             Entity source = damageSource.getAttacker();
@@ -77,11 +78,20 @@ public abstract class LivingEntityMixin extends Entity {
             }
             else ExperienceOrbEntity.spawn(world, this.getPos(), steal_xp);
         }
-    }
 
-    @Inject(method = "shouldDropXp", at = @At("HEAD"), cancellable = true)
-    public void alwaysDropBounty(CallbackInfoReturnable<Boolean> cir) {
-        if (this.getDataTracker().containsKey(XPHelper.BOUNTY) && this.getDataTracker().get(XPHelper.BOUNTY) > 0)
-            cir.setReturnValue(true);
+        if (this.getDataTracker().containsKey(XPHelper.BOUNTY) && this.getWorld() instanceof ServerWorld world) {
+            ExperienceOrbEntity.spawn(world, this.getPos(), this.getDataTracker().get(XPHelper.BOUNTY));
+        }
+
+        if (self instanceof Monster && Math.random() < ConfigEntries.bountyChance
+                && (ConfigEntries.bountyWhitelist == self.getType().isIn(ModTags.Entities.BOUNTIES))
+                && damageSource.getAttacker() instanceof PlayerEntity player) {
+
+            if (player.getWorld() instanceof ServerWorld world)
+                ExperienceOrbEntity.spawn(world, this.getPos(), ConfigEntries.bountyValue);
+            else
+                ModParticles.spawnWisps(player.getWorld(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
+                        8, new MutableTriple<>(0.5f, 1f, 0.2f));
+        }
     }
 }

@@ -21,7 +21,7 @@ public class SortilegeClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(ModParticles.WISP_PIXEL, WispParticle.Factory::new);
         CoreShaderRegistrationCallback.EVENT.register(shader -> {
-            shader.register(Sortilege.makeID("particle_add"), VertexFormats.POSITION_TEXTURE_COLOR_LIGHT,
+            shader.register(Sortilege.makeID("particle"), VertexFormats.POSITION_TEXTURE_COLOR_LIGHT,
                     ParticleShaders::register);
         });
     }

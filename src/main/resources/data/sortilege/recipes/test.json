@@ -1,6 +1,0 @@
-{
-  "type": "sortilege:brewing",
-  "input": "minecraft:glass_bottle",
-  "ingredient": "minecraft:honeycomb",
-  "output": "minecraft:honey_bottle"
-}

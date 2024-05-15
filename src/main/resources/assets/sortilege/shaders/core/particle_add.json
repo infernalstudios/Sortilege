@@ -4,7 +4,7 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "sortilege:particle",
+  "vertex": "sortilege:particle_add",
   "fragment": "sortilege:particle_add",
   "attributes": [
     "Position",

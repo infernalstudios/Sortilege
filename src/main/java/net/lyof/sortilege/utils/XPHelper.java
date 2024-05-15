@@ -19,6 +19,23 @@ public class XPHelper {
     public static final TrackedData<Integer> BOUNTY = new TrackedData<>(41, TrackedDataHandlerRegistry.INTEGER);
 
 
+    public static boolean hasXP(PlayerEntity player, int amount) {
+        float count = player.getNextLevelExperience() * player.experienceProgress;
+        int i = 0;
+        while (count < amount) {
+            if (player.experienceLevel <= 0) {
+                player.experienceLevel += i;
+                return false;
+            }
+
+            i++;
+            player.experienceLevel -= 1;
+            count += player.getNextLevelExperience();
+        }
+        player.experienceLevel += i;
+        return true;
+    }
+
     public static int getTotalxp(PlayerEntity player, ServerWorld server) {
         return getTotalxp(player.experienceLevel, player.experienceProgress, server);
     }

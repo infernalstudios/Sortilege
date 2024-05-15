@@ -7,6 +7,7 @@ import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
+import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.FireAspectEnchantment;
 import net.minecraft.entity.Entity;
@@ -93,7 +94,7 @@ public class StaffItem extends ToolItem {
     @Override
     public boolean canRepair(ItemStack staff, ItemStack stack) {
         if (this.rawInfos != null)
-            return this.rawInfos.repair.test(stack);
+            return this.rawInfos.repair.get().test(stack);
         return super.canRepair(staff, stack);
     }
 
@@ -114,7 +115,7 @@ public class StaffItem extends ToolItem {
     @Override
     public @NotNull TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity player, @NotNull Hand hand) {
         ItemStack staff = player.getStackInHand(hand);
-        if (!player.isCreative() && player.totalExperience < this.getXPCost(staff))
+        if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)))
             return super.use(world, player, hand);
 
         this.handSave = hand;
@@ -147,7 +148,7 @@ public class StaffItem extends ToolItem {
 
 
         if (cost > 0 && !player.isCreative()) {
-            if (player.totalExperience < cost)
+            if (!XPHelper.hasXP(player, cost))
                 return staff;
             player.addExperience(-cost);
         }

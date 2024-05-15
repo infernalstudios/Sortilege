@@ -17,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class ModJsonConfigs {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
@@ -34,7 +35,7 @@ public class ModJsonConfigs {
         public int pierce;
         public int range;
         public int durability;
-        public Ingredient repair;
+        public Supplier<Ingredient> repair;
         public int cooldown;
         public int charge_time;
         public int xp_cost;
@@ -80,7 +81,7 @@ public class ModJsonConfigs {
             this.durability = (dura == -1) ?
                 (int) Math.round(this.tier.getUses() * 0.7) : dura;
             this.repair = (repair.equals("")) ?
-                this.tier.getRepairIngredient() : Ingredient.of(Registry.ITEM.get(new ResourceLocation(repair)));
+                    () -> this.tier.getRepairIngredient() : () -> Ingredient.of(Registry.ITEM.get(new ResourceLocation(repair)));
             this.cooldown = Math.max(cooldown, 0);
             this.charge_time = Math.max(charge_time, 1);
             this.xp_cost = xp_cost;
@@ -107,7 +108,7 @@ public class ModJsonConfigs {
                     ", pierce=" + pierce +
                     ", range=" + range +
                     ", durability=" + durability +
-                    ", repair=" + Arrays.toString(repair.getItems()) +
+                    ", repair=" + Arrays.toString(repair.get().getItems()) +
                     ", cooldown=" + cooldown +
                     ", charge_time=" + charge_time +
                     ", xp_cost=" + xp_cost +

@@ -1,11 +1,13 @@
 package net.lyof.sortilege.items.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ModJsonConfigs;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.MathHelper;
+import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -85,7 +87,7 @@ public class StaffItem extends TieredItem {
     @Override
     public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
         if (this.rawInfos != null)
-            return this.rawInfos.repair.test(stack);
+            return this.rawInfos.repair.get().test(stack);
         return super.isValidRepairItem(staff, stack);
     }
 
@@ -106,7 +108,7 @@ public class StaffItem extends TieredItem {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
         ItemStack staff = player.getItemInHand(hand);
-        if (!player.isCreative() && player.totalExperience < this.getXPCost(staff))
+        if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)))
             return super.use(world, player, hand);
 
         this.handSave = hand;
@@ -139,7 +141,7 @@ public class StaffItem extends TieredItem {
 
 
         if (cost > 0 && !player.isCreative()) {
-            if (player.totalExperience < cost)
+            if (!XPHelper.hasXP(player, cost))
                 return staff;
             player.giveExperiencePoints(-cost);
         }

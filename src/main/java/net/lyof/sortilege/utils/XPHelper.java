@@ -15,6 +15,23 @@ public class XPHelper {
     private static final Map<Integer, Integer> totalxpCache = new HashMap<>();
 
 
+    public static boolean hasXP(Player player, int amount) {
+        float count = player.getXpNeededForNextLevel() * player.experienceProgress;
+        int i = 0;
+        while (count < amount) {
+            if (player.experienceLevel <= 0) {
+                player.experienceLevel += i;
+                return false;
+            }
+
+            i++;
+            player.experienceLevel -= 1;
+            count += player.getXpNeededForNextLevel();
+        }
+        player.experienceLevel += i;
+        return true;
+    }
+
     public static int getTotalxp(Player player, ServerLevel server) {
         return getTotalxp(player.experienceLevel, player.experienceProgress, server);
     }

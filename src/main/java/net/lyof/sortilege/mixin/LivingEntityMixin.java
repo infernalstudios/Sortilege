@@ -94,4 +94,9 @@ public abstract class LivingEntityMixin extends Entity {
                         8, new MutableTriple<>(0.5f, 1f, 0.2f));
         }
     }
+
+    @Inject(method = "dropInventory", at = @At("HEAD"), cancellable = true)
+    public void cancelCuriosDrop(CallbackInfo ci) {
+        if (ConfigEntries.keepEquipped && ((LivingEntity) (Object) this) instanceof PlayerEntity) ci.cancel();
+    }
 }

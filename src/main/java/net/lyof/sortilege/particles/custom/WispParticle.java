@@ -37,7 +37,12 @@ public class WispParticle extends SpriteBillboardParticle {
 
     @Override
     public ParticleTextureSheet getType() {
-        return ParticleShaders.PARTICLE_SHEET_ADDITIVE_MULTIPLY;
+        return ParticleTextureSheet.PARTICLE_SHEET_LIT;
+    }
+
+    @Override
+    protected int getBrightness(float tint) {
+        return 15728880;
     }
 
     @Environment(EnvType.CLIENT)

@@ -15,9 +15,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ModItems {
     public static List<Item> STAFFS = new ArrayList<>();

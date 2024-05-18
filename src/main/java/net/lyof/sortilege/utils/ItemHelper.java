@@ -2,7 +2,6 @@ package net.lyof.sortilege.utils;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.item.ModItems;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.BucketItem;

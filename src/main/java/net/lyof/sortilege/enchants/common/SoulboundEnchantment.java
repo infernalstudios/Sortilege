@@ -3,7 +3,6 @@ package net.lyof.sortilege.enchants.common;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class SoulboundEnchantment extends Enchantment {

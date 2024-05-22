@@ -21,7 +21,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
         ItemStack itemstack = this.copy();
-        int a = EnchantmentHelper.get(itemstack).size();
+        int a = ItemHelper.getEnchantValue(itemstack);
         int limit = ItemHelper.getMaxEnchantValue(itemstack);
         if (limit >= 0) {
             if (!this.getOrCreateNbt().contains("Enchantments", 9)) {

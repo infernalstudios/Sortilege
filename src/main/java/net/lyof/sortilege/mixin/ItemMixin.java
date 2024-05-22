@@ -21,7 +21,7 @@ import java.util.List;
 public class ItemMixin {
     @Inject(method = "appendTooltip", at = @At("HEAD"))
     public void showEnchantLimit(ItemStack stack, World world, List<Text> tooltip, TooltipContext context, CallbackInfo ci) {
-        int a = EnchantmentHelper.get(stack).size();
+        int a = ItemHelper.getEnchantValue(stack);
         int m = ItemHelper.getMaxEnchantValue(stack);
 
         if ((a > 0 || ItemHelper.getExtraEnchants(stack) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&

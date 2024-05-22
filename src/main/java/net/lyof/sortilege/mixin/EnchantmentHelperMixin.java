@@ -28,19 +28,22 @@ public class EnchantmentHelperMixin {
     @Inject(method = "set", at = @At("HEAD"), cancellable = true)
     private static void setEnchantments(Map<Enchantment, Integer> enchants, ItemStack itemstack, CallbackInfo ci) {
         int limit = ItemHelper.getMaxEnchantValue(itemstack);
+        int a = 0;
         if (limit >= 0) {
             NbtList listtag = new NbtList();
 
-            for(Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+            for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
                 Enchantment enchantment = entry.getKey();
                 int i = entry.getValue();
 
                 if (enchantment != null) {
-                    if (listtag.size() < limit || itemstack.isOf(Items.ENCHANTED_BOOK)) {
+                    if (a < limit || itemstack.isOf(Items.ENCHANTED_BOOK)) {
                         listtag.add(EnchantmentHelper.createNbt(EnchantmentHelper.getEnchantmentId(enchantment), i));
                         if (itemstack.isOf(Items.ENCHANTED_BOOK)) {
                             EnchantedBookItem.addEnchantment(itemstack, new EnchantmentLevelEntry(enchantment, i));
                         }
+
+                        if (!enchantment.isCursed()) a++;
                     }
                 }
             }

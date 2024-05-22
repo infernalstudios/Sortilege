@@ -20,7 +20,7 @@ public abstract class MixinItemStack {
     @Inject(method = "enchant", at = @At("HEAD"), cancellable = true)
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
         ItemStack itemstack = this.copy();
-        int a = EnchantmentHelper.getEnchantments(itemstack).size();
+        int a = ItemHelper.getEnchantValue(itemstack);
         int limit = ItemHelper.getMaxEnchantValue(itemstack);
         if (limit >= 0) {
             if (!this.getOrCreateTag().contains("Enchantments", 9)) {

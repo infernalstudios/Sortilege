@@ -21,7 +21,7 @@ import java.util.List;
 public class MixinItem {
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     public void showEnchantLimit(ItemStack itemstack, Level world, List<Component> list, TooltipFlag flag, CallbackInfo ci) {
-        int a = EnchantmentHelper.getEnchantments(itemstack).size();
+        int a = ItemHelper.getEnchantValue(itemstack);
         int m = ItemHelper.getMaxEnchantValue(itemstack);
 
         if ((a > 0 || ItemHelper.getExtraEnchants(itemstack) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&

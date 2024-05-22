@@ -20,6 +20,7 @@ public class MixinEnchantmentHelper {
     @Inject(method = "setEnchantments", at = @At("HEAD"), cancellable = true)
     private static void setEnchantments(Map<Enchantment, Integer> enchants, ItemStack itemstack, CallbackInfo ci) {
         int limit = ItemHelper.getMaxEnchantValue(itemstack);
+        int a = 0;
         if (limit >= 0) {
             ListTag listtag = new ListTag();
 
@@ -28,12 +29,14 @@ public class MixinEnchantmentHelper {
                 int i = entry.getValue();
 
                 if (enchantment != null) {
-                    if (listtag.size() < limit || itemstack.is(Items.ENCHANTED_BOOK)) {
+                    if (a < limit || itemstack.is(Items.ENCHANTED_BOOK)) {
                         listtag.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), i));
                         if (itemstack.is(Items.ENCHANTED_BOOK)) {
                             EnchantedBookItem.addEnchantment(itemstack, new EnchantmentInstance(enchantment, i));
                         }
                     }
+
+                    if (!enchantment.isCurse()) a++;
                 }
             }
 

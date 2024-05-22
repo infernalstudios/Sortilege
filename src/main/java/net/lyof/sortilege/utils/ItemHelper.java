@@ -55,6 +55,13 @@ public class ItemHelper {
     public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
 
+    public static int getEnchantValue(ItemStack stack) {
+        int l = 0;
+        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())
+            if (!enchant.isCurse()) l++;
+        return l;
+    }
+
     public static int getMaxEnchantValue(ItemStack stack) {
         String id = Registry.ITEM.getKey(stack.getItem()).toString();
 
@@ -64,10 +71,15 @@ public class ItemHelper {
         int limit = ConfigEntries.enchantLimiterOverrides.getOrDefault(id, sum ? 0.0 : -1.0).intValue();
         //int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
         if (sum)  limit += default_limit;
-        
+
+        int l = limit + getExtraEnchants(stack);
         if (limit == -1)
-            return default_limit;
-        return limit + getExtraEnchants(stack);
+            l = default_limit;
+
+        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())
+            if (enchant.isCurse()) l++;
+
+        return l;
     }
 
     public static int getExtraEnchants(ItemStack stack) {

@@ -4,6 +4,7 @@
   "package": "net.lyof.sortilege.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinAnvilMenu",
     "MixinCraftingMenu",
     "MixinEnchantmentHelper",
     "MixinInventory",

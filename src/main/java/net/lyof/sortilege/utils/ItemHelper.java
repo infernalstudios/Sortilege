@@ -2,14 +2,13 @@ package net.lyof.sortilege.utils;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.item.ModItems;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHelper {
-    public static final Item LIMIT_BREAKER = Items.ACACIA_BOAT;
+    public static final Item LIMIT_BREAKER = ModItems.LIMITITE;
 
     public static final List<Item> ENCHANTABLES = new ArrayList<>();
     public static final List<Item> SOULBINDABLES = new ArrayList<>();

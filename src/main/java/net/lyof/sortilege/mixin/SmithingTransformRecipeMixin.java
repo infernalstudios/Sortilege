@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.SmithingTransformRecipe;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;

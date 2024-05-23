@@ -270,7 +270,11 @@ public class ModJsonConfigs {
                 // Should enchanting in an enchanting table cost more xp than the default 1 2 3 levels
                 "increased_enchant_costs": true,
                 // If the above is true, defines the new costs to replace 1 2 3
-                "costs": [5, 15, 30],
+                "costs": [1, 3, 7],
+                // If increased_enchant_costs is true, defines the required xp levels to enchants
+                "needed": [5, 15, 30],
+                // Should Anvils never cost experience
+                "no_xp_anvil": true,
                 // Maximum experience level a player can have before it can't increase anymore. Set to -1 to disable the limit,
                 //    and to 0 to disable experience
                 "level_cap": 100,

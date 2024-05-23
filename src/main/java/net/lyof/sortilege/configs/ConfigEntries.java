@@ -22,7 +22,11 @@ public class ConfigEntries {
         witchHatBonus = new ConfigEntry<>("experience.witch_hat.xp_bonus", 3).get();
 
         doIncreasedEnchantCosts = new ConfigEntry<>("experience.increased_enchant_costs", true).get();
-        increasedEnchantCosts = new ConfigEntry<>("experience.costs", List.of(5d, 15d, 30d)).get();
+        increasedEnchantCosts = new ConfigEntry<>("experience.costs", List.of(1d, 3d, 7d)).get();
+        increasedEnchantNeeds = new ConfigEntry<>("experience.needed", List.of(5d, 15d, 30d)).get();
+
+        noXPAnvil = new ConfigEntry<>("experience.no_xp_anvil", true).get();
+
         xpLevelCap = new ConfigEntry<>("experience.level_cap", 100).get();
         xpLinearCost = new ConfigEntry<>("experience.linear_xp_requirement", 40).get();
 
@@ -68,6 +72,8 @@ public class ConfigEntries {
 
     public static boolean doIncreasedEnchantCosts;
     public static List<Double> increasedEnchantCosts;
+    public static List<Double> increasedEnchantNeeds;
+    public static boolean noXPAnvil;
     public static int xpLevelCap;
     public static int xpLinearCost;
 

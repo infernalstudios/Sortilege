@@ -3,6 +3,7 @@
   "package": "net.lyof.sortilege.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "AnvilScreenHandlerMixin",
     "BrewingRecipeRegistryMixin",
     "BrewingStandBlockEntityMixin",
     "BrewingStandScreenHandlerMixin",

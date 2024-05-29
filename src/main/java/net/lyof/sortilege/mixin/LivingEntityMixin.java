@@ -66,7 +66,9 @@ public abstract class LivingEntityMixin extends Entity {
             int steal_xp = (int) Math.round(XPHelper.getTotalxp(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);
             Entity source = damageSource.getAttacker();
 
-            if (source instanceof LivingEntity attacker) {
+            if (source instanceof PlayerEntity playerattacker)
+                playerattacker.addExperience(steal_xp);
+            else if (source instanceof LivingEntity attacker) {
                 attacker.getDataTracker().set(XPHelper.BOUNTY, steal_xp);
                 attacker.setGlowing(true);
             }

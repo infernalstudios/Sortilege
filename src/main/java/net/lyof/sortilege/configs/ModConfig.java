@@ -272,7 +272,7 @@ public class ModConfig {
                 // If the above is true, defines the new costs to replace 1 2 3
                 "costs": [1, 3, 7],
                 // If increased_enchant_costs is true, defines the required xp levels to enchants
-                "needed": [5, 15, 30],
+                "needed": [5, 10, 15],
                 // Should Anvils never cost experience
                 "no_xp_anvil": true,
                 // Maximum experience level a player can have before it can't increase anymore. Set to -1 to disable the limit,

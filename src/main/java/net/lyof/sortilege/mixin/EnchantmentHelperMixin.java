@@ -13,7 +13,6 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.random.Random;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -57,12 +56,8 @@ public class EnchantmentHelperMixin {
         }
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public static List<EnchantmentLevelEntry> getPossibleEntries(int power, ItemStack stack, boolean treasureAllowed) {
+    @Inject(method = "getPossibleEntries", at = @At("HEAD"), cancellable = true)
+    private static void getPossibleEntries(int power, ItemStack stack, boolean treasureAllowed, CallbackInfoReturnable<List<EnchantmentLevelEntry>> cir) {
         List<EnchantmentLevelEntry> list = Lists.newArrayList();
         boolean book = stack.isOf(Items.BOOK);
         Iterator<Enchantment> iterator = Registries.ENCHANTMENT.iterator();
@@ -72,8 +67,10 @@ public class EnchantmentHelperMixin {
             do {
                 do {
                     do {
-                        if (!iterator.hasNext())
-                            return list;
+                        if (!iterator.hasNext()) {
+                            cir.setReturnValue(list);
+                            return;
+                        }
 
                         enchantment = iterator.next();
                     } while (enchantment.isTreasure() && !treasureAllowed);

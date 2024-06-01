@@ -1,7 +1,7 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.lyof.sortilege.configs.ModConfig;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.particles.ModParticles;
@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffItem extends ToolItem {
-    public @Nullable ModJsonConfigs.StaffInfo rawInfos;
+    public @Nullable ModConfig.StaffInfo rawInfos;
     public float damage;
     public int pierce;
     public int range;
@@ -52,7 +52,7 @@ public class StaffItem extends ToolItem {
     public @Nullable Hand handSave;
 
 
-    public StaffItem(ModJsonConfigs.StaffInfo stats, FabricItemSettings settings) {
+    public StaffItem(ModConfig.StaffInfo stats, FabricItemSettings settings) {
         this(stats.tier, stats.damage, stats.pierce, stats.range, stats.durability, stats.cooldown, stats.charge_time, stats.xp_cost,
                 stats.fireRes ?
                     settings.fireproof() : settings);

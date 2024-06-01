@@ -26,7 +26,7 @@ public class ConfigEntry<T> {
 
     @SuppressWarnings("unchecked")
     public T get(T fallback) {
-        Map next = ModJsonConfigs.CONFIG;
+        Map next = ModConfig.CONFIG;
         Object result = null;
 
         for (String step : this.path) {

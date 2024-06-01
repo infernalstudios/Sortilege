@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.configs.ModJsonConfigs;
+import net.lyof.sortilege.configs.ModConfig;
 import net.lyof.sortilege.item.custom.LimititeItem;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.item.custom.armor.WitchHatItem;
@@ -21,9 +21,9 @@ public class ModItems {
     public static List<Item> STAFFS = new ArrayList<>();
 
     public static void register() {
-        for (Pair<String, ModJsonConfigs.StaffInfo> pair : ModJsonConfigs.STAFFS) {
+        for (Pair<String, ModConfig.StaffInfo> pair : ModConfig.STAFFS) {
             String id = pair.getFirst();
-            ModJsonConfigs.StaffInfo staff = pair.getSecond();
+            ModConfig.StaffInfo staff = pair.getSecond();
             if (FabricLoader.getInstance().isModLoaded(staff.dependency))
                 STAFFS.add(register(id, new StaffItem(staff, new FabricItemSettings().maxCount(1))));
         }

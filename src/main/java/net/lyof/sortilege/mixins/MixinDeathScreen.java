@@ -21,6 +21,10 @@ public class MixinDeathScreen {
             this.deathScore = Component.translatable("sortilege.death_screen.position")
                     .append(Component.literal(" " + self.getMinecraft().player.blockPosition().toShortString())
                             .withStyle(ChatFormatting.YELLOW));
+
+            self.getMinecraft().player.sendSystemMessage(Component.translatable("sortilege.death_screen.position")
+                    .append(Component.literal(" " + self.getMinecraft().player.blockPosition().toShortString())
+                            .withStyle(ChatFormatting.YELLOW)));
         }
     }
 }

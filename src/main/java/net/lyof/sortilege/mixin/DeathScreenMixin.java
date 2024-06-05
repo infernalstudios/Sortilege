@@ -22,6 +22,10 @@ public class DeathScreenMixin {
             this.scoreText = Text.translatable("sortilege.death_screen.position")
                     .append(Text.literal(" " + ((ScreenAccessor) self).getClient().player.getBlockPos().toShortString())
                             .formatted(Formatting.YELLOW));
+
+            ((ScreenAccessor) self).getClient().player.sendMessage(Text.translatable("sortilege.death_screen.position")
+                    .append(Text.literal(" " + ((ScreenAccessor) self).getClient().player.getBlockPos().toShortString())
+                            .formatted(Formatting.YELLOW)), false);
         }
     }
 }

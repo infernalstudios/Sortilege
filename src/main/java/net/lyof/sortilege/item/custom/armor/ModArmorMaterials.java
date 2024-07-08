@@ -54,7 +54,7 @@ public enum ModArmorMaterials implements ArmorMaterial {
     }
 
     public String getName() {
-        return Sortilege.MOD_ID + ":" + this.name;
+        return this.name;
     }
 
     public float getToughness() {

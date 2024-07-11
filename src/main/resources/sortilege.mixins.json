@@ -8,6 +8,7 @@
     "MixinCraftingMenu",
     "MixinEnchantmentHelper",
     "MixinInventory",
+    "MixinItem",
     "MixinItemStack",
     "MixinPlayer",
     "MixinRecipeManager",
@@ -16,8 +17,7 @@
   ],
   "client": [
     "MixinDeathScreen",
-    "MixinGui",
-    "MixinItem"
+    "MixinGui"
   ],
   "server": [
   ],

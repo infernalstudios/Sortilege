@@ -255,6 +255,8 @@ public class ModConfig {
                     "max_limit_break": 3
                   }
                 },
+                // Allow using Enchanted Books on items in inventory
+                "allow_inventory_enchanting": false,
                 // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments
                 "magic_protection_protection_compatibility": false
               },

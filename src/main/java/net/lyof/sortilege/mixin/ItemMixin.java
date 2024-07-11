@@ -3,18 +3,27 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
+import net.minecraft.util.ClickType;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Map;
 
 @Mixin(Item.class)
 public class ItemMixin {
@@ -29,5 +38,28 @@ public class ItemMixin {
             tooltip.add(Text.literal(a + "/" + m).append(" ")
                     .append(Text.translatable("sortilege.enchantments"))
                     .formatted(a >= m ? Formatting.RED : Formatting.WHITE));
+    }
+
+    @Inject(method = "onStackClicked", at = @At("TAIL"), cancellable = true)
+    public void inventoryEnchant(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
+        if (ConfigEntries.allowInventoryEnchanting || clickType == ClickType.LEFT) return;
+        if (!(stack.getItem() instanceof EnchantedBookItem)) return;
+
+        Map<Enchantment, Integer> enchants = EnchantmentHelper.get(stack);
+        ItemStack other = slot.getStack();
+        boolean used = false;
+
+        for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
+            if (entry.getKey().isAcceptableItem(other)
+                    && EnchantmentHelper.isCompatible(EnchantmentHelper.get(other).keySet(), entry.getKey())) {
+                other.addEnchantment(entry.getKey(), entry.getValue());
+                used = true;
+            }
+        }
+
+        if (used) {
+            stack.decrement(stack.getCount());
+            cir.setReturnValue(true);
+        }
     }
 }

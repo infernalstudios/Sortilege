@@ -16,6 +16,8 @@ public class ConfigEntries {
         doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.limitite.generate_as_loot", true).get();
         maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.limitite.max_limit_break", 3).get();
 
+        allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
+
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
 
         witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
@@ -64,6 +66,8 @@ public class ConfigEntries {
     public static boolean isLimititeFoil;
     public static boolean doLimititeSpawn;
     public static int maxLimitBreak;
+
+    public static boolean allowInventoryEnchanting;
 
     public static boolean magicProtCompatibility;
 

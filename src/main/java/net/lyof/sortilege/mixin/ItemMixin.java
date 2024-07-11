@@ -10,8 +10,10 @@ import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Formatting;
@@ -42,7 +44,7 @@ public class ItemMixin {
 
     @Inject(method = "onStackClicked", at = @At("TAIL"), cancellable = true)
     public void inventoryEnchant(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        if (ConfigEntries.allowInventoryEnchanting || clickType == ClickType.LEFT) return;
+        if ((!ConfigEntries.allowInventoryEnchanting && !player.isCreative()) || clickType == ClickType.LEFT) return;
         if (!(stack.getItem() instanceof EnchantedBookItem)) return;
 
         Map<Enchantment, Integer> enchants = EnchantmentHelper.get(stack);
@@ -58,7 +60,20 @@ public class ItemMixin {
         }
 
         if (used) {
-            stack.decrement(stack.getCount());
+            if (player.getWorld().isClient()) {
+                for (int i = 0; i < 20; i++) {
+                    float sin = (float) Math.sin(i * Math.PI / 10);
+                    float cos = (float) Math.cos(i * Math.PI / 10);
+
+                    player.getWorld().addParticle(ParticleTypes.END_ROD,
+                            player.getX() + sin, player.getEyeY() - 0.5, player.getZ() + cos,
+                            0, 0, 0);
+                }
+            }
+
+            player.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1, 1);
+
+            stack.decrement(1);
             cir.setReturnValue(true);
         }
     }

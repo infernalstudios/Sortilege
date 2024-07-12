@@ -241,7 +241,10 @@ public class ModJsonConfigs {
                     "minecraft:golden_chestplate": 2,
                     "minecraft:golden_leggings": 2,
                     "minecraft:golden_boots": 2,
-                    "sortilege:golden_staff": 2
+                    "sortilege:golden_staff": 2,
+                    
+                    "miningmaster:ultima_sword": 1,
+                    "miningmaster:ultima_pickaxe": 1
                   },
                   // Should an item's maximum enchantments be displayed even when it is not enchanted
                   "always_show_limit": true,

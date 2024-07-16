@@ -8,6 +8,7 @@ import java.util.Map;
 public class ConfigEntries {
     public static void reload() {
         enchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
+        cursesAddSlots = new ConfigEntry<>("enchantments.enchant_limiter.curses_add_slots", true).get();
         enchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
         enchantLimiterOverrides = new ConfigEntry<Map<String, Double>>( "enchantments.enchant_limiter.overrides", new HashMap<>()).get();
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
@@ -58,6 +59,7 @@ public class ConfigEntries {
     }
 
     public static int enchantLimiterDefault;
+    public static boolean cursesAddSlots;
     public static String enchantLimiterMode;
     public static Map<String, Double> enchantLimiterOverrides;
     public static boolean alwaysShowEnchantLimit;

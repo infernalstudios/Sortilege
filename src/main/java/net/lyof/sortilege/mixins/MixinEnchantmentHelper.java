@@ -1,5 +1,6 @@
 package net.lyof.sortilege.mixins;
 
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -36,7 +37,7 @@ public class MixinEnchantmentHelper {
                         }
                     }
 
-                    if (!enchantment.isCurse()) a++;
+                    if (!enchantment.isCurse() || !ConfigEntries.cursesAddSlots) a++;
                 }
             }
 

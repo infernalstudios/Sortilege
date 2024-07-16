@@ -226,6 +226,8 @@ public class ModJsonConfigs {
                   // Limits how many enchantments can be added to an item. Set it to -1 to disable the limiter,
                   //    and to 0 to disable enchanting as a whole
                   "default": 3,
+                  // Should curses add enchantment slots instead of using them
+                  "curses_add_slots": true,
                   // Overide modes include "relative" and "absolute".
                   //    If set to "relative", the overrides defined below will be added onto the default limit.
                   //    If set to "absolute", they'll replace the default limits.

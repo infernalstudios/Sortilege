@@ -48,7 +48,7 @@ public class ItemHelper {
     public static int getEnchantValue(ItemStack stack) {
         int l = 0;
         for (Enchantment enchant : EnchantmentHelper.get(stack).keySet())
-            if (!enchant.isCursed()) l++;
+            if (!enchant.isCursed() || !ConfigEntries.cursesAddSlots) l++;
         return l;
     }
 
@@ -67,7 +67,7 @@ public class ItemHelper {
             l = default_limit;
 
         for (Enchantment enchant : EnchantmentHelper.get(stack).keySet())
-            if (enchant.isCursed()) l++;
+            if (enchant.isCursed() && ConfigEntries.cursesAddSlots) l++;
 
         return l;
     }

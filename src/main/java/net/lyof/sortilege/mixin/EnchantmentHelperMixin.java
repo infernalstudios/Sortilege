@@ -42,7 +42,7 @@ public class EnchantmentHelperMixin {
                             EnchantedBookItem.addEnchantment(itemstack, new EnchantmentLevelEntry(enchantment, i));
                         }
 
-                        if (!enchantment.isCursed()) a++;
+                        if (!enchantment.isCursed() || !ConfigEntries.cursesAddSlots) a++;
                     }
                 }
             }

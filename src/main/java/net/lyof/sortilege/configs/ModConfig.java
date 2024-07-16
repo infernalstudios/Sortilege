@@ -227,7 +227,9 @@ public class ModConfig {
                   // Limits how many enchantments can be added to an item. Set it to -1 to disable the limiter,
                   //    and to 0 to disable enchanting as a whole
                   "default": 3,
-                  // Overide modes include "relative" and "absolute".
+                  // Should curses add enchantment slots instead of using them
+                  "curses_add_slots": true,
+                  // Override modes include "relative" and "absolute".
                   //    If set to "relative", the overrides defined below will be added onto the default limit.
                   //    If set to "absolute", they'll replace the default limits.
                   "override_mode": "relative",
@@ -242,7 +244,10 @@ public class ModConfig {
                     "minecraft:golden_chestplate": 2,
                     "minecraft:golden_leggings": 2,
                     "minecraft:golden_boots": 2,
-                    "sortilege:golden_staff": 2
+                    "sortilege:golden_staff": 2,
+                    
+                    "miningmaster:ultima_sword": 1,
+                    "miningmaster:ultima_pickaxe": 1
                   },
                   // Should an item's maximum enchantments be displayed even when it is not enchanted
                   "always_show_limit": true,

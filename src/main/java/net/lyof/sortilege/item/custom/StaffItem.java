@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
@@ -90,6 +91,8 @@ public class StaffItem extends ToolItem {
 
     @Override
     public boolean canRepair(ItemStack staff, ItemStack stack) {
+        if (Registries.ITEM.getId(stack.getItem()).toString().equals("phantasm:oblivion"))
+            return true;
         if (this.rawInfos != null)
             return this.rawInfos.repair.get().test(stack);
         return super.canRepair(staff, stack);

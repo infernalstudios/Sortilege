@@ -11,6 +11,7 @@ import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.antlr.v4.runtime.misc.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -86,6 +88,8 @@ public class StaffItem extends TieredItem {
 
     @Override
     public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
+        if (Registry.ITEM.getKey(stack.getItem()).toString().equals("phantasm:oblivion"))
+            return true;
         if (this.rawInfos != null)
             return this.rawInfos.repair.get().test(stack);
         return super.isValidRepairItem(staff, stack);

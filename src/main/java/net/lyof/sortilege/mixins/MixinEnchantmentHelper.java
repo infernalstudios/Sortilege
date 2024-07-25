@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixins;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

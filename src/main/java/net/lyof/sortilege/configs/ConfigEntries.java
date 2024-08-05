@@ -61,8 +61,8 @@ public class ConfigEntries {
 
     public static int enchantLimiterDefault;
     public static boolean cursesAddSlots;
-    public static String enchantLimiterMode;
-    public static Map<String, Double> enchantLimiterOverrides;
+    public static String enchantLimiterMode = "";
+    public static Map<String, Double> enchantLimiterOverrides = Map.of();
     public static boolean alwaysShowEnchantLimit;
 
     public static boolean isLimititeFoil;
@@ -77,8 +77,8 @@ public class ConfigEntries {
     public static int witchHatBonus;
 
     public static boolean doIncreasedEnchantCosts;
-    public static List<Double> increasedEnchantCosts;
-    public static List<Double> increasedEnchantNeeds;
+    public static List<Double> increasedEnchantCosts = List.of();
+    public static List<Double> increasedEnchantNeeds = List.of();
     public static boolean noXPAnvil;
     public static int xpLevelCap;
     public static int xpLinearCost;
@@ -87,7 +87,7 @@ public class ConfigEntries {
     public static int bountyValue;
     public static double bountyChance;
 
-    public static Map<String, Double> xpRequirements;
+    public static Map<String, Double> xpRequirements = Map.of();
 
     public static boolean doXPKeep;
     public static boolean stealFromPlayers;
@@ -100,11 +100,11 @@ public class ConfigEntries {
 
     public static boolean showDeathCoordinates;
 
-    public static List<String> antidoteBlacklist;
+    public static List<String> antidoteBlacklist = List.of();
     public static int antidoteStackSize;
 
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;
 
-    public static List<Map<String, Map<String, Object>>> staffEntries;
+    public static List<Map<String, Map<String, Object>>> staffEntries = List.of();
 }

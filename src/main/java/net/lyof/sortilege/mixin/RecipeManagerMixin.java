@@ -38,7 +38,7 @@ public class RecipeManagerMixin {
                     id,
                     Ingredient.ofItems(Items.LAPIS_LAZULI),
                     Ingredient.ofItems(item),
-                    Ingredient.ofItems(ItemHelper.LIMIT_BREAKER),
+                    Ingredient.fromTag(ModTags.Items.LIMIT_BREAKER),
                     new ItemStack(item)));
         }
 

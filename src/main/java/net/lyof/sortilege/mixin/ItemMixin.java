@@ -42,6 +42,14 @@ public class ItemMixin {
                     .formatted(a >= m ? Formatting.RED : Formatting.WHITE));
     }
 
+    @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
+    public void preventUselessEnchants(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
+        int a = ItemHelper.getEnchantValue(stack);
+        int m = ItemHelper.getMaxEnchantValue(stack);
+
+        if (m >= 0 && a >= m) cir.setReturnValue(false);
+    }
+
     @Inject(method = "onStackClicked", at = @At("TAIL"), cancellable = true)
     public void inventoryEnchant(ItemStack stack, Slot slot, ClickType clickType, PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         if ((!ConfigEntries.allowInventoryEnchanting && !player.isCreative()) || clickType == ClickType.LEFT) return;

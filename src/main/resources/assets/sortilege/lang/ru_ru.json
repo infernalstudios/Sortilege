@@ -4,7 +4,7 @@
   "tooltip.press_shift.right": "]",
 
   "sortilege.death_screen.position": "Место смерти:",
-  "sortilege.requires_level": "Необходим минимальный уровень: %s!",
+  "sortilege.crafting.requires_level": "Необходим минимальный уровень: %s!",
 
 
   "item.sortilege.wooden_staff" : "Деревянный жезл",

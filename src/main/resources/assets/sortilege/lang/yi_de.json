@@ -4,7 +4,7 @@
   "tooltip.press_shift.right": "]",
 
   "sortilege.death_screen.position": ":שטעלע",
-  "sortilege.requires_level": ":איר דאַרפֿן צו זיין בייַ מינדסטער מדרגה",
+  "sortilege.requires_level": "!%s :איר דאַרפֿן צו זיין בייַ מינדסטער מדרגה",
 
 
   "item.sortilege.wooden_staff" : "האָלצשטעקן",

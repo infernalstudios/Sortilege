@@ -77,7 +77,7 @@ public class MixinCraftingMenu {
 
         if (level < required.intValue()) {
             player.sendSystemMessage(
-                    Component.translatable("sortilege.requires_level").append(" " + required.intValue() + "!")
+                    Component.translatable("sortilege.requires_level", required.intValue())
                             .withStyle(ChatFormatting.YELLOW), true);
             world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
         }

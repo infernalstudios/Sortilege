@@ -4,7 +4,7 @@
   "tooltip.press_shift.right": "]",
 
   "sortilege.death_screen.position": "Місцезнаходження:",
-  "sortilege.requires_level": "Вам треба хочаб рівень",
+  "sortilege.requires_level": "Вам треба хочаб рівень %s!",
 
 
   "item.sortilege.wooden_staff" : "Дерев'яна патериця",

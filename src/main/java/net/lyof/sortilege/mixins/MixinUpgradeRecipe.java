@@ -44,7 +44,7 @@ public abstract class MixinUpgradeRecipe {
         }
     }
 
-    @Inject(method = "matches", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "matches", at = @At("HEAD"), cancellable = true)
     public void stopUseless(Container inventory, Level world, CallbackInfoReturnable<Boolean> cir) {
         if (this.getId().toString().endsWith("_limit_break")) {
             if (ItemHelper.getExtraEnchants(inventory.getItem(1)) >= ConfigEntries.maxLimitBreak) cir.setReturnValue(false);

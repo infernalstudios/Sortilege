@@ -16,13 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinAnvilMenu {
     @Shadow @Final private DataSlot cost;
 
-    @Inject(method = "createResult", at = @At("RETURN"))
+    @Inject(method = "createResult", at = @At("HEAD"))
     public void noAnvilCost(CallbackInfo ci) {
         if (ConfigEntries.noXPAnvil) this.cost.set(0);
     }
 
-    @Inject(method = "mayPickup", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "mayPickup", at = @At("HEAD"), cancellable = true)
     public void canTakeFix(Player player, boolean present, CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(true);
+        if (ConfigEntries.noXPAnvil) cir.setReturnValue(true);
     }
 }

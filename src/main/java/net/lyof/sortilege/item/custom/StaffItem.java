@@ -99,6 +99,12 @@ public class StaffItem extends ToolItem {
     }
 
     @Override
+    public int getEnchantability() {
+        if (this.rawInfos != null) return this.rawInfos.enchantability;
+        return super.getEnchantability();
+    }
+
+    @Override
     public void appendTooltip(ItemStack itemstack, @Nullable World level, List<Text> list, TooltipContext flag) {
         super.appendTooltip(itemstack, level, list, flag);
 

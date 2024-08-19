@@ -45,7 +45,7 @@ public class SmithingTransformRecipeMixin {
         }
     }
 
-    @Inject(method = "matches", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "matches", at = @At("HEAD"), cancellable = true)
     public void stopUseless(Inventory inventory, World world, CallbackInfoReturnable<Boolean> cir) {
         if (this.id.toString().endsWith("_limit_break")) {
             if (ItemHelper.getExtraEnchants(inventory.getStack(1)) >= ConfigEntries.maxLimitBreak) cir.setReturnValue(false);

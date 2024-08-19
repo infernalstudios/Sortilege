@@ -95,7 +95,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             this.addExperience(safe_xp);
 
             cir.setReturnValue(drop_xp);
-            cir.cancel();
         }
     }
 }

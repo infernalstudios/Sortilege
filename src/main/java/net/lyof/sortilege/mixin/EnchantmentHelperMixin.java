@@ -86,10 +86,9 @@ public class EnchantmentHelperMixin {
         }
     }
 
-    @Inject(method = "calculateRequiredExperienceLevel", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "calculateRequiredExperienceLevel", at = @At("HEAD"), cancellable = true)
     private static void betterEnchantingCosts(Random random, int slotIndex, int bookshelfCount, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (ConfigEntries.doIncreasedEnchantCosts) {
+        if (ConfigEntries.doIncreasedEnchantCosts)
             cir.setReturnValue(ConfigEntries.increasedEnchantNeeds.get(slotIndex).intValue());
-        }
     }
 }

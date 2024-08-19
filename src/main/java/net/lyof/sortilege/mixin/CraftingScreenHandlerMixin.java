@@ -65,7 +65,7 @@ public class CraftingScreenHandlerMixin {
 
         if (level < required.intValue()) {
             player.sendMessage(
-                    Text.translatable("sortilege.requires_level").append(" " + required.intValue() + "!")
+                    Text.translatable("sortilege.requires_level", required.intValue())
                             .formatted(Formatting.YELLOW), true);
             world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
         }

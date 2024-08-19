@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BrewingStandBlockEntity.class)
 public class BrewingStandBlockEntityMixin {
-    @Inject(method = "isValid", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "isValid", at = @At("HEAD"), cancellable = true)
     public void isValid(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (slot != 3 && slot != 4) {
             for (IBetterBrewingRecipe recipe : BetterBrewingRegistry.getAll()) {

@@ -36,7 +36,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 String content = new String(resource.getInputStream().readAllBytes());
                 Map<String, ?> json = new Gson().fromJson(content, Map.class);
 
-                if (!json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing")) continue;
+                if (json == null || !json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing")) continue;
 
                 BrewingRecipe.read(json);
 

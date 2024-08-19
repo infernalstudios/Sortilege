@@ -21,7 +21,7 @@ public class AnvilScreenHandlerMixin {
         if (ConfigEntries.noXPAnvil) this.levelCost.set(0);
     }
 
-    @Inject(method = "canTakeOutput", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "canTakeOutput", at = @At("HEAD"), cancellable = true)
     public void canTakeFix(PlayerEntity player, boolean present, CallbackInfoReturnable<Boolean> cir) {
         if (ConfigEntries.noXPAnvil) cir.setReturnValue(true);
     }

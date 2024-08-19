@@ -33,6 +33,7 @@ public class ModConfig {
 
     public static class StaffInfo {
         public ToolMaterial tier;
+        public int enchantability;
         public int damage;
         public int pierce;
         public int range;
@@ -52,6 +53,7 @@ public class ModConfig {
         public StaffInfo(Map<String, Object> dict) {
             this(
                     (String) dict.getOrDefault("tier", "WOOD"),
+                    MathHelper.toInt(dict.getOrDefault("enchantability", -1)),
                     MathHelper.toInt(dict.getOrDefault("damage", 2)),
                     MathHelper.toInt(dict.getOrDefault("pierce", 1)),
                     MathHelper.toInt(dict.getOrDefault("range", 8)),
@@ -69,7 +71,7 @@ public class ModConfig {
             );
         }
 
-        public StaffInfo(String tier, int dmg, int pierce, int range, int dura, String repair,  int cooldown, int charge_time,
+        public StaffInfo(String tier, int enchant, int dmg, int pierce, int range, int dura, String repair,  int cooldown, int charge_time,
                          int xp_cost, List<List<Double>> colors, boolean fire_res, String dependency, String on_shoot, String on_hit_self, String on_hit_target) {
             try {
                 this.tier = ToolMaterials.valueOf(tier);
@@ -77,6 +79,8 @@ public class ModConfig {
             catch (IllegalArgumentException e) {
                 this.tier = ToolMaterials.WOOD;
             }
+            this.enchantability = enchant == -1 ?
+                this.tier.getEnchantability() : enchant;
             this.damage = dmg;
             this.pierce = pierce;
             this.range = range;
@@ -106,6 +110,7 @@ public class ModConfig {
         public String toString() {
             return "StaffInfo{" +
                     "tier=" + tier +
+                    ", enchantability=" + enchantability +
                     ", damage=" + damage +
                     ", pierce=" + pierce +
                     ", range=" + range +
@@ -347,6 +352,8 @@ public class ModConfig {
                     "example_staff": {
                       // Sets the repair material and the durability if not set
                       "tier": "GOLD",
+                      // Staff's enchantability on the Enchanting Table. Defaults to the tier's
+                      "enchantability": 22,
                       // Half hearts of damage the staff deals
                       "damage": 5,
                       // Maximal number of targets the staff can pierce through

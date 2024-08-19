@@ -10,6 +10,7 @@ import net.lyof.sortilege.utils.MathHelper;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -164,10 +165,7 @@ public class StaffItem extends ToolItem {
 
         world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
         player.getItemCooldownManager().set(staff.getItem(), this.cooldown);
-        if (!player.getAbilities().creativeMode && staff.damage(1, Random.create(), null)) {
-            staff.decrement(1);
-            staff.setDamage(0);
-        }
+        staff.damage(1, player, e -> e.sendToolBreakStatus(this.handSave));
 
 
         // Getting the look vector to shoot the ray along

@@ -303,10 +303,12 @@ public class ModConfig {
                   "chance": 0.05
                 },
                 
-                // Locks certain recipes behind experience levels. Each entry must be of the form "modid:recipeid": minimalxplevel
-                //    The default config locks the crafting of Ender Eyes behind level 30, as an example
+                // Locks certain recipes behind experience levels or advancements.
+                //    Each entry must be of the form "modid:recipeid": minimalxplevel or "modid:recipeid": "advancementid"
+                //    The default config locks the crafting of Ender Eyes behind level 30 and the Beacon behind summoning the Wither, as an example
                 "xp_requirements": {
-                  "minecraft:ender_eye": 30
+                  "minecraft:ender_eye": 30,
+                  "minecraft:beacon": "minecraft:nether/summon_wither"
                 }
               },
               

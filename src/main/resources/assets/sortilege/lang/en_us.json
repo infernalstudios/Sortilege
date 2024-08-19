@@ -4,7 +4,8 @@
   "tooltip.press_shift.right": "]",
 
   "sortilege.death_screen.position": "Position:",
-  "sortilege.requires_level": "You need at least %s levels!",
+  "sortilege.crafting.requires_level": "You need at least %s levels!",
+  "sortilege.crafting.requires_advancement": "You need to have completed %s!",
 
 
   "item.sortilege.wooden_staff" : "Wooden Staff",

@@ -5,7 +5,9 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.brewing.custom.BrewingRecipe;
+import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.configs.ModConfig;
+import net.lyof.sortilege.crafting.RecipeLock;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -23,6 +25,12 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override
     public void reload(ResourceManager manager) {
         ModConfig.register();
+
+        RecipeLock.clear();
+        for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
+            RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
+                    new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
+        }
 
         BetterBrewingRegistry.clear();
         BetterBrewingRegistry.register();

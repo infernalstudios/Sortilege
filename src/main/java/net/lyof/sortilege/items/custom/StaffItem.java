@@ -96,6 +96,12 @@ public class StaffItem extends TieredItem {
     }
 
     @Override
+    public int getEnchantmentValue() {
+        if (this.rawInfos != null) return this.rawInfos.enchantability;
+        return super.getEnchantmentValue();
+    }
+
+    @Override
     public void appendHoverText(ItemStack itemstack, @Nullable Level level, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(itemstack, level, list, flag);
 

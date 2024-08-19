@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "Нажмите [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Место смерти:",
+  "sortilege.crafting.requires_level": "Необходим минимальный уровень: %s!",
+
+
+  "item.sortilege.wooden_staff" : "Деревянный жезл",
+  "item.sortilege.stone_staff" : "Каменный жезл",
+  "item.sortilege.iron_staff" : "Железный жезл",
+  "item.sortilege.golden_staff" : "Золотой жезл",
+  "item.sortilege.diamond_staff" : "Алмазный жезл",
+  "item.sortilege.netherite_staff" : "Незеритовый жезл",
+
+  "sortilege.staff.cost": "Требует",
+  "sortilege.experience": "Опыт",
+
+  "attribute.name.generic.staff_damage": "Магический урон",
+  "attribute.name.generic.staff_pierce": "Пронзание",
+  "attribute.name.generic.staff_range": "Дальность",
+
+  "enchantment.sortilege.potency": "Мощность",
+  "enchantment.sortilege.potency.desc": "Увеличивает урон лучей жезлов",
+  "enchantment.sortilege.stability": "Стабильность",
+  "enchantment.sortilege.stability.desc": "Увеличивает дальность лучей жезлов",
+  "enchantment.sortilege.chaining": "Цепочка",
+  "enchantment.sortilege.chaining.desc": "Увеличивает пронзание лучей жезлов",
+  "enchantment.sortilege.wisdom": "Мудрость",
+  "enchantment.sortilege.wisdom.desc": "Жезлы тратят меньше очков опыта",
+  "enchantment.sortilege.push": "Отталкивание",
+  "enchantment.sortilege.push.desc": "Отталкивает пораженные лучами жезла цели",
+  "enchantment.sortilege.pull": "Притягивание",
+  "enchantment.sortilege.pull.desc": "Притягивает пораженные лучами жезла цели",
+  "enchantment.sortilege.brazier": "Жаровня",
+  "enchantment.sortilege.brazier.desc": "Лучи жезлов поджигают пораженные цели",
+  "enchantment.sortilege.blizzard": "Метель",
+  "enchantment.sortilege.blizzard.desc": "Лучи жезлов замораживают пораженные цели",
+  "enchantment.sortilege.blast": "Взрыв",
+  "enchantment.sortilege.blast.desc": "Лучи жезлов создают взрывы",
+  "enchantment.sortilege.blitz": "Блиц",
+  "enchantment.sortilege.blitz.desc": "Лучи жезлов шокируют пораженные цели",
+  "enchantment.sortilege.ignorance_curse": "Проклятье невежества",
+  "enchantment.sortilege.ignorance_curse.desc": "Жезлы тратят очки опыта",
+
+  "enchantment.sortilege.magic_protection": "Защита от магии",
+  "enchantment.sortilege.magic_protection.desc": "Снижает полученный урон от магии",
+  "enchantment.sortilege.arcane": "Таинство",
+  "enchantment.sortilege.arcane.desc": "Превращает весь нанесенный урон в магический",
+  "enchantment.sortilege.soulbound": "Связанный душой",
+  "enchantment.sortilege.soulbound.desc": "Остается после смерти.",
+
+  "sortilege.enchantments": "Зачарования",
+
+
+  "item.sortilege.witch_hat": "Ведьмина шляпа",
+
+
+  "item.sortilege.antidote": "Антидот",
+  "sortilege.antidote.cures": "Лечит:",
+
+
+  "item.sortilege.limitite": "Предельник",
+  "sortilege.limitite.desc": "Совместите с предметом на кузнечном столе, чтобы увеличить предел зачарований на этом предмете!"
+}

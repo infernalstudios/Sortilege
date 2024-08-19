@@ -4,7 +4,8 @@
   "tooltip.press_shift.right": "]",
 
   "sortilege.death_screen.position": "Position:",
-  "sortilege.requires_level": "Vous devez être au moins niveau %s!",
+  "sortilege.crafting.requires_level": "Vous devez être au moins niveau %s!",
+  "sortilege.crafting.requires_advancement": "Vous devez avoir obtenu %s!",
 
 
   "item.sortilege.wooden_staff" : "Sceptre en Bois",

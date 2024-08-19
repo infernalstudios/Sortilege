@@ -1,0 +1,66 @@
+{
+  "tooltip.press_shift.left": "Націсніце [",
+  "tooltip.press_shift.center": "Шыфт",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Пазіцыя:",
+  "sortilege.crafting.requires_level": "Вам трэба мець прынамсі ўзроўняў %s!",
+
+
+  "item.sortilege.wooden_staff" : "Драўляны посах",
+  "item.sortilege.stone_staff" : "Каменны посах",
+  "item.sortilege.iron_staff" : "Жалезны посах",
+  "item.sortilege.golden_staff" : "Залаты посах",
+  "item.sortilege.diamond_staff" : "Дыяментавы посах",
+  "item.sortilege.netherite_staff" : "Недарытавы посах",
+
+  "sortilege.staff.cost": "Кошт",
+  "sortilege.experience": "Досвед",
+
+  "attribute.name.generic.staff_damage": "Магічнае пашкоджанне",
+  "attribute.name.generic.staff_pierce": "Працінанне",
+  "attribute.name.generic.staff_range": "Абсяг",
+
+  "enchantment.sortilege.potency": "Патэнцыял",
+  "enchantment.sortilege.potency.desc": "Павялічвае пашкоджанне посаха.",
+  "enchantment.sortilege.stability": "Стабільнасць",
+  "enchantment.sortilege.stability.desc": "Павялічвае абсяг посаха.",
+  "enchantment.sortilege.chaining": "Ланцужок",
+  "enchantment.sortilege.chaining.desc": "Павялічвае працінанне посаха.",
+  "enchantment.sortilege.wisdom": "Мудрасць",
+  "enchantment.sortilege.wisdom.desc": "Памяншае кошт досведу посаха.",
+  "enchantment.sortilege.push": "Удар",
+  "enchantment.sortilege.push.desc": "Запускае ахвяр за праменем посаху.",
+  "enchantment.sortilege.pull": "Зацягванне",
+  "enchantment.sortilege.pull.desc": "Зацягвае ахвяр праменем посаху.",
+  "enchantment.sortilege.brazier": "Апёк",
+  "enchantment.sortilege.brazier.desc": "Падпальвае ахвяр ударанымі посахам.",
+  "enchantment.sortilege.blizzard": "Бура",
+  "enchantment.sortilege.blizzard.desc": "Марозіць ахвяр ударанымі посахам.",
+  "enchantment.sortilege.blast": "Выбух",
+  "enchantment.sortilege.blast.desc": "Прымушае прамень посаха выбухаць.",
+  "enchantment.sortilege.blitz": "Шок",
+  "enchantment.sortilege.blitz.desc": "Шакуе ахвяр ударанымі посахам.",
+  "enchantment.sortilege.ignorance_curse": "Праклён дзіравасці",
+  "enchantment.sortilege.ignorance_curse.desc": "Прымушае посах марнаваць досвед.",
+
+  "enchantment.sortilege.magic_protection": "Магічная ахова",
+  "enchantment.sortilege.magic_protection.desc": "Памяншае пашкоджанне ад магіі.",
+  "enchantment.sortilege.arcane": "Аркан",
+  "enchantment.sortilege.arcane.desc": "Трансфармуе пашкоджанне ў магічнае.",
+  "enchantment.sortilege.soulbound": "Векавечны",
+  "enchantment.sortilege.soulbound.desc": "Застаёцца пасля смерці.",
+
+  "sortilege.enchantments": "Зачараванне",
+
+
+  "item.sortilege.witch_hat": "Капялюш ведзьмы",
+
+
+  "item.sortilege.antidote": "Антыдот",
+  "sortilege.antidote.cures": "Лечыць:",
+
+
+  "item.sortilege.limitite": "Ліміціт",
+  "sortilege.limitite.desc": "Аб'яднай з прадметам на варштаце каваля каб павялічыць максімальную колькасць зачараваннь!"
+}

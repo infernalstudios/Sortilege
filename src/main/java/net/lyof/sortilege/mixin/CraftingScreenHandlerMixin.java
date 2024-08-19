@@ -29,7 +29,6 @@ public class CraftingScreenHandlerMixin {
             player.sendMessage(
                     lock.getFailMessage(player)
                             .formatted(Formatting.YELLOW), true);
-            world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
         }
         return valid && instance.shouldCraftRecipe(world, player, recipe);
     }

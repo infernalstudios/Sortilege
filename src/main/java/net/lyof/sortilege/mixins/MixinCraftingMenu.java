@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixins;
 
 import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.crafting.RecipeLock;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -72,15 +73,15 @@ public class MixinCraftingMenu {
     @Redirect(method = "slotChangedCraftingGrid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/ResultContainer;setRecipeUsed(Lnet/minecraft/world/level/Level;Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/crafting/Recipe;)Z"))
     private static boolean lockCrafting(ResultContainer instance, Level world, ServerPlayer player, Recipe recipe) {
         String recipeid = recipe.getId().toString();
-        int level = player.experienceLevel;
-        Double required = ConfigEntries.xpRequirements.getOrDefault(recipeid, -1.0);
+        RecipeLock lock = RecipeLock.get(recipeid);
+        boolean valid = true;
 
-        if (level < required.intValue()) {
+        if (lock.matches(player)) {
+            valid = false;
             player.sendSystemMessage(
-                    Component.translatable("sortilege.requires_level", required.intValue())
+                    lock.getFailMessage(player)
                             .withStyle(ChatFormatting.YELLOW), true);
-            world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
         }
-        return level >= required.intValue() && instance.setRecipeUsed(world, player, recipe);
+        return valid && instance.setRecipeUsed(world, player, recipe);
     }
 }

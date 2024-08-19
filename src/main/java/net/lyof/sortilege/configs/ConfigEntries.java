@@ -1,5 +1,7 @@
 package net.lyof.sortilege.configs;
 
+import net.lyof.sortilege.crafting.RecipeLock;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +38,7 @@ public class ConfigEntries {
         bountyValue = new ConfigEntry<>("experience.xp_bounty.value", 20).get();
         bountyChance = new ConfigEntry<>("experience.xp_bounty.chance", 0.05).get();
 
-        xpRequirements = new ConfigEntry<Map<String, Double>>( "experience.xp_requirements", new HashMap<>()).get();
+        xpRequirements = new ConfigEntry<Map<String, Object>>( "experience.recipe_locks", new HashMap<>()).get();
 
         doXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
         stealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();
@@ -56,6 +58,13 @@ public class ConfigEntries {
         staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
 
         staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("staffs.entries", new ArrayList()).get();
+
+
+        RecipeLock.clear();
+        for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
+            RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
+                    new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
+        }
     }
 
     public static int enchantLimiterDefault;
@@ -87,7 +96,7 @@ public class ConfigEntries {
     public static int bountyValue;
     public static double bountyChance;
 
-    public static Map<String, Double> xpRequirements;
+    public static Map<String, Object> xpRequirements;
 
     public static boolean doXPKeep;
     public static boolean stealFromPlayers;

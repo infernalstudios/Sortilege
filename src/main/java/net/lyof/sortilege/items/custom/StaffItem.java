@@ -161,10 +161,7 @@ public class StaffItem extends TieredItem {
 
         world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
         player.getCooldowns().addCooldown(staff.getItem(), this.cooldown);
-        if (!player.getAbilities().instabuild && staff.hurt(1, RandomSource.create(), null)) {
-            staff.shrink(1);
-            staff.setDamageValue(0);
-        }
+        staff.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.handSave));
 
 
         // Getting the look vector to shoot the ray along

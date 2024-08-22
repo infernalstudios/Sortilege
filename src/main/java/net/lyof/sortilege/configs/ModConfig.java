@@ -85,15 +85,15 @@ public class ModConfig {
             this.pierce = pierce;
             this.range = range;
             this.durability = (dura == -1) ?
-                (int) Math.round(this.tier.getDurability() * 0.7) : dura;
+                this.tier.getDurability() : dura;
             this.repair = (repair.equals("")) ?
                     () -> this.tier.getRepairIngredient() : () -> Ingredient.ofItems(Registries.ITEM.get(new Identifier(repair)));
             this.cooldown = Math.max(cooldown, 0);
             this.charge_time = Math.max(charge_time, 1);
             this.xp_cost = xp_cost;
             try {
-                for (List<Double> MutableTriple : colors)
-                    this.colors.add(new MutableTriple<>(MutableTriple.get(0).floatValue(), MutableTriple.get(1).floatValue(), MutableTriple.get(2).floatValue()));
+                for (List<Double> triple : colors)
+                    this.colors.add(new MutableTriple<>(triple.get(0).floatValue(), triple.get(1).floatValue(), triple.get(2).floatValue()));
             }
             catch (Exception e) {
                 Sortilege.log("Encountered an error while parsing a Staff's beam color");
@@ -362,7 +362,7 @@ public class ModConfig {
                       "pierce": 2,
                       // Range of the staff, in half blocks
                       "range": 10,
-                      // Durability of the staff. Defaults to tier's * 0.7
+                      // Durability of the staff. Defaults to tier's
                       "durability": 512,
                       // Item to be used to repair the staff. Defaults to the tier's
                       "repair_item": "minecraft:obsidian",

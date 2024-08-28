@@ -92,8 +92,6 @@ public class StaffItem extends ToolItem {
 
     @Override
     public boolean canRepair(ItemStack staff, ItemStack stack) {
-        if (Registries.ITEM.getId(stack.getItem()).toString().equals("phantasm:oblivion"))
-            return true;
         if (this.rawInfos != null)
             return this.rawInfos.repair.get().test(stack);
         return super.canRepair(staff, stack);

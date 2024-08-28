@@ -88,8 +88,6 @@ public class StaffItem extends TieredItem {
 
     @Override
     public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
-        if (Registry.ITEM.getKey(stack.getItem()).toString().equals("phantasm:oblivion"))
-            return true;
         if (this.rawInfos != null)
             return this.rawInfos.repair.get().test(stack);
         return super.isValidRepairItem(staff, stack);

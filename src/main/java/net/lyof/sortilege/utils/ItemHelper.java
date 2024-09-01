@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemHelper {
-    public static final Item LIMIT_BREAKER = ModItems.LIMITITE.get();
-
     public static final List<Item> ENCHANTABLES = new ArrayList<>();
     public static final List<Item> SOULBINDABLES = new ArrayList<>();
 

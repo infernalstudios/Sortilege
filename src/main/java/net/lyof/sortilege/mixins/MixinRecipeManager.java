@@ -37,7 +37,7 @@ public class MixinRecipeManager {
             recipes.put(id, new UpgradeRecipe(
                     id,
                     Ingredient.of(item),
-                    Ingredient.of(ItemHelper.LIMIT_BREAKER),
+                    Ingredient.of(ModTags.Items.LIMIT_BREAKER),
                     new ItemStack(item)));
         }
 

@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixins;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -43,6 +44,7 @@ public class MixinInventory {
             }
             return true;
         }
+        if (stack.is(ModTags.Items.KEEP_ON_DEATH)) return true;
         return stack.isEmpty();
     }
 }

@@ -22,12 +22,6 @@ import java.util.Arrays;
 
 @Mixin(UpgradeRecipe.class)
 public abstract class MixinUpgradeRecipe {
-    @Shadow @Final Ingredient base;
-
-    @Shadow @Final ItemStack result;
-
-    @Shadow @Final Ingredient addition;
-
     @Shadow public abstract ResourceLocation getId();
 
     @Inject(method = "assemble", at = @At("RETURN"), cancellable = true)

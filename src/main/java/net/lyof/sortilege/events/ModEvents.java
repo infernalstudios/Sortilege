@@ -130,7 +130,10 @@ public class ModEvents {
         if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.doXPKeep)
             return;
 
-        player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));
+        if (XPHelper.XP_SAVES.containsKey(player.getStringUUID())) {
+            player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));
+            XPHelper.XP_SAVES.remove(player.getStringUUID());
+        }
     }
 
     @SubscribeEvent

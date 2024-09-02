@@ -122,7 +122,7 @@ public class ModEvents {
             XPHelper.XP_SAVES.remove(entity.getStringUUID());
         }
     }
-    
+
     @SubscribeEvent
     public static void xpRefill(PlayerEvent.PlayerRespawnEvent event) {
         Player player = event.getEntity();
@@ -130,7 +130,10 @@ public class ModEvents {
         if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.doXPKeep)
             return;
 
-        player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));
+        Integer savedXP = XPHelper.XP_SAVES.get(player.getStringUUID());
+        if (savedXP != null) {
+            player.giveExperiencePoints(savedXP);
+        }
     }
 
     @SubscribeEvent

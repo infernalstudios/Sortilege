@@ -20,6 +20,9 @@ public class ConfigEntries {
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
 
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
+        betterFeatherFalling = new ConfigEntry<>("enchantments.better_feather_falling", true).get();
+        betterUnbreaking = new ConfigEntry<>("enchantments.better_unbreaking", true).get();
+        betterProjectileProt = new ConfigEntry<>("enchantments.better_projectile_protection", true).get();
 
         witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
         witchHatBonus = new ConfigEntry<>("experience.witch_hat.xp_bonus", 3).get();
@@ -46,7 +49,7 @@ public class ConfigEntries {
         dropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
 
         keepEquipped = new ConfigEntry<>("death.keep_equipped", false).get();
-        consumeSoulbound = new ConfigEntry<>("death.consume_soulbound", true).get();
+        consumeSoulbound = new ConfigEntry<>("death.consume_soulbound", false).get();
 
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
@@ -72,6 +75,9 @@ public class ConfigEntries {
     public static boolean allowInventoryEnchanting;
 
     public static boolean magicProtCompatibility;
+    public static boolean betterFeatherFalling;
+    public static boolean betterUnbreaking;
+    public static boolean betterProjectileProt;
 
     public static double witchHatDropChance;
     public static int witchHatBonus;

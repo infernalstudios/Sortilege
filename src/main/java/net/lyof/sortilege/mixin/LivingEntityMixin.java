@@ -5,11 +5,14 @@ import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -21,10 +24,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
     @Shadow @Nullable protected PlayerEntity attackingPlayer;
+
+    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -94,5 +100,15 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "dropInventory", at = @At("HEAD"), cancellable = true)
     public void cancelCuriosDrop(CallbackInfo ci) {
         if (ConfigEntries.keepEquipped && ((LivingEntity) (Object) this) instanceof PlayerEntity) ci.cancel();
+    }
+
+    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+    public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (source.isIn(DamageTypeTags.IS_FALL) && ConfigEntries.betterFeatherFalling &&
+                EnchantmentHelper.getLevel(Enchantments.FEATHER_FALLING, this.getEquippedStack(EquipmentSlot.FEET)) >= 4)
+            cir.setReturnValue(false);
+        if (ConfigEntries.betterProjectileProt && Math.random() <=
+                0.05 * EnchantmentHelper.getEquipmentLevel(Enchantments.PROJECTILE_PROTECTION, (LivingEntity) (Object) this))
+            cir.setReturnValue(false);
     }
 }

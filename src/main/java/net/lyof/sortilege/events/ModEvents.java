@@ -170,6 +170,18 @@ public class ModEvents {
                 ItemHelper.getEnchantLevel(Enchantments.FALL_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.FEET)) >=
                         ConfigEntries.betterFeatherFalling)
             event.setCanceled(true);
+
+        if (event.getSource().isFire() &&
+                ItemHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.FEET)) >=
+                        ConfigEntries.betterFireProt &&
+                ItemHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.LEGS)) >=
+                        ConfigEntries.betterFireProt &&
+                ItemHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.CHEST)) >=
+                        ConfigEntries.betterFireProt &&
+                ItemHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.HEAD)) >=
+                        ConfigEntries.betterFireProt)
+            event.setCanceled(true);
+
         if (ConfigEntries.betterProjectileProt && Math.random() <=
                 0.05 * EnchantmentHelper.getEnchantmentLevel(Enchantments.PROJECTILE_PROTECTION, event.getEntity()))
             event.setCanceled(true);

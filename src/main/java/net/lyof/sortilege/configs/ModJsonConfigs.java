@@ -266,8 +266,15 @@ public class ModJsonConfigs {
                 },
                 // Allow using Enchanted Books on items in inventory
                 "allow_inventory_enchanting": false,
+                
                 // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments
-                "magic_protection_protection_compatibility": false
+                "magic_protection_protection_compatibility": false,
+                // Should Feather Falling at max level completely negate fall damage
+                "better_feather_falling": true,
+                // Should Unbreaking at max level make an item completely unbreakable
+                "better_unbreaking": true,
+                // Should Projectile Protection also give a level*5 chance to dodge any attack
+                "better_projectile_protection": true
               },
               
               // CATEGORY: EXPERIENCE
@@ -326,7 +333,7 @@ public class ModJsonConfigs {
                 // Keep equipped items (armor and hotbar) on death
                 "keep_equipped": false,
                 // Should the Soulbound enchantment be removed on use
-                "consume_soulbound": true,
+                "consume_soulbound": false,
                 // Display death coordinates instead of the score from vanilla on the death screen
                 "show_coordinates_on_death": true
               },

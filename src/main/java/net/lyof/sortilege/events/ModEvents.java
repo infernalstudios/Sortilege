@@ -6,9 +6,11 @@ import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
 import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
+import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.XPHelper;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -20,6 +22,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -163,6 +166,13 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void modCustomAttacks(LivingAttackEvent event) {
+        if (event.getSource().isFall() && ConfigEntries.betterFeatherFalling &&
+                ItemHelper.getEnchantLevel(Enchantments.FALL_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.FEET)) >= 4)
+            event.setCanceled(true);
+        if (ConfigEntries.betterProjectileProt && Math.random() <=
+                0.05 * EnchantmentHelper.getEnchantmentLevel(Enchantments.PROJECTILE_PROTECTION, event.getEntity()))
+            event.setCanceled(true);
+
         Entity sourceentity = event.getSource().getEntity();
         if (sourceentity == null) return;
         if (!(sourceentity instanceof LivingEntity source)) return;

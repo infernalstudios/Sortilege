@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
+import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;

@@ -16,7 +16,8 @@
     "RecipeManagerMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
-    "SmithingTransformRecipeMixin"
+    "SmithingTransformRecipeMixin",
+    "UnbreakingEnchantmentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -6,6 +6,7 @@
   "mixins": [
     "MixinAnvilMenu",
     "MixinCraftingMenu",
+    "MixinDigDurabilityEnchantment",
     "MixinEnchantmentHelper",
     "MixinInventory",
     "MixinItem",

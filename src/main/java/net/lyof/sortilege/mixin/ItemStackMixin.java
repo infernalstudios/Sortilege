@@ -3,7 +3,6 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
-import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -49,7 +48,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
         if (this.isIn(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= 3 && ConfigEntries.betterUnbreaking)
+        if (EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ConfigEntries.betterUnbreaking)
             cir.setReturnValue(false);
     }
 }

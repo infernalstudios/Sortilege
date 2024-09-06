@@ -1,6 +1,5 @@
 package net.lyof.sortilege.item.custom.armor;
 
-import net.lyof.sortilege.Sortilege;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Items;

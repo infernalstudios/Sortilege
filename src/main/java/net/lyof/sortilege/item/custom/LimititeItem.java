@@ -1,8 +1,8 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;

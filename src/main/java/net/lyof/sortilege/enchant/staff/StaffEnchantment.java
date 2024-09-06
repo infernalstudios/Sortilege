@@ -1,4 +1,4 @@
-package net.lyof.sortilege.enchants.staff;
+package net.lyof.sortilege.enchant.staff;
 
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.minecraft.enchantment.Enchantment;

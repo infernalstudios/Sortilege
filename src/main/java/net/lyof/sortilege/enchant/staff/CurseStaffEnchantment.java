@@ -1,4 +1,4 @@
-package net.lyof.sortilege.enchants.staff;
+package net.lyof.sortilege.enchant.staff;
 
 public class CurseStaffEnchantment extends StaffEnchantment {
     public CurseStaffEnchantment(Rarity pRarity) {

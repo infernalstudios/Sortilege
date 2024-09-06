@@ -1,4 +1,4 @@
-package net.lyof.sortilege.enchants.common;
+package net.lyof.sortilege.enchant.common;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;

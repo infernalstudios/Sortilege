@@ -2,7 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

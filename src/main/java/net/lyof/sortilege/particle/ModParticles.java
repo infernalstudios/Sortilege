@@ -1,4 +1,4 @@
-package net.lyof.sortilege.particles;
+package net.lyof.sortilege.particle;
 
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.lyof.sortilege.Sortilege;

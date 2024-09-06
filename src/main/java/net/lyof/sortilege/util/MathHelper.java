@@ -1,4 +1,4 @@
-package net.lyof.sortilege.utils;
+package net.lyof.sortilege.util;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;

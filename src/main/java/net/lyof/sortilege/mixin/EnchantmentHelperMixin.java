@@ -1,8 +1,8 @@
 package net.lyof.sortilege.mixin;
 
 import com.google.common.collect.Lists;
-import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;

@@ -1,15 +1,10 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.crafting.RecipeLock;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;

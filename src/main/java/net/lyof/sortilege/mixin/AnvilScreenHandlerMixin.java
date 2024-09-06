@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.Property;

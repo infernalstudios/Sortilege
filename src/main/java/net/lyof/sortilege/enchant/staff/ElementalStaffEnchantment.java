@@ -1,4 +1,4 @@
-package net.lyof.sortilege.enchants.staff;
+package net.lyof.sortilege.enchant.staff;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;

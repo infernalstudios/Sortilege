@@ -1,6 +1,6 @@
-package net.lyof.sortilege.enchants.armor;
+package net.lyof.sortilege.enchant.armor;
 
-import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.enchantment.ProtectionEnchantment;

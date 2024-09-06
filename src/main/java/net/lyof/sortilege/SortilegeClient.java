@@ -6,9 +6,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
-import net.lyof.sortilege.particles.ModParticles;
-import net.lyof.sortilege.particles.amo.ParticleShaders;
-import net.lyof.sortilege.particles.custom.WispParticle;
+import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.particle.amo.ParticleShaders;
+import net.lyof.sortilege.particle.custom.WispParticle;
 import net.minecraft.client.render.VertexFormats;
 
 public class SortilegeClient implements ClientModInitializer {

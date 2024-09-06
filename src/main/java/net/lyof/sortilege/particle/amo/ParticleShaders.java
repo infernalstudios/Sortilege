@@ -1,4 +1,4 @@
-package net.lyof.sortilege.particles.amo;
+package net.lyof.sortilege.particle.amo;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gl.ShaderProgram;

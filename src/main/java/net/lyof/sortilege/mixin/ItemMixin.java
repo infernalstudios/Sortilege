@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;

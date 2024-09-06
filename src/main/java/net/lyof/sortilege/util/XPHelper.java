@@ -1,4 +1,4 @@
-package net.lyof.sortilege.utils;
+package net.lyof.sortilege.util;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
 import net.minecraft.entity.ExperienceOrbEntity;

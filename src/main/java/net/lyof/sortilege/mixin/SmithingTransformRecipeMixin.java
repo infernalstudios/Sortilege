@@ -1,14 +1,13 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.enchants.ModEnchants;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.SmithingTransformRecipe;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.screen.AnvilScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;

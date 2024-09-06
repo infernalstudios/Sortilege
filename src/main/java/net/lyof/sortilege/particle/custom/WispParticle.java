@@ -1,4 +1,4 @@
-package net.lyof.sortilege.particles.custom;
+package net.lyof.sortilege.particle.custom;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

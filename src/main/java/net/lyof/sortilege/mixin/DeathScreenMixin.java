@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.text.Text;

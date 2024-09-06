@@ -1,12 +1,12 @@
-package net.lyof.sortilege.enchants;
+package net.lyof.sortilege.enchant;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchants.armor.MagicProtectionEnchantment;
-import net.lyof.sortilege.enchants.common.SoulboundEnchantment;
-import net.lyof.sortilege.enchants.staff.CurseStaffEnchantment;
-import net.lyof.sortilege.enchants.staff.ElementalStaffEnchantment;
-import net.lyof.sortilege.enchants.staff.StaffEnchantment;
-import net.lyof.sortilege.enchants.weapon.ArcaneEnchantment;
+import net.lyof.sortilege.enchant.armor.MagicProtectionEnchantment;
+import net.lyof.sortilege.enchant.common.SoulboundEnchantment;
+import net.lyof.sortilege.enchant.staff.CurseStaffEnchantment;
+import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.enchant.staff.StaffEnchantment;
+import net.lyof.sortilege.enchant.weapon.ArcaneEnchantment;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;

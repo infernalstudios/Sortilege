@@ -1,10 +1,10 @@
-package net.lyof.sortilege.configs;
+package net.lyof.sortilege.config;
 
 import com.google.gson.Gson;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.utils.MathHelper;
+import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;

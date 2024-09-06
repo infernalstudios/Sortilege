@@ -1,4 +1,4 @@
-package net.lyof.sortilege.configs;
+package net.lyof.sortilege.config;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,12 +2,12 @@ package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.lyof.sortilege.configs.ModConfig;
-import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.loot.ModLootModifiers;
-import net.lyof.sortilege.particles.ModParticles;
+import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;

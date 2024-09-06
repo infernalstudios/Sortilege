@@ -1,9 +1,9 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.enchants.ModEnchants;
+import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerInventory;

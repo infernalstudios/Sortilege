@@ -1,6 +1,6 @@
-package net.lyof.sortilege.utils;
+package net.lyof.sortilege.util;
 
-import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;

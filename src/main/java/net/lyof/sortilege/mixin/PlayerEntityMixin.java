@@ -1,8 +1,8 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
-import net.lyof.sortilege.utils.MathHelper;
-import net.lyof.sortilege.utils.XPHelper;
+import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.util.MathHelper;
+import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

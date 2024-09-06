@@ -1,4 +1,4 @@
-package net.lyof.sortilege.configs;
+package net.lyof.sortilege.config;
 
 import net.lyof.sortilege.Sortilege;
 import org.jetbrains.annotations.Nullable;

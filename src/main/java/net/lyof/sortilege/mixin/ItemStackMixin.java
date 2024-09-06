@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.utils.ItemHelper;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.Item;

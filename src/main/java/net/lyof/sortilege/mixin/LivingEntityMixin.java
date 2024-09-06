@@ -1,10 +1,10 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.configs.ConfigEntries;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.particles.ModParticles;
+import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.utils.XPHelper;
+import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.Monster;

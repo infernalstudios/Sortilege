@@ -26,11 +26,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
     @Shadow @Nullable protected PlayerEntity attackingPlayer;
 
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
+
+    @Shadow public abstract Iterable<ItemStack> getArmorItems();
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -108,6 +113,18 @@ public abstract class LivingEntityMixin extends Entity {
                 EnchantmentHelper.getLevel(Enchantments.FEATHER_FALLING, this.getEquippedStack(EquipmentSlot.FEET)) >=
                         ConfigEntries.betterFeatherFalling)
             cir.setReturnValue(false);
+
+        if (source.isIn(DamageTypeTags.IS_FIRE) &&
+                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.FEET)) >=
+                        ConfigEntries.betterFireProt &&
+                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.LEGS)) >=
+                        ConfigEntries.betterFireProt &&
+                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.CHEST)) >=
+                        ConfigEntries.betterFireProt &&
+                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.HEAD)) >=
+                        ConfigEntries.betterFireProt)
+            cir.setReturnValue(false);
+
         if (ConfigEntries.betterProjectileProt && Math.random() <=
                 0.05 * EnchantmentHelper.getEquipmentLevel(Enchantments.PROJECTILE_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);

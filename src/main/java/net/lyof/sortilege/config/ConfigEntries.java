@@ -23,6 +23,7 @@ public class ConfigEntries {
         betterFeatherFalling = new ConfigEntry<>("enchantments.better_feather_falling", 4).get();
         betterUnbreaking = new ConfigEntry<>("enchantments.better_unbreaking", 3).get();
         betterProjectileProt = new ConfigEntry<>("enchantments.better_projectile_protection", true).get();
+        betterFireProt = new ConfigEntry<>("enchantments.better_fire_protection", 4).get();
 
         witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
         witchHatBonus = new ConfigEntry<>("experience.witch_hat.xp_bonus", 3).get();
@@ -78,6 +79,7 @@ public class ConfigEntries {
     public static int betterFeatherFalling;
     public static int betterUnbreaking;
     public static boolean betterProjectileProt;
+    public static int betterFireProt;
 
     public static double witchHatDropChance;
     public static int witchHatBonus;

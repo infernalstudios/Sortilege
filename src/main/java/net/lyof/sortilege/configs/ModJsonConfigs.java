@@ -269,10 +269,10 @@ public class ModJsonConfigs {
                 
                 // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments
                 "magic_protection_protection_compatibility": false,
-                // Should Feather Falling at max level completely negate fall damage
-                "better_feather_falling": true,
-                // Should Unbreaking at max level make an item completely unbreakable
-                "better_unbreaking": true,
+                // Feather Falling at this level completely negates fall damage (should be set to the maximum if enabled, or higher if disabled)
+                "better_feather_falling": 4,
+                // Unbreaking at this level makes an item completely unbreakable (should be set to the maximum if enabled, or higher if disabled)
+                "better_unbreaking": 3,
                 // Should Projectile Protection also give a level*5 chance to dodge any attack
                 "better_projectile_protection": true
               },

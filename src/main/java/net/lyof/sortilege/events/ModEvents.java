@@ -166,8 +166,9 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void modCustomAttacks(LivingAttackEvent event) {
-        if (event.getSource().isFall() && ConfigEntries.betterFeatherFalling &&
-                ItemHelper.getEnchantLevel(Enchantments.FALL_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.FEET)) >= 4)
+        if (event.getSource().isFall() &&
+                ItemHelper.getEnchantLevel(Enchantments.FALL_PROTECTION, event.getEntity().getItemBySlot(EquipmentSlot.FEET)) >=
+                        ConfigEntries.betterFeatherFalling)
             event.setCanceled(true);
         if (ConfigEntries.betterProjectileProt && Math.random() <=
                 0.05 * EnchantmentHelper.getEnchantmentLevel(Enchantments.PROJECTILE_PROTECTION, event.getEntity()))

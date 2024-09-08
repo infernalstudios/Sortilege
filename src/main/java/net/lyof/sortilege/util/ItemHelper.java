@@ -1,5 +1,6 @@
 package net.lyof.sortilege.util;
 
+import net.fabricmc.fabric.mixin.client.rendering.ArmorFeatureRendererMixin;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.enchantment.Enchantment;

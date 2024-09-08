@@ -24,7 +24,6 @@
   },
   "client": [
     "DeathScreenMixin",
-    "HeadFeatureRendererMixin",
     "InGameHudMixin",
     "ItemMixin",
     "accessor.ScreenAccessor"

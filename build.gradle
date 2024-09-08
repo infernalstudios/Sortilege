@@ -15,7 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.5.4'
+version = '1.6'
 group = 'net.lyof.sortilege'
 archivesBaseName = 'Sortilege-1.19.2'
 

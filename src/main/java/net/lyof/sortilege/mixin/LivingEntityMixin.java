@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
@@ -25,9 +26,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
@@ -125,8 +123,8 @@ public abstract class LivingEntityMixin extends Entity {
                         ConfigEntries.betterFireProt)
             cir.setReturnValue(false);
 
-        if (ConfigEntries.betterProjectileProt && Math.random() <=
-                0.05 * EnchantmentHelper.getEquipmentLevel(Enchantments.PROJECTILE_PROTECTION, (LivingEntity) (Object) this))
+        if (ConfigEntries.betterMagicProt && Math.random() <=
+                0.05 * EnchantmentHelper.getEquipmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);
     }
 }

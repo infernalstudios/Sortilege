@@ -22,7 +22,7 @@ public class ConfigEntries {
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
         betterFeatherFalling = new ConfigEntry<>("enchantments.better_feather_falling", 4).get();
         betterUnbreaking = new ConfigEntry<>("enchantments.better_unbreaking", 3).get();
-        betterProjectileProt = new ConfigEntry<>("enchantments.better_projectile_protection", true).get();
+        betterMagicProt = new ConfigEntry<>("enchantments.better_magic_protection", true).get();
         betterFireProt = new ConfigEntry<>("enchantments.better_fire_protection", 4).get();
 
         witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
@@ -78,7 +78,7 @@ public class ConfigEntries {
     public static boolean magicProtCompatibility;
     public static int betterFeatherFalling;
     public static int betterUnbreaking;
-    public static boolean betterProjectileProt;
+    public static boolean betterMagicProt;
     public static int betterFireProt;
 
     public static double witchHatDropChance;

@@ -274,8 +274,8 @@ public class ModConfig {
                 "better_feather_falling": 4,
                 // Unbreaking at this level makes an item completely unbreakable (should be set to the maximum if enabled, or higher if disabled)
                 "better_unbreaking": 3,
-                // Should Projectile Protection also give a level*5 chance to dodge any attack
-                "better_projectile_protection": true,
+                // Should Magic Protection also give a level*5 chance to dodge any attack
+                "better_magic_protection": true,
                 // Should Fire Protection at this level on every armor slot at once grant fire immunity
                 "better_fire_protection": 4
               },

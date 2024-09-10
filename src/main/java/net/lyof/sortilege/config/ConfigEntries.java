@@ -14,7 +14,7 @@ public class ConfigEntries {
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
 
         isLimititeFoil = new ConfigEntry<>("enchantments.enchant_limiter.limitite.is_foil", true).get();
-        doLimititeSpawn = new ConfigEntry<>("enchantments.enchant_limiter.limitite.generate_as_loot", true).get();
+        limititeLootWeight = new ConfigEntry<>("enchantments.enchant_limiter.limitite.loot_weight", 24).get();
         maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.limitite.max_limit_break", 3).get();
 
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
@@ -70,7 +70,7 @@ public class ConfigEntries {
     public static boolean alwaysShowEnchantLimit;
 
     public static boolean isLimititeFoil;
-    public static boolean doLimititeSpawn;
+    public static int limititeLootWeight;
     public static int maxLimitBreak;
 
     public static boolean allowInventoryEnchanting;

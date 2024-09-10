@@ -259,8 +259,8 @@ public class ModConfig {
                   "limitite": {
                     // Should Limitite have an enchantment glint
                     "is_foil": true,
-                    // Should Limitite spawn in rare structures' chests
-                    "generate_as_loot": true,
+                    // 1 in X chance for Limitite to spawn as loot in chests. Set to 0 or lower to disable it
+                    "loot_weight": 24,
                     // How many Limitites can be applied to a single item
                     "max_limit_break": 3
                   }

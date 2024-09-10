@@ -1,6 +1,5 @@
 package net.lyof.sortilege.events;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.configs.ConfigEntries;
 import net.lyof.sortilege.enchants.ModEnchants;
 import net.lyof.sortilege.items.ModItems;
@@ -8,9 +7,7 @@ import net.lyof.sortilege.particles.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.utils.ItemHelper;
 import net.lyof.sortilege.utils.XPHelper;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -182,8 +179,8 @@ public class ModEvents {
                         ConfigEntries.betterFireProt)
             event.setCanceled(true);
 
-        if (ConfigEntries.betterProjectileProt && Math.random() <=
-                0.05 * EnchantmentHelper.getEnchantmentLevel(Enchantments.PROJECTILE_PROTECTION, event.getEntity()))
+        if (ConfigEntries.betterMagicProt && Math.random() <=
+                0.05 * EnchantmentHelper.getEnchantmentLevel(ModEnchants.MAGIC_PROTECTION.get(), event.getEntity()))
             event.setCanceled(true);
 
         Entity sourceentity = event.getSource().getEntity();

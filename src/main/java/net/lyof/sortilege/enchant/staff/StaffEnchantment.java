@@ -46,4 +46,9 @@ public class StaffEnchantment extends Enchantment {
     public boolean isAcceptableItem(ItemStack stack) {
         return stack.getItem() instanceof StaffItem;
     }
+
+    @Override
+    public int getMaxPower(int level) {
+        return super.getMaxPower(level) * 5;
+    }
 }

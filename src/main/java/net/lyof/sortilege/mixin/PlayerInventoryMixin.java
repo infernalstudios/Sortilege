@@ -35,19 +35,17 @@ public class PlayerInventoryMixin {
     public <E> E skipHotbar(List<E> list, int i) {
         if (i < PlayerInventory.getHotbarSize() && ConfigEntries.keepEquipped)
             return (E) ItemStack.EMPTY;
-        return list.get(i);
-    }
 
-    @Redirect(method = "dropAll", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;isEmpty()Z"))
-    public boolean skipSoulbound(ItemStack stack) {
+        ItemStack stack = (ItemStack) list.get(i);
         if (ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
             if (ConfigEntries.consumeSoulbound) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.get(stack);
                 enchants.remove(ModEnchants.SOULBOUND);
             }
-            return true;
+            return (E) ItemStack.EMPTY;
         }
-        if (stack.isIn(ModTags.Items.KEEP_ON_DEATH)) return true;
-        return stack.isEmpty();
+        if (stack.isIn(ModTags.Items.KEEP_ON_DEATH)) return (E) ItemStack.EMPTY;
+
+        return list.get(i);
     }
 }

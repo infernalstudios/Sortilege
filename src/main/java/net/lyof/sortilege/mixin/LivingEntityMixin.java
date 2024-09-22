@@ -35,6 +35,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow public abstract Iterable<ItemStack> getArmorItems();
 
+    @Shadow public abstract boolean damage(DamageSource source, float amount);
+
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }

@@ -24,8 +24,7 @@ public class PlayerInventoryMixin {
 
     @Redirect(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))
     public int skipEquipped(List<ItemStack> list) {
-        PlayerInventoryMixin self = (PlayerInventoryMixin) (Object) this;
-        if ((list != self.main && ConfigEntries.keepEquipped)) {
+        if ((list != this.main && ConfigEntries.keepEquipped)) {
             return 0;
         }
         return list.size();

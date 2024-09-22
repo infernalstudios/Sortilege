@@ -8,6 +8,7 @@
     "BrewingStandBlockEntityMixin",
     "BrewingStandScreenHandlerMixin",
     "CraftingScreenHandlerMixin",
+    "DamageSourcesMixin",
     "EnchantmentHelperMixin",
     "ItemStackMixin",
     "LivingEntityMixin",

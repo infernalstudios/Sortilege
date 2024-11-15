@@ -1,7 +1,9 @@
 package net.lyof.sortilege.util;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
@@ -34,10 +36,10 @@ public class PotionHelper {
     }
 
     public static Potion getDefaultPotion(StatusEffect effect) {
-        return POTIONS.containsKey(effect) ? POTIONS.get(effect) : new Potion();
+        return POTIONS.getOrDefault(effect, Potions.EMPTY);
     }
 
     public static Potion getDefaultPotion(Potion potion) {
-        return potion != Potions.EMPTY ? getDefaultPotion(potion.getEffects().get(0).getEffectType()) : new Potion();
+        return potion.getEffects().size() >= 1 ? getDefaultPotion(potion.getEffects().get(0).getEffectType()) : Potions.EMPTY;
     }
 }

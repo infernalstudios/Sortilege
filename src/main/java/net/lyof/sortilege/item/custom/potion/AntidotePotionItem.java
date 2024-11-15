@@ -38,7 +38,7 @@ public class AntidotePotionItem extends PotionItem {
 
     @Override
     public Text getName(ItemStack stack) {
-        if (PotionUtil.getPotion(stack) == Potions.EMPTY)
+        if (PotionUtil.getPotion(stack).getEffects().size() > 0)
             return Text.translatable(this.getTranslationKey());
 
         return Text.translatable(PotionUtil.getPotion(stack).getEffects().get(0).getTranslationKey())
@@ -48,7 +48,7 @@ public class AntidotePotionItem extends PotionItem {
 
     @Override
     public void appendTooltip(ItemStack itemstack, @Nullable World level, List<Text> list, TooltipContext context) {
-        if (PotionUtil.getPotion(itemstack) == Potions.EMPTY)
+        if (PotionUtil.getPotion(itemstack).getEffects().size() > 0)
             return;
 
         MutableText desc = Text.translatable("sortilege.antidote.cures").formatted(Formatting.DARK_PURPLE)
@@ -100,8 +100,8 @@ public class AntidotePotionItem extends PotionItem {
     public TypedActionResult<ItemStack> use(World level, PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getStackInHand(hand);
 
-        if (PotionUtil.getPotion(itemstack) != Potions.EMPTY && player.isSneaking() ||
-                player.hasStatusEffect(PotionUtil.getPotionEffects(itemstack).get(0).getEffectType()))
+        if (PotionUtil.getPotion(itemstack).getEffects().size() > 0 && (player.isSneaking() ||
+                player.hasStatusEffect(PotionUtil.getPotionEffects(itemstack).get(0).getEffectType())))
 
             return ItemUsage.consumeHeldItem(level, player, hand);
 

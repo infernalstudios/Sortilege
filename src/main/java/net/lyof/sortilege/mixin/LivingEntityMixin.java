@@ -43,7 +43,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Redirect(method = "dropXp", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ExperienceOrbEntity;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/Vec3d;I)V"))
     public void xpDropBonus(ServerWorld world, Vec3d pos, int amount) {
-        if (this.attackingPlayer != null && this.attackingPlayer.getEquippedStack(EquipmentSlot.HEAD).isOf(ModItems.WITCH_HAT))
+        if (ConfigEntries.witchHatEnabled && this.attackingPlayer != null && this.attackingPlayer.getEquippedStack(EquipmentSlot.HEAD).isOf(ModItems.WITCH_HAT))
             amount += ConfigEntries.witchHatBonus;
 
         ExperienceOrbEntity.spawn(world, pos, amount);
@@ -55,7 +55,7 @@ public abstract class LivingEntityMixin extends Entity {
             World world = this.getWorld();
             if (world.isClient()) return;
 
-            if (Math.random() > ConfigEntries.witchHatDropChance) return;
+            if (!ConfigEntries.witchHatEnabled || Math.random() > ConfigEntries.witchHatDropChance) return;
 
             ItemStack hat = ModItems.WITCH_HAT.getDefaultStack();
             hat.setDamage((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);

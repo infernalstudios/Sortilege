@@ -2,6 +2,7 @@ package net.lyof.sortilege.brewing;
 
 import net.lyof.sortilege.brewing.custom.AntidoteBrewingRecipe;
 import net.lyof.sortilege.brewing.custom.PotionBrewingRecipe;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import java.util.List;
 
 public class BetterBrewingRegistry {
     public static void register() {
-        register(new AntidoteBrewingRecipe());
-        register(new PotionBrewingRecipe());
+        if (ConfigEntries.antidoteEnabled) {
+            register(new AntidoteBrewingRecipe());
+            register(new PotionBrewingRecipe());
+        }
     }
 
 

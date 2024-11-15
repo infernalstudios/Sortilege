@@ -25,6 +25,7 @@ public class ConfigEntries {
         betterMagicProt = new ConfigEntry<>("enchantments.better_magic_protection", true).get();
         betterFireProt = new ConfigEntry<>("enchantments.better_fire_protection", 4).get();
 
+        witchHatEnabled = new ConfigEntry<>("experience.witch_hat.enable", true).get();
         witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
         witchHatBonus = new ConfigEntry<>("experience.witch_hat.xp_bonus", 3).get();
 
@@ -54,6 +55,7 @@ public class ConfigEntries {
 
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
 
+        antidoteEnabled = new ConfigEntry<>("brewing.enable", true).get();
         antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
         antidoteStackSize = new ConfigEntry<>("brewing.antidote_stack_size", 4).get();
 
@@ -81,6 +83,7 @@ public class ConfigEntries {
     public static boolean betterMagicProt;
     public static int betterFireProt;
 
+    public static boolean witchHatEnabled;
     public static double witchHatDropChance;
     public static int witchHatBonus;
 
@@ -108,6 +111,7 @@ public class ConfigEntries {
 
     public static boolean showDeathCoordinates;
 
+    public static boolean antidoteEnabled;
     public static List<String> antidoteBlacklist = List.of();
     public static int antidoteStackSize;
 

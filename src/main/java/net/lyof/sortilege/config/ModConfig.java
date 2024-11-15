@@ -283,6 +283,8 @@ public class ModConfig {
               // CATEGORY: EXPERIENCE
               "experience": {
                 "witch_hat": {
+                  // Should the Witch Hat be registered as an item
+                  "enable": true,
                   // Chance for the Witch Hat to drop when killing a Witch. Set to 0 to disable the drop
                   "drop_chance": 0.1,
                   // How many extra experience points should drop when killing a monster with the Witch Hat equipped
@@ -345,6 +347,8 @@ public class ModConfig {
               
               // CATEGORY: BREWING
               "brewing": {
+                // Should Antidotes be registered as items
+                "enable": true,
                 // A list of potion effects for which Antidotes don't get registered
                 "antidote_blacklist": [
                 ],

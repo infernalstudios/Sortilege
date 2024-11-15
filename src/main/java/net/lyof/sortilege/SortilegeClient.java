@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.armor.WitchHatItem;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
@@ -23,6 +24,6 @@ public class SortilegeClient implements ClientModInitializer {
                 shader.register(Sortilege.makeID("particle"), VertexFormats.POSITION_TEXTURE_COLOR_LIGHT,
                         ParticleShaders::register)
         );
-        ArmorRenderer.register(new WitchHatItem.Renderer(), ModItems.WITCH_HAT);
+        if (ConfigEntries.witchHatEnabled) ArmorRenderer.register(new WitchHatItem.Renderer(), ModItems.WITCH_HAT);
     }
 }

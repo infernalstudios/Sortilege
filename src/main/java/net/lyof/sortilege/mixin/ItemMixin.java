@@ -13,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Formatting;
@@ -34,11 +35,13 @@ public class ItemMixin {
         int m = ItemHelper.getMaxEnchantValue(stack);
 
         if ((a > 0 || ItemHelper.getExtraEnchants(stack) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&
-                m > 0 && stack.getItem().getEnchantability() > 0 && !stack.isOf(Items.ENCHANTED_BOOK))
+                m > 0 && stack.getItem().getEnchantability() > 0 && !stack.isOf(Items.ENCHANTED_BOOK)) {
 
-            tooltip.add(Text.literal(a + "/" + m).append(" ")
-                    .append(Text.translatable("sortilege.enchantments"))
-                    .formatted(a >= m ? Formatting.RED : Formatting.WHITE));
+            MutableText txt = Text.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
+                    a + "/" + m + " " + Text.translatable("sortilege.enchantments").getString());
+
+            tooltip.add(txt.formatted(a >= m ? Formatting.RED : Formatting.WHITE));
+        }
     }
 
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)

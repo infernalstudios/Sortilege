@@ -2,6 +2,7 @@ package net.lyof.sortilege.item.custom.potion;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
@@ -38,7 +39,7 @@ public class AntidotePotionItem extends PotionItem {
 
     @Override
     public Text getName(ItemStack stack) {
-        if (PotionUtil.getPotion(stack).getEffects().size() > 0)
+        if (PotionUtil.getPotion(stack).getEffects().size() <= 0)
             return Text.translatable(this.getTranslationKey());
 
         return Text.translatable(PotionUtil.getPotion(stack).getEffects().get(0).getTranslationKey())
@@ -48,7 +49,7 @@ public class AntidotePotionItem extends PotionItem {
 
     @Override
     public void appendTooltip(ItemStack itemstack, @Nullable World level, List<Text> list, TooltipContext context) {
-        if (PotionUtil.getPotion(itemstack).getEffects().size() > 0)
+        if (PotionUtil.getPotion(itemstack).getEffects().size() <= 0)
             return;
 
         MutableText desc = Text.translatable("sortilege.antidote.cures").formatted(Formatting.DARK_PURPLE)

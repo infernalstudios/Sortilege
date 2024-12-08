@@ -1,10 +1,8 @@
 package net.lyof.sortilege.brewing.custom;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.brewing.IBetterBrewingRecipe;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
-import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;

@@ -11,6 +11,7 @@
     "DamageEnchantmentMixin",
     "DamageSourcesMixin",
     "EnchantmentHelperMixin",
+    "EnchantmentScreenHandlerMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",

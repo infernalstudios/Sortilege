@@ -27,6 +27,7 @@
   },
   "client": [
     "DeathScreenMixin",
+    "EnchantmentScreenMixin",
     "InGameHudMixin",
     "ItemMixin",
     "accessor.ScreenAccessor"

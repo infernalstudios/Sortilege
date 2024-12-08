@@ -33,6 +33,12 @@ public class MathHelper {
         return list.get(randint(list.size() - 1));
     }
 
+    public static <T> T randi(List<T> list, net.minecraft.util.math.random.Random rnd) {
+        if (list.size() == 1) return list.get(0);
+        if (list.size() == 0) return null;
+        return list.get(rnd.nextInt(list.size()));
+    }
+
     public static int toInt(Object x) {
         return (int) Math.round(Double.parseDouble(String.valueOf(x)));
     }

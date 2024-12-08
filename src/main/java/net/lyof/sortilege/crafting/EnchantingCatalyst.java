@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class EnchantmentCatalyst {
+public class EnchantingCatalyst {
     private static final Map<Item, List<Enchantment>> CATALYSTS = new HashMap<>();
 
     public static void clear() {
@@ -42,7 +42,6 @@ public class EnchantmentCatalyst {
             List<Enchantment> enchants = l.stream()
                     .map(id -> Registries.ENCHANTMENT.get(new Identifier(String.valueOf(id)))).toList();
 
-            Sortilege.log(item + " AAAAA " + enchants + " : " + l);
             register(item, enchants);
         }
     }

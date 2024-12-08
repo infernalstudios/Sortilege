@@ -3,7 +3,7 @@ package net.lyof.sortilege.setup;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.crafting.EnchantmentCatalyst;
+import net.lyof.sortilege.crafting.EnchantingCatalyst;
 import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.config.ConfigEntries;
@@ -57,7 +57,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
         }
 
         // Enchantment catalysts
-        EnchantmentCatalyst.clear();
+        EnchantingCatalyst.clear();
 
         for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
                 path -> path.toString().endsWith(".json")).entrySet()) {
@@ -70,7 +70,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
                 if (json == null || !json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst")) continue;
 
-                EnchantmentCatalyst.read(json);
+                EnchantingCatalyst.read(json);
 
             } catch (IOException e) {
                 e.printStackTrace();

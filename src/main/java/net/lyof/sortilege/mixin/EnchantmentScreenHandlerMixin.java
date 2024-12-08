@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.random.Random;
@@ -24,6 +25,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(EnchantmentScreenHandler.class)
@@ -63,7 +65,8 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
             @Override
             public boolean isEnabled() {
-                return !EnchantmentScreenHandlerMixin.this.inventory.getStack(0).isEmpty();
+                ItemStack stack = EnchantmentScreenHandlerMixin.this.inventory.getStack(0);
+                return !stack.isEmpty() && stack.isEnchantable();
             }
         });
 
@@ -84,18 +87,22 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
             this.catalyzed[slot] = 0;
             return;
         }
-        List<EnchantmentLevelEntry> result = cir.getReturnValue();
+        List<EnchantmentLevelEntry> result = new ArrayList<>();
 
-        Enchantment chosen = MathHelper.randi(catalyzed.stream().filter(enchant -> enchant.isAcceptableItem(stack)
-                && result.stream().allMatch(e -> e.enchantment.canCombine(enchant))).toList(), this.random);
-        this.catalyzed[slot] = chosen == null ? 0 : 1;
-        if (chosen == null) return;
+        Enchantment chosen = MathHelper.randi(catalyzed.stream().filter(enchant -> enchant.isAcceptableItem(stack)).toList(), this.random);
 
-        // if (this.random.nextDouble() < 0.5)
+        if (chosen == null || this.random.nextDouble() < 0.5) {
+            this.catalyzed[slot] = 0;
+            return;
+        }
+
+        this.catalyzed[slot] = 1;
+
         int a = this.random.nextInt(chosen.getMaxLevel()) + 1;
         int b = this.random.nextInt(chosen.getMaxLevel()) + 1;
         result.add(0, new EnchantmentLevelEntry(chosen, Math.min(a, b)));
-        // Sortilege.log(result.stream().map(e -> Registries.ENCHANTMENT.getId(e.enchantment) + " " + e.level).toList());
+        result.addAll(cir.getReturnValue().stream().filter(e -> e.enchantment.canCombine(chosen)).toList());
+
         cir.setReturnValue(result);
     }
 
@@ -112,12 +119,15 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     @Inject(method = "quickMove", at = @At("HEAD"), cancellable = true)
     public void moveCatalyst(PlayerEntity player, int slotid, CallbackInfoReturnable<ItemStack> cir) {
         Slot slot = this.getSlot(slotid);
+        ItemStack stack = EnchantmentScreenHandlerMixin.this.inventory.getStack(0);
 
         if (slot.inventory == this.catalyst && !this.insertItem(slot.getStack(), 2, 38, true)) {
             slot.onTakeItem(player, slot.getStack());
             cir.setReturnValue(ItemStack.EMPTY);
         }
-        else if (EnchantingCatalyst.isCatalyst(slot.getStack().getItem()) && !this.insertItem(slot.getStack(), 38, 39, true)) {
+        else if (EnchantingCatalyst.isCatalyst(slot.getStack().getItem())
+                && !stack.isEmpty() && stack.isEnchantable() && !this.insertItem(slot.getStack(), 38, 39, true)) {
+
             slot.onTakeItem(player, slot.getStack());
             cir.setReturnValue(ItemStack.EMPTY);
         }
@@ -125,8 +135,11 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Inject(method = "onContentChanged", at = @At("HEAD"))
     public void updateCatalystOverlay(Inventory inventory, CallbackInfo ci) {
-        this.catalyzed[0] = 0;
-        this.catalyzed[1] = 0;
-        this.catalyzed[2] = 0;
+        ItemStack stack = this.inventory.getStack(0);
+        if (stack.isEmpty() || !stack.isEnchantable()) {
+            this.catalyzed[0] = 0;
+            this.catalyzed[1] = 0;
+            this.catalyzed[2] = 0;
+        }
     }
 }

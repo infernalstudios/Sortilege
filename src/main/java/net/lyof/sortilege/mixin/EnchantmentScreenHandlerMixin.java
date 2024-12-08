@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.crafting.EnchantmentCatalyst;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -45,10 +46,10 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler {
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V",
             at = @At(value = "TAIL"))
     public void allowOtherItems(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, CallbackInfo ci) {
-        this.addSlot(new Slot(this.catalyst, 0, 25, 14){
+        this.addSlot(new Slot(this.catalyst, 0, 25, 20){
             @Override
             public boolean canInsert(ItemStack stack) {
-                return true;
+                return EnchantmentCatalyst.isCatalyst(stack.getItem());
             }
 
             @Override

@@ -1,7 +1,7 @@
-package net.lyof.sortilege.brewing;
+package net.lyof.sortilege.crafting.brewing;
 
-import net.lyof.sortilege.brewing.custom.AntidoteBrewingRecipe;
-import net.lyof.sortilege.brewing.custom.PotionBrewingRecipe;
+import net.lyof.sortilege.crafting.brewing.custom.AntidoteBrewingRecipe;
+import net.lyof.sortilege.crafting.brewing.custom.PotionBrewingRecipe;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.item.ItemStack;
 

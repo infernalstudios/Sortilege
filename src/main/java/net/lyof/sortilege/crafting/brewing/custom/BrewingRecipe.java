@@ -1,7 +1,7 @@
-package net.lyof.sortilege.brewing.custom;
+package net.lyof.sortilege.crafting.brewing.custom;
 
-import net.lyof.sortilege.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.brewing.IBetterBrewingRecipe;
+import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
+import net.lyof.sortilege.crafting.brewing.IBetterBrewingRecipe;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;

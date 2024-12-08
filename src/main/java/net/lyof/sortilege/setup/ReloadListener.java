@@ -3,8 +3,9 @@ package net.lyof.sortilege.setup;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.brewing.custom.BrewingRecipe;
+import net.lyof.sortilege.crafting.EnchantmentCatalyst;
+import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
+import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.crafting.RecipeLock;
@@ -26,12 +27,14 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
     public void reload(ResourceManager manager) {
         ModConfig.register();
 
+        // Recipe locks
         RecipeLock.clear();
         for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
             RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
                     new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
         }
 
+        // Brewing recipes
         BetterBrewingRegistry.clear();
         BetterBrewingRegistry.register();
 
@@ -47,6 +50,27 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 if (json == null || !json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing")) continue;
 
                 BrewingRecipe.read(json);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // Enchantment catalysts
+        EnchantmentCatalyst.clear();
+
+        for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
+                path -> path.toString().endsWith(".json")).entrySet()) {
+
+            try {
+                Resource resource = entry.getValue();
+
+                String content = new String(resource.getInputStream().readAllBytes());
+                Map<String, ?> json = new Gson().fromJson(content, Map.class);
+
+                if (json == null || !json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst")) continue;
+
+                EnchantmentCatalyst.read(json);
 
             } catch (IOException e) {
                 e.printStackTrace();

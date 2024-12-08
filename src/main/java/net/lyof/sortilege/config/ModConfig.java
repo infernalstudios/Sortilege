@@ -277,7 +277,9 @@ public class ModConfig {
                 // Should Magic Protection also give a level*5 chance to dodge any attack
                 "better_magic_protection": true,
                 // Should Fire Protection at this level on every armor slot at once grant fire immunity
-                "better_fire_protection": 4
+                "better_fire_protection": 4,
+                // Should Bane of Arthropods apply a 0.5*(level + 1) seconds of slowness on hit
+                "better_bane_of_arthropods": true
               },
               
               // CATEGORY: EXPERIENCE

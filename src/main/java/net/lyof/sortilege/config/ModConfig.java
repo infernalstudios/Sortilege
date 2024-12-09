@@ -179,6 +179,9 @@ public class ModConfig {
             return;
         }
 
+        if (getVersion() > VERSION.get())
+            Sortilege.log("Your Sortilege configs are outdated! Consider deleting them so they can refresh");
+
 
         List<Pair<String, StaffInfo>> result = new ArrayList<>();
         for (Map<String, Map<String, Object>> staff : ConfigEntries.staffEntries) {
@@ -218,7 +221,7 @@ public class ModConfig {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 1.6,
+                "VERSION_DO_NOT_EDIT": 1.7,
                 "FORCE_RESET": false
               },
               
@@ -265,6 +268,15 @@ public class ModConfig {
                     "max_limit_break": 3
                   }
                 },
+                
+                "enchant_catalyst": {
+                  // Should Enchanted Books be usable as catalysts to increase the odds of getting their enchantments
+                  // If this is set to false and no catalyst is loaded from datapacks, the module will be disabled
+                  "allow_books": true,
+                  // Chance (0 - 1) for non book catalysts to activate for each option in the enchanting table
+                  "catalyst_activation_chance": 0.5
+                },
+                
                 // Allow using Enchanted Books on items in inventory
                 "allow_inventory_enchanting": false,
                 

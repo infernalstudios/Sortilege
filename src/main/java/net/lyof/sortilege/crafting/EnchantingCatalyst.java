@@ -1,10 +1,14 @@
 package net.lyof.sortilege.crafting;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
@@ -27,11 +31,22 @@ public class EnchantingCatalyst {
         CATALYSTS.replace(catalyst, new HashSet<>(CATALYSTS.get(catalyst)).stream().toList());
     }
 
-    public static List<Enchantment> getEnchantments(Item catalyst) {
-        return CATALYSTS.getOrDefault(catalyst, List.of());
+
+    public static boolean isEmpty() {
+        return CATALYSTS.isEmpty();
     }
 
-    public static boolean isCatalyst(Item item) {
+    public static Map<Enchantment, Integer> getEnchantments(ItemStack catalyst) {
+        if (catalyst.getItem() instanceof EnchantedBookItem && ConfigEntries.bookCatalysts)
+            return EnchantmentHelper.get(catalyst);
+
+        Map<Enchantment, Integer> result = new HashMap<>();
+        for (Enchantment enchant : CATALYSTS.getOrDefault(catalyst.getItem(), List.of()))
+            result.put(enchant, 1);
+        return result;
+    }
+
+    public static boolean isCatalyst(ItemStack item) {
         return !getEnchantments(item).isEmpty();
     }
 
@@ -40,7 +55,7 @@ public class EnchantingCatalyst {
         if (json.containsKey("item") && json.containsKey("enchantments") && json.get("enchantments") instanceof List l) {
             Item item = Registries.ITEM.get(new Identifier(String.valueOf(json.get("item"))));
             List<Enchantment> enchants = l.stream()
-                    .map(id -> Registries.ENCHANTMENT.get(new Identifier(String.valueOf(id)))).toList();
+                    .map(id -> Registries.ENCHANTMENT.get(new Identifier(String.valueOf(id)))).filter(Objects::nonNull).toList();
 
             register(item, enchants);
         }

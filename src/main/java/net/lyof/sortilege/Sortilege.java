@@ -37,6 +37,7 @@ public class Sortilege implements ModInitializer {
 		return Identifier.of(MOD_ID, name);
 	}
 
+	@Deprecated
 	public static <T> T log(T message) {
 		LOGGER.info(String.valueOf(message));
 		return message;

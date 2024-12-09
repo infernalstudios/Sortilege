@@ -17,6 +17,9 @@ public class ConfigEntries {
         limititeLootWeight = new ConfigEntry<>("enchantments.enchant_limiter.limitite.loot_weight", 24).get();
         maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.limitite.max_limit_break", 3).get();
 
+        bookCatalysts = new ConfigEntry<>("enchantments.enchant_catalyst.allow_books", true).get();
+        catalystChance = new ConfigEntry<>("enchantments.enchant_catalyst.catalyst_activation_chance", 0.5d).get();
+
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
 
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
@@ -75,6 +78,9 @@ public class ConfigEntries {
     public static boolean isLimititeFoil;
     public static int limititeLootWeight;
     public static int maxLimitBreak;
+
+    public static boolean bookCatalysts;
+    public static double catalystChance;
 
     public static boolean allowInventoryEnchanting;
 

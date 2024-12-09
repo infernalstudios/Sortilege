@@ -28,7 +28,7 @@ public class EnchantingCatalyst {
         else
             CATALYSTS.put(catalyst, enchants);
         // Yeets duplicated entries
-        CATALYSTS.replace(catalyst, new HashSet<>(CATALYSTS.get(catalyst)).stream().toList());
+        CATALYSTS.replace(catalyst, new ArrayList<>(new HashSet<>(CATALYSTS.get(catalyst)).stream().toList()));
     }
 
 

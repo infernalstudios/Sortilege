@@ -4,6 +4,7 @@
   "enchantments": [
     "minecraft:flame",
     "minecraft:fire_aspect",
-    "minecraft:fire_protection"
+    "minecraft:fire_protection",
+    "sortilege:brazier"
   ]
 }

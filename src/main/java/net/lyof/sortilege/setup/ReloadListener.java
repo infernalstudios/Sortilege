@@ -51,8 +51,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
                 BrewingRecipe.read(json);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Sortilege.log("Could not read data file " + entry.getKey());
             }
         }
 
@@ -72,8 +72,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
                 EnchantingCatalyst.read(json);
 
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Sortilege.log("Could not read data file " + entry.getKey());
             }
         }
     }

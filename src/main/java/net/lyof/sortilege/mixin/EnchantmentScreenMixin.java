@@ -1,8 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
-import net.lyof.sortilege.util.IPropertyHolder;
+import net.lyof.sortilege.util.IMixinAccess;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -29,7 +28,7 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         int j = (this.height - this.backgroundHeight) / 2;
 
         for (int k = 0; k < 3; k++) {
-            if (((IPropertyHolder) this.handler).getProperty(k) == 1)
+            if (((IMixinAccess) this.handler).getProperty(k) == 1)
                 context.drawTexture(CATALYST_TEXTURE, i + 60, j + 14 + 19 * k, 0, 0, 108, 19);
         }
     }

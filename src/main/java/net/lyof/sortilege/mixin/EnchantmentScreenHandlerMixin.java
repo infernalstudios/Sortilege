@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.crafting.EnchantingCatalyst;
-import net.lyof.sortilege.util.IPropertyHolder;
+import net.lyof.sortilege.util.IMixinAccess;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -13,7 +13,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.random.Random;
@@ -32,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(EnchantmentScreenHandler.class)
-public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implements IPropertyHolder {
+public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implements IMixinAccess {
     @Shadow @Final private Inventory inventory;
 
     @Shadow @Final private ScreenHandlerContext context;
@@ -97,6 +96,9 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
             this.catalyzed[slot] = 0;
             return;
         }
+
+        for (int i = 0; i < slot; i++)
+            this.random.nextDouble();
 
         Enchantment chosen = MathHelper.randi(enchants.keySet().stream().filter(enchant -> enchant.isAcceptableItem(stack))
                 .toList(), this.random);

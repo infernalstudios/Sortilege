@@ -1,5 +1,5 @@
 package net.lyof.sortilege.util;
 
-public interface IPropertyHolder {
+public interface IMixinAccess {
     int getProperty(int i);
 }

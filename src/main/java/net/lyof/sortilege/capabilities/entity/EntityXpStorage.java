@@ -62,7 +62,7 @@ public class EntityXpStorage implements IPersistentCapability<EntityXpStorage> {
     }
 
 
-    /* SERAILIZATION */
+    /* SERIALIZATION */
 
     @Override
     public CompoundTag save(CompoundTag tag) {

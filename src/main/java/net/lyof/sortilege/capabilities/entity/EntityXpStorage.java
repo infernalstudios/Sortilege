@@ -3,7 +3,6 @@ package net.lyof.sortilege.capabilities.entity;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.capabilities.CapabilityProvider;
 import net.lyof.sortilege.capabilities.IPersistentCapability;
-import net.lyof.sortilege.capabilities.ISyncedPersistentCapability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

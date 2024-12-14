@@ -1,8 +1,10 @@
 package net.lyof.sortilege.utils;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.capabilities.entity.EntityXpStorage;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -11,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class XPHelper {
-    public static Map<String, Integer> XP_SAVES = new HashMap<>();
     private static final Map<Integer, Integer> totalxpCache = new HashMap<>();
 
 
@@ -52,6 +53,22 @@ public class XPHelper {
 
         totalxpCache.put(level, total);
         return total;
+    }
+
+    public static int getSavedXp(LivingEntity entity) {
+        return EntityXpStorage.getIfPresent(entity, EntityXpStorage::getXp, () -> 0);
+    }
+
+    public static void removeSavedXp(LivingEntity entity) {
+        EntityXpStorage.ifPresent(entity, storage -> storage.setXp(0));
+    }
+
+    public static void setSavedXp(LivingEntity entity, int xp) {
+        EntityXpStorage.ifPresent(entity, storage -> storage.setXp(xp));
+    }
+
+    public static void setSavedXp(LivingEntity entity, int xp, boolean onlyIfZero) {
+        EntityXpStorage.ifPresent(entity, storage -> storage.setXp(xp, onlyIfZero));
     }
 
     public static void dropxpPinata(Level world, double x, double y, double z, int amount) {

@@ -48,7 +48,7 @@ public class XPHelper {
 
         for (int i = 0; i <= level; i++) {
             dummy.experienceLevel = i;
-            total += (int) (dummy.getXpNeededForNextLevel() * (i == level ? progress : 1));
+            total += dummy.getXpNeededForNextLevel() * (i == level ? progress : 1);
         }
 
         totalxpCache.put(level, total);

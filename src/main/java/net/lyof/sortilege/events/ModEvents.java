@@ -70,9 +70,10 @@ public class ModEvents {
         // Player got killed
         if (event.getEntity() instanceof Player player) {
             // Split the xp
-            int safe_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.selfXPRatio);
-            int steal_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.attackerXPRatio);
-            int drop_xp = (int) Math.round(XPHelper.getTotalxp(player, server) * ConfigEntries.dropXPRatio);
+            double total_xp = XPHelper.getTotalxp(player);
+            int safe_xp = (int) Math.round(total_xp * ConfigEntries.selfXPRatio);
+            int steal_xp = (int) Math.round(total_xp * ConfigEntries.attackerXPRatio);
+            int drop_xp = (int) Math.round(total_xp * ConfigEntries.dropXPRatio);
 
             // Save a part for respawn
             if (XPHelper.XP_SAVES.containsKey(player.getStringUUID()))

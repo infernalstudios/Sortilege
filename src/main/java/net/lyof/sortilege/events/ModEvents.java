@@ -106,7 +106,7 @@ public class ModEvents {
             }
 
             // Drop the last part
-            //XPHelper.dropxpPinata(player.getLevel(), player.getX(), player.getY(), player.getZ(), drop_xp);
+            player.skipDropExperience();
             ExperienceOrb.award(server, player.position(), drop_xp);
         }
 

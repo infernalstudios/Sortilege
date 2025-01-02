@@ -76,10 +76,7 @@ public class ModEvents {
             int drop_xp = (int) Math.round(total_xp * ConfigEntries.dropXPRatio);
 
             // Save a part for respawn
-            if (XPHelper.XP_SAVES.containsKey(player.getStringUUID()))
-                XPHelper.XP_SAVES.replace(player.getStringUUID(), safe_xp);
-            else
-                XPHelper.XP_SAVES.put(player.getStringUUID(), safe_xp);
+            XPHelper.setSavedXp(player, safe_xp);
 
             // If indirect death: add steal to drop
             if (event.getSource().getEntity() == null || !(event.getSource().getEntity() instanceof LivingEntity entity)) {
@@ -100,7 +97,7 @@ public class ModEvents {
 
             // If killed by a living entity: make it a bounty
             else {
-                XPHelper.XP_SAVES.putIfAbsent(entity.getStringUUID(), steal_xp);
+                XPHelper.setSavedXp(entity, steal_xp, true);
                 // Temporary: custom effect or something
                 entity.addEffect(new MobEffectInstance(MobEffects.GLOWING, 999999));
             }
@@ -111,16 +108,16 @@ public class ModEvents {
         }
 
         // Bounty got killed
-        else if (XPHelper.XP_SAVES.containsKey(event.getEntity().getStringUUID())) {
+        else if (XPHelper.getSavedXp(event.getEntity()) > 0) {
             LivingEntity entity = event.getEntity();
 
             // Probably better: ExperienceOrb.award(server, entity.position(), amount);
             //XPHelper.dropxpPinata(entity.getLevel(), entity.getX(), entity.getY(), entity.getZ(),
-            //        XPHelper.XP_SAVES.get(entity.getStringUUID()));
-            ExperienceOrb.award(server, entity.position(), XPHelper.XP_SAVES.get(entity.getStringUUID()));
+            //        XPHelper.getSavedXp(event.getEntity()));
+            ExperienceOrb.award(server, entity.position(), XPHelper.getSavedXp(event.getEntity()));
 
             // Remove the bounty
-            XPHelper.XP_SAVES.remove(entity.getStringUUID());
+            XPHelper.removeSavedXp(event.getEntity());
         }
     }
     
@@ -131,9 +128,10 @@ public class ModEvents {
         if (player.level.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY) || !ConfigEntries.doXPKeep)
             return;
 
-        if (XPHelper.XP_SAVES.containsKey(player.getStringUUID())) {
-            player.giveExperiencePoints(XPHelper.XP_SAVES.get(player.getStringUUID()));
-            XPHelper.XP_SAVES.remove(player.getStringUUID());
+        var xp = XPHelper.getSavedXp(player);
+        if (xp > 0) {
+            player.giveExperiencePoints(xp);
+            XPHelper.removeSavedXp(player);
         }
     }
 

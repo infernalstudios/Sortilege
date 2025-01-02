@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
@@ -13,7 +14,7 @@ public class ModItemGroups {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             for (Item staff : ModItems.STAFFS)
                 entries.add(staff);
-            entries.add(ModItems.WITCH_HAT);
+            if (ConfigEntries.witchHatEnabled) entries.add(ModItems.WITCH_HAT);
             AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {

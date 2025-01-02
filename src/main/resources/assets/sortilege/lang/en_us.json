@@ -52,6 +52,11 @@
   "enchantment.sortilege.soulbound": "Soulbound",
   "enchantment.sortilege.soulbound.desc": "Stays after death.",
 
+  "enchantment.minecraft.feather_falling.desc": "Reduces fall damage and ender pearl teleportation damage. They are completely negated at max level.",
+  "enchantment.minecraft.fire_protection.desc": "Reduces the effects of fire damage. Also reduces the burn time when set on fire. Wearing a full set at max level completely negates them.",
+  "enchantment.minecraft.bane_of_arthropods.desc": "Increases damage against arthropods such as Spiders and Silverfish. Also slows down opponents",
+  "enchantment.minecraft.unbreaking.desc": "Causes the tool to lose durability at a slower rate. Max level makes the item unbreakable",
+
   "sortilege.enchantments": "Enchantments",
 
 

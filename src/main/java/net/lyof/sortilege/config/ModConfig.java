@@ -356,7 +356,9 @@ public class ModConfig {
                 // Should the Soulbound enchantment be removed on use
                 "consume_soulbound": false,
                 // Display death coordinates instead of the score from vanilla on the death screen
-                "show_coordinates_on_death": true
+                "show_coordinates_on_death": true,
+                // Should the mob that killed you be made glowing
+                "glowing_killer": true
               },
               
               // CATEGORY: BREWING

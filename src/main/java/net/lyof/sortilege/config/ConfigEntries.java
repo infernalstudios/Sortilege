@@ -58,6 +58,7 @@ public class ConfigEntries {
         consumeSoulbound = new ConfigEntry<>("death.consume_soulbound", false).get();
 
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
+        glowingKiller = new ConfigEntry<>("death.glowing_killer", true).get();
 
         antidoteEnabled = new ConfigEntry<>("brewing.enable", true).get();
         antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
@@ -118,6 +119,7 @@ public class ConfigEntries {
     public static boolean consumeSoulbound;
 
     public static boolean showDeathCoordinates;
+    public static boolean glowingKiller;
 
     public static boolean antidoteEnabled;
     public static List<String> antidoteBlacklist = List.of();

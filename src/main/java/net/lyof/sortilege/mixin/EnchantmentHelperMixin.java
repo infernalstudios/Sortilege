@@ -26,7 +26,7 @@ import java.util.Map;
 public class EnchantmentHelperMixin {
     @Inject(method = "set", at = @At("HEAD"), cancellable = true)
     private static void setEnchantments(Map<Enchantment, Integer> enchants, ItemStack itemstack, CallbackInfo ci) {
-        int limit = ItemHelper.getMaxEnchantValue(itemstack);
+        int limit = ItemHelper.getTotalEnchantSlots(itemstack);
         int a = 0;
         if (limit >= 0) {
             NbtList listtag = new NbtList();

@@ -31,10 +31,10 @@ import java.util.Map;
 public class ItemMixin {
     @Inject(method = "appendTooltip", at = @At("HEAD"))
     public void showEnchantLimit(ItemStack stack, World world, List<Text> tooltip, TooltipContext context, CallbackInfo ci) {
-        int a = ItemHelper.getEnchantValue(stack);
-        int m = ItemHelper.getMaxEnchantValue(stack);
+        int a = ItemHelper.getUsedEnchantSlots(stack);
+        int m = ItemHelper.getTotalEnchantSlots(stack);
 
-        if ((a > 0 || ItemHelper.getExtraEnchants(stack) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&
+        if ((a > 0 || ItemHelper.getExtraEnchantSlots(stack) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&
                 m > 0 && stack.getItem().getEnchantability() > 0 && !stack.isOf(Items.ENCHANTED_BOOK)) {
 
             MutableText txt = Text.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
@@ -46,8 +46,8 @@ public class ItemMixin {
 
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
     public void preventUselessEnchants(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        int a = ItemHelper.getEnchantValue(stack);
-        int m = ItemHelper.getMaxEnchantValue(stack);
+        int a = ItemHelper.getUsedEnchantSlots(stack);
+        int m = ItemHelper.getTotalEnchantSlots(stack);
 
         if (m >= 0 && a >= m) cir.setReturnValue(false);
     }

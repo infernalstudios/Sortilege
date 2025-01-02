@@ -4,16 +4,22 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ItemHelper {
     public static final List<Item> ENCHANTABLES = new ArrayList<>();
@@ -24,7 +30,8 @@ public class ItemHelper {
             if (item.getEnchantability() > 0)
                 ENCHANTABLES.add(item);
 
-            if (item.getDefaultStack().getMaxCount() == 1 && !item.isFood() && !(item instanceof BucketItem))
+            if (item.getDefaultStack().getMaxCount() == 1 && !item.isFood()
+                    && !(item instanceof BucketItem) && !(item instanceof BlockItem))
                 SOULBINDABLES.add(item);
         }
     }
@@ -39,41 +46,67 @@ public class ItemHelper {
     }
 
 
-    public static final String ENCHLIMIT_PATH = "enchantments.enchant_limiter.";
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
+    public static final Map<Item, Integer> ENCHLIMIT_CACHE = new HashMap<>();
 
-    public static int getEnchantValue(ItemStack stack) {
+    public static int getUsedEnchantSlots(ItemStack stack) {
         int l = 0;
         for (Enchantment enchant : EnchantmentHelper.get(stack).keySet())
             if (!enchant.isCursed() || !ConfigEntries.cursesAddSlots) l++;
         return l;
     }
 
-    public static int getMaxEnchantValue(ItemStack stack) {
+    public static int getTotalEnchantSlots(ItemStack stack) {
+        int l = getBaseEnchantSlots(stack);
+        if (l >= 0)
+            l = l + getExtraEnchantSlots(stack) + getCurseEnchantSlots(stack);
+        return l;
+    }
+
+    public static int getBaseEnchantSlots(ItemStack stack) {
+        if (ENCHLIMIT_CACHE.containsKey(stack.getItem())) return ENCHLIMIT_CACHE.get(stack.getItem());
+
         String id = Registries.ITEM.getId(stack.getItem()).toString();
 
         int default_limit = ConfigEntries.enchantLimiterDefault;
         boolean sum = ConfigEntries.enchantLimiterMode.equals("relative");
 
-        int limit = ConfigEntries.enchantLimiterOverrides.getOrDefault(id, sum ? 0.0 : -1.0).intValue();
-        //int limit = new ConfigEntry<>(ENCHLIMIT_PATH + "overrides." + id, sum ? 0 : -1).get();
-        if (sum) limit += default_limit;
+        if (ConfigEntries.enchantLimiterOverrides.containsKey(id)) {
+            int l = ConfigEntries.enchantLimiterOverrides.get(id).intValue();
+            l = sum ? l + default_limit : l;
+            ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), l);
+            return l;
+        }
 
-        int l = limit + getExtraEnchants(stack);
-        if (limit == -1)
-            l = default_limit;
+        for (String str : ConfigEntries.enchantLimiterOverrides.keySet()) {
+            if (!str.startsWith("#")) continue;
 
-        for (Enchantment enchant : EnchantmentHelper.get(stack).keySet())
+            TagKey<Item> tag = TagKey.of(RegistryKeys.ITEM, new Identifier(str.substring(1)));
+            if (stack.isIn(tag)) {
+                int l = ConfigEntries.enchantLimiterOverrides.get(str).intValue();
+                l = sum ? l + default_limit : l;
+                ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), l);
+                return l;
+            }
+        }
+
+        ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), default_limit);
+        return default_limit;
+    }
+
+    public static int getCurseEnchantSlots(ItemStack stack) {
+        int l = 0;
+        for (Enchantment enchant : EnchantmentHelper.get(stack).keySet()) {
             if (enchant.isCursed() && ConfigEntries.cursesAddSlots) l++;
-
+        }
         return l;
     }
 
-    public static int getExtraEnchants(ItemStack stack) {
+    public static int getExtraEnchantSlots(ItemStack stack) {
         return stack.hasNbt() ? stack.getOrCreateNbt().getInt(ENCHLIMIT_NBT) : 0;
     }
 
-    public static ItemStack addExtraEnchant(ItemStack stack) {
+    public static ItemStack addExtraEnchantSlot(ItemStack stack) {
         NbtCompound tag = stack.getOrCreateNbt();
         int current = tag.getInt(ENCHLIMIT_NBT);
 
@@ -82,6 +115,7 @@ public class ItemHelper {
         stack.setNbt(tag);
         return stack;
     }
+
 
     public static Text getShiftTooltip() {
         return Text.translatable("tooltip.press_shift.left").formatted(Formatting.DARK_GRAY)

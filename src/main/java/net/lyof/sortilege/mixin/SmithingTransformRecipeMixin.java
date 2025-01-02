@@ -33,7 +33,7 @@ public class SmithingTransformRecipeMixin {
     @Inject(method = "craft", at = @At("RETURN"), cancellable = true)
     public void addExtraEnchant(Inventory inventory, DynamicRegistryManager registryManager, CallbackInfoReturnable<ItemStack> cir) {
         if (this.id.toString().endsWith("_limit_break")) {
-            cir.setReturnValue(ItemHelper.addExtraEnchant(cir.getReturnValue()));
+            cir.setReturnValue(ItemHelper.addExtraEnchantSlot(cir.getReturnValue()));
         }
 
         if (this.id.toString().endsWith("_soulbind")) {
@@ -47,7 +47,7 @@ public class SmithingTransformRecipeMixin {
     @Inject(method = "matches", at = @At("HEAD"), cancellable = true)
     public void stopUseless(Inventory inventory, World world, CallbackInfoReturnable<Boolean> cir) {
         if (this.id.toString().endsWith("_limit_break")) {
-            if (ItemHelper.getExtraEnchants(inventory.getStack(1)) >= ConfigEntries.maxLimitBreak) cir.setReturnValue(false);
+            if (ItemHelper.getExtraEnchantSlots(inventory.getStack(1)) >= ConfigEntries.maxLimitBreak) cir.setReturnValue(false);
         }
 
         if (this.id.toString().endsWith("_soulbind")) {

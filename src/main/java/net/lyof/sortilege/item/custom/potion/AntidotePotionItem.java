@@ -2,6 +2,7 @@ package net.lyof.sortilege.item.custom.potion;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
@@ -31,6 +32,8 @@ public class AntidotePotionItem extends PotionItem {
     }
 
     public static void fillItemGroup(FabricItemGroupEntries entries, Item antidote) {
+        if (!ConfigEntries.antidoteEnabled) return;
+
         for (Potion potion : PotionHelper.POTIONS.values())
             entries.add(PotionUtil.setPotion(antidote.getDefaultStack(), potion));
     }

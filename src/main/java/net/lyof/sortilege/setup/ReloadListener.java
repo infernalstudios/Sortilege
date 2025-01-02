@@ -38,24 +38,6 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
         BetterBrewingRegistry.clear();
         BetterBrewingRegistry.register();
 
-        for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
-                path -> path.toString().endsWith(".json")).entrySet()) {
-
-            try {
-                Resource resource = entry.getValue();
-
-                String content = new String(resource.getInputStream().readAllBytes());
-                Map<String, ?> json = new Gson().fromJson(content, Map.class);
-
-                if (json == null || !json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing")) continue;
-
-                BrewingRecipe.read(json);
-
-            } catch (Exception e) {
-                Sortilege.log("Could not read data file " + entry.getKey());
-            }
-        }
-
         // Enchantment catalysts
         EnchantingCatalyst.clear();
 
@@ -68,9 +50,10 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 String content = new String(resource.getInputStream().readAllBytes());
                 Map<String, ?> json = new Gson().fromJson(content, Map.class);
 
-                if (json == null || !json.containsKey("type") || !Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst")) continue;
-
-                EnchantingCatalyst.read(json);
+                if (json != null && json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing"))
+                    BrewingRecipe.read(json);
+                else if (json != null && json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst"))
+                    EnchantingCatalyst.read(json);
 
             } catch (Exception e) {
                 Sortilege.log("Could not read data file " + entry.getKey());

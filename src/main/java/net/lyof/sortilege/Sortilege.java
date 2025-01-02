@@ -2,6 +2,7 @@ package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
@@ -22,6 +23,7 @@ public class Sortilege implements ModInitializer {
 	public void onInitialize() {
 		ModConfig.register();
 
+		ModAttributes.register();
 		ModItems.register();
 		ModItemGroups.register();
 

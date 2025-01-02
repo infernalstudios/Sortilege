@@ -1,5 +1,6 @@
 package net.lyof.sortilege.enchant.staff;
 
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -44,7 +45,7 @@ public class StaffEnchantment extends Enchantment {
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem() instanceof StaffItem;
+        return stack.getItem() instanceof StaffItem staff && (this != ModEnchants.WISDOM || staff.getXPCost(stack) > 0);
     }
 
     @Override

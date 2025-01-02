@@ -1,6 +1,9 @@
 package net.lyof.sortilege.item.custom;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
@@ -10,7 +13,11 @@ import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -48,13 +55,14 @@ public class StaffItem extends ToolItem {
     public int charge;
     public int xp_cost;
 
+    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
+
     public @Nullable Hand handSave;
 
 
     public StaffItem(ModConfig.StaffInfo stats, FabricItemSettings settings) {
         this(stats.tier, stats.damage, stats.pierce, stats.range, stats.durability, stats.cooldown, stats.charge_time, stats.xp_cost,
-                stats.fireRes ?
-                    settings.fireproof() : settings);
+                stats.fireRes ? settings.fireproof() : settings);
         this.rawInfos = stats;
     }
 
@@ -68,6 +76,12 @@ public class StaffItem extends ToolItem {
         this.cooldown = cooldown;
         this.charge = charge;
         this.xp_cost = xp_cost;
+
+        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+        builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(), "Weapon modifier", damage, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", targets, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", range, EntityAttributeModifier.Operation.ADDITION));
+        this.attributeModifiers = builder.build();
     }
 
     public int getXPCost(ItemStack itemstack) {
@@ -98,6 +112,14 @@ public class StaffItem extends ToolItem {
     public int getEnchantability() {
         if (this.rawInfos != null) return this.rawInfos.enchantability;
         return super.getEnchantability();
+    }
+
+    @Override
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+        if (slot == EquipmentSlot.MAINHAND) {
+            return this.attributeModifiers;
+        }
+        return super.getAttributeModifiers(slot);
     }
 
     @Override

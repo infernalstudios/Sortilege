@@ -21,7 +21,7 @@ import java.util.Map;
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
     @Inject(method = "getAllOfType", at = @At("RETURN"), cancellable = true)
-    public <C extends Inventory, T extends Recipe<C>> void addLimiteRecipes(RecipeType<T> type, CallbackInfoReturnable<Map<Identifier, T>> cir) {
+    public <C extends Inventory, T extends Recipe<C>> void addLimititeRecipes(RecipeType<T> type, CallbackInfoReturnable<Map<Identifier, T>> cir) {
         Map<Identifier, T> map = cir.getReturnValue();
         if (type != RecipeType.SMITHING)
             return;
@@ -32,7 +32,7 @@ public class RecipeManagerMixin {
 
         Identifier id;
         for (Item item : ItemHelper.ENCHANTABLES) {
-            id = Sortilege.makeID(Registries.ITEM.getId(item).getPath() + "_limit_break");
+            id = Sortilege.makeID("/" + Registries.ITEM.getId(item).getPath() + "_limit_break");
 
             recipes.put(id, new SmithingTransformRecipe(
                     id,
@@ -43,7 +43,7 @@ public class RecipeManagerMixin {
         }
 
         for (Item item : ItemHelper.SOULBINDABLES) {
-            id = Sortilege.makeID(Registries.ITEM.getId(item).getPath() + "_soulbind");
+            id = Sortilege.makeID("/" + Registries.ITEM.getId(item).getPath() + "_soulbind");
 
             recipes.put(id, new SmithingTransformRecipe(
                     id,

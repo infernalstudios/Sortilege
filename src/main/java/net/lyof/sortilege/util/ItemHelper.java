@@ -57,6 +57,8 @@ public class ItemHelper {
     }
 
     public static int getTotalEnchantSlots(ItemStack stack) {
+        if (ENCHLIMIT_CACHE == null) return 0;
+
         int l = getBaseEnchantSlots(stack);
         if (l >= 0)
             l = l + getExtraEnchantSlots(stack) + getCurseEnchantSlots(stack);

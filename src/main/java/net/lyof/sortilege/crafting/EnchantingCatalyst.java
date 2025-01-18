@@ -1,9 +1,6 @@
 package net.lyof.sortilege.crafting;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.EnchantedBookItem;
@@ -13,7 +10,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class EnchantingCatalyst {
     private static final Map<Item, List<Enchantment>> CATALYSTS = new HashMap<>();

@@ -3,18 +3,17 @@ package net.lyof.sortilege.setup;
 import com.google.gson.Gson;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.crafting.EnchantingCatalyst;
-import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.crafting.EnchantingCatalyst;
 import net.lyof.sortilege.crafting.RecipeLock;
+import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
+import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
 

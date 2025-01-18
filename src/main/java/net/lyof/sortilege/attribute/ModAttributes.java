@@ -1,15 +1,6 @@
 package net.lyof.sortilege.attribute;
 
-import com.mojang.datafixers.util.Pair;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ModConfig;
-import net.lyof.sortilege.item.custom.LimititeItem;
-import net.lyof.sortilege.item.custom.StaffItem;
-import net.minecraft.entity.attribute.AttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 

@@ -52,6 +52,11 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Override
     public int getProperty(int i) {
+        if (i > 2) {
+            ItemStack stack = this.inventory.getStack(0);
+            return stack.isEmpty() || !stack.isEnchantable() || (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
+                    ? 0 : 1;
+        }
         return this.catalyzed[i];
     }
 

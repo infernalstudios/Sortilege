@@ -146,7 +146,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
 
         Slot slot = this.getSlot(slotid);
-        ItemStack stack = EnchantmentScreenHandlerMixin.this.inventory.getStack(0);
+        ItemStack stack = this.inventory.getStack(0);
 
         if (slot.inventory == this.catalyst && !this.insertItem(slot.getStack(), 2, 38, true)) {
             slot.onTakeItem(player, slot.getStack());

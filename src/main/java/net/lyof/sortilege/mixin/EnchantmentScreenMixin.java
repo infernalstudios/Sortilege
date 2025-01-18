@@ -42,7 +42,7 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
 
-        int frame = ((ScreenAccessor) this).getClient().player.age / 3 % 18;
+        int frame = ((ScreenAccessor) this).getClient().player.age / 2 % 18;
         int x = frame >= 9 ? 18 : 0;
         int y = (frame % 9) * 18;
 
@@ -51,9 +51,4 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         context.drawTexture(CATALYST_TEXTURE, i + 24, j + 19, x, y, 18, 18);
         context.getMatrices().pop();
     }
-/*
-    @Inject(method = "drawBook", at = @At("HEAD"), cancellable = true)
-    public void cancelBook(DrawContext context, int x, int y, float delta, CallbackInfo ci) {
-        ci.cancel();
-    }*/
 }

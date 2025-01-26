@@ -42,7 +42,11 @@ public class AntidotePotionItem extends PotionItem {
         if (PotionUtils.getPotion(itemstack) == Potions.EMPTY)
             return Component.translatable(this.getDescriptionId());
 
-        return Component.translatable(PotionUtils.getPotion(itemstack).getEffects().get(0).getDescriptionId())
+        List<MobEffectInstance> effects = PotionUtils.getPotion(itemstack).getEffects();
+        if (effects.isEmpty()) {
+            return Component.translatable(this.getDescriptionId());
+        }
+        return Component.translatable(effects.get(0).getDescriptionId())
                 .append(" ")
                 .append(Component.translatable(this.getDescriptionId()));
     }

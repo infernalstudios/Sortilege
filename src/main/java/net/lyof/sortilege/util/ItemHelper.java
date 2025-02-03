@@ -2,6 +2,7 @@ package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.BlockItem;
@@ -15,6 +16,7 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,14 +32,15 @@ public class ItemHelper {
             if (item.getEnchantability() > 0)
                 ENCHANTABLES.add(item);
 
-            if (item.getDefaultStack().getMaxCount() == 1 && !item.isFood()
+            if (item.getDefaultStack().getMaxCount() == 1 && ModEnchants.SOULBOUND != null && !item.isFood()
                     && !(item instanceof BucketItem) && !(item instanceof BlockItem))
                 SOULBINDABLES.add(item);
         }
     }
 
 
-    public static int getEnchantLevel(Enchantment enchant, ItemStack item) {
+    public static int getEnchantLevel(@Nullable Enchantment enchant, ItemStack item) {
+        if (enchant == null) return 0;
         return EnchantmentHelper.getLevel(enchant, item);
     }
 

@@ -1,6 +1,7 @@
 package net.lyof.sortilege.enchant;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.armor.MagicProtectionEnchantment;
 import net.lyof.sortilege.enchant.common.SoulboundEnchantment;
 import net.lyof.sortilege.enchant.staff.CurseStaffEnchantment;
@@ -20,7 +21,12 @@ public class ModEnchants {
     public static void register() {}
     
     public static Enchantment register(String name, Enchantment enchant) {
+        if (!isEnabled(name)) return null;
         return Registry.register(Registries.ENCHANTMENT, Sortilege.makeID(name), enchant);
+    }
+
+    private static boolean isEnabled(String name) {
+        return ConfigEntries.enabledEnchants.getOrDefault(name, true);
     }
 
 

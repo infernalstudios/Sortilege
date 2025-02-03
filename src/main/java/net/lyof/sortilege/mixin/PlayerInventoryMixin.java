@@ -37,7 +37,7 @@ public class PlayerInventoryMixin {
 
         ItemStack stack = (ItemStack) list.get(i);
         if (ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
-            if (ConfigEntries.consumeSoulbound) {
+            if (ConfigEntries.consumeSoulbound && ModEnchants.SOULBOUND != null) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.get(stack);
                 enchants.remove(ModEnchants.SOULBOUND);
             }

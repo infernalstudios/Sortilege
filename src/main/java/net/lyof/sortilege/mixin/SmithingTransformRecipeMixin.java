@@ -19,15 +19,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SmithingTransformRecipe.class)
 public class SmithingTransformRecipeMixin {
-    @Shadow @Final
-    Ingredient base;
-
-    @Shadow @Final
-    ItemStack result;
-
-    @Shadow @Final
-    Ingredient addition;
-
     @Shadow @Final private Identifier id;
 
     @Inject(method = "craft", at = @At("RETURN"), cancellable = true)

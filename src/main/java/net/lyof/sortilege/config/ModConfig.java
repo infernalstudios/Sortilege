@@ -294,7 +294,26 @@ public class ModConfig {
                 // Should Fire Protection at this level on every armor slot at once grant fire immunity
                 "better_fire_protection": 4,
                 // Should Bane of Arthropods apply a 0.5*(level + 1) seconds of slowness on hit
-                "better_bane_of_arthropods": true
+                "better_bane_of_arthropods": true,
+                
+                // Set these to false to disable the corresponding enchantment from appearing in game (it won't be registered)
+                "enabled_enchants": {
+                  "potency": true,
+                  "stability": true,
+                  "chaining": true,
+                  "wisdom": true,
+                  "push": true,
+                  "pull": true,
+                  "brazier": true,
+                  "blizzard": true,
+                  "blast": true,
+                  "blitz": true,
+                  "ignorance_curse": true,
+                  
+                  "magic_protection": true,
+                  "arcane": true,
+                  "soulbound": true
+                }
               },
               
               // CATEGORY: EXPERIENCE

@@ -125,7 +125,7 @@ public abstract class LivingEntityMixin extends Entity {
                         ConfigEntries.betterFireProt)
             cir.setReturnValue(false);
 
-        if (ConfigEntries.betterMagicProt && Math.random() <=
+        if (ModEnchants.MAGIC_PROTECTION != null && ConfigEntries.betterMagicProt && Math.random() <=
                 0.05 * EnchantmentHelper.getEquipmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);
     }

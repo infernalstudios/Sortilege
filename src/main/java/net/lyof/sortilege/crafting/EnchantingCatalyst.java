@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import java.util.*;
 
 public class EnchantingCatalyst {
-    private static final Map<Item, List<Enchantment>> CATALYSTS = new HashMap<>();
+    public static final Map<Item, List<Enchantment>> CATALYSTS = new HashMap<>();
 
     public static void clear() {
         CATALYSTS.clear();

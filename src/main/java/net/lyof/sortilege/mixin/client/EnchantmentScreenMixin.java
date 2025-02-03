@@ -1,4 +1,4 @@
-package net.lyof.sortilege.mixin;
+package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
@@ -7,7 +7,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;

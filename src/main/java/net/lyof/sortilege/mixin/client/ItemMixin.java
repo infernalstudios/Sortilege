@@ -1,4 +1,4 @@
-package net.lyof.sortilege.mixin;
+package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.ItemHelper;

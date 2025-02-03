@@ -19,6 +19,7 @@ public class ConfigEntries {
 
         bookCatalysts = new ConfigEntry<>("enchantments.enchant_catalyst.allow_books", true).get();
         catalystChance = new ConfigEntry<>("enchantments.enchant_catalyst.catalyst_activation_chance", 0.5d).get();
+        catalystTooltip = new ConfigEntry<>("enchantments.enchant_catalyst.show_in_tooltip", true).get();
 
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
 
@@ -82,6 +83,7 @@ public class ConfigEntries {
 
     public static boolean bookCatalysts;
     public static double catalystChance;
+    public static boolean catalystTooltip;
 
     public static boolean allowInventoryEnchanting;
 

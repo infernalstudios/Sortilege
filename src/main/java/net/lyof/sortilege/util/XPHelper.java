@@ -1,6 +1,7 @@
 package net.lyof.sortilege.util;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class XPHelper {
     public static Map<String, Integer> XP_SAVES = new HashMap<>();
 
-    public static final TrackedData<Integer> BOUNTY = new TrackedData<>(41, TrackedDataHandlerRegistry.INTEGER);
+    public static final TrackedData<Integer> BOUNTY = new TrackedData<>(ConfigEntries.stolenXpData, TrackedDataHandlerRegistry.INTEGER);
 
 
     public static boolean hasXP(PlayerEntity player, int amount) {

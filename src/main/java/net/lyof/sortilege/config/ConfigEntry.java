@@ -49,7 +49,7 @@ public class ConfigEntry<T> {
 
 
         if (fallback instanceof Integer)
-            return (T) (Integer) Long.valueOf(Math.round(Double.parseDouble(String.valueOf(result)))).intValue();
+            return (T) (Integer) Double.valueOf(String.valueOf(result)).intValue();
         if (fallback instanceof Double)
             return (T) Double.valueOf(String.valueOf(result));
         if (fallback instanceof String)

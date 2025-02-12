@@ -160,7 +160,7 @@ public class StaffItem extends ToolItem {
             element = (ElementalStaffEnchantment) ModEnchants.BLAST;
         else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, staff))
             element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
-        int element_level = element == null ? 0 : ItemHelper.getEnchantLevel(element, staff);
+        int element_level = ItemHelper.getEnchantLevel(element, staff);
 
 
         int cost = this.getXPCost(staff);

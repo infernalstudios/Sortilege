@@ -1,0 +1,67 @@
+{
+  "tooltip.press_shift.left": "按 [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "位置:",
+  "sortilege.crafting.requires_level": "至少需要%s级！",
+  "sortilege.crafting.requires_advancement": "需要完成成就%s！",
+
+
+  "item.sortilege.wooden_staff" : "木法杖",
+  "item.sortilege.stone_staff" : "石法杖",
+  "item.sortilege.iron_staff" : "铁法杖",
+  "item.sortilege.golden_staff" : "金法杖",
+  "item.sortilege.diamond_staff" : "钻石法杖",
+  "item.sortilege.netherite_staff" : "下界合金法杖",
+
+  "sortilege.staff.cost": "消耗",
+  "sortilege.experience": "经验",
+
+  "attribute.name.generic.staff_damage": "魔法伤害",
+  "attribute.name.generic.staff_pierce": "穿透",
+  "attribute.name.generic.staff_range": "范围",
+
+  "enchantment.sortilege.potency": "法力",
+  "enchantment.sortilege.potency.desc": "提高法杖伤害",
+  "enchantment.sortilege.stability": "法术距离",
+  "enchantment.sortilege.stability.desc": "提高法杖攻击范围",
+  "enchantment.sortilege.chaining": "法术穿透",
+  "enchantment.sortilege.chaining.desc": "提高法杖穿透力",
+  "enchantment.sortilege.wisdom": "智慧",
+  "enchantment.sortilege.wisdom.desc": "减少法杖攻击的经验消耗.",
+  "enchantment.sortilege.push": "法术冲击",
+  "enchantment.sortilege.push.desc": "击退被法杖攻击的目标",
+  "enchantment.sortilege.pull": "法术吸引",
+  "enchantment.sortilege.pull.desc": "吸引被法杖攻击的目标",
+  "enchantment.sortilege.brazier": "灼热",
+  "enchantment.sortilege.brazier.desc": "点燃被法杖击中的目标",
+  "enchantment.sortilege.blizzard": "霜冻",
+  "enchantment.sortilege.blizzard.desc": "冰冻被法杖击中的目标",
+  "enchantment.sortilege.blast": "魔爆",
+  "enchantment.sortilege.blast.desc": "法杖命中目标后产生小范围爆炸",
+  "enchantment.sortilege.blitz": "电痹",
+  "enchantment.sortilege.blitz.desc": "麻痹被法杖击中的目标",
+  "enchantment.sortilege.ignorance_curse": "失聪诅咒",
+  "enchantment.sortilege.ignorance_curse.desc": "法杖攻击消耗的经验值增加",
+
+  "enchantment.sortilege.magic_protection": "魔法保护",
+  "enchantment.sortilege.magic_protection.desc": "降低所受魔法伤害",
+  "enchantment.sortilege.arcane": "覆魔",
+  "enchantment.sortilege.arcane.desc": "将造成的物理伤害转换为魔法伤害",
+  "enchantment.sortilege.soulbound": "灵魂绑定",
+  "enchantment.sortilege.soulbound.desc": "物品不会因死亡而掉落",
+
+  "sortilege.enchantments": "附魔条目",
+
+
+  "item.sortilege.witch_hat": "女巫帽",
+
+
+  "item.sortilege.antidote": "解药",
+  "sortilege.antidote.cures": "解除：",
+
+
+  "item.sortilege.limitite": "界限结晶",
+  "sortilege.limitite.desc": "在锻造台中与其他物品锻造，提高该物品的附魔条目上限！"
+}

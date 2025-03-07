@@ -36,7 +36,7 @@ public class EnchantmentHelperMixin {
                 int i = entry.getValue();
 
                 if (enchantment != null) {
-                    if (a < limit || itemstack.isOf(Items.ENCHANTED_BOOK)) {
+                    if (a < limit || itemstack.isOf(Items.ENCHANTED_BOOK) || (ConfigEntries.cursesAddSlots && enchantment.isCursed())) {
                         listtag.add(EnchantmentHelper.createNbt(EnchantmentHelper.getEnchantmentId(enchantment), i));
                         if (itemstack.isOf(Items.ENCHANTED_BOOK)) {
                             EnchantedBookItem.addEnchantment(itemstack, new EnchantmentLevelEntry(enchantment, i));

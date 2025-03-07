@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.crafting.EnchantingCatalyst;
 import net.lyof.sortilege.setup.ModTags;
@@ -48,7 +49,7 @@ public abstract class ItemStackMixin {
                 this.getOrCreateNbt().put("Enchantments", new NbtList());
             }
 
-            if (a < limit) {
+            if (a < limit || (ConfigEntries.cursesAddSlots && enchantment.isCursed())) {
                 NbtList listtag = this.getOrCreateNbt().getList("Enchantments", 10);
                 listtag.add(EnchantmentHelper.createNbt(EnchantmentHelper.getEnchantmentId(enchantment), (byte) level));
             }

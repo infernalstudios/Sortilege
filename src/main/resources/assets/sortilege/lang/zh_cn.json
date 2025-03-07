@@ -4,7 +4,8 @@
   "tooltip.press_shift.right": "]",
 
   "sortilege.death_screen.position": "位置:",
-  "sortilege.crafting.requires_level": "至少需要等级",
+  "sortilege.crafting.requires_level": "至少需要%s级！",
+  "sortilege.crafting.requires_advancement": "需要完成成就%s！",
 
 
   "item.sortilege.wooden_staff" : "木法杖",
@@ -45,22 +46,28 @@
   "enchantment.sortilege.ignorance_curse.desc": "法杖攻击消耗的经验值增加",
 
   "enchantment.sortilege.magic_protection": "魔法保护",
-  "enchantment.sortilege.magic_protection.desc": "降低魔法伤害",
+  "enchantment.sortilege.magic_protection.desc": "降低所受魔法伤害",
   "enchantment.sortilege.arcane": "覆魔",
   "enchantment.sortilege.arcane.desc": "将造成的物理伤害转换为魔法伤害",
   "enchantment.sortilege.soulbound": "灵魂绑定",
   "enchantment.sortilege.soulbound.desc": "物品不会因死亡而掉落",
+  
+  "enchantment.minecraft.feather_falling.desc": "减轻摔落伤害和末影珍珠传送伤害，在最高等级时完全免疫。",
+  "enchantment.minecraft.fire_protection.desc": "降低火焰伤害并减少燃烧时间，在最高等级时完全免疫。",
+  "enchantment.minecraft.bane_of_arthropods.desc": "增加对节肢动物的伤害，并减速目标。",
+  "enchantment.minecraft.unbreaking.desc": "使工具耐久降低速度变慢，在最高等级时工具将不可损坏。",
 
   "sortilege.enchantments": "附魔条目",
+  "sortilege.catalyst": "当用来附魔时：",
 
 
   "item.sortilege.witch_hat": "女巫帽",
 
 
   "item.sortilege.antidote": "解药",
-  "sortilege.antidote.cures": "解除:",
+  "sortilege.antidote.cures": "解除：",
 
 
   "item.sortilege.limitite": "界限结晶",
-  "sortilege.limitite.desc": "在锻造台中与其他物品锻造，提高该物品的附魔条目上限!"
+  "sortilege.limitite.desc": "在锻造台中与其他物品锻造，提高该物品的附魔条目上限！"
 }

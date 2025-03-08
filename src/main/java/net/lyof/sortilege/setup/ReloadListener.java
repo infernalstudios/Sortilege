@@ -10,6 +10,7 @@ import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -26,8 +27,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override
     public void reload(ResourceManager manager) {
         ModConfig.register();
+
         ItemHelper.ENCHLIMIT_CACHE.clear();
-        ItemHelper.loadItems();
+        PotionHelper.load();
 
         // Recipe locks
         RecipeLock.clear();

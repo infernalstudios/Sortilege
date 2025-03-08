@@ -14,6 +14,7 @@ import net.minecraft.potion.Potions;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class AntidoteBrewingRecipe implements IBetterBrewingRecipe {
     @Override
@@ -42,6 +43,27 @@ public class AntidoteBrewingRecipe implements IBetterBrewingRecipe {
 
         if (potion == Potions.EMPTY) return input;
         return PotionUtil.setPotion(ModItems.ANTIDOTE.getDefaultStack(), potion);
+    }
+
+    @Override
+    public ItemStack getIngredient() {
+        return Items.GLOW_INK_SAC.getDefaultStack();
+    }
+
+    @Override
+    public ItemStack getInput() {
+        return Items.POTION.getDefaultStack();
+    }
+
+    @Override
+    public ItemStack getInput(Random random) {
+        int i = random.nextInt(PotionHelper.POTIONS.size());
+        return PotionUtil.setPotion(Items.POTION.getDefaultStack(), (Potion) PotionHelper.POTIONS.values().toArray()[i]);
+    }
+
+    @Override
+    public ItemStack getOutput() {
+        return ModItems.ANTIDOTE.getDefaultStack();
     }
 
     @Override

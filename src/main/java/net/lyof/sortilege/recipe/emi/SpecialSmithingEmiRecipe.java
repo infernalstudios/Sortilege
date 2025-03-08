@@ -47,6 +47,8 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
         this.inputs.addAll(this.bases.stream().map(EmiStack::of).toList());
         this.inputs.add(this.additions);
         this.inputs.add(EmiStack.of(Items.LAPIS_LAZULI));
+
+        this.outputs.addAll(this.bases.stream().map(EmiStack::of).toList());
     }
 
     @Override
@@ -67,7 +69,7 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
     }
 
     private List<EmiStack> getStack(Random random) {
-        int i = random.nextInt(this.bases.size() - 2);
+        int i = random.nextInt(this.bases.size());
         EmiStack input = this.inputs.get(i).getEmiStacks().get(0);
 
         return List.of(input, EmiStack.of(this.recipe.craft(new SimpleInventory(

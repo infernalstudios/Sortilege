@@ -1,13 +1,16 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
+import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.IBetterBrewingRecipe;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
+import java.util.Random;
 
 public class BrewingRecipe implements IBetterBrewingRecipe {
     @Override
@@ -22,6 +25,26 @@ public class BrewingRecipe implements IBetterBrewingRecipe {
 
     @Override
     public ItemStack craft(ItemStack input, ItemStack ingredient) {
+        return this.output.getDefaultStack();
+    }
+
+    @Override
+    public ItemStack getIngredient() {
+        return this.ingredient.getDefaultStack();
+    }
+
+    @Override
+    public ItemStack getInput() {
+        return this.input.getDefaultStack();
+    }
+
+    @Override
+    public ItemStack getInput(Random random) {
+        return this.getInput();
+    }
+
+    @Override
+    public ItemStack getOutput() {
         return this.output.getDefaultStack();
     }
 

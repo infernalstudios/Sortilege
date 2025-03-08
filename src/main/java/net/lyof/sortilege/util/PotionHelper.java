@@ -13,7 +13,7 @@ import java.util.Objects;
 public class PotionHelper {
     public static final Map<StatusEffect, Potion> POTIONS = new HashMap<>();
 
-    static {
+    public static void load() {
         for (Potion potion : Registries.POTION) {
             if (potion != Potions.EMPTY &&
                     potion.getEffects().size() == 1 &&

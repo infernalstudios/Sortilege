@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.crafting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.util.IMixinAccess;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.enchantment.Enchantment;

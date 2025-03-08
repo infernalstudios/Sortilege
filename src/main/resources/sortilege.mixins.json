@@ -16,10 +16,8 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
-    "RecipeManagerMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
-    "SmithingTransformRecipeMixin",
     "UnbreakingEnchantmentMixin"
   ],
   "injectors": {

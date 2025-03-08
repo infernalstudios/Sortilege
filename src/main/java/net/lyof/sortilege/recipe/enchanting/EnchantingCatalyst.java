@@ -1,4 +1,4 @@
-package net.lyof.sortilege.crafting;
+package net.lyof.sortilege.recipe.enchanting;
 
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.enchantment.Enchantment;

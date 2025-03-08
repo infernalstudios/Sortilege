@@ -5,10 +5,10 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
-import net.lyof.sortilege.crafting.EnchantingCatalyst;
-import net.lyof.sortilege.crafting.RecipeLock;
-import net.lyof.sortilege.crafting.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.crafting.brewing.custom.BrewingRecipe;
+import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.crafting.RecipeLock;
+import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
+import net.lyof.sortilege.recipe.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
@@ -25,8 +25,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
     @Override
     public void reload(ResourceManager manager) {
-        ItemHelper.ENCHLIMIT_CACHE.clear();
         ModConfig.register();
+        ItemHelper.ENCHLIMIT_CACHE.clear();
+        ItemHelper.loadItems();
 
         // Recipe locks
         RecipeLock.clear();
@@ -51,9 +52,11 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 String content = new String(resource.getInputStream().readAllBytes());
                 Map<String, ?> json = new Gson().fromJson(content, Map.class);
 
-                if (json != null && json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing"))
+                if (json == null) continue;
+
+                if (json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing"))
                     BrewingRecipe.read(json);
-                else if (json != null && json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst"))
+                else if (json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst"))
                     EnchantingCatalyst.read(json);
 
             } catch (Exception e) {

@@ -1,4 +1,4 @@
-package net.lyof.sortilege.crafting.brewing;
+package net.lyof.sortilege.recipe.brewing;
 
 import net.minecraft.item.ItemStack;
 

@@ -1,4 +1,4 @@
-package net.lyof.sortilege.loot;
+package net.lyof.sortilege.recipe.loot;
 
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.lyof.sortilege.config.ConfigEntries;

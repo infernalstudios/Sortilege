@@ -7,7 +7,8 @@ import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.loot.ModLootModifiers;
+import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.minecraft.resource.ResourceType;
@@ -31,6 +32,7 @@ public class Sortilege implements ModInitializer {
 		ModParticles.register();
 
 		ModLootModifiers.register();
+		ModRecipeTypes.register();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new ReloadListener());
 	}

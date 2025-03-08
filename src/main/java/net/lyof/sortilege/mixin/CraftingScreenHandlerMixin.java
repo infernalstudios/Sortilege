@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.crafting.RecipeLock;
+import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.screen.CraftingScreenHandler;
@@ -21,9 +21,7 @@ public class CraftingScreenHandlerMixin {
 
         if (lock.matches(player)) {
             valid = false;
-            player.sendMessage(
-                    lock.getFailMessage(player)
-                            .formatted(Formatting.YELLOW), true);
+            player.sendMessage(lock.getFailMessage(player).formatted(Formatting.YELLOW), true);
         }
         return valid && instance.shouldCraftRecipe(world, player, recipe);
     }

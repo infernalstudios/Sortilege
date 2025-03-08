@@ -1,4 +1,4 @@
-package net.lyof.sortilege.crafting;
+package net.lyof.sortilege.recipe.crafting;
 
 import net.minecraft.advancement.Advancement;
 import net.minecraft.server.network.ServerPlayerEntity;

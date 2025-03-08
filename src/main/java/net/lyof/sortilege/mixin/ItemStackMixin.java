@@ -1,9 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.crafting.EnchantingCatalyst;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.item.TooltipContext;
@@ -29,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
-import java.util.Set;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {

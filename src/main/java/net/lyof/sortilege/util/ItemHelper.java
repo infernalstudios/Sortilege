@@ -27,7 +27,10 @@ public class ItemHelper {
     public static final List<Item> ENCHANTABLES = new ArrayList<>();
     public static final List<Item> SOULBINDABLES = new ArrayList<>();
 
-    static {
+    public static void loadItems() {
+        ENCHANTABLES.clear();
+        SOULBINDABLES.clear();
+
         for (Item item : Registries.ITEM) {
             if (item.getEnchantability() > 0)
                 ENCHANTABLES.add(item);

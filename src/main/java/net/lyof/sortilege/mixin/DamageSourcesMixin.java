@@ -19,7 +19,7 @@ public abstract class DamageSourcesMixin {
 
     @Inject(method = "playerAttack", at = @At("HEAD"), cancellable = true)
     public void arcaneDamage(PlayerEntity attacker, CallbackInfoReturnable<DamageSource> cir) {
-        if (EnchantmentHelper.getEquipmentLevel(ModEnchants.ARCANE, attacker) > 0) {
+        if (ModEnchants.ARCANE != null && EnchantmentHelper.getEquipmentLevel(ModEnchants.ARCANE, attacker) > 0) {
             cir.setReturnValue(this.indirectMagic(attacker, attacker));
         }
     }

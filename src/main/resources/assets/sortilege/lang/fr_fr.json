@@ -10,6 +10,9 @@
   "tag.item.sortilege.is_limit_break_material": "Briseur de limite",
   "tag.item.sortilege.is_soulbind_material": "Lieur d'âme",
   "tag.item.sortilege.unbreakable": "Indestructible",
+  "tag.item.sortilege.keep_on_death": "Gardé en mourrant",
+
+  "emi.category.sortilege.enchanting": "Enchantement",
 
 
   "item.sortilege.wooden_staff" : "Sceptre en Bois",

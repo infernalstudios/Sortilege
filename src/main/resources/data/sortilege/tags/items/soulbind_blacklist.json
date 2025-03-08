@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "#minecraft:boats"
+    "#minecraft:boats",
+    "minecraft:minecart",
+    "minecraft:chest_minecart",
+    "minecraft:hopper_minecart",
+    "minecraft:tnt_minecart",
+    "minecraft:furnace_minecart"
   ]
 }

@@ -24,24 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemHelper {
-    public static final List<Item> ENCHANTABLES = new ArrayList<>();
-    public static final List<Item> SOULBINDABLES = new ArrayList<>();
-
-    public static void loadItems() {
-        ENCHANTABLES.clear();
-        SOULBINDABLES.clear();
-
-        for (Item item : Registries.ITEM) {
-            if (item.getEnchantability() > 0)
-                ENCHANTABLES.add(item);
-
-            if (item.getDefaultStack().getMaxCount() == 1 && ModEnchants.SOULBOUND != null && !item.isFood()
-                    && !(item instanceof BucketItem) && !(item instanceof BlockItem))
-                SOULBINDABLES.add(item);
-        }
-    }
-
-
     public static int getEnchantLevel(@Nullable Enchantment enchant, ItemStack item) {
         if (enchant == null) return 0;
         return EnchantmentHelper.getLevel(enchant, item);

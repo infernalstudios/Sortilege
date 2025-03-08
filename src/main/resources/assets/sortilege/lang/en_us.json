@@ -7,6 +7,10 @@
   "sortilege.crafting.requires_level": "You need at least %s levels!",
   "sortilege.crafting.requires_advancement": "You need to have completed %s!",
 
+  "tag.item.sortilege.is_limit_break_material": "Limit Breaker",
+  "tag.item.sortilege.is_soulbind_material": "Soulbinder",
+  "tag.item.sortilege.unbreakable": "Unbreakable",
+
 
   "item.sortilege.wooden_staff" : "Wooden Staff",
   "item.sortilege.stone_staff" : "Stone Staff",

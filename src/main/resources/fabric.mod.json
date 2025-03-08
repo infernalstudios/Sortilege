@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"net.lyof.sortilege.SortilegeClient"
+		],
+		"emi": [
+			"net.lyof.sortilege.setup.EmiCompat"
 		]
 	},
 	"mixins": [

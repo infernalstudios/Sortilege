@@ -166,12 +166,21 @@ public class StaffItem extends ToolItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext flag) {
         super.appendTooltip(stack, level, list, flag);
+        boolean needsBlank = false;
 
         if (this.getXPCost(stack) > 0) {
             list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
                     .formatted(Formatting.GREEN));
-            list.add(Text.literal(""));
+            needsBlank = true;
         }
+
+        float[] color = StaffItem.getBeamColor(stack);
+        if (color != COLOR_NONE) {
+            list.add(Text.translatable("sortilege.staff.dyed").formatted(MathHelper.getClosestFormatting(color)));
+            needsBlank = true;
+        }
+
+        if (needsBlank) list.add(Text.empty());
     }
 
     @Override

@@ -24,11 +24,12 @@
     "defaultRequire": 1
   },
   "client": [
+    "accessor.ScreenAccessor",
     "client.DeathScreenMixin",
     "client.EnchantmentScreenMixin",
     "client.InGameHudMixin",
     "client.ItemMixin",
-    "accessor.ScreenAccessor",
+    "client.ItemRendererMixin",
     "client.ItemStackMixin"
   ]
 }

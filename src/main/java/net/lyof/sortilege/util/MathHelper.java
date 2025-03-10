@@ -2,9 +2,7 @@ package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.recipe.ArmorDyeRecipe;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;

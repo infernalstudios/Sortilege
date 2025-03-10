@@ -2,8 +2,6 @@ package net.lyof.sortilege.enchant.staff;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.LivingEntity;
-import org.apache.commons.lang3.tuple.MutableTriple;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.function.BiConsumer;

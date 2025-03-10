@@ -6,7 +6,6 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.tuple.Triple;
 
 public class ModParticles {
     public static void spawnWisps(World level, double x, double y, double z, int amount, float[] color) {
@@ -15,7 +14,7 @@ public class ModParticles {
             level.addParticle(WISP_PIXEL, x + (0.5 - Math.random()) * spread,
                     y + (0.5 - Math.random()) * spread,
                     z + (0.5 - Math.random()) * spread,
-                    color[0], color[1], color[2]);
+                    color[0], Math.max(0, color[1]), Math.max(0, color[2]));
     }
 
 

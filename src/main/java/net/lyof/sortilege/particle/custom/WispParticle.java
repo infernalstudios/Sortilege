@@ -17,6 +17,9 @@ public class WispParticle extends SpriteBillboardParticle {
 
         this.setSprite(sprite);
 
+        r = Math.max(0, Math.min(1, r));
+        g = Math.max(0, Math.min(1, g));
+        b = Math.max(0, Math.min(1, b));
         this.setColor(r, g, b);
         this.gravityStrength = 0;
         this.velocityMultiplier = 0f;

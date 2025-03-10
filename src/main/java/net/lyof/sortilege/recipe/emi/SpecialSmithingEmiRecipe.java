@@ -1,29 +1,23 @@
 package net.lyof.sortilege.recipe.emi;
 
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.render.EmiTooltipComponents;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.function.Predicate;
 
 public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
     protected final int uniq;

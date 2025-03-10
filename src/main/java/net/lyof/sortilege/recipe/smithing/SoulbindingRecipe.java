@@ -1,7 +1,6 @@
 package net.lyof.sortilege.recipe.smithing;
 
 import com.google.gson.JsonObject;
-import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModTags;

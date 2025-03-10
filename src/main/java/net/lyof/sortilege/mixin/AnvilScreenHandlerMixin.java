@@ -33,30 +33,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     }
 
     @Inject(method = "updateResult", at = @At("RETURN"))
-    public void noAnvilCost(CallbackInfo ci) {/*
-        ItemStack base = this.input.getStack(0);
-        ItemStack addition = this.input.getStack(1);
-
-        if (base.getItem() instanceof StaffItem && addition.getItem() instanceof DyeItem dye) {
-            int i = 1;
-            ItemStack result = base.copy();
-            StaffItem.setBeamColor(result, dye.getColor().getColorComponents());
-
-            if (this.newItemName != null && !Util.isBlank(this.newItemName)) {
-                if (!this.newItemName.equals(base.getName().getString())) {
-                    i++;
-                    result.setCustomName(Text.literal(this.newItemName));
-                }
-            } else if (base.hasCustomName()) {
-                i++;
-                result.removeCustomName();
-            }
-
-            this.levelCost.set(i);
-            this.output.setStack(0, result);
-            this.sendContentUpdates();
-        }
-*/
+    public void noAnvilCost(CallbackInfo ci) {
         if (ConfigEntries.noXPAnvil) this.levelCost.set(0);
     }
 

@@ -2,6 +2,7 @@ package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.recipe.ArmorDyeRecipe;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.Vec3d;
@@ -59,7 +60,7 @@ public class MathHelper {
         Formatting result = Formatting.BLACK;
         for (Formatting formatting : Formatting.values()) {
             if (formatting.isColor())
-                Sortilege.log(Math.abs(formatting.getColorValue() - result.getColorValue()) + " " + distance + " " + formatting.getName());
+                Sortilege.log(Math.abs(formatting.getColorValue() - color) + " " + distance + " " + formatting.getName());
             if (formatting.isColor() && (Math.abs(formatting.getColorValue() - color) < distance || distance < 0)) {
                 distance = Math.abs(formatting.getColorValue() - color);
                 result = formatting;

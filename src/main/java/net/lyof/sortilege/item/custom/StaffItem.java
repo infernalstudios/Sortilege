@@ -19,6 +19,7 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeableItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
@@ -33,10 +34,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.UseAction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.MutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
@@ -46,27 +44,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaffItem extends ToolItem {
-    private static final String COLOR_NBT = "SortilegeColor";
+public class StaffItem extends ToolItem implements DyeableItem{
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
-
-    public static float[] getBeamColor(ItemStack stack) {
-        if (!stack.hasNbt()) return COLOR_NONE;
-
-        int[] nbt = stack.getOrCreateNbt().getIntArray(COLOR_NBT);
-        if (nbt.length < 3) return COLOR_NONE;
-
-        return new float[]{nbt[0] / 100f, nbt[1] / 100f, nbt[2] / 100f};
-    }
-
-    public static void setBeamColor(ItemStack stack, float[] color) {
-        int[] array = new int[]{(int) (color[0] * 100), (int) (color[1] * 100), (int) (color[2] * 100)};
-
-        NbtCompound nbt = stack.getOrCreateNbt();
-        nbt.putIntArray(COLOR_NBT, array);
-        stack.setNbt(nbt);
-    }
-
 
     public @Nullable ModConfig.StaffInfo rawInfos;
     public float damage;
@@ -125,7 +104,10 @@ public class StaffItem extends ToolItem {
     public List<float[]> getBeamColors(ItemStack stack, @Nullable ElementalStaffEnchantment element) {
         List<float[]> result = new ArrayList<>();
 
-        float[] color = StaffItem.getBeamColor(stack);
+        int rgb = this.getColor(stack);
+        float[] color = new float[]{ColorHelper.Argb.getRed(rgb) / 255f,
+                ColorHelper.Argb.getGreen(rgb) / 255f,
+                ColorHelper.Argb.getBlue(rgb) / 255f};
         if (color == COLOR_NONE) {
             if (element != null)
                 result.addAll(element.colors);
@@ -134,7 +116,13 @@ public class StaffItem extends ToolItem {
             if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
                 result.addAll(this.rawInfos.colors);
         }
-        else result.add(color);
+        else {
+            for (int i = 0 ; i < 5; i++) {
+                result.add(new float[]{(float) (color[0] + Math.random()*0.1 - 0.05),
+                        (float) (color[1] + Math.random()*0.1 - 0.05),
+                        (float) (color[2] + Math.random()*0.1 - 0.05)});
+            }
+        }
 
         if (result.isEmpty())
             result.add(color);
@@ -166,21 +154,12 @@ public class StaffItem extends ToolItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext flag) {
         super.appendTooltip(stack, level, list, flag);
-        boolean needsBlank = false;
 
         if (this.getXPCost(stack) > 0) {
             list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
                     .formatted(Formatting.GREEN));
-            needsBlank = true;
+            list.add(Text.empty());
         }
-
-        float[] color = StaffItem.getBeamColor(stack);
-        if (color != COLOR_NONE) {
-            list.add(Text.translatable("sortilege.staff.dyed").formatted(MathHelper.getClosestFormatting(color)));
-            needsBlank = true;
-        }
-
-        if (needsBlank) list.add(Text.empty());
     }
 
     @Override

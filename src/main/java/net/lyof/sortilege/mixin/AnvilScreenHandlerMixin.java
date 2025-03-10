@@ -33,7 +33,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     }
 
     @Inject(method = "updateResult", at = @At("RETURN"))
-    public void noAnvilCost(CallbackInfo ci) {
+    public void noAnvilCost(CallbackInfo ci) {/*
         ItemStack base = this.input.getStack(0);
         ItemStack addition = this.input.getStack(1);
 
@@ -56,7 +56,7 @@ public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
             this.output.setStack(0, result);
             this.sendContentUpdates();
         }
-
+*/
         if (ConfigEntries.noXPAnvil) this.levelCost.set(0);
     }
 

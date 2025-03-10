@@ -22,6 +22,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
@@ -46,6 +47,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StaffItem extends ToolItem {
+    private static final String COLOR_NBT = "SortilegeColor";
+    private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
+
+    public static float[] getBeamColor(ItemStack stack) {
+        if (!stack.hasNbt()) return COLOR_NONE;
+
+        int[] nbt = stack.getOrCreateNbt().getIntArray(COLOR_NBT);
+        if (nbt.length < 3) return COLOR_NONE;
+
+        return new float[]{nbt[0] / 100f, nbt[1] / 100f, nbt[2] / 100f};
+    }
+
+    public static void setBeamColor(ItemStack stack, float[] color) {
+        int[] array = new int[]{(int) (color[0] * 100), (int) (color[1] * 100), (int) (color[2] * 100)};
+
+        NbtCompound nbt = stack.getOrCreateNbt();
+        nbt.putIntArray(COLOR_NBT, array);
+        stack.setNbt(nbt);
+    }
+
+
     public @Nullable ModConfig.StaffInfo rawInfos;
     public float damage;
     public int pierce;
@@ -101,12 +123,21 @@ public class StaffItem extends ToolItem {
     }
 
     public List<float[]> getBeamColors(ItemStack stack, @Nullable ElementalStaffEnchantment element) {
-        List<float[]> result = new ArrayList<>(element == null ? List.of(new float[]{1f, 1f, 1f}) : element.colors);
+        List<float[]> result = new ArrayList<>();
 
-        if (stack.hasEnchantments())
-            result.add(new float[]{0.7f, 0f, 1f});
-        if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
-            result = this.rawInfos.colors;
+        float[] color = StaffItem.getBeamColor(stack);
+        if (color == COLOR_NONE) {
+            if (element != null)
+                result.addAll(element.colors);
+            if (stack.hasEnchantments())
+                result.add(new float[]{0.7f, 0f, 1f});
+            if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
+                result.addAll(this.rawInfos.colors);
+        }
+        else result.add(color);
+
+        if (result.isEmpty())
+            result.add(color);
 
         return result;
     }
@@ -133,16 +164,16 @@ public class StaffItem extends ToolItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack itemstack, @Nullable World level, List<Text> list, TooltipContext flag) {
-        super.appendTooltip(itemstack, level, list, flag);
+    public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext flag) {
+        super.appendTooltip(stack, level, list, flag);
 
-        if (this.getXPCost(itemstack) > 0) {
-            list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(itemstack))
+        if (this.getXPCost(stack) > 0) {
+            list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
                     .formatted(Formatting.GREEN));
             list.add(Text.literal(""));
         }
 
-        //list.add(Component.literal("" + this.rawInfos));
+        list.add(Text.literal(stack.getOrCreateNbt() + ""));
     }
 
     @Override

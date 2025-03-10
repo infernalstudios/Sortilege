@@ -22,7 +22,6 @@ public class ParticleShaders {
         public void begin(BufferBuilder builder, TextureManager textureManager) {
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
-            RenderSystem.setShader(() -> PARTICLE_ADDITIVE_MULTIPLY);
             RenderSystem.setShaderTexture(0, SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE);
             builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
         }

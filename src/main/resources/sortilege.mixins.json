@@ -30,6 +30,7 @@
     "client.InGameHudMixin",
     "client.ItemMixin",
     "client.ItemRendererMixin",
-    "client.ItemStackMixin"
+    "client.ItemStackMixin",
+    "client.ParticleTextureSheetMixin"
   ]
 }

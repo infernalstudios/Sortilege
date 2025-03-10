@@ -11,6 +11,7 @@ import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
+import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -39,6 +40,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class StaffItem extends ToolItem implements DyeableItem{
@@ -79,6 +81,8 @@ public class StaffItem extends ToolItem implements DyeableItem{
         builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", this.pierce, EntityAttributeModifier.Operation.ADDITION));
         builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", this.range, EntityAttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
+
+        CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put(this, CauldronBehavior.CLEAN_DYEABLE_ITEM);
     }
 
     public int getXPCost(ItemStack itemstack) {
@@ -105,7 +109,7 @@ public class StaffItem extends ToolItem implements DyeableItem{
         float[] color = new float[]{ColorHelper.Argb.getRed(rgb) / 255f,
                 ColorHelper.Argb.getGreen(rgb) / 255f,
                 ColorHelper.Argb.getBlue(rgb) / 255f};
-        if (color == COLOR_NONE) {
+        if (rgb == 10511680) {
             if (element != null)
                 result.addAll(element.colors);
             if (stack.hasEnchantments())
@@ -122,7 +126,7 @@ public class StaffItem extends ToolItem implements DyeableItem{
         }
 
         if (result.isEmpty())
-            result.add(color);
+            result.add(COLOR_NONE);
 
         return result;
     }

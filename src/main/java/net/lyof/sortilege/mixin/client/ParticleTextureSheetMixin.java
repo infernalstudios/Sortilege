@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ParticleTextureSheetMixin {
     @Shadow public abstract String toString();
 
+    // I am aware this is dirty work, and I'm sorry about it, I could not find a cleaner way
     @Inject(method = "begin", at = @At("HEAD"), cancellable = true)
     public void translucentLitBegin(BufferBuilder builder, TextureManager textureManager, CallbackInfo ci) {
         RenderSystem.depthMask(false);

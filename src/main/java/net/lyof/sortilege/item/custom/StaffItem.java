@@ -172,8 +172,6 @@ public class StaffItem extends ToolItem {
                     .formatted(Formatting.GREEN));
             list.add(Text.literal(""));
         }
-
-        list.add(Text.literal(stack.getOrCreateNbt() + ""));
     }
 
     @Override

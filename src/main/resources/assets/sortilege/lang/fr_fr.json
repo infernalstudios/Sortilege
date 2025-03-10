@@ -22,8 +22,7 @@
   "item.sortilege.diamond_staff" : "Sceptre en Diamant",
   "item.sortilege.netherite_staff" : "Sceptre en Netherite",
 
-  "sortilege.staff.cost": "Utilise",
-  "sortilege.experience": "XP",
+  "sortilege.staff.experience_cost": "Utilise %s XP",
 
   "attribute.name.generic.staff_damage": "Dégâts Magiques",
   "attribute.name.generic.staff_pierce": "Transpercement",

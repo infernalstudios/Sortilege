@@ -14,8 +14,7 @@
   "item.sortilege.diamond_staff" : "Алмазный жезл",
   "item.sortilege.netherite_staff" : "Незеритовый жезл",
 
-  "sortilege.staff.cost": "Требует",
-  "sortilege.experience": "Опыт",
+  "sortilege.staff.experience_cost": "Требует %s Опыт",
 
   "attribute.name.generic.staff_damage": "Магический урон",
   "attribute.name.generic.staff_pierce": "Пронзание",

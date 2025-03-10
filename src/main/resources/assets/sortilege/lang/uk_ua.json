@@ -14,8 +14,7 @@
   "item.sortilege.diamond_staff" : "Діамантова патериця",
   "item.sortilege.netherite_staff" : "Незеритова патериця",
 
-  "sortilege.staff.cost": "Коштує",
-  "sortilege.experience": "Досвід",
+  "sortilege.staff.experience_cost": "Коштує %s Досвід",
 
   "attribute.name.generic.staff_damage": "Магічна шкода",
   "attribute.name.generic.staff_pierce": "Пробивання",

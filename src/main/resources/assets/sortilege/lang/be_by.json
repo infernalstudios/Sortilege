@@ -14,8 +14,7 @@
   "item.sortilege.diamond_staff" : "Дыяментавы посах",
   "item.sortilege.netherite_staff" : "Недарытавы посах",
 
-  "sortilege.staff.cost": "Кошт",
-  "sortilege.experience": "Досвед",
+  "sortilege.staff.experience_cost": "Кошт %s Досвед",
 
   "attribute.name.generic.staff_damage": "Магічнае пашкоджанне",
   "attribute.name.generic.staff_pierce": "Працінанне",

@@ -77,9 +77,9 @@ public class StaffItem extends ToolItem {
         this.xp_cost = xp_cost;
 
         ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(), "Weapon modifier", damage, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", targets, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", range, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(), "Weapon modifier", this.damage, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", this.pierce, EntityAttributeModifier.Operation.ADDITION));
+        builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", this.range, EntityAttributeModifier.Operation.ADDITION));
         this.attributeModifiers = builder.build();
     }
 
@@ -126,9 +126,8 @@ public class StaffItem extends ToolItem {
         super.appendTooltip(itemstack, level, list, flag);
 
         if (this.getXPCost(itemstack) > 0) {
-            list.add(Text.translatable("sortilege.staff.cost")
-                    .append(" " + this.getXPCost(itemstack) + " ")
-                    .append(Text.translatable("sortilege.experience")).formatted(Formatting.GREEN));
+            list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(itemstack))
+                    .formatted(Formatting.GREEN));
             list.add(Text.literal(""));
         }
 

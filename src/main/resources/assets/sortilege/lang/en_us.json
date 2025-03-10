@@ -22,8 +22,7 @@
   "item.sortilege.diamond_staff" : "Diamond Staff",
   "item.sortilege.netherite_staff" : "Netherite Staff",
 
-  "sortilege.staff.cost": "Costs",
-  "sortilege.experience": "Experience",
+  "sortilege.staff.experience_cost": "Costs %s XP",
 
   "attribute.name.generic.staff_damage": "Magic Damage",
   "attribute.name.generic.staff_pierce": "Pierce",

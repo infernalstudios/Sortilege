@@ -15,8 +15,7 @@
   "item.sortilege.diamond_staff" : "钻石法杖",
   "item.sortilege.netherite_staff" : "下界合金法杖",
 
-  "sortilege.staff.cost": "消耗",
-  "sortilege.experience": "经验",
+  "sortilege.staff.experience_cost": "消耗 %s 经验",
 
   "attribute.name.generic.staff_damage": "魔法伤害",
   "attribute.name.generic.staff_pierce": "穿透",

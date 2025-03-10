@@ -14,8 +14,7 @@
   "item.sortilege.diamond_staff" : "דימענדשטעקן",
   "item.sortilege.netherite_staff" : "נעטהעריטע שטעקן",
 
-  "sortilege.staff.cost": "פּרייַז",
-  "sortilege.experience": "דערפֿאַרונג",
+  "sortilege.staff.experience_cost": "דערפֿאַרונג %s פּרייַז",
 
   "attribute.name.generic.staff_damage": "מאַגיש אַנגריפסשאָדן",
   "attribute.name.generic.staff_pierce": "דורכשאָס",

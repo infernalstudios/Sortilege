@@ -100,6 +100,17 @@ public class StaffItem extends ToolItem {
         return this.pierce + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
     }
 
+    public List<float[]> getBeamColors(ItemStack stack, @Nullable ElementalStaffEnchantment element) {
+        List<float[]> result = new ArrayList<>(element == null ? List.of(new float[]{1f, 1f, 1f}) : element.colors);
+
+        if (stack.hasEnchantments())
+            result.add(new float[]{0.7f, 0f, 1f});
+        if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
+            result = this.rawInfos.colors;
+
+        return result;
+    }
+
     @Override
     public boolean canRepair(ItemStack staff, ItemStack stack) {
         if (this.rawInfos != null)
@@ -205,16 +216,8 @@ public class StaffItem extends ToolItem {
         }
 
         DamageSource damagetype = player.getDamageSources().indirectMagic(player, player);
-        //if (element == ModEnchants.BRAZIER)
-        //    damagetype.setIsFire();
 
-        List<Triple<Float, Float, Float>> colors = new ArrayList<>(element == null ? List.of(new MutableTriple<>(1f, 1f, 1f)) : element.colors);
-
-        if (staff.hasEnchantments())
-            colors.add(new MutableTriple<>(0.7f, 0f, 1f));
-        if (this.rawInfos != null && this.rawInfos.colors.size() > 0)
-            colors = this.rawInfos.colors;
-
+        List<float[]> colors = this.getBeamColors(staff, element);
 
         int step = 5;
         // Main loop, displaying particles and hurting mobs on its way
@@ -224,10 +227,7 @@ public class StaffItem extends ToolItem {
             z = (float) (player.getZ() + look.z * i/step);
 
             if (world.isClient())
-                //world.addParticle(ParticleTypes.CRIT, x, y, z, 0, 0, 0);
                 ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
-                //WispParticle.COLOR = MathHelper.randi(colors);
-                //serverworld.sendParticles(particle, x, y, z, 1, 0, 0, 0, 0);
 
             if (i*2 % step != 0)
                 continue;

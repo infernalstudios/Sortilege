@@ -42,7 +42,7 @@ public class ModConfig {
         public int cooldown;
         public int charge_time;
         public int xp_cost;
-        public List<Triple<Float, Float, Float>> colors = new ArrayList<>();
+        public List<float[]> colors = new ArrayList<>();
         public boolean fireRes;
         public String dependency;
 
@@ -93,7 +93,7 @@ public class ModConfig {
             this.xp_cost = xp_cost;
             try {
                 for (List<Double> triple : colors)
-                    this.colors.add(new MutableTriple<>(triple.get(0).floatValue(), triple.get(1).floatValue(), triple.get(2).floatValue()));
+                    this.colors.add(new float[]{triple.get(0).floatValue(), triple.get(1).floatValue(), triple.get(2).floatValue()});
             }
             catch (Exception e) {
                 Sortilege.log("Encountered an error while parsing a Staff's beam color");

@@ -50,26 +50,26 @@ public class ModEnchants {
 
     public static Enchantment BRAZIER = register("brazier",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new MutableTriple<>(1f, 0.7f, 0f),
-                            new MutableTriple<>(1f, 1f, 0f),
-                            new MutableTriple<>(1f, 0.85f, 0f)),
+                    List.of(new float[]{1f, 0.7f, 0f},
+                            new float[]{1f, 1f, 0f},
+                            new float[]{1f, 0.85f, 0f}),
                     (target, level) -> target.setOnFireFor(level * 4)));
     public static Enchantment BLIZZARD = register("blizzard",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new MutableTriple<>(0.7f, 0.7f, 1f),
-                            new MutableTriple<>(0.8f, 0.9f, 1f)),
+                    List.of(new float[]{0.7f, 0.7f, 1f},
+                            new float[]{0.8f, 0.9f, 1f}),
                     (target, level) -> target.setFrozenTicks(target.getFrozenTicks() + 150*level)));
     public static Enchantment BLAST = register("blast",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new MutableTriple<>(0.5f, 0.25f, 0f),
-                            new MutableTriple<>(0.8f, 0.2f, 0f),
-                            new MutableTriple<>(1f, 0.4f, 0f)),
+                    List.of(new float[]{0.5f, 0.25f, 0f},
+                            new float[]{0.8f, 0.2f, 0f},
+                            new float[]{1f, 0.4f, 0f}),
                     null));
     public static Enchantment BLITZ = register("blitz",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new MutableTriple<>(1f, 1f, 0f),
-                            new MutableTriple<>(1f, 1f, 0.5f),
-                            new MutableTriple<>(1f, 1f, 0.75f)),
+                    List.of(new float[]{1f, 1f, 0f},
+                            new float[]{1f, 1f, 0.5f},
+                            new float[]{1f, 1f, 0.75f}),
                     (target, level) -> {
                 target.setVelocity(0, -1, 0);
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level));

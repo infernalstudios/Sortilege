@@ -96,9 +96,9 @@ public abstract class LivingEntityMixin extends Entity {
 
             if (player.getWorld() instanceof ServerWorld world)
                 ExperienceOrbEntity.spawn(world, this.getPos(), ConfigEntries.bountyValue);
-            else
-                ModParticles.spawnWisps(player.getWorld(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
-                        8, new MutableTriple<>(0.5f, 1f, 0.2f));
+
+            ModParticles.spawnWisps(player.getWorld(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
+                    8, new float[]{0.5f, 1f, 0.2f});
         }
     }
 

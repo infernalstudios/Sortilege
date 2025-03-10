@@ -8,8 +8,8 @@
 		"Lyof"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://www.curseforge.com/minecraft/mc-mods/sortilege",
+		"sources": "https://github.com/infernalstudios/Sortilege/tree/1.20"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/sortilege/icon.png",
@@ -35,6 +35,7 @@
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
+		"phantasm": "*",
+		"emi": "*"
 	}
 }

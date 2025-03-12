@@ -446,7 +446,7 @@ public class ModConfig {
                       "damage": 3,
                       "pierce": 1,
                       "range": 6,
-                      "cooldown": 15
+                      "cooldown": 20
                     }
                   },
                   {
@@ -455,7 +455,7 @@ public class ModConfig {
                       "damage": 4,
                       "pierce": 1,
                       "range": 8,
-                      "cooldown": 20
+                      "cooldown": 25
                     }
                   },
                   {
@@ -464,7 +464,42 @@ public class ModConfig {
                       "damage": 5,
                       "pierce": 1,
                       "range": 10,
-                      "cooldown": 15
+                      "cooldown": 20
+                    }
+                  },
+                  {
+                    "citrine_staff": {
+                      "tier": "IRON",
+                      "enchantability": 24,
+                      "damage": 4,
+                      "pierce": 3,
+                      "range": 10,
+                      "cooldown": 25,
+                      "xp_cost": 0,
+                      "repair_item": "unusualend:citrine",
+                      "dependency": "unusualend",
+                      "on_hit_target": "/function sortilege:citrine_staff_on_hit_target",
+                      "beam_color": [
+                        [1, 0.4, 0],
+                        [1, 0.3, 0]
+                      ]
+                    }
+                  },
+                  {
+                    "shiny_crystal_staff": {
+                      "tier": "IRON",
+                      "damage": 3,
+                      "pierce": 3,
+                      "range": 8,
+                      "cooldown": 35,
+                      "repair_item": "unusualend:citrine",
+                      "dependency": "unusualend",
+                      "on_hit_self": "/effect give @s minecraft:regeneration 4 0 true",
+                      "beam_color": [
+                        [1, 0.8, 1],
+                        [1, 0.7, 1],
+                        [1, 0.6, 1]
+                      ]
                     }
                   },
                   {
@@ -474,10 +509,11 @@ public class ModConfig {
                       "damage": 4,
                       "pierce": 3,
                       "range": 10,
-                      "cooldown": 15,
+                      "cooldown": 20,
                       "durability": 612,
                       "repair_item": "phantasm:crystal_shard",
-                      "dependency": "minecraft"
+                      "dependency": "phantasm"
+                      // XP speed boost handled by the native Phantasm tag
                     }
                   },
                   {
@@ -486,7 +522,7 @@ public class ModConfig {
                       "damage": 3,
                       "pierce": 2,
                       "range": 14,
-                      "cooldown": 10
+                      "cooldown": 15
                     }
                   },
                   {
@@ -495,7 +531,51 @@ public class ModConfig {
                       "damage": 5,
                       "pierce": 2,
                       "range": 12,
+                      "cooldown": 20
+                    }
+                  },
+                  {
+                    "prismalite_staff": {
+                      "tier": "DIAMOND",
+                      "damage": 4,
+                      "pierce": 3,
+                      "range": 14,
+                      "cooldown": 15,
+                      "durability": 1562,
+                      "repair_item": "unusualend:prismalite",
+                      "dependency": "unusualend",
+                      "on_shoot": "/effect give @s minecraft:speed 3 0 true",
+                      "beam_color": [
+                        [0.75, 0.75, 1],
+                        [0.6, 1, 1]
+                      ]
+                    }
+                  },
+                  {
+                    "gripcrystal_staff": {
+                      "tier": "DIAMOND",
+                      "damage": 5,
+                      "pierce": 2,
+                      "range": 12,
                       "cooldown": 15
+                    }
+                  },
+                  {
+                    "spawner_staff": {
+                      "tier": "DIAMOND",
+                      "damage": 4,
+                      "pierce": 3,
+                      "range": 14,
+                      "cooldown": 25,
+                      "durability": 1562,
+                      "repair_item": "dungeonnowloading:spawner_blade",
+                      "dependency": "dungeonnowloading",
+                      "on_hit_self": "/effect give @s minecraft:regeneration 4 0 true",
+                      "beam_color": [
+                        [0.5, 0.2, 0.5],
+                        [0.4, 0.1, 0.4],
+                        [0.25, 0, 0.25]
+                      ]
                     }
                   },
                   {
@@ -505,7 +585,23 @@ public class ModConfig {
                       "pierce": 3,
                       "range": 16,
                       "fire_resistant": true,
-                      "cooldown": 20
+                      "cooldown": 25
+                    }
+                  },
+                  {
+                    "pearlescent_alloy_staff": {
+                      "tier": "NETHERITE",
+                      "damage": 7,
+                      "pierce": 1,
+                      "range": 20,
+                      "cooldown": 20,
+                      "repair_item": "unusualend:pearlescent_alloy",
+                      "dependency": "unusualend",
+                      "on_shoot": "/effect give @s minecraft:speed 3 0 true",
+                      "beam_color": [
+                        [0.5, 0, 0.75],
+                        [0.75, 0.25, 1]
+                      ]
                     }
                   }
                 ]

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/spawner",
+  "pattern": [
+    " SV",
+    " SS",
+    "M  "
+  ],
+  "key": {
+	"V": {
+      "item": "dungeonnowloading:spawner_blade"
+    },
+    "M": {
+      "item": "dungeonnowloading:soul_silk"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "sortilege:spawner_staff"
+  }
+}

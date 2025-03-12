@@ -8,6 +8,7 @@ import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
@@ -100,6 +101,13 @@ public class StaffItem extends ToolItem implements DyeableItem{
 
     public int getPierce(ItemStack stack) {
         return this.pierce + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
+    }
+
+    private int getCooldown(ItemStack stack, PlayerEntity player) {
+        float multiplier = 1;
+        if (stack.isIn(ModTags.Items.XP_BOOSTED))
+            multiplier -= player.experienceLevel / 200f;
+        return (int) (this.cooldown * multiplier);
     }
 
     public List<float[]> getBeamColors(ItemStack stack, @Nullable ElementalStaffEnchantment element) {
@@ -208,7 +216,7 @@ public class StaffItem extends ToolItem implements DyeableItem{
             player.swingHand(this.handSave, true);
 
         world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
-        player.getItemCooldownManager().set(staff.getItem(), this.cooldown);
+        player.getItemCooldownManager().set(staff.getItem(), this.getCooldown(staff, player));
         staff.damage(1, player, e -> e.sendToolBreakStatus(this.handSave));
 
 

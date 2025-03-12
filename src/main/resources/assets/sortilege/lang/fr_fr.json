@@ -15,11 +15,12 @@
   "emi.category.sortilege.enchanting": "Enchantement",
 
 
-  "item.sortilege.wooden_staff" : "Sceptre en Bois",
-  "item.sortilege.stone_staff" : "Sceptre en Pierre",
-  "item.sortilege.iron_staff" : "Sceptre en Fer",
-  "item.sortilege.golden_staff" : "Sceptre en Or",
-  "item.sortilege.diamond_staff" : "Sceptre en Diamant",
+  "item.sortilege.wooden_staff" : "Sceptre en bois",
+  "item.sortilege.stone_staff" : "Sceptre en pierre",
+  "item.sortilege.iron_staff" : "Sceptre en fer",
+  "item.sortilege.crystalline_staff" : "Sceptre en crystal",
+  "item.sortilege.golden_staff" : "Sceptre en or",
+  "item.sortilege.diamond_staff" : "Sceptre en diamant",
   "item.sortilege.netherite_staff" : "Sceptre en Netherite",
 
   "sortilege.staff.experience_cost": "Utilise %s XP",

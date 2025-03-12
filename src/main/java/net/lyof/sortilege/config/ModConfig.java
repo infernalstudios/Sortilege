@@ -468,6 +468,19 @@ public class ModConfig {
                     }
                   },
                   {
+                    "crystalline_staff": {
+                      "tier": "GOLD",
+                      "enchantability": 19,
+                      "damage": 4,
+                      "pierce": 3,
+                      "range": 10,
+                      "cooldown": 15,
+                      "durability": 612,
+                      "repair_item": "phantasm:crystal_shard",
+                      "dependency": "minecraft"
+                    }
+                  },
+                  {
                     "golden_staff": {
                       "tier": "GOLD",
                       "damage": 3,

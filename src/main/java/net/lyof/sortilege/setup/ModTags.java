@@ -5,6 +5,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.util.Identifier;
 
 public class ModTags {
     public static class Entities {
@@ -26,5 +27,7 @@ public class ModTags {
         private static TagKey<Item> create(String name) {
             return TagKey.of(RegistryKeys.ITEM, Sortilege.makeID(name));
         }
+
+        public static TagKey<Item> XP_BOOSTED = TagKey.of(RegistryKeys.ITEM, new Identifier("phantasm", "gets_xp_speed_boost"));
     }
 }

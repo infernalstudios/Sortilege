@@ -71,8 +71,8 @@ public class ModEnchants {
                             new float[]{1f, 1f, 0.75f}),
                     (target, level) -> {
                 target.setVelocity(0, -1, 0);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40 * level));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level, 1));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40 * level, 1));
             }));
 
     public static Enchantment IGNORANCE_CURSE = register("ignorance_curse",

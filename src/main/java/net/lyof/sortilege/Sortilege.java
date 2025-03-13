@@ -22,7 +22,7 @@ public class Sortilege implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		ModConfig.register(true);
+		ModConfig.register();
 
 		ModAttributes.register();
 		ModItems.register();

@@ -466,7 +466,7 @@ public class ModConfig {
                       "range": 10,
                       "cooldown": 20
                     }
-                  }
+                  },
                   {
                     "crystalline_staff": {
                       "tier": "GOLD",
@@ -498,14 +498,20 @@ public class ModConfig {
                       "range": 12,
                       "cooldown": 20
                     }
-                  }
+                  },
                   {
                     "gripcrystal_staff": {
                       "tier": "DIAMOND",
                       "damage": 5,
                       "pierce": 2,
                       "range": 12,
-                      "cooldown": 15
+                      "cooldown": 15,
+                      "repair_item": "unseen_world:gripcrystal",
+                      "dependency": "unseen_world",
+                      "beam_color": [
+                        [0.25, 0, 1],
+                        [0.35, 0.25, 1]
+                      ]
                     }
                   },
                   {

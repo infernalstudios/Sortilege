@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class StaffItem extends ToolItem implements DyeableItem{
+public class StaffItem extends ToolItem implements DyeableItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
 
     public @Nullable ModConfig.StaffInfo rawInfos;

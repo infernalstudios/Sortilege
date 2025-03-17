@@ -37,9 +37,9 @@ public class ItemRendererMixin {
         if (stack.getItem() instanceof StaffItem staff && staff.hasColor(stack)) {
             matrices.push();
 
-            matrices.scale(1.01f, 1.01f, 1.01f);
+            matrices.scale(1.005f, 1.005f, 1.005f);
             //matrices.translate(0.995f, -0.005f, 0.495f);
-            matrices.translate(0, 0.995, 0.495);
+            matrices.translate(0, 0.995, 0.4975);
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
             MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light,

@@ -1,13 +1,9 @@
 package net.lyof.sortilege.util;
 
-import net.lyof.sortilege.Sortilege;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 public class MathHelper {
@@ -45,27 +41,5 @@ public class MathHelper {
 
     public static int toInt(Object x) {
         return (int) Math.round(Double.parseDouble(String.valueOf(x)));
-    }
-
-
-    private static Map<Integer, Formatting> COLOR_CACHE = new HashMap<>();
-
-    public static Formatting getClosestFormatting(float[] rgb) {
-        int color = net.minecraft.util.math.MathHelper.packRgb(rgb[0], rgb[1], rgb[2]);
-        if (COLOR_CACHE.containsKey(color)) return COLOR_CACHE.get(color);
-
-        int distance = -1;
-        Formatting result = Formatting.BLACK;
-        for (Formatting formatting : Formatting.values()) {
-            if (formatting.isColor())
-                Sortilege.log(Math.abs(formatting.getColorValue() - color) + " " + distance + " " + formatting.getName());
-            if (formatting.isColor() && (Math.abs(formatting.getColorValue() - color) < distance || distance < 0)) {
-                distance = Math.abs(formatting.getColorValue() - color);
-                result = formatting;
-            }
-        }
-
-        COLOR_CACHE.putIfAbsent(color, result);
-        return result;
     }
 }

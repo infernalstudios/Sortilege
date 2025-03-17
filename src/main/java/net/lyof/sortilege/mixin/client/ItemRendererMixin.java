@@ -3,7 +3,6 @@ package net.lyof.sortilege.mixin.client;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.MockItemRenderer;
 import net.lyof.sortilege.item.custom.StaffItem;
-import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;

@@ -1,8 +1,6 @@
 package net.lyof.sortilege.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.lyof.sortilege.Sortilege;
-import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat;

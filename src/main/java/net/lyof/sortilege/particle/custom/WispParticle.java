@@ -2,7 +2,6 @@ package net.lyof.sortilege.particle.custom;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lyof.sortilege.particle.amo.ParticleShaders;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;

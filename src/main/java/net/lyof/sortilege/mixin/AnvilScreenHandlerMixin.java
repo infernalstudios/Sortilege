@@ -17,8 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
     @Shadow @Final private Property levelCost;
 
-    @Shadow @Nullable private String newItemName;
-
     public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         super(type, syncId, playerInventory, context);
     }

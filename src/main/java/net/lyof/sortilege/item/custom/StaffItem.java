@@ -251,8 +251,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
             y = (float) (player.getY() + look.y * i/step + player.getEyeHeight(player.getPose()) - 0.2);
             z = (float) (player.getZ() + look.z * i/step);
 
-            if (world.isClient())
-                ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
+            ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
 
             if (i*2 % step != 0)
                 continue;

@@ -5,6 +5,7 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 
 public class ModItemGroups {
     public static void register() {

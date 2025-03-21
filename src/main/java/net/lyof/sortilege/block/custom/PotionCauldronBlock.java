@@ -1,5 +1,6 @@
 package net.lyof.sortilege.block.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -8,12 +9,17 @@ import net.minecraft.block.LeveledCauldronBlock;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -79,9 +85,26 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
     public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         super.randomTick(state, world, pos, random);
 
-        if (world.random.nextFloat() < 0.5 && state.get(LEVEL) != 3) {
+        if (random.nextFloat() < 0.5 && state.get(LEVEL) != 3 && world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES)) {
             BlockState blockState = state.cycle(LEVEL);
             world.setBlockState(pos, blockState);
+        }
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
+        if (world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES))
+            world.addParticle(ParticleTypes.BUBBLE, pos.getX() + random.nextFloat(), pos.getY() + this.getFluidHeight(state) + 0.1,
+                    pos.getZ() + random.nextFloat(), 0, 0, 0);
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron && entity instanceof LivingEntity living) {
+            for (StatusEffectInstance effect : cauldron.potion.getEffects()) {
+                living.addStatusEffect(new StatusEffectInstance(effect.getEffectType(), 60));
+            }
         }
     }
 }

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "level=1": {
+      "model": "sortilege:block/potion_cauldron_level1"
+    },
+    "level=2": {
+      "model": "sortilege:block/potion_cauldron_level2"
+    },
+    "level=3": {
+      "model": "sortilege:block/potion_cauldron_full"
+    }
+  }
+}

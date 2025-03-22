@@ -22,7 +22,7 @@
 			"net.lyof.sortilege.SortilegeClient"
 		],
 		"emi": [
-			"net.lyof.sortilege.setup.EmiCompat"
+          "net.lyof.sortilege.recipe.EmiCompat"
 		]
 	},
 	"mixins": [

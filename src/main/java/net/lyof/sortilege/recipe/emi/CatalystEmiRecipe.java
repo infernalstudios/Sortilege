@@ -4,7 +4,7 @@ import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.setup.EmiCompat;
+import net.lyof.sortilege.recipe.EmiCompat;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.EnchantedBookItem;

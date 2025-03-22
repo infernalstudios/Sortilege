@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:cauldron_brewing",
+  "input": {
+    "item": "minecraft:golden_carrot"
+  },
+  "output": "minecraft:night_vision"
+}

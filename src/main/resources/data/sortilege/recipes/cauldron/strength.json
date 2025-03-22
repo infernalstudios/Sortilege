@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:cauldron_brewing",
+  "input": {
+    "item": "minecraft:blaze_powder"
+  },
+  "output": "minecraft:strength"
+}

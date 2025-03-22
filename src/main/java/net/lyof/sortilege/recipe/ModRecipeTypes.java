@@ -1,6 +1,7 @@
 package net.lyof.sortilege.recipe;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.minecraft.inventory.Inventory;
@@ -27,9 +28,15 @@ public class ModRecipeTypes {
     }
 
 
-    public static RecipeSerializer<SoulbindingRecipe> SOULBINDING_RECIPE_SERIALIZER
+    public static RecipeType<CauldronBrewingRecipe> CAULDRON_BREWING = register("cauldron_brewing");
+
+
+    public static RecipeSerializer<SoulbindingRecipe> SOULBINDING_SERIALIZER
             = register("soulbind_smithing", new SoulbindingRecipe.Serializer());
 
-    public static RecipeSerializer<LimitBreakRecipe> LIMIT_BREAK_RECIPE_SERIALIZER
+    public static RecipeSerializer<LimitBreakRecipe> LIMIT_BREAK_SERIALIZER
             = register("limitbreak_smithing", new LimitBreakRecipe.Serializer());
+
+    public static RecipeSerializer<CauldronBrewingRecipe> CAULDRON_BREWING_SERIALIZER
+            = register("cauldron_brewing", new CauldronBrewingRecipe.Serializer());
 }

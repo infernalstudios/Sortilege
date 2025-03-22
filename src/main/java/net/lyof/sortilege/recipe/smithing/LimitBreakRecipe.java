@@ -63,7 +63,7 @@ public class LimitBreakRecipe implements SmithingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.LIMIT_BREAK_RECIPE_SERIALIZER;
+        return ModRecipeTypes.LIMIT_BREAK_SERIALIZER;
     }
 
 

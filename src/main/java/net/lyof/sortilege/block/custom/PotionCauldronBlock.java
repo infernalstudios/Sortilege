@@ -2,31 +2,43 @@ package net.lyof.sortilege.block.custom;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CauldronBlock;
-import net.minecraft.block.LeveledCauldronBlock;
+import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
+import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
+import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.event.GameEvent;
@@ -34,6 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEntityProvider {
     public static class Behavior {
@@ -63,10 +76,24 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
         }
     }
 
+    public static int getBlockColor(BlockState state, BlockRenderView world, BlockPos pos, int tintIndex) {
+        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)
+            return (int) cauldron.getRenderData();
+        return 16253176;
+    }
 
+
+    public static final BooleanProperty REFRESH = BooleanProperty.of("refresh_render");
 
     public PotionCauldronBlock(Settings settings) {
         super(settings.ticksRandomly(), precipitation -> true, Behavior.INSTANCE);
+        this.setDefaultState(this.getDefaultState().with(REFRESH, false));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(REFRESH);
     }
 
     @Override
@@ -94,17 +121,66 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
+
         if (world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES))
-            world.addParticle(ParticleTypes.BUBBLE, pos.getX() + random.nextFloat(), pos.getY() + this.getFluidHeight(state) + 0.1,
-                    pos.getZ() + random.nextFloat(), 0, 0, 0);
+            world.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getFluidHeight(state) + 0.1,
+                    pos.getZ() + this.getRandomOffset(random), 0, 0, 0);
+    }
+
+    private float getRandomOffset(Random random) {
+        return random.nextFloat()*0.8f + 0.2f;
     }
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron && entity instanceof LivingEntity living) {
+        if (!(world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)) return;
+
+        if (entity instanceof LivingEntity living) {
             for (StatusEffectInstance effect : cauldron.potion.getEffects()) {
-                living.addStatusEffect(new StatusEffectInstance(effect.getEffectType(), 60));
+                living.addStatusEffect(new StatusEffectInstance(effect.getEffectType(), 100));
             }
         }
+
+        if (entity instanceof ItemEntity item) {
+            Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.CAULDRON_BREWING,
+                    new SimpleInventory(item.getStack()), world);
+
+            if (optional.isPresent()) {
+                cauldron.potion = optional.get().output;
+
+                world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
+
+                world.markDirty(pos);
+                world.updateListeners(pos, state, state, 0);
+
+                item.setStack(ItemStack.EMPTY);
+            }
+        }
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron) {
+            //world.setBlockState(pos, state.with(REFRESH, !state.get(REFRESH)));
+
+            Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.CAULDRON_BREWING,
+                    new SimpleInventory(player.getStackInHand(hand)), world);
+
+            if (optional.isPresent()) {
+                cauldron.potion = optional.get().output;
+
+                player.incrementStat(Stats.USE_CAULDRON);
+                player.incrementStat(Stats.USED.getOrCreateStat(player.getStackInHand(hand).getItem()));
+                world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
+
+                world.markDirty(pos);
+                world.updateListeners(pos, state, state, 0);
+
+                return ActionResult.SUCCESS;
+            }
+        }
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 }

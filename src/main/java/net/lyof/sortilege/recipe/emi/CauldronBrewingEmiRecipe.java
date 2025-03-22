@@ -26,7 +26,7 @@ public class CauldronBrewingEmiRecipe extends BasicEmiRecipe {
         this.output = EmiStack.of(PotionUtil.setPotion(Items.POTION.getDefaultStack(), recipe.output));
 
         this.inputs.add(this.input);
-        this.outputs.add(this.output.copy().setAmount(3));
+        this.outputs.add(this.output);
     }
 
     @Override

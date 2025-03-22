@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:cauldron_brewing",
+  "input": {
+    "item": "minecraft:magma_cream"
+  },
+  "output": "minecraft:fire_resistance"
+}

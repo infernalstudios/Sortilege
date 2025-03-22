@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:cauldron_brewing",
+  "input": {
+    "item": "minecraft:phantom_membrane"
+  },
+  "output": "minecraft:slow_falling"
+}

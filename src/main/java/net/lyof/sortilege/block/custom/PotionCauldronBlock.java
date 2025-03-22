@@ -147,7 +147,7 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
             Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.CAULDRON_BREWING,
                     new SimpleInventory(item.getStack()), world);
 
-            if (optional.isPresent()) {
+            if (optional.isPresent() && item.getStack().getCount() >= state.get(LEVEL) && cauldron.potion != optional.get().output) {
                 cauldron.potion = optional.get().output;
 
                 world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
@@ -156,33 +156,8 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
                 world.markDirty(pos);
                 world.updateListeners(pos, state, state, 0);
 
-                item.setStack(ItemStack.EMPTY);
+                item.getStack().decrement(state.get(LEVEL));
             }
         }
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron) {
-            //world.setBlockState(pos, state.with(REFRESH, !state.get(REFRESH)));
-
-            Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.CAULDRON_BREWING,
-                    new SimpleInventory(player.getStackInHand(hand)), world);
-
-            if (optional.isPresent()) {
-                cauldron.potion = optional.get().output;
-
-                player.incrementStat(Stats.USE_CAULDRON);
-                player.incrementStat(Stats.USED.getOrCreateStat(player.getStackInHand(hand).getItem()));
-                world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
-
-                world.markDirty(pos);
-                world.updateListeners(pos, state, state, 0);
-
-                return ActionResult.SUCCESS;
-            }
-        }
-        return super.onUse(state, world, pos, player, hand, hit);
     }
 }

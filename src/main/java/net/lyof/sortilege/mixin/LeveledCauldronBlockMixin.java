@@ -29,20 +29,18 @@ import java.util.Optional;
 
 @Mixin(LeveledCauldronBlock.class)
 public abstract class LeveledCauldronBlockMixin {
-    @Shadow public abstract boolean isFull(BlockState state);
-
     @Shadow @Final public static IntProperty LEVEL;
 
     @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
     public void brewItemEntity(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (entity instanceof ItemEntity item && this.isFull(state) && world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES)
+        if (entity instanceof ItemEntity item && world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES)
                 && state.isOf(Blocks.WATER_CAULDRON)) {
 
             Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.CAULDRON_BREWING,
                     new SimpleInventory(item.getStack()), world);
 
-            if (optional.isPresent()) {
-                world.setBlockState(pos, ModBlocks.POTION_CAULDRON.getDefaultState().with(LEVEL, 3));
+            if (optional.isPresent() && item.getStack().getCount() >= state.get(LEVEL)) {
+                world.setBlockState(pos, ModBlocks.POTION_CAULDRON.getDefaultState().with(LEVEL, state.get(LEVEL)));
                 if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)
                     cauldron.potion = optional.get().output;
 
@@ -52,7 +50,7 @@ public abstract class LeveledCauldronBlockMixin {
                 world.markDirty(pos);
                 world.updateListeners(pos, state, state, 0);
 
-                item.setStack(ItemStack.EMPTY);
+                item.getStack().decrement(state.get(LEVEL));
                 ci.cancel();
             }
         }

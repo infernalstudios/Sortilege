@@ -48,7 +48,7 @@ public class Sortilege implements ModInitializer {
 
 	@Deprecated
 	public static <T> T log(T message) {
-		LOGGER.info(String.valueOf(message));
+        LOGGER.info("[Sortilege] {}", message);
 		return message;
 	}
 }

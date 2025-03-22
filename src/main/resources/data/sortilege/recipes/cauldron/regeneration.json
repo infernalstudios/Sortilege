@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:cauldron_brewing",
+  "input": {
+    "item": "minecraft:ghast_tear"
+  },
+  "output": "minecraft:regeneration"
+}

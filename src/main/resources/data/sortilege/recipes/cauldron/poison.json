@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:cauldron_brewing",
+  "input": {
+    "item": "minecraft:spider_eye"
+  },
+  "output": "minecraft:poison"
+}

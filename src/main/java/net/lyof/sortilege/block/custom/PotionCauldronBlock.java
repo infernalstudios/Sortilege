@@ -79,23 +79,13 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
     }
 
     public static int getBlockColor(BlockState state, BlockRenderView world, BlockPos pos, int tintIndex) {
-        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)
+        if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron && tintIndex == 0)
             return (int) cauldron.getRenderData();
         return 16253176;
     }
 
-
-    public static final BooleanProperty REFRESH = BooleanProperty.of("refresh_render");
-
     public PotionCauldronBlock(Settings settings) {
         super(settings.ticksRandomly(), precipitation -> true, Behavior.INSTANCE);
-        this.setDefaultState(this.getDefaultState().with(REFRESH, false));
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(REFRESH);
     }
 
     @Override

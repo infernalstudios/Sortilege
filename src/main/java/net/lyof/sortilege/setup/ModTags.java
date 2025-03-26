@@ -1,6 +1,7 @@
 package net.lyof.sortilege.setup;
 
 import net.lyof.sortilege.Sortilege;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
@@ -29,5 +30,13 @@ public class ModTags {
         }
 
         public static TagKey<Item> XP_BOOSTED = TagKey.of(RegistryKeys.ITEM, new Identifier("phantasm", "gets_xp_speed_boost"));
+    }
+
+    public static class Blocks {
+        public static TagKey<Block> REFILLS_CAULDRONS = create("refills_cauldrons");
+
+        private static TagKey<Block> create(String name) {
+            return TagKey.of(RegistryKeys.BLOCK, Sortilege.makeID(name));
+        }
     }
 }

@@ -65,9 +65,12 @@ public class ConfigEntries {
         showDeathCoordinates = new ConfigEntry<>("death.show_coordinates_on_death", true).get();
         glowingKiller = new ConfigEntry<>("death.glowing_killer", true).get();
 
-        antidoteEnabled = new ConfigEntry<>("brewing.enable", true).get();
-        antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote_blacklist", new ArrayList()).get();
-        antidoteStackSize = new ConfigEntry<>("brewing.antidote_stack_size", 4).get();
+        antidoteEnabled = new ConfigEntry<>("brewing.antidote.enable", true).get();
+        antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote.effect_blacklist", new ArrayList()).get();
+        antidoteStackSize = new ConfigEntry<>("brewing.antidote.stack_size", 4).get();
+
+        cauldronAutoRefill = new ConfigEntry<>("brewing.cauldron.auto_refill", true).get();
+        cauldronBlazeRefill = new ConfigEntry<>("brewing.cauldron.blaze_powder_refill", true).get();
 
         staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
         staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
@@ -133,6 +136,9 @@ public class ConfigEntries {
     public static boolean antidoteEnabled;
     public static List<String> antidoteBlacklist = List.of();
     public static int antidoteStackSize;
+
+    public static boolean cauldronAutoRefill;
+    public static boolean cauldronBlazeRefill;
 
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;

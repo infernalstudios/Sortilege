@@ -2,6 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.setup.ModTags;
@@ -19,33 +20,32 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 import java.util.Map;
 
-@Mixin(PlayerInventory.class)
+@Mixin(value = PlayerInventory.class, priority = 1001)
 public class PlayerInventoryMixin {
     @Shadow @Final public DefaultedList<ItemStack> main;
 
     @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))
-    public int skipEquipped(List list, Operation<Integer> original) {
+    public int skipEquipped(List<ItemStack> list, Operation<Integer> original) {
         if ((list != this.main && ConfigEntries.keepEquipped)) {
             return 0;
         }
         return original.call(list);
     }
 
-    @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"))
-    public Object skipHotbar(List<ItemStack> list, int i, Operation<Object> original) {
+    @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "net/minecraft/item/ItemStack.isEmpty()Z"))
+    public boolean skipHotbar(ItemStack stack, Operation<Boolean> original, @Local(index = 3) int i) {
         if (i < PlayerInventory.getHotbarSize() && ConfigEntries.keepEquipped)
-            return ItemStack.EMPTY;
+            return true;
 
-        ItemStack stack = (ItemStack) original.call(list, i);
         if (ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
             if (ConfigEntries.consumeSoulbound && ModEnchants.SOULBOUND != null) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.get(stack);
                 enchants.remove(ModEnchants.SOULBOUND);
             }
-            return ItemStack.EMPTY;
+            return true;
         }
-        if (stack.isIn(ModTags.Items.KEEP_ON_DEATH)) return ItemStack.EMPTY;
+        if (stack.isIn(ModTags.Items.KEEP_ON_DEATH)) return true;
 
-        return stack;
+        return original.call(stack);
     }
 }

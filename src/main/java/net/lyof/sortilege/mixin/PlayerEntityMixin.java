@@ -1,5 +1,7 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
@@ -15,7 +17,6 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -77,11 +78,11 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         }
     }
 
-    @Redirect(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"))
-    public boolean keepInventory(GameRules instance, GameRules.Key<GameRules.BooleanRule> rule) {
+    @WrapOperation(method = "dropInventory", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameRules;getBoolean(Lnet/minecraft/world/GameRules$Key;)Z"))
+    public boolean keepInventory(GameRules instance, GameRules.Key<GameRules.BooleanRule> rule, Operation<Boolean> original) {
         if (rule == GameRules.KEEP_INVENTORY && this.isCreative())
             return true;
-        return instance.getBoolean(rule);
+        return original.call(instance, rule);
     }
 
     @Inject(method = "getXpToDrop", at = @At("HEAD"), cancellable = true)

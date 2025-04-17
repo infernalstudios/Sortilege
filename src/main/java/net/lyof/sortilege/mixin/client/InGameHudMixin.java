@@ -28,8 +28,6 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
     public void renderExperienceBar(DrawContext context, int x, CallbackInfo ci) {
         if (ConfigEntries.xpLevelCap > -1) {
-            InGameHud self = (InGameHud) (Object) this;
-
             this.client.getProfiler().push("expBar");
             int i = this.client.player.getNextLevelExperience();
             int k;

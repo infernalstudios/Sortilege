@@ -19,6 +19,7 @@
     "PlayerInventoryMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
+    "SmithingTransformRecipeMixin",
     "UnbreakingEnchantmentMixin"
   ],
   "injectors": {

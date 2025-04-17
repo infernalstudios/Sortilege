@@ -393,7 +393,7 @@ public class ModConfig {
                   ],
                   "stack_size": 4
                 },
-                "cauldron_brewing": {
+                "cauldron": {
                   // To disable cauldrons from filling over time automatically if above a soul campfire,
                   //    override the #sortilege:refills_cauldrons block tag to be empty
                   

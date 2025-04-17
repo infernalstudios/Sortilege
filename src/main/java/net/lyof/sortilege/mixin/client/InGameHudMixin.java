@@ -33,7 +33,6 @@ public abstract class InGameHudMixin {
             int k;
             int l;
             if (i > 0) {
-                boolean j = true;
                 k = (int) (this.client.player.experienceProgress * 183.0F);
                 if (this.client.player.experienceLevel >= ConfigEntries.xpLevelCap)
                     k = 183;

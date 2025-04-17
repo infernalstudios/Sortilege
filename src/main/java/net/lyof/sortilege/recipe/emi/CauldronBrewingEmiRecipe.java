@@ -1,20 +1,15 @@
 package net.lyof.sortilege.recipe.emi;
 
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
-import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.recipe.EmiCompat;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.util.Identifier;
 
 public class CauldronBrewingEmiRecipe extends BasicEmiRecipe {
     private final EmiIngredient input;

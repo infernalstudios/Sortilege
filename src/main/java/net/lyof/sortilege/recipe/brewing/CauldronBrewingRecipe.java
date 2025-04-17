@@ -2,7 +2,6 @@ package net.lyof.sortilege.recipe.brewing;
 
 import com.google.gson.JsonObject;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
-import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;

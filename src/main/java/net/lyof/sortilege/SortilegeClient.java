@@ -22,16 +22,13 @@ public class SortilegeClient implements ClientModInitializer {
         ColorProviderRegistry.BLOCK.register(PotionCauldronBlock::getBlockColor, ModBlocks.POTION_CAULDRON);
 
         ParticleFactoryRegistry.getInstance().register(ModParticles.WISP_PIXEL, WispParticle.Factory::new);
-        /*CoreShaderRegistrationCallback.EVENT.register(shader ->
-                shader.register(Sortilege.makeID("particle"), VertexFormats.POSITION_TEXTURE_COLOR_LIGHT,
-                        ParticleShaders::register)
-        );*/
+
         if (ConfigEntries.witchHatEnabled) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
 
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, (client, handler, buf, responseSender) -> {
             double x = buf.readDouble(), y = buf.readDouble(), z = buf.readDouble();
             float r = buf.readFloat(), g = buf.readFloat(), b = buf.readFloat();
-            int amount = buf.readInt(), spread = amount == 1 ? 0 : 1;
+            int amount = buf.readInt(), spread = amount == 1 ? 0 : 2;
             client.execute(() -> {
                 for (int i = 0; i < amount; i++) {
                     client.world.addParticle(ModParticles.WISP_PIXEL, x + (0.5 - Math.random()) * spread,

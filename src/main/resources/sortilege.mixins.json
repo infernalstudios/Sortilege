@@ -14,6 +14,7 @@
     "EnchantmentScreenHandlerMixin",
     "ItemStackMixin",
     "LeveledCauldronBlockMixin",
+    "LifecycledResourceManagerImplMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",

@@ -183,7 +183,7 @@ public class ModConfig {
 
         List<Pair<String, StaffInfo>> result = new ArrayList<>();
         for (Map<String, Map<String, Object>> staff : ConfigEntries.staffEntries) {
-            String id = String.valueOf(List.of(staff.keySet().toArray()).get(0));
+            String id = String.valueOf(staff.keySet().toArray()[0]);
             result.add(new Pair<>(id, new StaffInfo(staff.get(id))));
         }
         STAFFS = result;

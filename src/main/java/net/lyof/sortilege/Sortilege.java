@@ -13,6 +13,7 @@ import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.setup.ReloadListener;
+import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class Sortilege implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModConfig.register();
+		ConfiguredData.register();
 
 		ModBlocks.register();
 		ModBlockEntities.register();

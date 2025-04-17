@@ -26,8 +26,6 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
 
     @Override
     public void reload(ResourceManager manager) {
-        ModConfig.register();
-
         ItemHelper.ENCHLIMIT_CACHE.clear();
         PotionHelper.load();
 

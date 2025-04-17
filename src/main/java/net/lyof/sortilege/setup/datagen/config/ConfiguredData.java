@@ -50,6 +50,8 @@ public class ConfiguredData {
             register(Sortilege.makeID("models/item/" + staff.getFirst() + ".json"),
                     () -> FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency),
                     json -> Instances.generateDefaultModel(json, staff.getFirst()));
+
+        register(Sortilege.makeID("lang/en_us.json"), () -> true, Instances::generateTranslations);
     }
 
     private static class Instances {
@@ -58,7 +60,7 @@ public class ConfiguredData {
         }
 
         public static String generateDefaultModel(JsonElement json, String path) {
-            if ( json != null) return json.toString();
+            if (json != null) return json.toString();
 
             return """
                     {
@@ -67,6 +69,26 @@ public class ConfiguredData {
                         "layer0": """ + "\"sortilege:item/" + path + "\"" + """
                       }
                     }""";
+        }
+
+        public static String generateTranslations(JsonElement json) {
+            for (Pair<String, ModConfig.StaffInfo> staff : ModConfig.STAFFS) {
+                if (!FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency)) continue;
+
+                String id = staff.getFirst();
+                StringBuilder translation = new StringBuilder(id.toUpperCase().charAt(0) + "");
+                for (int i = 1; i < id.length(); i++) {
+                    if (id.charAt(i - 1) == '_')
+                        translation.append(id.toUpperCase().charAt(i));
+                    else if (id.charAt(i) == '_')
+                        translation.append(' ');
+                    else
+                        translation.append(id.charAt(i));
+                }
+                json.getAsJsonObject().addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
+            }
+
+            return gson.toJson(json);
         }
     }
 }

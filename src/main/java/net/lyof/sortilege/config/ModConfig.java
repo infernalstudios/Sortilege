@@ -394,9 +394,10 @@ public class ModConfig {
                   "stack_size": 4
                 },
                 "cauldron": {
+                  // Should cauldron brewing be enabled
+                  "enable": true,
                   // To disable cauldrons from filling over time automatically if above a soul campfire,
                   //    override the #sortilege:refills_cauldrons block tag to be empty
-                  
                   // If true, dropping blaze powder into a cauldron containing potion will increment its fluid level by 1 (up to 3)
                   "blaze_powder_refill": true
                 }

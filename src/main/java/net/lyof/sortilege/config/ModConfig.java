@@ -553,6 +553,21 @@ public class ModConfig {
                     }
                   },
                   {
+                    "electrum_staff": {
+                      "tier": "NETHERITE",
+                      "durability": 1561,
+                      "repair_item": "oreganized:electrum_ingot",
+                      "enchantability": 14,
+                      "damage": 4,
+                      "pierce": 3,
+                      "range": 16,
+                      "cooldown": 20,
+                      "dependency": "oreganized",
+                      "on_shoot": "/effect give @s minecraft:speed 5 0",
+                      "on_hit_self": "/effect give @s minecraft:haste 3 0"
+                    }
+                  },
+                  {
                     "pearlescent_staff": {
                       "tier": "NETHERITE",
                       "damage": 7,

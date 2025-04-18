@@ -71,7 +71,7 @@
   "item.sortilege.witch_hat": "Witch Hat",
 
   "item.sortilege.antidote": "Antidote",
-  "sortilege.antidote.cures": "Cures: %s",
+  "sortilege.antidote.cures": "Cures:",
 
   "item.sortilege.limitite": "Limitite",
   "sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",

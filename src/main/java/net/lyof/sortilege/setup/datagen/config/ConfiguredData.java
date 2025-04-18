@@ -4,8 +4,11 @@ import com.google.gson.*;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.item.ModItems;
+import net.minecraft.advancement.criterion.RecipeCraftedCriterion;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.BiomeKeys;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +49,12 @@ public class ConfiguredData {
 
 
     public static void register() {
+        register(Sortilege.makeID("tags/items/staffs.json"), () -> true, Instances::generateStaffTag);
+        register(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"), () -> ConfigEntries.witchHatEnabled,
+                Instances::changeVoluntaryExileParent);
+    }
+
+    public static void registerClient() {
         for (Pair<String, ModConfig.StaffInfo> staff : ModConfig.STAFFS)
             register(Sortilege.makeID("models/item/" + staff.getFirst() + ".json"),
                     () -> FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency),
@@ -58,6 +67,23 @@ public class ConfiguredData {
         private static JsonElement getJson(String string) {
             return gson.fromJson(string, JsonElement.class);
         }
+
+        public static String generateStaffTag(JsonElement json) {
+            if (json == null) json = new JsonObject();
+            json.getAsJsonObject().add("values", new JsonArray());
+
+            for (Pair<String, ModConfig.StaffInfo> staff : ModConfig.STAFFS) {
+                if (!FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency)) continue;
+                json.getAsJsonObject().get("values").getAsJsonArray().add(Sortilege.makeID(staff.getFirst()).toString());
+            }
+            return json.toString();
+        }
+
+        public static String changeVoluntaryExileParent(JsonElement json) {
+            json.getAsJsonObject().asMap().replace("parent", new JsonPrimitive(Sortilege.makeID("get_witch_hat").toString()));
+            return json.toString();
+        }
+
 
         public static String generateDefaultModel(JsonElement json, String path) {
             if (json != null) return json.toString();
@@ -88,7 +114,10 @@ public class ConfiguredData {
                 json.getAsJsonObject().addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
             }
 
-            return gson.toJson(json);
+            json.getAsJsonObject().asMap().replace("advancement.sortilege.get_wooden_staff",
+                    new JsonPrimitive("You are a Wizard, " + MinecraftClient.getInstance().getSession().getUsername()));
+
+            return json.toString();
         }
     }
 }

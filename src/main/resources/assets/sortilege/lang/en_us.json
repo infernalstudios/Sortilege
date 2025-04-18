@@ -7,10 +7,11 @@
   "sortilege.crafting.requires_level": "You need at least %s levels!",
   "sortilege.crafting.requires_advancement": "You need to have completed %s!",
 
-  "tag.item.sortilege.is_limit_break_material": "Limit Breaker",
-  "tag.item.sortilege.is_soulbind_material": "Soulbinder",
+  "tag.item.sortilege.is_limit_break_material": "Limit Break Material",
+  "tag.item.sortilege.is_soulbind_material": "Soulbinding Material",
   "tag.item.sortilege.unbreakable": "Unbreakable",
   "tag.item.sortilege.keep_on_death": "Kept on Death",
+  "tag.item.sortilege.staffs": "Staffs",
 
   "emi.category.sortilege.enchanting": "Enchanting",
   "emi.category.sortilege.cauldron_brewing": "Cauldron Brewing",
@@ -67,14 +68,22 @@
   "sortilege.enchantments": "Enchantments",
   "sortilege.catalyst": "When used to Enchant:",
 
-
   "item.sortilege.witch_hat": "Witch Hat",
 
-
   "item.sortilege.antidote": "Antidote",
-  "sortilege.antidote.cures": "Cures:",
-
+  "sortilege.antidote.cures": "Cures: %s",
 
   "item.sortilege.limitite": "Limitite",
-  "sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!"
+  "sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",
+
+  "advancement.sortilege.get_wooden_staff": "You are a Wizard, Steve",
+  "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",
+  "advancement.sortilege.dye_staff": "The Colour of Magic",
+  "advancement.sortilege.dye_staff.desc": "Use dye on a staff to change its beam color.",
+  "advancement.sortilege.get_netherite_staff": "The Elder Wand",
+  "advancement.sortilege.get_netherite_staff.desc": "Upgrade a diamond staff to Netherite.",
+  "advancement.sortilege.use_limitite": "Infinity +1",
+  "advancement.sortilege.use_limitite.desc": "Increase an item's enchantment limit using limitite.",
+  "advancement.sortilege.get_witch_hat": "Mad Hatter",
+  "advancement.sortilege.get_witch_hat.desc": "Kill a witch and get her hat."
 }

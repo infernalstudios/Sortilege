@@ -20,6 +20,6 @@ public class DamageEnchantmentMixin {
     @Inject(method = "onTargetDamaged", at = @At("HEAD"))
     public void betterBaneOfArthropods(LivingEntity user, Entity target, int level, CallbackInfo ci) {
         if (this.typeIndex == 2 && ConfigEntries.betterBane && target instanceof LivingEntity living)
-            living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20 + user.getRandom().nextInt(10 * level), 1));
+            living.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 20 * level, 1));
     }
 }

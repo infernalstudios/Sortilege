@@ -50,8 +50,8 @@ public class ConfiguredData {
 
     public static void register() {
         register(Sortilege.makeID("tags/items/staffs.json"), () -> true, Instances::generateStaffTag);
-        register(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"), () -> ConfigEntries.witchHatEnabled,
-                Instances::changeVoluntaryExileParent);
+        register(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
+                () -> ConfigEntries.witchHatEnabled, Instances::changeVoluntaryExileParent);
     }
 
     public static void registerClient() {

@@ -76,7 +76,7 @@ public abstract class ItemStackMixin {
             MutableText txt = Text.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
                     a + "/" + m + " " + Text.translatable("sortilege.enchantments").getString());
 
-            if (list.size() > 1)
+            if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
                 list.add(Text.empty());
             list.add(txt.formatted(a >= m ? Formatting.RED : Formatting.WHITE));
         }

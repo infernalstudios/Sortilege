@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Objects;
 
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
@@ -30,7 +31,7 @@ public class ItemStackMixin {
 
         if (ConfigEntries.catalystTooltip && EnchantingCatalyst.isCatalyst(self) && !(self.getItem() instanceof EnchantedBookItem)) {
             if (Screen.hasShiftDown()) {
-                if (list.size() > 1)
+                if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
                     list.add(Text.empty());
 
                 list.add(Text.translatable("sortilege.catalyst").formatted(Formatting.DARK_PURPLE));

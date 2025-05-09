@@ -14,6 +14,7 @@ import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -78,6 +79,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
         CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put(this, CauldronBehavior.CLEAN_DYEABLE_ITEM);
     }
 
+
     public int getXPCost(ItemStack itemstack) {
         return Math.max(this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
                 - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack), 0);
@@ -131,6 +133,9 @@ public class StaffItem extends ToolItem implements DyeableItem {
         return result;
     }
 
+
+
+
     @Override
     public boolean canRepair(ItemStack staff, ItemStack stack) {
         if (this.rawInfos != null)
@@ -157,14 +162,25 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext flag) {
-        super.appendTooltip(stack, level, list, flag);
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> list, TooltipContext flag) {
+        super.appendTooltip(stack, world, list, flag);
 
+        if (world != null && world.isClient())
+            list.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
+                    .formatted(Formatting.GRAY));
         if (this.getXPCost(stack) > 0) {
             list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
                     .formatted(Formatting.GREEN));
             list.add(Text.empty());
         }
+    }
+
+    public int getOverchargeBarColor(ItemStack stack) {
+        return super.getItemBarColor(stack);
+    }
+
+    public int getOverchargeBarStep(ItemStack stack) {
+        return super.getItemBarStep(stack);
     }
 
     @Override

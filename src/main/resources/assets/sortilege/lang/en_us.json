@@ -25,6 +25,7 @@
   "item.sortilege.spawner_staff" : "Spawner Staff",
 
   "sortilege.staff.experience_cost": "Costs %s XP",
+  "sortilege.staff.cooldown": "%ss Cooldown",
 
   "attribute.name.generic.staff_damage": "Magic Damage",
   "attribute.name.generic.staff_pierce": "Pierce",

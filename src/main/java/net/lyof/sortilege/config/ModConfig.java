@@ -5,10 +5,14 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.util.MathHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 
@@ -84,8 +88,16 @@ public class ModConfig {
             this.range = range;
             this.durability = (dura == -1) ?
                 this.tier.getDurability() : dura;
-            this.repair = (repair.equals("")) ?
-                    () -> this.tier.getRepairIngredient() : () -> Ingredient.ofItems(Registries.ITEM.get(new Identifier(repair)));
+            if (repair.isEmpty())
+                this.repair = () -> this.tier.getRepairIngredient();
+            if (repair.startsWith("#")) {
+                TagKey<Item> tag = TagKey.of(RegistryKeys.ITEM, new Identifier(repair.substring(1)));
+                this.repair = () -> Ingredient.fromTag(tag);
+            }
+            else {
+                Identifier id = new Identifier(repair);
+                this.repair = () -> Ingredient.ofItems(Registries.ITEM.get(id));
+            }
             this.cooldown = Math.max(cooldown, 0);
             this.charge_time = Math.max(charge_time, 1);
             this.xp_cost = xp_cost;

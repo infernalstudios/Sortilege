@@ -133,7 +133,13 @@ public class StaffItem extends ToolItem implements DyeableItem {
         return result;
     }
 
+    public static int getOvercharge(ItemStack stack) {
+        return 3;
+    }
 
+    public static int getMaxOvercharge(ItemStack stack) {
+        return 8;
+    }
 
 
     @Override
@@ -176,11 +182,11 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     public int getOverchargeBarColor(ItemStack stack) {
-        return super.getItemBarColor(stack);
+        return 255;
     }
 
     public int getOverchargeBarStep(ItemStack stack) {
-        return super.getItemBarStep(stack);
+        return Math.round(13.0F - (float) getOvercharge(stack) * 13.0F / (float) getMaxOvercharge(stack));
     }
 
     @Override

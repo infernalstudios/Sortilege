@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
@@ -23,20 +25,17 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeableItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.inventory.StackReference;
+import net.minecraft.item.*;
+import net.minecraft.registry.Registries;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.command.CommandOutput;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -133,12 +132,19 @@ public class StaffItem extends ToolItem implements DyeableItem {
         return result;
     }
 
+    private static final String OVERCHARGE_NBT = Sortilege.MOD_ID +  "Overcharge";
+
     public static int getOvercharge(ItemStack stack) {
-        return 3;
+        if (!stack.hasNbt()) return 0;
+        return stack.getOrCreateNbt().getInt(OVERCHARGE_NBT);
+    }
+
+    public static void setOvercharge(ItemStack stack, int value) {
+        stack.getOrCreateNbt().putInt(OVERCHARGE_NBT, Math.min(value, getMaxOvercharge(stack)));
     }
 
     public static int getMaxOvercharge(ItemStack stack) {
-        return 8;
+        return ConfigEntries.maxOvercharge;
     }
 
 
@@ -182,11 +188,26 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     public int getOverchargeBarColor(ItemStack stack) {
-        return 255;
+        return Integer.decode(ConfigEntries.overchargeColor);
     }
 
     public int getOverchargeBarStep(ItemStack stack) {
-        return Math.round(13.0F - (float) getOvercharge(stack) * 13.0F / (float) getMaxOvercharge(stack));
+        return Math.round(getOvercharge(stack) * 13.0F / (float) getMaxOvercharge(stack));
+    }
+
+
+    @Override
+    public boolean onClicked(ItemStack stack, ItemStack other, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
+        if (clickType != ClickType.RIGHT) return false;
+
+        String id = Registries.ITEM.getId(other.getItem()).toString();
+        if (ConfigEntries.overchargeIngredients.containsKey(id) && getOvercharge(stack) < getMaxOvercharge(stack)) {
+            other.decrement(1);
+            setOvercharge(stack, getOvercharge(stack) + ConfigEntries.overchargeIngredients.get(id).intValue());
+
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -224,7 +245,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, staff) - ItemHelper.getEnchantLevel(ModEnchants.PULL, staff);
 
 
-        if (cost > 0 && !player.isCreative()) {
+        if (cost > 0 && !player.isCreative() && !(getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {
             if (!XPHelper.hasXP(player, cost))
                 return staff;
             player.addExperience(-cost);
@@ -235,7 +256,11 @@ public class StaffItem extends ToolItem implements DyeableItem {
 
         world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
         player.getItemCooldownManager().set(staff.getItem(), this.getCooldown(staff, player));
-        staff.damage(1, player, e -> e.sendToolBreakStatus(this.handSave));
+
+        if (getOvercharge(staff) <= 0 || !ConfigEntries.overchargePreventsDurability)
+            staff.damage(1, player, e -> e.sendToolBreakStatus(this.handSave));
+        if (getOvercharge(staff) > 0)
+            setOvercharge(staff, getOvercharge(staff) - 1);
 
 
         // Getting the look vector to shoot the ray along

@@ -10,7 +10,7 @@ public class ConfigEntries {
         enchantLimiterDefault = new ConfigEntry<>("enchantments.enchant_limiter.default", 3).get();
         cursesAddSlots = new ConfigEntry<>("enchantments.enchant_limiter.curses_add_slots", true).get();
         enchantLimiterMode = new ConfigEntry<>( "enchantments.enchant_limiter.override_mode", "relative").get();
-        enchantLimiterOverrides = new ConfigEntry<Map<String, Double>>( "enchantments.enchant_limiter.overrides", new HashMap<>()).get();
+        enchantLimiterOverrides = new ConfigEntry<Map<String, Double>>( "enchantments.enchant_limiter.overrides", Map.of()).get();
         alwaysShowEnchantLimit = new ConfigEntry<>("enchantments.enchant_limiter.always_show_limit", true).get();
 
         isLimititeFoil = new ConfigEntry<>("enchantments.enchant_limiter.limitite.is_foil", true).get();
@@ -30,7 +30,7 @@ public class ConfigEntries {
         betterFireProt = new ConfigEntry<>("enchantments.better_fire_protection", 4).get();
         betterBane = new ConfigEntry<>("enchantments.better_bane_of_arthropods", true).get();
 
-        enabledEnchants = new ConfigEntry<Map<String, Boolean>>("enchantments.enabled_enchants", new HashMap<>()).get();
+        enabledEnchants = new ConfigEntry<Map<String, Boolean>>("enchantments.enabled_enchants", Map.of()).get();
 
         witchHatEnabled = new ConfigEntry<>("experience.witch_hat.enable", true).get();
         witchHatDropChance = new ConfigEntry<>("experience.witch_hat.drop_chance", 0.1).get();
@@ -49,7 +49,7 @@ public class ConfigEntries {
         bountyValue = new ConfigEntry<>("experience.xp_bounty.value", 20).get();
         bountyChance = new ConfigEntry<>("experience.xp_bounty.chance", 0.05).get();
 
-        xpRequirements = new ConfigEntry<Map<String, Object>>( "experience.recipe_locks", new HashMap<>()).get();
+        xpRequirements = new ConfigEntry<Map<String, Object>>( "experience.recipe_locks", Map.of()).get();
 
         doXPKeep = new ConfigEntry<>("death.xp_keeping.enable", true).get();
         stealFromPlayers = new ConfigEntry<>("death.xp_keeping.allow_stealing_from_players", true).get();
@@ -66,16 +66,22 @@ public class ConfigEntries {
         glowingKiller = new ConfigEntry<>("death.glowing_killer", true).get();
 
         antidoteEnabled = new ConfigEntry<>("brewing.antidote.enable", true).get();
-        antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote.effect_blacklist", new ArrayList()).get();
+        antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote.effect_blacklist", List.of()).get();
         antidoteStackSize = new ConfigEntry<>("brewing.antidote.stack_size", 4).get();
 
         cauldronBrewingEnabled = new ConfigEntry<>("brewing.cauldron.enable", true).get();
         cauldronBlazeRefill = new ConfigEntry<>("brewing.cauldron.blaze_powder_refill", true).get();
 
+        maxOvercharge = new ConfigEntry<>("staffs.overcharge.max_overcharge", 20).get();
+        overchargeColor = new ConfigEntry<>("staffs.overcharge.bar_color", "#0000ff").get();
+        overchargePreventsDurability = new ConfigEntry<>("staffs.overcharge.free_durability", true).get();
+        overchargePreventsExperience = new ConfigEntry<>("staffs.overcharge.free_experience", true).get();
+        overchargeIngredients = new ConfigEntry<Map<String, Double>>("staffs.overcharge.ingredients", Map.of()).get();
+
         staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
         staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
 
-        staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("staffs.entries", new ArrayList()).get();
+        staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("staffs.entries", List.of()).get();
     }
 
     public static int enchantLimiterDefault;
@@ -139,6 +145,12 @@ public class ConfigEntries {
 
     public static boolean cauldronBrewingEnabled;
     public static boolean cauldronBlazeRefill;
+
+    public static int maxOvercharge;
+    public static String overchargeColor = "";
+    public static boolean overchargePreventsDurability;
+    public static boolean overchargePreventsExperience;
+    public static Map<String, Double> overchargeIngredients = Map.of();
 
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;

@@ -231,7 +231,7 @@ public class ModConfig {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 1.7,
+                "VERSION_DO_NOT_EDIT": 1.8,
                 "FORCE_RESET": false
               },
               
@@ -417,6 +417,22 @@ public class ModConfig {
               
               // CATEGORY: STAFFS
               "staffs": {
+                "overcharge": {
+                  // Maximal overcharge a staff can hold at any given time
+                  "max_overcharge": 20,
+                  // Color for the overcharge bar. Hexadecimal format
+                  "bar_color": "#0000ff",
+                  // Should overcharged staffs not use durability
+                  "free_durability": true,
+                  // Should overcharged staffs not use experience
+                  "free_experience": true,
+                  // Which items can be used to overcharge staffs. Must be formatted as "modid:itemid": value
+                  "ingredients": {
+                    "minecraft:lapis_lazuli": 2,
+                    "minecraft:lapis_block": 20
+                  }
+                },
+              
                 // Amount of xp points needed to use a staff, if not set
                 "default_xp_cost": 0,
                 // Time staffs need to be held down (in ticks) before shooting, if not set

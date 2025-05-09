@@ -3,6 +3,7 @@ package net.lyof.sortilege.item.custom;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
@@ -54,8 +55,6 @@ public class StaffItem extends ToolItem implements DyeableItem {
     public int charge;
     public int xp_cost;
 
-    private final Multimap<EntityAttribute, EntityAttributeModifier> attributeModifiers;
-
     public @Nullable Hand handSave;
 
 
@@ -75,12 +74,6 @@ public class StaffItem extends ToolItem implements DyeableItem {
         this.cooldown = cooldown;
         this.charge = charge;
         this.xp_cost = xp_cost;
-
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(), "Weapon modifier", this.damage, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", this.pierce, EntityAttributeModifier.Operation.ADDITION));
-        builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", this.range, EntityAttributeModifier.Operation.ADDITION));
-        this.attributeModifiers = builder.build();
 
         CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put(this, CauldronBehavior.CLEAN_DYEABLE_ITEM);
     }
@@ -152,9 +145,13 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot) {
+    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
-            return this.attributeModifiers;
+            ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+            builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(), "Weapon modifier", this.getAttackDamage(stack), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", this.getPierce(stack), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", this.getAttackRange(stack), EntityAttributeModifier.Operation.ADDITION));
+            return builder.build();
         }
         return super.getAttributeModifiers(slot);
     }

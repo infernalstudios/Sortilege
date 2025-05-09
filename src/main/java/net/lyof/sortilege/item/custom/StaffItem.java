@@ -269,15 +269,11 @@ public class StaffItem extends ToolItem implements DyeableItem {
                     target.damage(damagetype, damage);
                     if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
                         server.getServer().getCommandManager().executeWithPrefix(
-                                new ServerCommandSource(player, new Vec3d(x, y, z), Vec2f.ZERO, server,
-                                        4, "", Text.literal(""), server.getServer(), player)
-                                        .withOutput(CommandOutput.DUMMY),
+                                player.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
                                 this.rawInfos.on_hit_self);
 
                         server.getServer().getCommandManager().executeWithPrefix(
-                                new ServerCommandSource(player, new Vec3d(x, y, z), Vec2f.ZERO, server,
-                                        4, "", Text.literal(""), server.getServer(), target)
-                                        .withOutput(CommandOutput.DUMMY),
+                                target.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
                                 this.rawInfos.on_hit_target);
                     }
 
@@ -288,7 +284,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
                         world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
                     if (kinesis != 0)
-                        target.setVelocity(look.multiply(kinesis).add(0, 0.4, 0));
+                        target.setVelocity(look.add(0, 0.07, 0).normalize().multiply(kinesis * 0.6));
 
                     targetsHit.add(target.getUuidAsString());
                     targetsLeft--;

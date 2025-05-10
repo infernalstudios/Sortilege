@@ -1,5 +1,6 @@
 package net.lyof.sortilege.enchant.staff;
 
+import com.chocohead.mm.api.ClassTinkerers;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.minecraft.enchantment.Enchantment;
@@ -12,17 +13,20 @@ import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class StaffEnchantment extends Enchantment {
-    public int maxLevel;
-    public BiConsumer<LivingEntity, Integer> effect;
-    public Predicate<Enchantment> condition;
+    private static final EnchantmentTarget STAFF = ClassTinkerers.getEnum(EnchantmentTarget.class, "Sortilege$STAFF");
+    private static final EquipmentSlot[] SLOTS = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
-    public StaffEnchantment(Rarity pRarity, int maxLevel) {
-        this(pRarity, maxLevel, null, null);
+    private final int maxLevel;
+    private final BiConsumer<LivingEntity, Integer> effect;
+    private final Predicate<Enchantment> condition;
+
+    public StaffEnchantment(Rarity rarity, int maxLevel) {
+        this(rarity, maxLevel, null, null);
     }
 
-    public StaffEnchantment(Rarity pRarity, int maxLevel,
+    public StaffEnchantment(Rarity rarity, int maxLevel,
                             BiConsumer<LivingEntity, Integer> effect, Predicate<Enchantment> condition) {
-        super(pRarity, EnchantmentTarget.VANISHABLE, EquipmentSlot.values());
+        super(rarity, STAFF, SLOTS);
         this.maxLevel = maxLevel;
         this.effect = effect;
         this.condition = condition;
@@ -45,7 +49,8 @@ public class StaffEnchantment extends Enchantment {
 
     @Override
     public boolean isAcceptableItem(ItemStack stack) {
-        return stack.getItem() instanceof StaffItem staff && (this != ModEnchants.WISDOM || staff.getXPCost(stack) > 0);
+        return super.isAcceptableItem(stack) && (this != ModEnchants.WISDOM
+                || (stack.getItem() instanceof StaffItem staff && staff.getXPCost(stack) > 0));
     }
 
     @Override

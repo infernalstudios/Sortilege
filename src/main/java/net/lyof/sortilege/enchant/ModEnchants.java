@@ -35,7 +35,7 @@ public class ModEnchants {
     public static Enchantment STABILITY = register("stability",
             new StaffEnchantment(Enchantment.Rarity.COMMON, 5));
     public static Enchantment CHAINING = register("chaining",
-            new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 3));
+            new StaffEnchantment(Enchantment.Rarity.COMMON, 3));
     public static Enchantment WISDOM = register("wisdom",
             new StaffEnchantment(Enchantment.Rarity.RARE, 2));
 
@@ -81,9 +81,9 @@ public class ModEnchants {
 
     // EXTRA ENCHANTS
     public static Enchantment MAGIC_PROTECTION = register("magic_protection",
-            new MagicProtectionEnchantment(Enchantment.Rarity.UNCOMMON));
+            new MagicProtectionEnchantment(Enchantment.Rarity.COMMON));
     public static Enchantment ARCANE = register("arcane",
-            new ArcaneEnchantment(Enchantment.Rarity.RARE));
+            new ArcaneEnchantment(Enchantment.Rarity.UNCOMMON));
 
     public static Enchantment SOULBOUND = register("soulbound",
             new SoulboundEnchantment());

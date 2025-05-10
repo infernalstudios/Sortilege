@@ -12,6 +12,11 @@ base {
 
 repositories {
 	maven {
+		name = "JitpackASM"
+		url = 'https://jitpack.io'
+	}
+
+	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
@@ -25,7 +30,11 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	// Fabric ASM
+	modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"
+	include "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"
 
+	// EMI
 	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
 	modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
 }

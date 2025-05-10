@@ -18,6 +18,9 @@
 		"main": [
 			"net.lyof.sortilege.Sortilege"
 		],
+		"mm:early_risers": [
+			"net.lyof.sortilege.setup.asm.EarlyRiser"
+		],
 		"client": [
 			"net.lyof.sortilege.SortilegeClient"
 		],
@@ -28,6 +31,7 @@
 	"mixins": [
 		"sortilege.mixins.json"
 	],
+	"accessWidener" : "sortilege.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.15.11",
 		"minecraft": "~1.20.1",

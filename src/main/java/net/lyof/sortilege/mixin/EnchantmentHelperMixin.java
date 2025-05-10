@@ -56,36 +56,6 @@ public class EnchantmentHelperMixin {
         }
     }
 
-    @Inject(method = "getPossibleEntries", at = @At("HEAD"), cancellable = true)
-    private static void getPossibleEntries(int power, ItemStack stack, boolean treasureAllowed, CallbackInfoReturnable<List<EnchantmentLevelEntry>> cir) {
-        List<EnchantmentLevelEntry> list = Lists.newArrayList();
-        boolean book = stack.isOf(Items.BOOK);
-        Iterator<Enchantment> iterator = Registries.ENCHANTMENT.iterator();
-
-        while (true) {
-            Enchantment enchantment;
-            do {
-                do {
-                    do {
-                        if (!iterator.hasNext()) {
-                            cir.setReturnValue(list);
-                            return;
-                        }
-
-                        enchantment = iterator.next();
-                    } while (enchantment.isTreasure() && !treasureAllowed);
-                } while (!enchantment.isAvailableForRandomSelection());
-            } while (!enchantment.isAcceptableItem(stack) && !book);
-
-            for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
-                if (power >= enchantment.getMinPower(i) && power <= enchantment.getMaxPower(i)) {
-                    list.add(new EnchantmentLevelEntry(enchantment, i));
-                    break;
-                }
-            }
-        }
-    }
-
     @Inject(method = "calculateRequiredExperienceLevel", at = @At("HEAD"), cancellable = true)
     private static void betterEnchantingCosts(Random random, int slotIndex, int bookshelfCount, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (ConfigEntries.doIncreasedEnchantCosts && ConfigEntries.increasedEnchantNeeds.size() == 3) {

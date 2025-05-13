@@ -249,14 +249,12 @@ public class StaffItem extends ToolItem implements DyeableItem {
             element = (ElementalStaffEnchantment) ModEnchants.BLAST;
         else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, staff))
             element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
-        int element_level = ItemHelper.getEnchantLevel(element, staff);
 
 
         int cost = this.getXPCost(staff);
         float damage = this.getAttackDamage(staff);
         int range = this.getAttackRange(staff);
         int targetsLeft = this.getPierce(staff);
-        float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, staff) - ItemHelper.getEnchantLevel(ModEnchants.PULL, staff);
 
 
         if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {

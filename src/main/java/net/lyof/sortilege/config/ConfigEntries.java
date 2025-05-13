@@ -71,6 +71,7 @@ public class ConfigEntries {
 
         cauldronBrewingEnabled = new ConfigEntry<>("brewing.cauldron.enable", true).get();
         cauldronBlazeRefill = new ConfigEntry<>("brewing.cauldron.blaze_powder_refill", true).get();
+        fillSwampHutCauldrons = new ConfigEntry<>("brewing.cauldron.fill_swamp_huts_randomly", true).get();
 
         maxOvercharge = new ConfigEntry<>("staffs.overcharge.max_overcharge", 20).get();
         overchargeColor = new ConfigEntry<>("staffs.overcharge.bar_color", "#0000ff").get();
@@ -145,6 +146,7 @@ public class ConfigEntries {
 
     public static boolean cauldronBrewingEnabled;
     public static boolean cauldronBlazeRefill;
+    public static boolean fillSwampHutCauldrons;
 
     public static int maxOvercharge;
     public static String overchargeColor = "";

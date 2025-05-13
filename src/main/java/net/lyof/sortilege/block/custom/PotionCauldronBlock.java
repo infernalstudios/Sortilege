@@ -6,6 +6,8 @@ import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.particle.SpellParticle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
@@ -22,6 +24,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ColorHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
@@ -106,6 +109,15 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
         if (world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES) && isLit(world.getBlockState(pos.down())))
             world.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getFluidHeight(state) + 0.1,
                     pos.getZ() + this.getRandomOffset(random), 0, 0, 0);
+
+        if (random.nextFloat() < 0.3) {
+            int rgb = getBlockColor(state, world, pos, 0);
+            float[] color = new float[]{ColorHelper.Argb.getRed(rgb) / 255f,
+                    ColorHelper.Argb.getGreen(rgb) / 255f,
+                    ColorHelper.Argb.getBlue(rgb) / 255f};
+            world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getFluidHeight(state) + 0.1,
+                    pos.getZ() + this.getRandomOffset(random), color[0], color[1], color[2]);
+        }
     }
 
     private float getRandomOffset(Random random) {

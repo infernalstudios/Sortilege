@@ -413,7 +413,9 @@ public class ModConfig {
                   // To disable cauldrons from filling over time automatically if above a soul campfire,
                   //    override the #sortilege:refills_cauldrons block tag to be empty
                   // If true, dropping blaze powder into a cauldron containing potion will increment its fluid level by 1 (up to 3)
-                  "blaze_powder_refill": true
+                  "blaze_powder_refill": true,
+                  // If true, cauldrons generated in Swamp Huts will have a random potion inside
+                  "fill_swamp_huts_randomly": true
                 }
               },
               

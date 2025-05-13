@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.block.ModBlocks;
 import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.block.Block;
@@ -33,10 +34,9 @@ public abstract class ChunkRegionMixin {
 
     @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;onBlockChanged(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;)V"))
     public void fillWitchCauldron(ServerWorld instance, BlockPos pos, BlockState oldBlock, BlockState newBlock, Operation<Void> original) {
-        if (newBlock.isOf(Blocks.CAULDRON) && this.currentlyGeneratingStructureName != null
+        if (ConfigEntries.fillSwampHutCauldrons && newBlock.isOf(Blocks.CAULDRON) && this.currentlyGeneratingStructureName != null
                 && this.currentlyGeneratingStructureName.get().equals("ResourceKey[minecraft:worldgen/structure / minecraft:swamp_hut]")) {
 
-            Sortilege.log("Found a cauldron at " + pos.toShortString());
             this.setBlockState(pos, ModBlocks.POTION_CAULDRON.getDefaultState().with(LeveledCauldronBlock.LEVEL,
                             MathHelper.randint(LeveledCauldronBlock.MIN_LEVEL, LeveledCauldronBlock.MAX_LEVEL)),
                     Block.REDRAW_ON_MAIN_THREAD, 1);

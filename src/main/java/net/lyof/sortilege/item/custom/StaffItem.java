@@ -327,42 +327,23 @@ public class StaffItem extends ToolItem implements DyeableItem {
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target.getUuidAsString())) {
 
-                    target.damage(damagetype, damage);
-                    if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
-                        server.getServer().getCommandManager().executeWithPrefix(
-                                player.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
-                                this.rawInfos.on_hit_self);
+                    this.triggerAttack(target, player, staff, element, look, true, damage, targetsHit);
 
-                        server.getServer().getCommandManager().executeWithPrefix(
-                                target.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
-                                this.rawInfos.on_hit_target);
-                    }
-
-
-                    if (element != null)
-                        element.triggerAttack(target, ItemHelper.getEnchantLevel(element, staff));
-                    if (element == ModEnchants.BLAST && element_level > 1)
-                        world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
-
-                    if (kinesis != 0)
-                        target.setVelocity(look.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
-
-                    targetsHit.add(target.getUuidAsString());
+                    //targetsHit.add(target.getUuidAsString());
                     targetsLeft--;
                 }
                 index++;
             }
         }
         if (element == ModEnchants.BLAST)
-            world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
+            this.triggerBlastAttack(player, staff, look, damage, x, y, z, 2, targetsHit);
+            //world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
         return staff;
     }
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        World world = attacker.getWorld();
-
         ElementalStaffEnchantment element = null;
         if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
             element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
@@ -372,8 +353,24 @@ public class StaffItem extends ToolItem implements DyeableItem {
             element = (ElementalStaffEnchantment) ModEnchants.BLAST;
         else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
             element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
+
+        this.triggerAttack(target, attacker, stack, element, MathHelper.getLookVector(attacker), true,
+                this.getAttackDamage(stack), new ArrayList<>());
+        return super.postHit(stack, target, attacker);
+    }
+
+    public void triggerAttack(LivingEntity target, LivingEntity attacker, ItemStack stack, @Nullable ElementalStaffEnchantment element,
+                              Vec3d direction, boolean propagate, float damage, List<String> targetsHit) {
+
+        if (targetsHit.contains(target.getUuidAsString())) return;
+
+        World world = attacker.getWorld();
         int element_level = ItemHelper.getEnchantLevel(element, stack);
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
+
+        if (damage > 0)
+            target.damage(attacker.getDamageSources().indirectMagic(attacker, attacker), damage);
+        targetsHit.add(target.getUuidAsString());
 
         if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
             server.getServer().getCommandManager().executeWithPrefix(
@@ -385,15 +382,32 @@ public class StaffItem extends ToolItem implements DyeableItem {
                     this.rawInfos.on_hit_target);
         }
 
+        if (kinesis != 0)
+            target.setVelocity(direction.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
+
         if (element != null)
             element.triggerAttack(target, ItemHelper.getEnchantLevel(element, stack));
-        if (element == ModEnchants.BLAST && element_level > 1)
-            world.createExplosion(attacker, target.getX(), target.getY() + target.getEyeY()/2, target.getZ(), 1, World.ExplosionSourceType.NONE);
+        if (element == ModEnchants.BLAST && element_level > 1 && propagate) {
+            this.triggerBlastAttack(attacker, stack, direction, damage, target.getX(), target.getY() + target.getStandingEyeHeight()/2, target.getZ(),
+                    2, targetsHit);
+        }
+    }
 
-        if (kinesis != 0)
-            target.setVelocity(MathHelper.getLookVector(attacker).add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
+    public void triggerBlastAttack(LivingEntity attacker, ItemStack stack, Vec3d direction, float damage,
+                                   double x, double y, double z, double radius, List<String> targetsHit) {
 
-        return super.postHit(stack, target, attacker);
+        if (attacker.getWorld().isClient())
+            attacker.getWorld().createExplosion(attacker, x, y, z, 1, World.ExplosionSourceType.NONE);
+
+        Vec3d pos = new Vec3d(x, y, z);
+        Vec3d offset = new Vec3d(radius, radius, radius);
+
+        for (Entity entity : attacker.getWorld().getOtherEntities(attacker, new Box(pos.subtract(offset), pos.add(offset)))) {
+            if (entity instanceof LivingEntity living) {
+                this.triggerAttack(living, attacker, stack, (ElementalStaffEnchantment) ModEnchants.BLAST, direction,
+                        false, damage, targetsHit);
+            }
+        }
     }
 
     @Override

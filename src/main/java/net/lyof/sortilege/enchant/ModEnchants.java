@@ -64,8 +64,10 @@ public class ModEnchants {
                     List.of(new float[]{0.7f, 0.7f, 1f},
                             new float[]{0.8f, 0.9f, 1f}),
                     (target, level) -> {
-                if (target.isOnFire())
-                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, level-1));
+                if (target.isOnFire()) {
+                    target.extinguish();
+                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, level));
+                }
                 target.setFrozenTicks(target.getFrozenTicks() + 160*level);
             }));
     public static Enchantment BLAST = register("blast",

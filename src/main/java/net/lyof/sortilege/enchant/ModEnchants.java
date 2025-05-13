@@ -9,6 +9,7 @@ import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.enchant.staff.StaffEnchantment;
 import net.lyof.sortilege.enchant.weapon.ArcaneEnchantment;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.registry.Registries;
@@ -37,17 +38,19 @@ public class ModEnchants {
     public static Enchantment CHAINING = register("chaining",
             new StaffEnchantment(Enchantment.Rarity.COMMON, 3));
     public static Enchantment WISDOM = register("wisdom",
-            new StaffEnchantment(Enchantment.Rarity.RARE, 2));
+            new StaffEnchantment(Enchantment.Rarity.RARE, 2,
+                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.focus")));
 
     public static Enchantment PUSH = register("push",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, (candidate) -> !candidate.getTranslationKey().equals("enchantment.sortilege.pull")));
+                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.pull")));
     public static Enchantment PULL = register("pull",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, (candidate) -> !candidate.getTranslationKey().equals("enchantment.sortilege.push")));
+                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.push")));
 
     public static Enchantment FOCUS = register("focus",
-            new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 5));
+            new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 5,
+                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.wisdom")));
 
 
     public static Enchantment BRAZIER = register("brazier",

@@ -63,7 +63,7 @@ public class ModEnchants {
                     (target, level) -> {
                 if (target.isOnFire())
                     target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, level-1));
-                target.setFrozenTicks(target.getFrozenTicks() + 150*level);
+                target.setFrozenTicks(target.getFrozenTicks() + 160*level);
             }));
     public static Enchantment BLAST = register("blast",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,

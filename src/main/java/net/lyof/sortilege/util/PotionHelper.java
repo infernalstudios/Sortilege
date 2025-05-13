@@ -6,6 +6,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -39,5 +40,9 @@ public class PotionHelper {
 
     public static Potion getDefaultPotion(Potion potion) {
         return potion.getEffects().size() >= 1 ? getDefaultPotion(potion.getEffects().get(0).getEffectType()) : Potions.EMPTY;
+    }
+
+    public static Potion getRandomPotion() {
+        return MathHelper.randi(new ArrayList<>(POTIONS.values()));
     }
 }

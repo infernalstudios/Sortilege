@@ -7,6 +7,7 @@
     "BrewingRecipeRegistryMixin",
     "BrewingStandBlockEntityMixin",
     "BrewingStandScreenHandlerMixin",
+    "ChunkRegionMixin",
     "CraftingScreenHandlerMixin",
     "DamageEnchantmentMixin",
     "DamageSourcesMixin",

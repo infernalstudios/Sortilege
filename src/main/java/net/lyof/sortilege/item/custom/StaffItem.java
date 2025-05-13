@@ -134,16 +134,16 @@ public class StaffItem extends ToolItem implements DyeableItem {
 
     private static final String OVERCHARGE_NBT = Sortilege.MOD_ID +  "Overcharge";
 
-    public static int getOvercharge(ItemStack stack) {
+    public int getOvercharge(ItemStack stack) {
         if (!stack.hasNbt()) return 0;
         return stack.getOrCreateNbt().getInt(OVERCHARGE_NBT);
     }
 
-    public static void setOvercharge(ItemStack stack, int value) {
-        stack.getOrCreateNbt().putInt(OVERCHARGE_NBT, Math.min(value, getMaxOvercharge(stack)));
+    public void setOvercharge(ItemStack stack, int value) {
+        stack.getOrCreateNbt().putInt(OVERCHARGE_NBT, Math.min(value, this.getMaxOvercharge(stack)));
     }
 
-    public static int getMaxOvercharge(ItemStack stack) {
+    public int getMaxOvercharge(ItemStack stack) {
         return ConfigEntries.maxOvercharge;
     }
 
@@ -192,7 +192,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     public int getOverchargeBarStep(ItemStack stack) {
-        return Math.round(getOvercharge(stack) * 13.0F / (float) getMaxOvercharge(stack));
+        return Math.round(this.getOvercharge(stack) * 13.0F / (float) this.getMaxOvercharge(stack));
     }
 
 
@@ -201,9 +201,9 @@ public class StaffItem extends ToolItem implements DyeableItem {
         if (clickType != ClickType.RIGHT) return false;
 
         String id = Registries.ITEM.getId(other.getItem()).toString();
-        if (ConfigEntries.overchargeIngredients.containsKey(id) && getOvercharge(stack) < getMaxOvercharge(stack)) {
+        if (ConfigEntries.overchargeIngredients.containsKey(id) && getOvercharge(stack) < this.getMaxOvercharge(stack)) {
             other.decrement(1);
-            setOvercharge(stack, getOvercharge(stack) + ConfigEntries.overchargeIngredients.get(id).intValue());
+            this.setOvercharge(stack, this.getOvercharge(stack) + ConfigEntries.overchargeIngredients.get(id).intValue());
 
             return true;
         }
@@ -213,7 +213,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
     @Override
     public @NotNull TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity player, @NotNull Hand hand) {
         ItemStack staff = player.getStackInHand(hand);
-        if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)))
+        if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)) && this.getOvercharge(staff) <= 0)
             return super.use(world, player, hand);
 
         this.handSave = hand;
@@ -245,7 +245,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, staff) - ItemHelper.getEnchantLevel(ModEnchants.PULL, staff);
 
 
-        if (cost > 0 && !player.isCreative() && !(getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {
+        if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {
             if (!XPHelper.hasXP(player, cost))
                 return staff;
             player.addExperience(-cost);
@@ -257,10 +257,10 @@ public class StaffItem extends ToolItem implements DyeableItem {
         world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
         player.getItemCooldownManager().set(staff.getItem(), this.getCooldown(staff, player));
 
-        if (getOvercharge(staff) <= 0 || !ConfigEntries.overchargePreventsDurability)
+        if (this.getOvercharge(staff) <= 0 || !ConfigEntries.overchargePreventsDurability)
             staff.damage(1, player, e -> e.sendToolBreakStatus(this.handSave));
-        if (getOvercharge(staff) > 0)
-            setOvercharge(staff, getOvercharge(staff) - 1);
+        if (this.getOvercharge(staff) > 0)
+            this.setOvercharge(staff, this.getOvercharge(staff) - 1);
 
 
         // Getting the look vector to shoot the ray along

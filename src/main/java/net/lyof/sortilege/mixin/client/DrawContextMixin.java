@@ -18,7 +18,7 @@ public abstract class DrawContextMixin {
     @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;pop()V", shift = At.Shift.BEFORE))
     public void drawOverchargeBar(TextRenderer textRenderer, ItemStack stack, int x, int y, String countOverride, CallbackInfo ci) {
-        if (stack.getItem() instanceof StaffItem staff && StaffItem.getOvercharge(stack) > 0) {
+        if (stack.getItem() instanceof StaffItem staff && staff.getOvercharge(stack) > 0) {
             int i = staff.getOverchargeBarStep(stack);
             int j = staff.getOverchargeBarColor(stack);
             this.fill(RenderLayer.getGuiOverlay(), x + 2, y + 14, x + 15, y + 15, -16777216);

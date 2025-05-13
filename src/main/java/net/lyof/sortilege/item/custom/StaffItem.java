@@ -23,6 +23,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
@@ -97,9 +98,10 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     private int getCooldown(ItemStack stack, PlayerEntity player) {
-        float multiplier = 1;
+        float multiplier = 1 - ItemHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
         if (stack.isIn(ModTags.Items.XP_BOOSTED))
             multiplier -= player.experienceLevel / 200f;
+        multiplier = Math.max(multiplier, 0);
         return (int) (this.cooldown * multiplier);
     }
 
@@ -110,13 +112,16 @@ public class StaffItem extends ToolItem implements DyeableItem {
         float[] color = new float[]{ColorHelper.Argb.getRed(rgb) / 255f,
                 ColorHelper.Argb.getGreen(rgb) / 255f,
                 ColorHelper.Argb.getBlue(rgb) / 255f};
+
         if (rgb == 10511680) {
             if (element != null)
                 result.addAll(element.colors);
-            if (stack.hasEnchantments())
-                result.add(new float[]{0.7f, 0f, 1f});
             if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
                 result.addAll(this.rawInfos.colors);
+            if (result.isEmpty())
+                result.add(COLOR_NONE);
+            if (stack.hasEnchantments())
+                result.add(new float[]{0.7f, 0f, 1f});
         }
         else {
             for (int i = 0 ; i < 5; i++) {
@@ -125,9 +130,6 @@ public class StaffItem extends ToolItem implements DyeableItem {
                         (float) (color[2] + Math.random()*0.1 - 0.05)});
             }
         }
-
-        if (result.isEmpty())
-            result.add(COLOR_NONE);
 
         return result;
     }
@@ -165,9 +167,21 @@ public class StaffItem extends ToolItem implements DyeableItem {
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-            builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(), "Weapon modifier", this.getAttackDamage(stack), EntityAttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(), "Weapon modifier", this.getPierce(stack), EntityAttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(), "Weapon modifier", this.getAttackRange(stack), EntityAttributeModifier.Operation.ADDITION));
+
+            if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
+                builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID,
+                        "Weapon modifier", this.getAttackDamage(stack)-1, EntityAttributeModifier.Operation.ADDITION));
+                builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID,
+                        "Weapon modifier", -2.4, EntityAttributeModifier.Operation.ADDITION));
+            }
+
+            builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(),
+                    "Weapon modifier", this.getAttackDamage(stack), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(),
+                    "Weapon modifier", this.getPierce(stack), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(),
+                    "Weapon modifier", this.getAttackRange(stack), EntityAttributeModifier.Operation.ADDITION));
+
             return builder.build();
         }
         return super.getAttributeModifiers(slot);
@@ -331,7 +345,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
                         world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
                     if (kinesis != 0)
-                        target.setVelocity(look.add(0, 0.07, 0).normalize().multiply(kinesis * 0.6));
+                        target.setVelocity(look.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
 
                     targetsHit.add(target.getUuidAsString());
                     targetsLeft--;
@@ -343,6 +357,43 @@ public class StaffItem extends ToolItem implements DyeableItem {
             world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
         return staff;
+    }
+
+    @Override
+    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+        World world = attacker.getWorld();
+
+        ElementalStaffEnchantment element = null;
+        if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
+            element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
+        else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, stack))
+            element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD;
+        else if (ItemHelper.hasEnchant(ModEnchants.BLAST, stack))
+            element = (ElementalStaffEnchantment) ModEnchants.BLAST;
+        else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
+            element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
+        int element_level = ItemHelper.getEnchantLevel(element, stack);
+        float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
+
+        if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
+            server.getServer().getCommandManager().executeWithPrefix(
+                    attacker.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
+                    this.rawInfos.on_hit_self);
+
+            server.getServer().getCommandManager().executeWithPrefix(
+                    target.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
+                    this.rawInfos.on_hit_target);
+        }
+
+        if (element != null)
+            element.triggerAttack(target, ItemHelper.getEnchantLevel(element, stack));
+        if (element == ModEnchants.BLAST && element_level > 1)
+            world.createExplosion(attacker, target.getX(), target.getY() + target.getEyeY()/2, target.getZ(), 1, World.ExplosionSourceType.NONE);
+
+        if (kinesis != 0)
+            target.setVelocity(MathHelper.getLookVector(attacker).add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
+
+        return super.postHit(stack, target, attacker);
     }
 
     @Override

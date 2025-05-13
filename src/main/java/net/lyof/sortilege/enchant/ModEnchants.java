@@ -46,6 +46,9 @@ public class ModEnchants {
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     null, (candidate) -> !candidate.getTranslationKey().equals("enchantment.sortilege.push")));
 
+    public static Enchantment FOCUS = register("focus",
+            new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 5));
+
 
     public static Enchantment BRAZIER = register("brazier",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
@@ -57,7 +60,11 @@ public class ModEnchants {
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     List.of(new float[]{0.7f, 0.7f, 1f},
                             new float[]{0.8f, 0.9f, 1f}),
-                    (target, level) -> target.setFrozenTicks(target.getFrozenTicks() + 150*level)));
+                    (target, level) -> {
+                if (target.isOnFire())
+                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, level-1));
+                target.setFrozenTicks(target.getFrozenTicks() + 150*level);
+            }));
     public static Enchantment BLAST = register("blast",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     List.of(new float[]{0.5f, 0.25f, 0f},
@@ -74,6 +81,9 @@ public class ModEnchants {
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level, 1));
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40 * level, 1));
             }));
+
+    public static Enchantment BONK = register("bonk",
+            new StaffEnchantment(Enchantment.Rarity.RARE, 1));
 
     public static Enchantment IGNORANCE_CURSE = register("ignorance_curse",
             new CurseStaffEnchantment(Enchantment.Rarity.RARE));

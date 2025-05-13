@@ -1,5 +1,6 @@
 package net.lyof.sortilege.util;
 
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
@@ -9,12 +10,12 @@ import java.util.Random;
 public class MathHelper {
     public static final Random rnd = new Random();
 
-    public static Vec3d getLookVector(PlayerEntity player) {
-        double y = Math.sin(-player.getPitch() * Math.PI / 180);
-        double nullifier = Math.cos(player.getPitch() * Math.PI / 180);
+    public static Vec3d getLookVector(LivingEntity entity) {
+        double y = Math.sin(-entity.getPitch() * Math.PI / 180);
+        double nullifier = Math.cos(entity.getPitch() * Math.PI / 180);
 
-        double x = Math.sin(-player.getYaw() * Math.PI / 180) * nullifier;
-        double z = Math.cos( player.getYaw() * Math.PI / 180) * nullifier;
+        double x = Math.sin(-entity.getYaw() * Math.PI / 180) * nullifier;
+        double z = Math.cos( entity.getYaw() * Math.PI / 180) * nullifier;
 
         return new Vec3d(x, y, z);
     }

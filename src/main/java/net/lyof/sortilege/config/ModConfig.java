@@ -311,6 +311,7 @@ public class ModConfig {
                   "potency": true,
                   "stability": true,
                   "chaining": true,
+                  "focus": true,
                   "wisdom": true,
                   "push": true,
                   "pull": true,
@@ -318,6 +319,7 @@ public class ModConfig {
                   "blizzard": true,
                   "blast": true,
                   "blitz": true,
+                  "bonk": true,
                   "ignorance_curse": true,
                   
                   "magic_protection": true,

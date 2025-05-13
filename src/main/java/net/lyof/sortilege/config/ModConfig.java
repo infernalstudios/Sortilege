@@ -524,7 +524,7 @@ public class ModConfig {
                   {
                     "golden_staff": {
                       "tier": "GOLD",
-                      "damage": 3,
+                      "damage": 2,
                       "pierce": 2,
                       "range": 14,
                       "cooldown": 15

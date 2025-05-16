@@ -5,6 +5,7 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
 
 public class ModItemGroups {
     public static void register() {
@@ -12,10 +13,11 @@ public class ModItemGroups {
             entries.add(ModItems.LIMITITE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
+            entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);
             for (Item staff : ModItems.STAFFS)
                 entries.add(staff);
             if (ConfigEntries.witchHatEnabled) entries.add(ModItems.WITCH_HAT);
-            AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
+            //AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
             AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);

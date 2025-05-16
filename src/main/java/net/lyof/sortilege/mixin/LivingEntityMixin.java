@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
@@ -29,11 +30,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LivingEntityMixin extends Entity {
     @Shadow @Nullable protected PlayerEntity attackingPlayer;
 
-    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot var1);
+    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 
     @Shadow public abstract Iterable<ItemStack> getArmorItems();
 
     @Shadow public abstract boolean damage(DamageSource source, float amount);
+
+    @Shadow public abstract ItemStack getOffHandStack();
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -126,5 +129,15 @@ public abstract class LivingEntityMixin extends Entity {
         if (ModEnchants.MAGIC_PROTECTION != null && ConfigEntries.betterMagicProt && Math.random() <=
                 0.05 * EnchantmentHelper.getEquipmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);
+    }
+
+    @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
+    public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
+        ItemStack stack = this.getOffHandStack();
+        if (((LivingEntity) (Object) this) instanceof PlayerEntity player && stack.isOf(ModItems.LAPIS_SHIELD) &&
+                Math.abs(0.5 - player.getItemCooldownManager().getCooldownProgress(stack.getItem(), 0)) > 0.45) {
+            LapisShieldItem.putOnCooldown(stack, player);
+            cir.setReturnValue(true);
+        }
     }
 }

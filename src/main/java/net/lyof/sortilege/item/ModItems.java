@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.LimititeItem;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.item.custom.armor.ModArmorMaterials;
@@ -43,4 +44,7 @@ public class ModItems {
 
     public static final Item WITCH_HAT = ConfigEntries.witchHatEnabled ? register("witch_hat",
             new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings())) : Items.AIR;
+
+    public static final Item LAPIS_SHIELD = register("lapis_shield",
+            new LapisShieldItem(new FabricItemSettings().maxCount(1)));
 }

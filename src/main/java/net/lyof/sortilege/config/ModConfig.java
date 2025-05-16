@@ -415,7 +415,10 @@ public class ModConfig {
                   // If true, dropping blaze powder into a cauldron containing potion will increment its fluid level by 1 (up to 3)
                   "blaze_powder_refill": true,
                   // If true, cauldrons generated in Swamp Huts will have a random potion inside
-                  "fill_swamp_huts_randomly": true
+                  "fill_swamp_huts_randomly": true,
+                  // A list of effect ids that are not allowed to generate in swamp huts
+                  "swamp_hut_blacklist": [
+                  ]
                 }
               },
               

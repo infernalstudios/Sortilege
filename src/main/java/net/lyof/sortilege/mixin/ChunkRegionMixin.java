@@ -35,7 +35,8 @@ public abstract class ChunkRegionMixin {
     @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;onBlockChanged(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;)V"))
     public void fillWitchCauldron(ServerWorld instance, BlockPos pos, BlockState oldBlock, BlockState newBlock, Operation<Void> original) {
         if (ConfigEntries.fillSwampHutCauldrons && newBlock.isOf(Blocks.CAULDRON) && this.currentlyGeneratingStructureName != null
-                && this.currentlyGeneratingStructureName.get().equals("ResourceKey[minecraft:worldgen/structure / minecraft:swamp_hut]")) {
+                && this.currentlyGeneratingStructureName.get().equals("ResourceKey[minecraft:worldgen/structure / minecraft:swamp_hut]")
+                && !PotionHelper.GEN_ALLOWED_POTIONS.isEmpty()) {
 
             this.setBlockState(pos, ModBlocks.POTION_CAULDRON.getDefaultState().with(LeveledCauldronBlock.LEVEL,
                             MathHelper.randint(LeveledCauldronBlock.MIN_LEVEL, LeveledCauldronBlock.MAX_LEVEL)),

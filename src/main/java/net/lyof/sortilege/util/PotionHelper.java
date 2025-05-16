@@ -6,13 +6,11 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class PotionHelper {
     public static final Map<StatusEffect, Potion> POTIONS = new HashMap<>();
+    public static final List<Potion> GEN_ALLOWED_POTIONS = new ArrayList<>();
 
     public static void load() {
         for (Potion potion : Registries.POTION) {
@@ -20,8 +18,7 @@ public class PotionHelper {
                     potion.getEffects().size() == 1 &&
                     !potion.hasInstantEffect() &&
                     potion.getEffects().get(0).getAmplifier() == 0 &&
-                    !ConfigEntries.antidoteBlacklist.contains(
-                            Objects.requireNonNull(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType())).toString())) {
+                    !ConfigEntries.antidoteBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString())) {
 
                 StatusEffect effect = potion.getEffects().get(0).getEffectType();
                 int duration = potion.getEffects().get(0).getDuration();
@@ -32,6 +29,12 @@ public class PotionHelper {
                     POTIONS.replace(effect, potion);
             }
         }
+
+        GEN_ALLOWED_POTIONS.clear();
+        for (Potion potion : POTIONS.values()) {
+            if (!ConfigEntries.swampHutBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString()))
+                GEN_ALLOWED_POTIONS.add(potion);
+        }
     }
 
     public static Potion getDefaultPotion(StatusEffect effect) {
@@ -39,10 +42,10 @@ public class PotionHelper {
     }
 
     public static Potion getDefaultPotion(Potion potion) {
-        return potion.getEffects().size() >= 1 ? getDefaultPotion(potion.getEffects().get(0).getEffectType()) : Potions.EMPTY;
+        return !potion.getEffects().isEmpty() ? getDefaultPotion(potion.getEffects().get(0).getEffectType()) : Potions.EMPTY;
     }
 
     public static Potion getRandomPotion() {
-        return MathHelper.randi(new ArrayList<>(POTIONS.values()));
+        return MathHelper.randi(GEN_ALLOWED_POTIONS);
     }
 }

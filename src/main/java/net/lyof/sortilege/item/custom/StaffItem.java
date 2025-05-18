@@ -342,18 +342,20 @@ public class StaffItem extends ToolItem implements DyeableItem {
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        ElementalStaffEnchantment element = null;
-        if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
-            element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
-        else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, stack))
-            element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD;
-        else if (ItemHelper.hasEnchant(ModEnchants.BLAST, stack))
-            element = (ElementalStaffEnchantment) ModEnchants.BLAST;
-        else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
-            element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
+        if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
+            ElementalStaffEnchantment element = null;
+            if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
+                element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
+            else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, stack))
+                element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD;
+            else if (ItemHelper.hasEnchant(ModEnchants.BLAST, stack))
+                element = (ElementalStaffEnchantment) ModEnchants.BLAST;
+            else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
+                element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
 
-        this.triggerAttack(target, attacker, stack, element, MathHelper.getLookVector(attacker), true,
-                this.getAttackDamage(stack), new ArrayList<>());
+            this.triggerAttack(target, attacker, stack, element, MathHelper.getLookVector(attacker), true,
+                    this.getAttackDamage(stack), new ArrayList<>());
+        }
         return super.postHit(stack, target, attacker);
     }
 

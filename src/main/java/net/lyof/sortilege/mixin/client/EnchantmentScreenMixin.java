@@ -1,6 +1,10 @@
 package net.lyof.sortilege.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.util.IMixinAccess;
 import net.minecraft.client.gui.DrawContext;
@@ -9,6 +13,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.EnchantmentScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -32,6 +37,14 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
             if (((IMixinAccess) this.handler).getProperty(k) == 1)
                 context.drawTexture(CATALYST_TEXTURE, i + 60, j + 14 + 19 * k, 36, 0, 108, 19);
         }
+
+        if (((IMixinAccess) this.handler).getProperty(3) == 1 && ConfigEntries.overrideDefaultEnchanting
+                && ((IMixinAccess) this.handler).getProperty(4) == 0
+                && this.isPointWithinBounds(60, 14, 108, 57, mouseX, mouseY)) {
+
+            context.drawTooltip(this.textRenderer, Text.translatable("sortilege.enchanting.requires_catalyst").formatted(Formatting.RED),
+                    mouseX, mouseY);
+        }
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/EnchantmentScreen;drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.BEFORE))
@@ -49,5 +62,14 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         context.getMatrices().translate(0, 0, 200);
         context.drawTexture(CATALYST_TEXTURE, i + 24, j + 19, x, y, 18, 18);
         context.getMatrices().pop();
+    }
+
+    @WrapOperation(method = "doTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
+    public float forceRenderBook(float value, float min, float max, Operation<Float> original) {
+        if (((IMixinAccess) this.handler).getProperty(3) == 1 && this.handler.enchantmentPower[0] == 0
+                && this.handler.enchantmentPower[1] == 0 && this.handler.enchantmentPower[2] == 0)
+            value += 0.4f;
+
+        return original.call(value, min, max);
     }
 }

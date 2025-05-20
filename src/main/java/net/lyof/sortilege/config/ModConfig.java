@@ -284,10 +284,12 @@ public class ModConfig {
                   // If this is set to false and no catalyst is loaded from datapacks, the module will be disabled
                   "allow_books": true,
                   // Chance (0 - 1) for non book catalysts to activate for each option in the enchanting table
-                  "catalyst_activation_chance": 0.5,
-                  
+                  "activation_chance": 0.5,
                   // Should items usable as catalysts display it in their tooltip
-                  "show_in_tooltip": true
+                  "show_in_tooltip": true,
+                  
+                  // If true, the default enchant logic will be removed, meaning a catalyst *must* be used in order to get enchants at an enchanting table
+                  "override_default_enchanting": false
                 },
                 
                 // Allow using Enchanted Books on items in inventory

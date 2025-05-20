@@ -7,6 +7,8 @@
   "sortilege.crafting.requires_level": "You need at least %s levels!",
   "sortilege.crafting.requires_advancement": "You need to have completed %s!",
 
+  "sortilege.enchanting.requires_catalyst": "You must use a catalyst!",
+
   "tag.item.sortilege.is_limit_break_material": "Limit Break Material",
   "tag.item.sortilege.is_soulbind_material": "Soulbinding Material",
   "tag.item.sortilege.unbreakable": "Unbreakable",

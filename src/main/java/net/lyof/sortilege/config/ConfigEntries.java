@@ -76,16 +76,16 @@ public class ConfigEntries {
         fillSwampHutCauldrons = new ConfigEntry<>("brewing.cauldron.fill_swamp_huts_randomly", true).get();
         swampHutBlacklist = new ConfigEntry<List<String>>("brewing.cauldron.swamp_hut_blacklist", List.of()).get();
 
-        maxOvercharge = new ConfigEntry<>("staffs.overcharge.max_overcharge", 20).get();
-        overchargeColor = new ConfigEntry<>("staffs.overcharge.bar_color", "#0000ff").get();
-        overchargePreventsDurability = new ConfigEntry<>("staffs.overcharge.free_durability", true).get();
-        overchargePreventsExperience = new ConfigEntry<>("staffs.overcharge.free_experience", true).get();
-        overchargeIngredients = new ConfigEntry<Map<String, Double>>("staffs.overcharge.ingredients", Map.of()).get();
+        maxOvercharge = new ConfigEntry<>("equipment.staffs.overcharge.max_overcharge", 20).get();
+        overchargeColor = new ConfigEntry<>("equipment.staffs.overcharge.bar_color", "#0000ff").get();
+        overchargePreventsDurability = new ConfigEntry<>("equipment.staffs.overcharge.free_durability", true).get();
+        overchargePreventsExperience = new ConfigEntry<>("equipment.staffs.overcharge.free_experience", true).get();
+        overchargeIngredients = new ConfigEntry<Map<String, Double>>("equipment.staffs.overcharge.ingredients", Map.of()).get();
 
-        staffsDefaultCost = new ConfigEntry<>("staffs.default_xp_cost", 0).get();
-        staffsDefaultCharge = new ConfigEntry<>("staffs.default_charge_time", 1).get();
+        staffsDefaultCost = new ConfigEntry<>("equipment.staffs.default_xp_cost", 0).get();
+        staffsDefaultCharge = new ConfigEntry<>("equipment.staffs.default_charge_time", 1).get();
 
-        staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("staffs.entries", List.of()).get();
+        staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("equipment.staffs.entries", List.of()).get();
     }
 
     public static int enchantLimiterDefault;

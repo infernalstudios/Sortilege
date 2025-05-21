@@ -231,7 +231,7 @@ public class ModConfig {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 1.8,
+                "VERSION_DO_NOT_EDIT": 2.0,
                 "FORCE_RESET": false
               },
               
@@ -424,203 +424,209 @@ public class ModConfig {
                 }
               },
               
-              // CATEGORY: STAFFS
-              "staffs": {
-                "overcharge": {
-                  // Maximal overcharge a staff can hold at any given time
-                  "max_overcharge": 20,
-                  // Color for the overcharge bar. Hexadecimal format
-                  "bar_color": "#0000ff",
-                  // Should overcharged staffs not use durability
-                  "free_durability": true,
-                  // Should overcharged staffs not use experience
-                  "free_experience": true,
-                  // Which items can be used to overcharge staffs. Must be formatted as "modid:itemid": value
-                  "ingredients": {
-                    "minecraft:lapis_lazuli": 2,
-                    "minecraft:lapis_block": 20
-                  }
+              // CATEGORY: EQUIPMENT
+              "equipment": {
+                "lapis_shield": {
                 },
               
-                // Amount of xp points needed to use a staff, if not set
-                "default_xp_cost": 0,
-                // Time staffs need to be held down (in ticks) before shooting, if not set
-                "default_charge_time": 1,
-                "entries": [
-                  {
-                    // Example entry, not loaded in game as it's only for demonstration purposes
-                    "example_staff": {
-                      // Sets the repair material and the durability if not set
-                      "tier": "GOLD",
-                      // Staff's enchantability on the Enchanting Table. Defaults to the tier's
-                      "enchantability": 22,
-                      // Half hearts of damage the staff deals
-                      "damage": 5,
-                      // Maximal number of targets the staff can pierce through
-                      "pierce": 2,
-                      // Range of the staff, in half blocks
-                      "range": 10,
-                      // Durability of the staff. Defaults to tier's
-                      "durability": 512,
-                      // Item to be used to repair the staff. Defaults to the tier's
-                      "repair_item": "minecraft:obsidian",
-                      // Amount of ticks to wait for between each shots
-                      "cooldown": 20,
-                      // Amount of ticks of casting to shoot. Defaults to default_charge_time above
-                      "charge_time": 1,
-                      // Amount of xp points needed to shoot. Defaults to default_xp_cost above
-                      "xp_cost": 0,
-                      // Custom RGB colors to be used for the staff's beam. If unset, the beam will be white unless the staff has enchantments
-                      "beam_color": [
-                        [0.5, 0, 0],
-                        [0, 0.5, 0],
-                        [0, 0, 0.5]
-                      ],
-                      // Whether the staff is resistant to fire like Netherite items. Defaults to false
-                      "fire_res": true,
-                      // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft
-                      "dependency": "nah",
-                      // Commands to be run when using the staff
-                      "on_shoot": "/give @s minecraft:lapis_lazuli",
-                      "on_hit_self": "/effect give @s minecraft:regeneration",
-                      "on_hit_target": "/tp @s ~ ~2 ~"
+                // CATEGORY: STAFFS
+                "staffs": {
+                  "overcharge": {
+                    // Maximal overcharge a staff can hold at any given time
+                    "max_overcharge": 20,
+                    // Color for the overcharge bar. Hexadecimal format
+                    "bar_color": "#0000ff",
+                    // Should overcharged staffs not use durability
+                    "free_durability": true,
+                    // Should overcharged staffs not use experience
+                    "free_experience": true,
+                    // Which items can be used to overcharge staffs. Must be formatted as "modid:itemid": value
+                    "ingredients": {
+                      "minecraft:lapis_lazuli": 2,
+                      "minecraft:lapis_block": 20
                     }
                   },
-                  // Actual staffs
-                  {
-                    "wooden_staff": {
-                      "tier": "WOOD",
-                      "damage": 3,
-                      "pierce": 1,
-                      "range": 6,
-                      "cooldown": 20
+                
+                  // Amount of xp points needed to use a staff, if not set
+                  "default_xp_cost": 0,
+                  // Time staffs need to be held down (in ticks) before shooting, if not set
+                  "default_charge_time": 1,
+                  "entries": [
+                    {
+                      // Example entry, not loaded in game as it's only for demonstration purposes
+                      "example_staff": {
+                        // Sets the repair material and the durability if not set
+                        "tier": "GOLD",
+                        // Staff's enchantability on the Enchanting Table. Defaults to the tier's
+                        "enchantability": 22,
+                        // Half hearts of damage the staff deals
+                        "damage": 5,
+                        // Maximal number of targets the staff can pierce through
+                        "pierce": 2,
+                        // Range of the staff, in half blocks
+                        "range": 10,
+                        // Durability of the staff. Defaults to tier's
+                        "durability": 512,
+                        // Item to be used to repair the staff. Defaults to the tier's
+                        "repair_item": "minecraft:obsidian",
+                        // Amount of ticks to wait for between each shots
+                        "cooldown": 20,
+                        // Amount of ticks of casting to shoot. Defaults to default_charge_time above
+                        "charge_time": 1,
+                        // Amount of xp points needed to shoot. Defaults to default_xp_cost above
+                        "xp_cost": 0,
+                        // Custom RGB colors to be used for the staff's beam. If unset, the beam will be white unless the staff has enchantments
+                        "beam_color": [
+                          [0.5, 0, 0],
+                          [0, 0.5, 0],
+                          [0, 0, 0.5]
+                        ],
+                        // Whether the staff is resistant to fire like Netherite items. Defaults to false
+                        "fire_res": true,
+                        // Mod needed to be loaded for the staff to appear in game. Defaults to minecraft
+                        "dependency": "nah",
+                        // Commands to be run when using the staff
+                        "on_shoot": "/give @s minecraft:lapis_lazuli",
+                        "on_hit_self": "/effect give @s minecraft:regeneration",
+                        "on_hit_target": "/tp @s ~ ~2 ~"
+                      }
+                    },
+                    // Actual staffs
+                    {
+                      "wooden_staff": {
+                        "tier": "WOOD",
+                        "damage": 3,
+                        "pierce": 1,
+                        "range": 6,
+                        "cooldown": 20
+                      }
+                    },
+                    {
+                      "stone_staff": {
+                        "tier": "STONE",
+                        "damage": 4,
+                        "pierce": 1,
+                        "range": 8,
+                        "cooldown": 25
+                      }
+                    },
+                    {
+                      "iron_staff": {
+                        "tier": "IRON",
+                        "damage": 5,
+                        "pierce": 1,
+                        "range": 10,
+                        "cooldown": 20
+                      }
+                    },
+                    {
+                      "crystalline_staff": {
+                        "tier": "GOLD",
+                        "enchantability": 19,
+                        "damage": 4,
+                        "pierce": 3,
+                        "range": 10,
+                        "cooldown": 20,
+                        "durability": 612,
+                        "repair_item": "phantasm:crystal_shard",
+                        "dependency": "phantasm"
+                        // XP speed boost handled by the native Phantasm tag
+                      }
+                    },
+                    {
+                      "golden_staff": {
+                        "tier": "GOLD",
+                        "damage": 2,
+                        "pierce": 2,
+                        "range": 14,
+                        "cooldown": 15
+                      }
+                    },
+                    {
+                      "diamond_staff": {
+                        "tier": "DIAMOND",
+                        "damage": 5,
+                        "pierce": 2,
+                        "range": 12,
+                        "cooldown": 20
+                      }
+                    },
+                    {
+                      "gripcrystal_staff": {
+                        "tier": "DIAMOND",
+                        "damage": 5,
+                        "pierce": 2,
+                        "range": 12,
+                        "cooldown": 15,
+                        "repair_item": "unseen_world:gripcrystal",
+                        "dependency": "unseen_world",
+                        "beam_color": [
+                          [0.25, 0, 1],
+                          [0.35, 0.25, 1]
+                        ]
+                      }
+                    },
+                    {
+                      "spawner_staff": {
+                        "tier": "DIAMOND",
+                        "damage": 4,
+                        "pierce": 3,
+                        "range": 14,
+                        "cooldown": 25,
+                        "durability": 1562,
+                        "repair_item": "dungeonnowloading:spawner_blade",
+                        "dependency": "dungeonnowloading",
+                        "on_hit_self": "/effect give @s minecraft:regeneration 4 0 true",
+                        "beam_color": [
+                          [0.5, 0.2, 0.5],
+                          [0.4, 0.1, 0.4],
+                          [0.25, 0, 0.25]
+                        ]
+                      }
+                    },
+                    {
+                      "netherite_staff": {
+                        "tier": "NETHERITE",
+                        "damage": 6,
+                        "pierce": 3,
+                        "range": 16,
+                        "fire_resistant": true,
+                        "cooldown": 25
+                      }
+                    },
+                    {
+                      "electrum_staff": {
+                        "tier": "NETHERITE",
+                        "durability": 1561,
+                        "repair_item": "oreganized:electrum_ingot",
+                        "enchantability": 14,
+                        "damage": 4,
+                        "pierce": 3,
+                        "range": 16,
+                        "cooldown": 20,
+                        "dependency": "oreganized",
+                        "on_shoot": "/effect give @s minecraft:speed 5 0",
+                        "on_hit_self": "/effect give @s minecraft:haste 3 0"
+                      }
+                    },
+                    {
+                      "pearlescent_staff": {
+                        "tier": "NETHERITE",
+                        "damage": 7,
+                        "pierce": 1,
+                        "range": 20,
+                        "cooldown": 25,
+                        "repair_item": "unusualend:pearlescent_ingot",
+                        "dependency": "unusualend",
+                        "on_shoot": "/effect give @s minecraft:speed 3 0 true",
+                        "beam_color": [
+                          [0.5, 0, 0.75],
+                          [0.75, 0.25, 1]
+                        ]
+                      }
                     }
-                  },
-                  {
-                    "stone_staff": {
-                      "tier": "STONE",
-                      "damage": 4,
-                      "pierce": 1,
-                      "range": 8,
-                      "cooldown": 25
-                    }
-                  },
-                  {
-                    "iron_staff": {
-                      "tier": "IRON",
-                      "damage": 5,
-                      "pierce": 1,
-                      "range": 10,
-                      "cooldown": 20
-                    }
-                  },
-                  {
-                    "crystalline_staff": {
-                      "tier": "GOLD",
-                      "enchantability": 19,
-                      "damage": 4,
-                      "pierce": 3,
-                      "range": 10,
-                      "cooldown": 20,
-                      "durability": 612,
-                      "repair_item": "phantasm:crystal_shard",
-                      "dependency": "phantasm"
-                      // XP speed boost handled by the native Phantasm tag
-                    }
-                  },
-                  {
-                    "golden_staff": {
-                      "tier": "GOLD",
-                      "damage": 2,
-                      "pierce": 2,
-                      "range": 14,
-                      "cooldown": 15
-                    }
-                  },
-                  {
-                    "diamond_staff": {
-                      "tier": "DIAMOND",
-                      "damage": 5,
-                      "pierce": 2,
-                      "range": 12,
-                      "cooldown": 20
-                    }
-                  },
-                  {
-                    "gripcrystal_staff": {
-                      "tier": "DIAMOND",
-                      "damage": 5,
-                      "pierce": 2,
-                      "range": 12,
-                      "cooldown": 15,
-                      "repair_item": "unseen_world:gripcrystal",
-                      "dependency": "unseen_world",
-                      "beam_color": [
-                        [0.25, 0, 1],
-                        [0.35, 0.25, 1]
-                      ]
-                    }
-                  },
-                  {
-                    "spawner_staff": {
-                      "tier": "DIAMOND",
-                      "damage": 4,
-                      "pierce": 3,
-                      "range": 14,
-                      "cooldown": 25,
-                      "durability": 1562,
-                      "repair_item": "dungeonnowloading:spawner_blade",
-                      "dependency": "dungeonnowloading",
-                      "on_hit_self": "/effect give @s minecraft:regeneration 4 0 true",
-                      "beam_color": [
-                        [0.5, 0.2, 0.5],
-                        [0.4, 0.1, 0.4],
-                        [0.25, 0, 0.25]
-                      ]
-                    }
-                  },
-                  {
-                    "netherite_staff": {
-                      "tier": "NETHERITE",
-                      "damage": 6,
-                      "pierce": 3,
-                      "range": 16,
-                      "fire_resistant": true,
-                      "cooldown": 25
-                    }
-                  },
-                  {
-                    "electrum_staff": {
-                      "tier": "NETHERITE",
-                      "durability": 1561,
-                      "repair_item": "oreganized:electrum_ingot",
-                      "enchantability": 14,
-                      "damage": 4,
-                      "pierce": 3,
-                      "range": 16,
-                      "cooldown": 20,
-                      "dependency": "oreganized",
-                      "on_shoot": "/effect give @s minecraft:speed 5 0",
-                      "on_hit_self": "/effect give @s minecraft:haste 3 0"
-                    }
-                  },
-                  {
-                    "pearlescent_staff": {
-                      "tier": "NETHERITE",
-                      "damage": 7,
-                      "pierce": 1,
-                      "range": 20,
-                      "cooldown": 25,
-                      "repair_item": "unusualend:pearlescent_ingot",
-                      "dependency": "unusualend",
-                      "on_shoot": "/effect give @s minecraft:speed 3 0 true",
-                      "beam_color": [
-                        [0.5, 0, 0.75],
-                        [0.75, 0.25, 1]
-                      ]
-                    }
-                  }
-                ]
+                  ]
+                }
               }
             }""";
 }

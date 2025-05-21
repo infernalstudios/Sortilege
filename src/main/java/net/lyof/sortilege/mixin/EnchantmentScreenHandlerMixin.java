@@ -1,6 +1,9 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
@@ -15,6 +18,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.random.Random;
@@ -39,6 +43,8 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     @Shadow @Final private Random random;
 
     @Shadow @Final public int[] enchantmentPower;
+
+    @Shadow public abstract int getSeed();
 
     protected EnchantmentScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId) {
         super(type, syncId);
@@ -95,36 +101,41 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         this.context.run((world, pos) -> this.dropInventory(player, this.catalyst));
     }
 
+    @WrapOperation(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;generateEnchantments(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/item/ItemStack;IZ)Ljava/util/List;"))
+    public List<EnchantmentLevelEntry> overrideDefaultEnchanting(Random random, ItemStack stack, int level, boolean treasureAllowed, Operation<List<EnchantmentLevelEntry>> original) {
+        if (ConfigEntries.overrideDefaultEnchanting)
+            return new ArrayList<>();
+        return original.call(random, stack, level, treasureAllowed);
+    }
+
     @ModifyReturnValue(method = "generateEnchantments", at = @At("RETURN"))
     public List<EnchantmentLevelEntry> applyCatalyst(List<EnchantmentLevelEntry> original, ItemStack stack, int slot, int level) {
         int power = this.enchantmentPower[slot];
-
-        if (ConfigEntries.overrideDefaultEnchanting)
-            original = new ArrayList<>();
         if (original.isEmpty())
             this.enchantmentPower[slot] = 0;
+        this.catalyzed[slot] = 0;
 
         if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
             return original;
 
-
         Map<Enchantment, Integer> enchants = EnchantingCatalyst.getEnchantments(this.catalyst.getStack(0));
-        if (enchants.isEmpty()) {
-            this.catalyzed[slot] = 0;
+        if (enchants.isEmpty())
             return original;
-        }
 
         for (int i = 0; i < slot; i++)
             this.random.nextDouble();
 
         Enchantment chosen = MathHelper.randi(enchants.keySet().stream().filter(enchant -> enchant.isAcceptableItem(stack)
-                        || stack.isOf(Items.BOOK))
-                .toList(), this.random);
+                        || stack.isOf(Items.BOOK)).toList(), this.random);
 
-        if (chosen == null || this.random.nextDouble() > ConfigEntries.catalystChance) {
-            this.catalyzed[slot] = 0;
+        if (chosen == null)
             return original;
-        }
+
+        for (int i = 0; i < Registries.ENCHANTMENT.getRawId(chosen) % 8; i++)
+            this.random.nextDouble();
+
+        if (this.random.nextDouble() > ConfigEntries.catalystChance)
+            return original;
 
         int lvl = chosen.getMaxLevel();
         for (int i = 0; i < 3 - slot; i++)
@@ -133,7 +144,6 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         if (this.catalyst.getStack(0).getItem() instanceof EnchantedBookItem)
             lvl = Math.min(lvl, enchants.get(chosen));
 
-        this.catalyzed[slot] = 1;
         List<EnchantmentLevelEntry> result = new ArrayList<>();
 
         for (EnchantmentLevelEntry entry : original) {
@@ -144,23 +154,26 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         }
         result.add(0, new EnchantmentLevelEntry(chosen, lvl));
 
+        this.catalyzed[slot] = 1;
         this.enchantmentPower[slot] = power;
         return result;
     }
 
-    @Inject(method = "onButtonClick", at = @At("RETURN"))
-    public void useCatalyst(PlayerEntity player, int id, CallbackInfoReturnable<Boolean> cir) {
+    @WrapMethod(method = "onButtonClick")
+    public boolean useCatalyst(PlayerEntity player, int id, Operation<Boolean> original) {
+        boolean result = original.call(player, id);
+
         if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
-            return;
+            return result;
 
-
-        if (cir.getReturnValue()) {
+        if (result) {
             if (!(this.catalyst.getStack(0).getItem() instanceof EnchantedBookItem))
                 this.catalyst.getStack(0).decrement(1);
             this.catalyzed[0] = 0;
             this.catalyzed[1] = 0;
             this.catalyzed[2] = 0;
         }
+        return result;
     }
 
     @Inject(method = "quickMove", at = @At("HEAD"), cancellable = true)

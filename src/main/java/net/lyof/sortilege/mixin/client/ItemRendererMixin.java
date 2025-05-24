@@ -2,6 +2,8 @@ package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.MockItemRenderer;
+import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.client.MinecraftClient;
@@ -32,7 +34,7 @@ public class ItemRendererMixin {
     public void renderItem(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         MinecraftClient minecraft = MinecraftClient.getInstance();
 
-        if (minecraft.world == null) return;
+        if (minecraft.world == null || stack == null) return;
 
         if (stack.getItem() instanceof StaffItem staff && staff.hasColor(stack) && !stack.isIn(ModTags.Items.NO_DYE_OVERLAY_STAFFS)) {
             matrices.push();
@@ -44,6 +46,20 @@ public class ItemRendererMixin {
 
             MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light,
                     GLINT_TEXTURE, staff.getColor(stack));
+
+            matrices.pop();
+        }
+
+        if (stack.isOf(ModItems.LAPIS_SHIELD) && LapisShieldItem.isOnCooldown(stack)) {
+            matrices.push();
+
+            matrices.scale(1.005f, 1.005f, 1.005f);
+            //matrices.translate(0.995f, -0.005f, 0.495f);
+            matrices.translate(0, 0.995, 0.4975);
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+
+            MockItemRenderer.renderItem(matrices, vertexConsumers, light,
+                    GLINT_TEXTURE);
 
             matrices.pop();
         }

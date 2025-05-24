@@ -1,7 +1,6 @@
 package net.lyof.sortilege.util;
 
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.List;

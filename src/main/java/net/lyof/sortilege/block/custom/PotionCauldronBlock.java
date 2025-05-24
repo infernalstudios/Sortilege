@@ -6,8 +6,6 @@ import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.particle.ParticleFactory;
-import net.minecraft.client.particle.SpellParticle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;

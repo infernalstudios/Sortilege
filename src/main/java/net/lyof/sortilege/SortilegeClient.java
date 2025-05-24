@@ -1,17 +1,13 @@
 package net.lyof.sortilege;
 
-import com.google.gson.JsonElement;
-import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.block.ModBlocks;
 import net.lyof.sortilege.block.custom.PotionCauldronBlock;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.armor.rendering.WitchHatRenderer;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
@@ -19,7 +15,6 @@ import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
-import net.minecraft.client.MinecraftClient;
 
 public class SortilegeClient implements ClientModInitializer {
     @Override

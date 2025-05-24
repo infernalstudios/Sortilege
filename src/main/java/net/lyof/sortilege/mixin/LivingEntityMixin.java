@@ -1,5 +1,6 @@
 package net.lyof.sortilege.mixin;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
@@ -16,6 +17,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,14 +31,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
     @Shadow @Nullable protected PlayerEntity attackingPlayer;
-
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
-
     @Shadow public abstract Iterable<ItemStack> getArmorItems();
-
     @Shadow public abstract boolean damage(DamageSource source, float amount);
-
     @Shadow public abstract ItemStack getOffHandStack();
+    @Shadow public abstract Random getRandom();
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
@@ -134,10 +133,15 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getOffHandStack();
-        if (((LivingEntity) (Object) this) instanceof PlayerEntity player && stack.isOf(ModItems.LAPIS_SHIELD) &&
-                Math.abs(0.5 - player.getItemCooldownManager().getCooldownProgress(stack.getItem(), 0)) > 0.45) {
-            LapisShieldItem.putOnCooldown(stack, player);
-            cir.setReturnValue(true);
+        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+
+        if (((LivingEntity) (Object) this) instanceof PlayerEntity player) {
+            if (!LapisShieldItem.isOnCooldown(stack))
+                cir.setReturnValue(true);
+        }
+        else {
+            if (this.getRandom().nextDouble() < 0.1)
+                cir.setReturnValue(true);
         }
     }
 }

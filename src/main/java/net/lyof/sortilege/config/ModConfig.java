@@ -10,7 +10,6 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -427,6 +426,10 @@ public class ModConfig {
               // CATEGORY: EQUIPMENT
               "equipment": {
                 "lapis_shield": {
+                  // How many durability points do Lapis Shields have
+                  "durability": 152,
+                  // How many ticks between each Lapis Shield dodge, in ticks (20t = 1s)
+                  "cooldown": 80
                 },
               
                 // CATEGORY: STAFFS

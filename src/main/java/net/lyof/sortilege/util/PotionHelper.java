@@ -6,7 +6,10 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PotionHelper {
     public static final Map<StatusEffect, Potion> POTIONS = new HashMap<>();

@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;

@@ -46,5 +46,5 @@ public class ModItems {
             new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings())) : Items.AIR;
 
     public static final Item LAPIS_SHIELD = register("lapis_shield",
-            new LapisShieldItem(new FabricItemSettings().maxCount(1)));
+            new LapisShieldItem(new FabricItemSettings().maxDamage(ConfigEntries.lapisShieldDurability)));
 }

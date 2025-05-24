@@ -1,6 +1,5 @@
 package net.lyof.sortilege.setup.asm;
 
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.item.Item;

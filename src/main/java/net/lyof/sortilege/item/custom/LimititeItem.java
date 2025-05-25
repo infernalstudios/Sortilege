@@ -29,7 +29,7 @@ public class LimititeItem extends Item {
         super.appendTooltip(stack, level, list, context);
 
         if (Screen.hasShiftDown())
-            list.add(Text.translatable("sortilege.limitite.desc").formatted(Formatting.YELLOW));
+            list.add(Text.translatable("item.sortilege.limitite.desc").formatted(Formatting.YELLOW));
         else
             list.add(ItemHelper.getShiftTooltip());
     }

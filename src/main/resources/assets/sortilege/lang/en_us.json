@@ -78,10 +78,13 @@
   "item.sortilege.witch_hat": "Witch Hat",
 
   "item.sortilege.antidote": "Antidote",
-  "sortilege.antidote.cures": "Cures:",
+  "item.sortilege.antidote.cures": "Cures:",
 
   "item.sortilege.limitite": "Limitite",
-  "sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",
+  "item.sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",
+
+  "item.sortilege.lapis_shield": "Lapis Shield",
+  "item.sortilege.lapis_shield.desc": "Passively blocks front attacks every %ss",
 
   "advancement.sortilege.get_wooden_staff": "You are a Wizard, Steve",
   "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",

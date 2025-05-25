@@ -50,10 +50,10 @@ public class AntidotePotionItem extends PotionItem {
 
     @Override
     public void appendTooltip(ItemStack itemstack, @Nullable World level, List<Text> list, TooltipContext context) {
-        if (PotionUtil.getPotion(itemstack).getEffects().size() <= 0)
+        if (PotionUtil.getPotion(itemstack).getEffects().isEmpty())
             return;
 
-        MutableText desc = Text.translatable("sortilege.antidote.cures").formatted(Formatting.DARK_PURPLE)
+        MutableText desc = Text.translatable("item.sortilege.antidote.cures").formatted(Formatting.DARK_PURPLE)
                 .append(" ");
 
         StatusEffectInstance effect = PotionUtil.getPotion(itemstack).getEffects().get(0);

@@ -1,5 +1,7 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
@@ -17,6 +19,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -135,13 +141,36 @@ public abstract class LivingEntityMixin extends Entity {
         ItemStack stack = this.getOffHandStack();
         if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
 
-        if (((LivingEntity) (Object) this) instanceof PlayerEntity player) {
-            if (!LapisShieldItem.isOnCooldown(stack))
-                cir.setReturnValue(true);
-        }
-        else {
-            if (this.getRandom().nextDouble() < 0.1)
-                cir.setReturnValue(true);
-        }
+        if (!LapisShieldItem.isOnCooldown(stack))
+            cir.setReturnValue(true);
+    }
+
+    @WrapOperation(method = "blockedByShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Vec3d;dotProduct(Lnet/minecraft/util/math/Vec3d;)D"))
+    public double blockedByLapisShield(Vec3d a, Vec3d b, Operation<Double> original) {
+        double v = original.call(a, b);
+        if (!this.getOffHandStack().isOf(ModItems.LAPIS_SHIELD)) return v;
+
+        if (v <= -0.5 * Math.cos(90 * Math.PI / 360d))
+            return -1;
+        return 1;
+    }
+
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void tickLapisShield(CallbackInfo ci) {
+        ItemStack stack = this.getOffHandStack();
+        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+
+        if (LapisShieldItem.getCooldownEnd(stack) <= this.getWorld().getTime()
+                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.getWorld().getTime())
+            LapisShieldItem.removeCooldown(stack);
+    }
+
+    @Inject(method = "damageShield", at = @At("HEAD"))
+    public void damageLapisShield(float amount, CallbackInfo ci) {
+        ItemStack stack = this.getOffHandStack();
+        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+
+        LivingEntity self = (LivingEntity) (Object) this;
+        LapisShieldItem.onSuccessfulUse(stack, self, amount);
     }
 }

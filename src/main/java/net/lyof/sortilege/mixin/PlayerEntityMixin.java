@@ -98,27 +98,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
         PlayerEntity self = (PlayerEntity) (Object) this;
 
-        LapisShieldItem.putOnCooldown(stack, self);
-        ModParticles.spawnWisps(self.getWorld(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
-                16, new float[]{0.3f, 0.3f, 1f});
-
+        LapisShieldItem.onSuccessfulUse(stack, self, amount);
         if (!this.getWorld().isClient())
             self.incrementStat(Stats.USED.getOrCreateStat(ModItems.LAPIS_SHIELD));
-
-        if (amount >= 3.0F) {
-            stack.damage(1, self, e -> e.sendToolBreakStatus(Hand.OFF_HAND));
-            if (stack.isEmpty())
-                this.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + this.getWorld().random.nextFloat() * 0.4F);
-        }
-    }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tickLapisShield(CallbackInfo ci) {
-        ItemStack stack = this.getOffHandStack();
-        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
-
-        if (LapisShieldItem.getCooldownEnd(stack) <= this.getWorld().getTime()
-                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.getWorld().getTime())
-            LapisShieldItem.removeCooldown(stack);
     }
 }

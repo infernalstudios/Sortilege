@@ -115,12 +115,12 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (source.isIn(DamageTypeTags.IS_FALL) &&
+        if (ConfigEntries.betterFeatherFalling > 0 && source.isIn(DamageTypeTags.IS_FALL) &&
                 EnchantmentHelper.getLevel(Enchantments.FEATHER_FALLING, this.getEquippedStack(EquipmentSlot.FEET)) >=
                         ConfigEntries.betterFeatherFalling)
             cir.setReturnValue(false);
 
-        if (source.isIn(DamageTypeTags.IS_FIRE) &&
+        if (ConfigEntries.betterFireProt > 0 && source.isIn(DamageTypeTags.IS_FIRE) &&
                 EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.FEET)) >=
                         ConfigEntries.betterFireProt &&
                 EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.LEGS)) >=

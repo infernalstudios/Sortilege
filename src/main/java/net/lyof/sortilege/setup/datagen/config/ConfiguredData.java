@@ -58,7 +58,10 @@ public class ConfiguredData {
                     json -> Instances.generateDefaultModel(json, staff.getFirst()));
 
         register(Sortilege.makeID("lang/en_us.json"), () -> true, Instances::generateTranslations);
+
+        register(Identifier.of("enchdesc", "lang/en_us.json"), () -> true, Instances::changeEnchantmentDescriptions);
     }
+
 
     private static class Instances {
         private static JsonElement getJson(String string) {
@@ -114,7 +117,34 @@ public class ConfiguredData {
             json.getAsJsonObject().asMap().replace("advancement.sortilege.get_wooden_staff",
                     new JsonPrimitive("You are a Wizard, " + MinecraftClient.getInstance().getSession().getUsername()));
 
+            if (ConfigEntries.betterMagicProt)
+                json.getAsJsonObject().asMap().replace("enchantment.sortilege.magic_protection.desc",
+                        new JsonPrimitive("Reduces damage from magic, and gives a chance to dodge attacks."));
+
             return json.toString();
+        }
+
+        public static String changeEnchantmentDescriptions(JsonElement json) {
+            JsonObject o = (JsonObject) json;
+
+            if (ConfigEntries.betterFireProt > 0)
+                o.asMap().replace("enchantment.minecraft.fire_protection.desc",
+                        new JsonPrimitive(o.get("enchantment.minecraft.fire_protection.desc").getAsString()
+                            + " Wearing a full set at max level completely negates them."));
+            if (ConfigEntries.betterBane)
+                o.asMap().replace("enchantment.minecraft.bane_of_arthropods.desc",
+                        new JsonPrimitive(o.get("enchantment.minecraft.bane_of_arthropods.desc").getAsString()
+                            + " Also slows down opponents."));
+            if (ConfigEntries.betterFeatherFalling > 0)
+                o.asMap().replace("enchantment.minecraft.feather_falling.desc",
+                        new JsonPrimitive(o.get("enchantment.minecraft.feather_falling.desc").getAsString()
+                            + " They are completely negated at max level."));
+            if (ConfigEntries.betterUnbreaking > 0)
+                o.asMap().replace("enchantment.minecraft.unbreaking.desc",
+                        new JsonPrimitive(o.get("enchantment.minecraft.unbreaking.desc").getAsString()
+                            + " Max level makes the item unbreakable"));
+
+            return o.toString();
         }
     }
 }

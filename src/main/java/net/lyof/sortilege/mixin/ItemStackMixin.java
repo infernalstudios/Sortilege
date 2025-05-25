@@ -58,7 +58,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
         if (this.isIn(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ConfigEntries.betterUnbreaking)
+        if (ConfigEntries.betterUnbreaking > 0 && EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ConfigEntries.betterUnbreaking)
             cir.setReturnValue(false);
     }
 

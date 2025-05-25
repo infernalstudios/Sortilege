@@ -9,12 +9,14 @@ import net.lyof.sortilege.block.ModBlocks;
 import net.lyof.sortilege.block.custom.PotionCauldronBlock;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.armor.rendering.WitchHatRenderer;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 
 public class SortilegeClient implements ClientModInitializer {
     @Override
@@ -41,5 +43,8 @@ public class SortilegeClient implements ClientModInitializer {
                 }
             });
         });
+
+        ModelPredicateProviderRegistry.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) ->
+            LapisShieldItem.isOnCooldown(stack) ? 1f : 0f);
     }
 }

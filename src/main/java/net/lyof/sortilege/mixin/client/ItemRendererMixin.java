@@ -49,19 +49,5 @@ public class ItemRendererMixin {
 
             matrices.pop();
         }
-
-        if (stack.isOf(ModItems.LAPIS_SHIELD) && LapisShieldItem.isOnCooldown(stack)) {
-            matrices.push();
-
-            matrices.scale(10.005f, 10.005f, 10.005f);
-            //matrices.translate(0.995f, -0.005f, 0.495f);
-            matrices.translate(0, 0.995, 0.4975);
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-
-            MockItemRenderer.renderItem(matrices, vertexConsumers, light,
-                    GLINT_TEXTURE);
-
-            matrices.pop();
-        }
     }
 }

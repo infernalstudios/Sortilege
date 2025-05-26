@@ -156,8 +156,8 @@ public abstract class LivingEntityMixin extends Entity {
         ItemStack stack = this.getOffHandStack();
         if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
 
-        if (LapisShieldItem.getCooldownEnd(stack) <= this.getWorld().getTime()
-                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.getWorld().getTime())
+        if (LapisShieldItem.getCooldownEnd(stack) <= this.age
+                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.age)
             LapisShieldItem.removeCooldown(stack);
     }
 

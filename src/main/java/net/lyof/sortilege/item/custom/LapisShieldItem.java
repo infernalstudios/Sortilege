@@ -44,8 +44,8 @@ public class LapisShieldItem extends Item implements Equipment {
 
     private static final String COOLDOWN_NBT = Sortilege.MOD_ID + "_LastUse";
 
-    public static void putOnCooldown(ItemStack stack, LivingEntity player) {
-        stack.getOrCreateNbt().putInt(COOLDOWN_NBT, (int) player.getWorld().getTime());
+    public static void putOnCooldown(ItemStack stack, LivingEntity user) {
+        stack.getOrCreateNbt().putInt(COOLDOWN_NBT, user.age);
     }
 
     public static int getCooldownEnd(ItemStack stack) {

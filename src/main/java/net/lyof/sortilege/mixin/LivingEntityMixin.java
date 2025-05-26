@@ -154,11 +154,13 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickLapisShield(CallbackInfo ci) {
         ItemStack stack = this.getOffHandStack();
-        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+        if (!stack.isOf(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack) || this.getWorld().isClient()) return;
 
         if (LapisShieldItem.getCooldownEnd(stack) <= this.age
-                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.age)
+                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.age) {
             LapisShieldItem.removeCooldown(stack);
+            LapisShieldItem.sendCooldownUpdate((LivingEntity) (Object) this, 0);
+        }
     }
 
     @Inject(method = "damageShield", at = @At("HEAD"))

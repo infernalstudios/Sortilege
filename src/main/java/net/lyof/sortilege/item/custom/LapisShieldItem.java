@@ -1,8 +1,12 @@
 package net.lyof.sortilege.item.custom;
 
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -10,10 +14,14 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,16 +52,16 @@ public class LapisShieldItem extends Item implements Equipment {
 
     private static final String COOLDOWN_NBT = Sortilege.MOD_ID + "_LastUse";
 
-    public static void putOnCooldown(ItemStack stack, LivingEntity user) {
-        stack.getOrCreateNbt().putInt(COOLDOWN_NBT, user.age);
-    }
-
-    public static int getCooldownEnd(ItemStack stack) {
-        return stack.getOrCreateNbt().getInt(COOLDOWN_NBT) + ConfigEntries.lapisShieldCooldown;
+    public static void addCooldown(ItemStack stack, int time) {
+        stack.getOrCreateNbt().putInt(COOLDOWN_NBT, time);
     }
 
     public static void removeCooldown(ItemStack stack) {
         stack.getOrCreateNbt().remove(COOLDOWN_NBT);
+    }
+
+    public static int getCooldownEnd(ItemStack stack) {
+        return stack.getOrCreateNbt().getInt(COOLDOWN_NBT) + ConfigEntries.lapisShieldCooldown;
     }
 
     public static boolean isOnCooldown(ItemStack stack) {
@@ -61,7 +69,8 @@ public class LapisShieldItem extends Item implements Equipment {
     }
 
     public static void onSuccessfulUse(ItemStack stack, LivingEntity entity, float amount) {
-        LapisShieldItem.putOnCooldown(stack, entity);
+        if (!entity.getWorld().isClient()) LapisShieldItem.addCooldown(stack, entity.age);
+        sendCooldownUpdate(entity, entity.age);
         ModParticles.spawnWisps(entity.getWorld(), entity.getX(), entity.getY() + entity.getEyeHeight(entity.getPose()) / 2, entity.getZ(),
                 16, new float[]{0.3f, 0.3f, 1f});
 
@@ -69,6 +78,19 @@ public class LapisShieldItem extends Item implements Equipment {
             stack.damage(1, entity, e -> e.sendToolBreakStatus(Hand.OFF_HAND));
             if (stack.isEmpty())
                 entity.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + entity.getWorld().random.nextFloat() * 0.4F);
+        }
+    }
+
+    public static void sendCooldownUpdate(LivingEntity entity, int cooldown) {
+        if (!entity.getWorld().isClient()) {
+            PacketByteBuf buf = PacketByteBufs.create();
+
+            buf.writeInt(entity.getId());
+            buf.writeInt(cooldown);
+
+            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) entity.getWorld(), entity.getBlockPos())) {
+                ServerPlayNetworking.send(player, ModPackets.LAPIS_SHIELD_COOLDOWN, buf);
+            }
         }
     }
 }

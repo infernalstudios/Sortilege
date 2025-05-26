@@ -17,11 +17,20 @@ import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+
+import java.util.UUID;
 
 public class SortilegeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ConfiguredData.registerClient();
+        registerPackets();
 
         ColorProviderRegistry.ITEM.register(AntidotePotionItem::getItemColor, ModItems.ANTIDOTE);
         ColorProviderRegistry.BLOCK.register(PotionCauldronBlock::getBlockColor, ModBlocks.POTION_CAULDRON);
@@ -30,10 +39,18 @@ public class SortilegeClient implements ClientModInitializer {
 
         if (ConfigEntries.witchHatEnabled) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
 
+        ModelPredicateProviderRegistry.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) -> {
+            stack.getOrCreateNbt();
+            return LapisShieldItem.isOnCooldown(stack) ? 1f : 0f;
+        });
+    }
+
+    public static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, (client, handler, buf, responseSender) -> {
             double x = buf.readDouble(), y = buf.readDouble(), z = buf.readDouble();
             float r = buf.readFloat(), g = buf.readFloat(), b = buf.readFloat();
             int amount = buf.readInt(), spread = amount == 1 ? 0 : 2;
+
             client.execute(() -> {
                 for (int i = 0; i < amount; i++) {
                     client.world.addParticle(ModParticles.WISP_PIXEL, x + (0.5 - Math.random()) * spread,
@@ -44,7 +61,24 @@ public class SortilegeClient implements ClientModInitializer {
             });
         });
 
-        ModelPredicateProviderRegistry.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) ->
-            LapisShieldItem.isOnCooldown(stack) ? 1f : 0f);
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.LAPIS_SHIELD_COOLDOWN, (client, handler, buf, responseSender) -> {
+            int id = buf.readInt();
+            int cooldown = buf.readInt();
+
+            client.execute(() -> {
+                Entity e = handler.getWorld().getEntityById(id);
+                if (!(e instanceof LivingEntity entity)) {
+                    Sortilege.log("Something went wrong while receiving a packet");
+                    return;
+                }
+                ItemStack stack = entity.getOffHandStack();
+                if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+
+                if (cooldown == 0)
+                    LapisShieldItem.removeCooldown(stack);
+                else
+                    LapisShieldItem.addCooldown(stack, cooldown);
+            });
+        });
     }
 }

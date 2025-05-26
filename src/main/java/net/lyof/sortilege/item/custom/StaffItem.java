@@ -2,6 +2,8 @@ package net.lyof.sortilege.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
@@ -190,6 +192,7 @@ public class StaffItem extends ToolItem implements DyeableItem {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> list, TooltipContext flag) {
         super.appendTooltip(stack, world, list, flag);
 

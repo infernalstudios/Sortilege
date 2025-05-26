@@ -2,8 +2,6 @@ package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.MockItemRenderer;
-import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.client.MinecraftClient;

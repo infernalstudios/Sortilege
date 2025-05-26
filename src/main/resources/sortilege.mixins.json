@@ -17,6 +17,7 @@
     "LeveledCauldronBlockMixin",
     "LifecycledResourceManagerImplMixin",
     "LivingEntityMixin",
+    "PlayerAdvancementTrackerMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
     "ServerPlayerEntityMixin",

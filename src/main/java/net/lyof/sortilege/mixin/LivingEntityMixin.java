@@ -2,7 +2,6 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
@@ -19,9 +18,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;

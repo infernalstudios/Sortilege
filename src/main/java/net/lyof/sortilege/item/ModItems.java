@@ -28,7 +28,7 @@ public class ModItems {
             String id = pair.getFirst();
             ModConfig.StaffInfo staff = pair.getSecond();
             if (FabricLoader.getInstance().isModLoaded(staff.dependency))
-                STAFFS.add(register(id, new StaffItem(staff, new FabricItemSettings().maxCount(1))));
+                STAFFS.add(register(id, new StaffItem(staff, new FabricItemSettings())));
         }
     }
 

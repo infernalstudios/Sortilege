@@ -1,8 +1,12 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.mojang.datafixers.util.Pair;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredDataResourcePack;
 import net.minecraft.resource.LifecycledResourceManagerImpl;
@@ -89,6 +93,22 @@ public class LifecycledResourceManagerImplMixin {
 
             original.replace(id, readAndApply(original.get(id), data));
         }
+
+        if (startingPath.startsWith("recipes")) {
+            List<Identifier> toRemove = original.keySet().stream().filter(id -> {
+                if (!id.toString().startsWith(Sortilege.MOD_ID +  ":recipes/compat/")) return false;
+
+                return ModConfig.STAFFS.stream().anyMatch(p ->
+                        id.equals(Sortilege.makeID("recipes/compat/" + p.getFirst() + ".json"))
+                            && !FabricLoader.getInstance().isModLoaded(p.getSecond().dependency));
+            }).toList();
+
+            for (Identifier id : toRemove)
+                original.remove(id);
+
+            Sortilege.log("Neutralized recipes " + toRemove + ", as their corresponding staffs are not loaded.");
+        }
+
         return original;
     }
 

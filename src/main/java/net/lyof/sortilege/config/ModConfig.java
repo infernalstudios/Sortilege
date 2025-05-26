@@ -406,7 +406,9 @@ public class ModConfig {
                   // A list of potion effects for which Antidotes don't get registered
                   "effect_blacklist": [
                   ],
-                  "stack_size": 4
+                  "stack_size": 16,
+                  // For how many seconds Antidotes make you immune to their effect after drinking. Set to 0 or lower to disable extra immunity
+                  "immunity_time": 300
                 },
                 "cauldron": {
                   // Should cauldron brewing be enabled

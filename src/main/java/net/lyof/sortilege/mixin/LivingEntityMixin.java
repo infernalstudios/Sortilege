@@ -1,11 +1,13 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
+import net.lyof.sortilege.item.custom.potion.IAntidoteUser;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
@@ -13,6 +15,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -24,14 +28,31 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity implements IAntidoteUser {
+    @Unique private final Map<StatusEffect, Integer> effectImmunities = new HashMap<>();
+
+    @Override
+    public void sorti$setImmunity(StatusEffect effect, int time) {
+        int timeOff = this.age + time;
+        if (this.effectImmunities.containsKey(effect)) {
+            if (this.effectImmunities.get(effect) < timeOff)
+                this.effectImmunities.replace(effect, timeOff);
+        }
+        else
+            this.effectImmunities.put(effect, timeOff);
+    }
+
     @Shadow @Nullable protected PlayerEntity attackingPlayer;
     @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
     @Shadow public abstract Iterable<ItemStack> getArmorItems();
@@ -170,5 +191,16 @@ public abstract class LivingEntityMixin extends Entity {
 
         LivingEntity self = (LivingEntity) (Object) this;
         LapisShieldItem.onSuccessfulUse(stack, self, amount);
+    }
+
+    @WrapMethod(method = "canHaveStatusEffect")
+    public boolean applyEffectImmunity(StatusEffectInstance effect, Operation<Boolean> original) {
+        if (this.effectImmunities.containsKey(effect.getEffectType())) {
+            if (this.effectImmunities.get(effect.getEffectType()) >= this.age)
+                return false;
+            else
+                this.effectImmunities.remove(effect.getEffectType());
+        }
+        return original.call(effect);
     }
 }

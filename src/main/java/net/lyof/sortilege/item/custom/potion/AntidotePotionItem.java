@@ -66,16 +66,18 @@ public class AntidotePotionItem extends PotionItem {
     }
 
     @Override
-    public ItemStack finishUsing(ItemStack itemstack, World level, LivingEntity entity) {
+    public ItemStack finishUsing(ItemStack stack, World level, LivingEntity entity) {
         PlayerEntity player = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
         if (player instanceof ServerPlayerEntity)
-            Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity) player, itemstack);
+            Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity) player, stack);
 
         if (!level.isClient()) {
-            StatusEffect effect = PotionUtil.getPotionEffects(itemstack).get(0).getEffectType();
+            StatusEffect effect = PotionUtil.getPotionEffects(stack).get(0).getEffectType();
 
-            if (player != null && player.hasStatusEffect(effect)) {
-                player.removeStatusEffect(effect);
+            if (entity.hasStatusEffect(effect)) {
+                entity.removeStatusEffect(effect);
+                if (ConfigEntries.antidoteImmunityTime > 0)
+                    ((IAntidoteUser) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
                 // todo: particles?
             }
         }
@@ -83,19 +85,20 @@ public class AntidotePotionItem extends PotionItem {
         if (player != null) {
             player.incrementStat(Stats.USED.getOrCreateStat(this));
             if (!player.getAbilities().creativeMode)
-                itemstack.decrement(1);
+                stack.decrement(1);
         }
 
-        if (player == null || !player.getAbilities().creativeMode) {
-            if (itemstack.isEmpty())
+        if (player == null)
+            return stack;
+        if (!player.getAbilities().creativeMode) {
+            if (stack.isEmpty())
                 return new ItemStack(Items.GLASS_BOTTLE);
 
-            if (player != null)
-                player.getInventory().offerOrDrop(new ItemStack(Items.GLASS_BOTTLE));
+            player.getInventory().offerOrDrop(new ItemStack(Items.GLASS_BOTTLE));
         }
 
         entity.emitGameEvent(GameEvent.DRINK);
-        return itemstack;
+        return stack;
     }
 
     @Override

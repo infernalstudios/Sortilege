@@ -67,7 +67,8 @@ public class ConfigEntries {
 
         antidoteEnabled = new ConfigEntry<>("brewing.antidote.enable", true).get();
         antidoteBlacklist = new ConfigEntry<List<String>>("brewing.antidote.effect_blacklist", List.of()).get();
-        antidoteStackSize = new ConfigEntry<>("brewing.antidote.stack_size", 4).get();
+        antidoteStackSize = new ConfigEntry<>("brewing.antidote.stack_size", 16).get();
+        antidoteStackSize = new ConfigEntry<>("brewing.antidote.immunity_time", 300).get();
 
         cauldronBrewingEnabled = new ConfigEntry<>("brewing.cauldron.enable", true).get();
         cauldronBlazeRefill = new ConfigEntry<>("brewing.cauldron.blaze_powder_refill", true).get();
@@ -149,6 +150,7 @@ public class ConfigEntries {
     public static boolean antidoteEnabled;
     public static List<String> antidoteBlacklist = List.of();
     public static int antidoteStackSize;
+    public static int antidoteImmunityTime;
 
     public static boolean cauldronBrewingEnabled;
     public static boolean cauldronBlazeRefill;

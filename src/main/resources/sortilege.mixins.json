@@ -30,6 +30,7 @@
   },
   "client": [
     "accessor.ScreenAccessor",
+    "client.AdvancementDisplayMixin",
     "client.DeathScreenMixin",
     "client.DrawContextMixin",
     "client.EnchantmentScreenMixin",

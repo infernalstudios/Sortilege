@@ -25,10 +25,8 @@ public class PlayerAdvancementTrackerMixin {
 
     @WrapOperation(method = "grantCriterion", at = @At(value = "INVOKE", target = "Lnet/minecraft/advancement/Advancement;toHoverableText()Lnet/minecraft/text/Text;"))
     public Text formatGetWoodenStaffAdvancement(Advancement instance, Operation<Text> original) {
-        if (instance.getId().equals(GET_WOODEN_STAFF)) {
-            Sortilege.log("heyo");
-
-            Text text = Text.literal(instance.getDisplay().getTitle().getString().replace("Steve", this.owner.getDisplayName().getString()));
+        if (instance.getDisplay().getTitle().getString().contains("{playerName}")) {
+            Text text = Text.literal(instance.getDisplay().getTitle().getString().replace("{playerName}", this.owner.getDisplayName().getString()));
             Formatting formatting = instance.getDisplay().getFrame().getTitleFormat();
             Text text2 = Texts.setStyleIfAbsent(text.copy(), Style.EMPTY.withColor(formatting)).append("\n").append(instance.getDisplay().getDescription());
             Text text3 = text.copy().styled(style -> style.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, text2)));

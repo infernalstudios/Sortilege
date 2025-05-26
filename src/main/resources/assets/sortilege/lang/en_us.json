@@ -81,7 +81,7 @@
   "item.sortilege.lapis_shield": "Lapis Shield",
   "item.sortilege.lapis_shield.desc": " Passively blocks front attacks every %ss",
 
-  "advancement.sortilege.get_wooden_staff": "You are a Wizard, Steve",
+  "advancement.sortilege.get_wooden_staff": "You are a Wizard, {playerName}",
   "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",
   "advancement.sortilege.dye_staff": "The Colour of Magic",
   "advancement.sortilege.dye_staff.desc": "Use dye on a staff to change its beam color.",

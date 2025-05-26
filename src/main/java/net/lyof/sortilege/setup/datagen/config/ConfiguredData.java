@@ -112,10 +112,7 @@ public class ConfiguredData {
                 }
                 json.getAsJsonObject().addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
             }
-/*
-            json.getAsJsonObject().asMap().replace("advancement.sortilege.get_wooden_staff",
-                    new JsonPrimitive("You are a Wizard, " + MinecraftClient.getInstance().getSession().getUsername()));
-*/
+
             if (ConfigEntries.betterMagicProt)
                 json.getAsJsonObject().asMap().replace("enchantment.sortilege.magic_protection.desc",
                         new JsonPrimitive("Reduces damage from magic, and gives a chance to dodge attacks."));

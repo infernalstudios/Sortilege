@@ -17,14 +17,9 @@ import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-
-import java.util.UUID;
 
 public class SortilegeClient implements ClientModInitializer {
     @Override

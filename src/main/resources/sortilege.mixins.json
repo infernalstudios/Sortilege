@@ -20,11 +20,13 @@
     "PlayerAdvancementTrackerMixin",
     "PlayerEntityMixin",
     "PlayerInventoryMixin",
+    "PotionMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
     "ShieldItemMixin",
     "SmithingTransformRecipeMixin",
-    "UnbreakingEnchantmentMixin"
+    "UnbreakingEnchantmentMixin",
+    "accessor.StatusEffectInstanceAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

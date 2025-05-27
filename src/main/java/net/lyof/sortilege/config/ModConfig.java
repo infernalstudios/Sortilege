@@ -410,6 +410,11 @@ public class ModConfig {
                   // For how many seconds Antidotes make you immune to their effect after drinking. Set to 0 or lower to disable extra immunity
                   "immunity_time": 300
                 },
+                "potion": {
+                  // Value to multiply all potions effects length by.
+                  //    For example, if this is 2, then all effects gained *from potions* will last twice as long
+                  "length_multiplier": 1.5
+                },
                 "cauldron": {
                   // Should cauldron brewing be enabled
                   "enable": true,

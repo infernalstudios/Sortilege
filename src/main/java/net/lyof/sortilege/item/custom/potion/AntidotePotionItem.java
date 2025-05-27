@@ -76,10 +76,10 @@ public class AntidotePotionItem extends PotionItem {
 
             if (entity.hasStatusEffect(effect)) {
                 entity.removeStatusEffect(effect);
-                if (ConfigEntries.antidoteImmunityTime > 0)
-                    ((IAntidoteUser) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
                 // todo: particles?
             }
+            if (ConfigEntries.antidoteImmunityTime > 0)
+                ((IAntidoteUser) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
         }
 
         if (player != null) {

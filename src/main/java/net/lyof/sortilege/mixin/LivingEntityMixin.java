@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
@@ -195,9 +196,12 @@ public abstract class LivingEntityMixin extends Entity implements IAntidoteUser 
 
     @WrapMethod(method = "canHaveStatusEffect")
     public boolean applyEffectImmunity(StatusEffectInstance effect, Operation<Boolean> original) {
+        Sortilege.log(this.effectImmunities.entrySet().stream().map(p -> p.getKey().getTranslationKey() + " " + p.getValue()).toList());
         if (this.effectImmunities.containsKey(effect.getEffectType())) {
-            if (this.effectImmunities.get(effect.getEffectType()) >= this.age)
+            if (this.effectImmunities.get(effect.getEffectType()) >= this.age) {
+                Sortilege.log("Nah");
                 return false;
+            }
             else
                 this.effectImmunities.remove(effect.getEffectType());
         }

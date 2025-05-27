@@ -3,12 +3,11 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
-import net.lyof.sortilege.item.custom.potion.IAntidoteUser;
+import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
@@ -40,7 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements IAntidoteUser {
+public abstract class LivingEntityMixin extends Entity implements IPotionShenanigans {
     @Unique private final Map<StatusEffect, Integer> effectImmunities = new HashMap<>();
 
     @Override

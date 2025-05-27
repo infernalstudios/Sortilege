@@ -79,7 +79,7 @@ public class AntidotePotionItem extends PotionItem {
                 // todo: particles?
             }
             if (ConfigEntries.antidoteImmunityTime > 0)
-                ((IAntidoteUser) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
+                ((IPotionShenanigans) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
         }
 
         if (player != null) {
@@ -105,7 +105,7 @@ public class AntidotePotionItem extends PotionItem {
     public TypedActionResult<ItemStack> use(World level, PlayerEntity player, Hand hand) {
         ItemStack itemstack = player.getStackInHand(hand);
 
-        if (PotionUtil.getPotion(itemstack).getEffects().size() > 0 && (player.isSneaking() ||
+        if (!PotionUtil.getPotion(itemstack).getEffects().isEmpty() && (player.isSneaking() ||
                 player.hasStatusEffect(PotionUtil.getPotionEffects(itemstack).get(0).getEffectType())))
 
             return ItemUsage.consumeHeldItem(level, player, hand);
@@ -119,9 +119,8 @@ public class AntidotePotionItem extends PotionItem {
     }
 
     public static int getItemColor(ItemStack itemstack, int i) {
-        if (i == 0) {
+        if (i == 0)
             return PotionUtil.getColor(itemstack);
-        }
         return -1;
     }
 }

@@ -1,9 +1,11 @@
 package net.lyof.sortilege.setup;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.custom.BrewingRecipe;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
@@ -39,6 +41,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
         BetterBrewingRegistry.clear();
         BetterBrewingRegistry.register();
 
+        CustomPotionData.clear();
+
         // Enchantment catalysts
         EnchantingCatalyst.clear();
 
@@ -49,16 +53,34 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 Resource resource = entry.getValue();
 
                 String content = new String(resource.getInputStream().readAllBytes());
-                Map<String, ?> json = new Gson().fromJson(content, Map.class);
+                Map<String, ?> map = new Gson().fromJson(content, Map.class);
 
-                if (json == null) continue;
+                if (map == null) continue;
 
-                if (json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":brewing"))
-                    BrewingRecipe.read(json);
-                else if (json.containsKey("type") && Objects.equals(String.valueOf(json.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst"))
-                    EnchantingCatalyst.read(json);
+                if (map.containsKey("type") && Objects.equals(String.valueOf(map.get("type")), Sortilege.MOD_ID + ":brewing"))
+                    BrewingRecipe.read(map);
+                else if (map.containsKey("type") && Objects.equals(String.valueOf(map.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst"))
+                    EnchantingCatalyst.read(map);
 
-            } catch (Exception e) {
+            } catch (Throwable e) {
+                Sortilege.log("Could not read data file " + entry.getKey());
+            }
+        }
+
+        for (Map.Entry<Identifier, Resource> entry : manager.findResources("potions",
+                path -> path.toString().endsWith(".json")).entrySet()) {
+
+            try {
+                Resource resource = entry.getValue();
+
+                String content = new String(resource.getInputStream().readAllBytes());
+                JsonElement json = new Gson().fromJson(content, JsonElement.class);
+
+                if (json == null || !json.isJsonObject()) continue;
+
+                CustomPotionData.read(json.getAsJsonObject());
+            }
+            catch (Throwable e) {
                 Sortilege.log("Could not read data file " + entry.getKey());
             }
         }

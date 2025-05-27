@@ -71,7 +71,7 @@ public class ConfigEntries {
         antidoteImmunityTime = new ConfigEntry<>("brewing.antidote.immunity_time", 300).get();
 
         potionLengthMultiplier = new ConfigEntry<>("brewing.potion.length_multiplier", 1.5).get();
-        potionDrinkingTime = new ConfigEntry<>("brewing.potion.drinking_time", 16).get();
+        potionDrinkingTime = new ConfigEntry<>("brewing.potion.default_drinking_time", 15).get();
 
         cauldronBrewingEnabled = new ConfigEntry<>("brewing.cauldron.enable", true).get();
         cauldronBlazeRefill = new ConfigEntry<>("brewing.cauldron.blaze_powder_refill", true).get();

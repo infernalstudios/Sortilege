@@ -22,6 +22,7 @@
     "PlayerInventoryMixin",
     "ServerPlayerEntityMixin",
     "ServerWorldMixin",
+    "ShieldItemMixin",
     "SmithingTransformRecipeMixin",
     "UnbreakingEnchantmentMixin"
   ],

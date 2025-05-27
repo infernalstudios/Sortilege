@@ -28,10 +28,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
-import net.minecraft.item.DyeableItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.command.CommandOutput;
@@ -233,6 +230,9 @@ public class StaffItem extends ToolItem implements DyeableItem {
     public @NotNull TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity player, @NotNull Hand hand) {
         ItemStack staff = player.getStackInHand(hand);
         if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)) && this.getOvercharge(staff) <= 0)
+            return super.use(world, player, hand);
+        if (player.getStackInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND).getItem() instanceof ShieldItem
+                && player.isSneaking())
             return super.use(world, player, hand);
 
         this.handSave = hand;

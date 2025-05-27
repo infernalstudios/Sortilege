@@ -196,10 +196,8 @@ public abstract class LivingEntityMixin extends Entity implements IAntidoteUser 
 
     @WrapMethod(method = "canHaveStatusEffect")
     public boolean applyEffectImmunity(StatusEffectInstance effect, Operation<Boolean> original) {
-        Sortilege.log(this.effectImmunities.entrySet().stream().map(p -> p.getKey().getTranslationKey() + " " + p.getValue()).toList());
         if (this.effectImmunities.containsKey(effect.getEffectType())) {
             if (this.effectImmunities.get(effect.getEffectType()) >= this.age) {
-                Sortilege.log("Nah");
                 return false;
             }
             else

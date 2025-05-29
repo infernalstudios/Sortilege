@@ -28,7 +28,6 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override
     public void reload(ResourceManager manager) {
         ItemHelper.ENCHLIMIT_CACHE.clear();
-        PotionHelper.load();
 
         // Recipe locks
         RecipeLock.clear();
@@ -84,5 +83,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 Sortilege.log("Could not read data file " + entry.getKey());
             }
         }
+
+        PotionHelper.load();
     }
 }

@@ -45,6 +45,6 @@ public class ModItems {
     public static final Item WITCH_HAT = ConfigEntries.witchHatEnabled ? register("witch_hat",
             new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings())) : Items.AIR;
 
-    public static final Item LAPIS_SHIELD = register("lapis_shield",
-            new LapisShieldItem(new FabricItemSettings().maxDamage(ConfigEntries.lapisShieldDurability)));
+    public static final Item LAPIS_SHIELD = ConfigEntries.lapisShieldEnabled ? register("lapis_shield",
+            new LapisShieldItem(new FabricItemSettings().maxDamage(ConfigEntries.lapisShieldDurability))) : Items.AIR;
 }

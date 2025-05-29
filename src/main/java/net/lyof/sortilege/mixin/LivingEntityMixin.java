@@ -158,7 +158,7 @@ public abstract class LivingEntityMixin extends Entity implements IPotionShenani
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getOffHandStack();
-        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
 
         if (!LapisShieldItem.isOnCooldown(stack))
             cir.setReturnValue(true);
@@ -167,7 +167,7 @@ public abstract class LivingEntityMixin extends Entity implements IPotionShenani
     @WrapOperation(method = "blockedByShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Vec3d;dotProduct(Lnet/minecraft/util/math/Vec3d;)D"))
     public double blockedByLapisShield(Vec3d a, Vec3d b, Operation<Double> original) {
         double v = original.call(a, b);
-        if (!this.getOffHandStack().isOf(ModItems.LAPIS_SHIELD)) return v;
+        if (!ConfigEntries.lapisShieldEnabled || !this.getOffHandStack().isOf(ModItems.LAPIS_SHIELD)) return v;
 
         if (v <= -0.5 * Math.cos(90 * Math.PI / 360d))
             return -1;
@@ -177,7 +177,8 @@ public abstract class LivingEntityMixin extends Entity implements IPotionShenani
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickLapisShield(CallbackInfo ci) {
         ItemStack stack = this.getOffHandStack();
-        if (!stack.isOf(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack) || this.getWorld().isClient()) return;
+        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack)
+                || this.getWorld().isClient()) return;
 
         if (LapisShieldItem.getCooldownEnd(stack) <= this.age
                 || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.age) {
@@ -189,7 +190,7 @@ public abstract class LivingEntityMixin extends Entity implements IPotionShenani
     @Inject(method = "damageShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
         ItemStack stack = this.getOffHandStack();
-        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
 
         LivingEntity self = (LivingEntity) (Object) this;
         LapisShieldItem.onSuccessfulUse(stack, self, amount);

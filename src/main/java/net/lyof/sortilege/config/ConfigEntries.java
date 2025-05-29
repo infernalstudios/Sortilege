@@ -78,6 +78,7 @@ public class ConfigEntries {
         fillSwampHutCauldrons = new ConfigEntry<>("brewing.cauldron.fill_swamp_huts_randomly", true).get();
         swampHutBlacklist = new ConfigEntry<List<String>>("brewing.cauldron.swamp_hut_blacklist", List.of()).get();
 
+        lapisShieldEnabled = new ConfigEntry<>("equipment.lapis_shield.enable", true).get();
         lapisShieldDurability = new ConfigEntry<>("equipment.lapis_shield.durability", 152).get();
         lapisShieldCooldown = new ConfigEntry<>("equipment.lapis_shield.cooldown", 80).get();
 
@@ -163,6 +164,7 @@ public class ConfigEntries {
     public static boolean fillSwampHutCauldrons;
     public static List<String> swampHutBlacklist = List.of();
 
+    public static boolean lapisShieldEnabled;
     public static int lapisShieldDurability;
     public static int lapisShieldCooldown;
 

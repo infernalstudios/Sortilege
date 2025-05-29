@@ -435,6 +435,8 @@ public class ModConfig {
               // CATEGORY: EQUIPMENT
               "equipment": {
                 "lapis_shield": {
+                  // Should the Witch Hat be registered as an item
+                  "enabled": true,
                   // How many durability points do Lapis Shields have
                   "durability": 152,
                   // How many ticks between each Lapis Shield dodge, in ticks (20t = 1s)

@@ -10,13 +10,13 @@ import net.minecraft.item.Items;
 public class ModItemGroups {
     public static void register() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
-            entries.add(ModItems.LIMITITE);
+            entries.addAfter(Items.EXPERIENCE_BOTTLE, ModItems.LIMITITE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
-            entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);
+            if (ConfigEntries.lapisShieldEnabled) entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);
             for (Item staff : ModItems.STAFFS)
                 entries.addBefore(Items.TRIDENT, staff);
-            if (ConfigEntries.witchHatEnabled) entries.add(ModItems.WITCH_HAT);
+            if (ConfigEntries.witchHatEnabled) entries.addAfter(Items.TURTLE_HELMET, ModItems.WITCH_HAT);
             //AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {

@@ -34,10 +34,11 @@ public class SortilegeClient implements ClientModInitializer {
 
         if (ConfigEntries.witchHatEnabled) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
 
-        ModelPredicateProviderRegistry.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) -> {
-            stack.getOrCreateNbt();
-            return LapisShieldItem.isOnCooldown(stack) ? 1f : 0f;
-        });
+        if (ConfigEntries.lapisShieldEnabled)
+            ModelPredicateProviderRegistry.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) -> {
+                stack.getOrCreateNbt();
+                return LapisShieldItem.isOnCooldown(stack) ? 1f : 0f;
+            });
     }
 
     public static void registerPackets() {
@@ -67,7 +68,7 @@ public class SortilegeClient implements ClientModInitializer {
                     return;
                 }
                 ItemStack stack = entity.getOffHandStack();
-                if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+                if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
 
                 if (cooldown == 0)
                     LapisShieldItem.removeCooldown(stack);

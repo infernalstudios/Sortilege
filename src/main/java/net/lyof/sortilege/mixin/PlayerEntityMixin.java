@@ -90,7 +90,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "damageShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
         ItemStack stack = this.getOffHandStack();
-        if (!stack.isOf(ModItems.LAPIS_SHIELD)) return;
+        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
 
         PlayerEntity self = (PlayerEntity) (Object) this;
 

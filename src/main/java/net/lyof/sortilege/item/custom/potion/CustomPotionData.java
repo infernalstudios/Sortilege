@@ -5,12 +5,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.entry.RegistryEntryOwner;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,10 +27,14 @@ public class CustomPotionData {
     public List<StatusEffectInstance> effects;
     public int drinkingTime;
 
-    public CustomPotionData(Identifier potion, List<StatusEffectInstance> effects, int drinkingTime) {
+    public CustomPotionData(Identifier potion, List<StatusEffectInstance> effects, int drinkingTime, boolean create) {
         this.potion = potion;
         this.effects = effects;
         this.drinkingTime = drinkingTime;
+
+        if (create && !Registries.POTION.containsId(potion)) {
+            REGISTRY.putIfAbsent(potion, new Potion(potion.getNamespace() + "_" + potion.getPath()));
+        }
     }
 
     @Override
@@ -36,39 +46,15 @@ public class CustomPotionData {
                 '}';
     }
 
-    private static final List<CustomPotionData> INSTANCES = new ArrayList<>();
-    private static final Map<Potion, CustomPotionData> CACHE = new HashMap<>();
-
-    @Nullable
-    public static CustomPotionData get(Potion potion) {
-        if (CACHE.containsKey(potion)) return CACHE.get(potion);
-        Sortilege.log("Running lengthy calculation");
-        CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(Registries.POTION.getId(potion)))
-                .findFirst().orElse(null);
-        CACHE.put(potion, result);
-        return result;
-    }
-
-    public static void clear() {
-        INSTANCES.clear();
-        CACHE.clear();
-
-        for (Potion potion : Registries.POTION)
-            ((IPotionShenanigans) potion).sorti$resetPotionCache();
-    }
-
-    public static boolean isEmpty() {
-        return INSTANCES.isEmpty();
-    }
 
     public static void read(JsonObject json) {
         if (json.has("potion")) {
-
             INSTANCES.add(new CustomPotionData(new Identifier(json.get("potion").getAsString()),
                     json.has("effects") && json.get("effects").isJsonArray() ?
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
-                            json.get("drinking_time").getAsInt() : ConfigEntries.potionDrinkingTime));
+                            json.get("drinking_time").getAsInt() : ConfigEntries.potionDrinkingTime,
+                    json.has("create") && json.get("create").getAsBoolean()));
         }
     }
 
@@ -87,5 +73,55 @@ public class CustomPotionData {
             effects.add(new StatusEffectInstance(effect, duration, amplifier));
         }
         return effects;
+    }
+
+
+    private static final List<CustomPotionData> INSTANCES = new ArrayList<>();
+    private static final Map<Potion, CustomPotionData> CACHE = new HashMap<>();
+
+    @Nullable
+    public static CustomPotionData get(Potion potion) {
+        if (CACHE.containsKey(potion)) return CACHE.get(potion);
+        CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(Registries.POTION.getId(potion)))
+                .findFirst().orElse(null);
+        CACHE.put(potion, result);
+        return result;
+    }
+
+    public static void clear() {
+        INSTANCES.clear();
+        CACHE.clear();
+
+        for (Potion potion : Registries.POTION)
+            ((IPotionShenanigans) potion).sorti$resetPotionCache();
+
+        REGISTRY.clear();
+    }
+
+    public static boolean isEmpty() {
+        return INSTANCES.isEmpty();
+    }
+
+
+    private static final Map<Identifier, Potion> REGISTRY = new HashMap<>();
+
+    public static Potion get(Identifier id) {
+        return REGISTRY.get(id);
+    }
+
+    public static Identifier getId(Potion potion) {
+        for (Map.Entry<Identifier, Potion> entry : REGISTRY.entrySet())
+            if (entry.getValue() == potion) return entry.getKey();
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> List<RegistryEntry.Reference<T>> getRegistry(RegistryEntryOwner<T> owner) {
+        return REGISTRY.entrySet().stream().map(entry -> {
+            RegistryEntry.Reference<T> ref = RegistryEntry.Reference.standAlone(owner,
+                    (RegistryKey<T>) RegistryKey.of(RegistryKeys.POTION, entry.getKey()));
+            ((RegistryEntryReferenceAccessor<T>) ref).setValue((T) entry.getValue());
+            return ref;
+        }).toList();
     }
 }

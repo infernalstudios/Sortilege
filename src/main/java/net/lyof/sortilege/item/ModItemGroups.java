@@ -15,7 +15,7 @@ public class ModItemGroups {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);
             for (Item staff : ModItems.STAFFS)
-                entries.add(staff);
+                entries.addBefore(Items.TRIDENT, staff);
             if (ConfigEntries.witchHatEnabled) entries.add(ModItems.WITCH_HAT);
             //AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });

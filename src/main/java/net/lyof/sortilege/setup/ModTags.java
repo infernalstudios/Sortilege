@@ -11,6 +11,7 @@ import net.minecraft.util.Identifier;
 public class ModTags {
     public static class Entities {
         public static TagKey<EntityType<?>> BOUNTIES = create("bounties");
+        public static TagKey<EntityType<?>> UNEXPERIENCED = create("unexperienced");
 
         private static TagKey<EntityType<?>> create(String name) {
             return TagKey.of(RegistryKeys.ENTITY_TYPE, Sortilege.makeID(name));

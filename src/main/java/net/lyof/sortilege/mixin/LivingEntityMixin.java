@@ -68,6 +68,8 @@ public abstract class LivingEntityMixin extends Entity implements IPotionShenani
     public int xpDropBonus(int amount) {
         if (ConfigEntries.witchHatEnabled && this.attackingPlayer != null && this.attackingPlayer.getEquippedStack(EquipmentSlot.HEAD).isOf(ModItems.WITCH_HAT))
             amount += ConfigEntries.witchHatBonus;
+        if (this.getType().isIn(ModTags.Entities.UNEXPERIENCED))
+            amount = 0;
 
         return amount;
     }

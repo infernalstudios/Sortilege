@@ -42,6 +42,7 @@
     "client.EnchantmentScreenMixin",
     "client.InGameHudMixin",
     "client.ItemMixin",
+    "client.ItemModelsMixin",
     "client.ItemRendererMixin",
     "client.ItemStackMixin",
     "client.ParticleTextureSheetMixin"

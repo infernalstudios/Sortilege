@@ -15,10 +15,14 @@ public class PotionHelper {
     public static final Map<StatusEffect, Potion> POTIONS = new HashMap<>();
     public static final List<Potion> GEN_ALLOWED_POTIONS = new ArrayList<>();
 
+    public static void clear() {
+        POTIONS.clear();
+        GEN_ALLOWED_POTIONS.clear();
+    }
+
     public static void load() {
         for (Potion potion : Registries.POTION) {
-            if (potion != Potions.EMPTY &&
-                    potion.getEffects().size() == 1 &&
+            if (potion.getEffects().size() == 1 &&
                     !potion.hasInstantEffect() &&
                     potion.getEffects().get(0).getAmplifier() == 0 &&
                     !ConfigEntries.antidoteBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString())) {
@@ -33,7 +37,6 @@ public class PotionHelper {
             }
         }
 
-        GEN_ALLOWED_POTIONS.clear();
         for (Potion potion : POTIONS.values()) {
             if (!ConfigEntries.swampHutBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString()))
                 GEN_ALLOWED_POTIONS.add(potion);

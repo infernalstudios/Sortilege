@@ -37,6 +37,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
         }
 
         // Brewing recipes
+        PotionHelper.clear();
+
         BetterBrewingRegistry.clear();
         BetterBrewingRegistry.register();
 

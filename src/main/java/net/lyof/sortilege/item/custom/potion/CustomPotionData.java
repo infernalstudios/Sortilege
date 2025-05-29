@@ -102,6 +102,7 @@ public class CustomPotionData {
 
 
     private static final Map<Identifier, Potion> REGISTRY = new HashMap<>();
+    public static final List<Identifier> MODELS = new ArrayList<>();
 
     public static Potion get(Identifier id) {
         return REGISTRY.get(id);

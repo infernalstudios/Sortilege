@@ -45,6 +45,7 @@
     "client.ItemModelsMixin",
     "client.ItemRendererMixin",
     "client.ItemStackMixin",
+    "client.ModelLoaderMixin",
     "client.ParticleTextureSheetMixin"
   ]
 }

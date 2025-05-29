@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.model.BakedModel;
@@ -11,6 +12,7 @@ import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.Registries;
@@ -26,13 +28,17 @@ public class ItemModelsMixin {
 
     @WrapMethod(method = "getModel(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/client/render/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
-        if (!(stack.getItem() instanceof PotionItem)) return original.call(stack);
+        if (!(stack.getItem() instanceof PotionItem) || stack.getItem() instanceof AntidotePotionItem) return original.call(stack);
 
         CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));
         if (data == null) return original.call(stack);
 
-        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Sortilege.log(Identifier.of(data.potion.getNamespace(),
-                "potions/" + data.potion.getPath())), "inventory"));
+        String path = "";
+        if (stack.isOf(Items.SPLASH_POTION)) path = "splash/";
+        else if (stack.isOf(Items.LINGERING_POTION)) path = "lingering/";
+
+        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Identifier.of(data.potion.getNamespace(),
+                "potions/" + path + data.potion.getPath()), "inventory"));
         if (model == this.modelManager.getMissingModel())
             return original.call(stack);
         return model;

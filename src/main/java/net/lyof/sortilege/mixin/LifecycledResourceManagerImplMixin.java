@@ -4,12 +4,11 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredDataResourcePack;
-import net.minecraft.resource.LifecycledResourceManagerImpl;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.resource.*;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.input.CharSequenceInputStream;
 import org.spongepowered.asm.mixin.Mixin;
@@ -134,6 +133,10 @@ public class LifecycledResourceManagerImplMixin {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void reloadConfigs(ResourceType type, List<ResourcePack> packs, CallbackInfo ci) {
+        CustomPotionData.MODELS.clear();
+        for (Identifier model : ResourceFinder.json("models/item/potions").findResources((ResourceManager) (Object) this).keySet())
+            CustomPotionData.MODELS.add(ResourceFinder.json("models/item").toResourceId(model));
+
         ModConfig.register();
     }
 }

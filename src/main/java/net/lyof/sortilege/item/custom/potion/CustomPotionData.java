@@ -3,15 +3,11 @@ package net.lyof.sortilege.item.custom.potion;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -20,7 +16,10 @@ import net.minecraft.registry.entry.RegistryEntryOwner;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CustomPotionData {
     public Identifier potion;
@@ -32,9 +31,8 @@ public class CustomPotionData {
         this.effects = effects;
         this.drinkingTime = drinkingTime;
 
-        if (create && !Registries.POTION.containsId(potion)) {
-            REGISTRY.putIfAbsent(potion, new Potion(potion.getNamespace() + "_" + potion.getPath()));
-        }
+        if (create && !Registries.POTION.containsId(potion))
+            REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "_" + potion.getPath()));
     }
 
     @Override

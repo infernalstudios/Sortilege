@@ -228,8 +228,6 @@ public class StaffItem extends ToolItem implements DyeableItem {
 
     @Override
     public @NotNull TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity player, @NotNull Hand hand) {
-        Sortilege.log(Registries.POTION.streamEntries().map(p -> Registries.POTION.getId(p.value())).toList());
-
         ItemStack staff = player.getStackInHand(hand);
         if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)) && this.getOvercharge(staff) <= 0)
             return super.use(world, player, hand);

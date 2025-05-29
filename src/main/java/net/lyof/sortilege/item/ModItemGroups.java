@@ -17,7 +17,7 @@ public class ModItemGroups {
             for (Item staff : ModItems.STAFFS)
                 entries.addBefore(Items.TRIDENT, staff);
             if (ConfigEntries.witchHatEnabled) entries.addAfter(Items.TURTLE_HELMET, ModItems.WITCH_HAT);
-            //AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
+            AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
             AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);

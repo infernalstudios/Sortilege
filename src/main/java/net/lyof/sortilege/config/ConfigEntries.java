@@ -70,7 +70,7 @@ public class ConfigEntries {
         antidoteStackSize = new ConfigEntry<>("brewing.antidote.stack_size", 16).get();
         antidoteImmunityTime = new ConfigEntry<>("brewing.antidote.immunity_time", 300).get();
 
-        potionLengthMultiplier = new ConfigEntry<>("brewing.potion.length_multiplier", 1.5).get();
+        potionDurationMultiplier = new ConfigEntry<>("brewing.potion.duration_multiplier", 1.5).get();
         potionDrinkingTime = new ConfigEntry<>("brewing.potion.default_drinking_time", 15).get();
 
         cauldronBrewingEnabled = new ConfigEntry<>("brewing.cauldron.enable", true).get();
@@ -155,7 +155,7 @@ public class ConfigEntries {
     public static int antidoteStackSize;
     public static int antidoteImmunityTime;
 
-    public static double potionLengthMultiplier;
+    public static double potionDurationMultiplier;
     public static int potionDrinkingTime;
 
     public static boolean cauldronBrewingEnabled;

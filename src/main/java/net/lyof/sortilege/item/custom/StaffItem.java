@@ -190,16 +190,16 @@ public class StaffItem extends ToolItem implements DyeableItem {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> list, TooltipContext flag) {
-        super.appendTooltip(stack, world, list, flag);
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext flag) {
+        super.appendTooltip(stack, world, tooltip, flag);
 
         if (world != null && world.isClient())
-            list.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
+            tooltip.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
                     .formatted(Formatting.GRAY));
         if (this.getXPCost(stack) > 0) {
-            list.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
+            tooltip.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
                     .formatted(Formatting.GREEN));
-            list.add(Text.empty());
+            tooltip.add(Text.empty());
         }
     }
 

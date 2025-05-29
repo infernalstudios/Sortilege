@@ -14,10 +14,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class CustomPotionData {
     public Identifier potion;
@@ -40,15 +37,22 @@ public class CustomPotionData {
     }
 
     private static final List<CustomPotionData> INSTANCES = new ArrayList<>();
+    private static final Map<Potion, CustomPotionData> CACHE = new HashMap<>();
 
     @Nullable
     public static CustomPotionData get(Potion potion) {
-        return INSTANCES.stream().filter(data -> data.potion.equals(Registries.POTION.getId(potion)))
+        if (CACHE.containsKey(potion)) return CACHE.get(potion);
+        Sortilege.log("Running lengthy calculation");
+        CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(Registries.POTION.getId(potion)))
                 .findFirst().orElse(null);
+        CACHE.put(potion, result);
+        return result;
     }
 
     public static void clear() {
         INSTANCES.clear();
+        CACHE.clear();
+
         for (Potion potion : Registries.POTION)
             ((IPotionShenanigans) potion).sorti$resetPotionCache();
     }

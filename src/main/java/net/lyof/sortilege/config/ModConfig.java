@@ -413,7 +413,7 @@ public class ModConfig {
                 "potion": {
                   // Value to multiply all potions effects length by.
                   //    For example, if this is 2, then all effects gained *from potions* will last twice as long
-                  "length_multiplier": 1.5,
+                  "duration_multiplier": 1.5,
                   // How many ticks should drinking a potion take. 20t = 1s
                   "default_drinking_time": 15
                 },

@@ -25,23 +25,19 @@ public class CustomPotionData {
     public Identifier potion;
     public List<StatusEffectInstance> effects;
     public int drinkingTime;
+    public int cooldown;
+    public int stackSize;
 
-    public CustomPotionData(Identifier potion, List<StatusEffectInstance> effects, int drinkingTime, boolean create) {
+    public CustomPotionData(Identifier potion, List<StatusEffectInstance> effects, int drinkingTime, int cooldown,
+                            int stackSize, boolean create) {
         this.potion = potion;
         this.effects = effects;
         this.drinkingTime = drinkingTime;
+        this.cooldown = cooldown;
+        this.stackSize = stackSize;
 
         if (create && !Registries.POTION.containsId(potion))
             REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "_" + potion.getPath()));
-    }
-
-    @Override
-    public String toString() {
-        return "CustomPotionData{" +
-                "potion=" + potion +
-                ", effects=" + effects.stream().map(e -> e.getEffectType().getTranslationKey() + " " + e.getDuration() + " " + e.getAmplifier()).toList() +
-                ", drinkingTime=" + drinkingTime +
-                '}';
     }
 
 
@@ -52,6 +48,10 @@ public class CustomPotionData {
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
                             json.get("drinking_time").getAsInt() : ConfigEntries.potionDrinkingTime,
+                    json.has("cooldown") ?
+                            json.get("cooldown").getAsInt() : ConfigEntries.potionCooldown,
+                    json.has("stack_size") ?
+                            json.get("stack_size").getAsInt() : ConfigEntries.potionStackSize,
                     json.has("create") && json.get("create").getAsBoolean()));
         }
     }

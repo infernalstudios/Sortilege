@@ -1,7 +1,11 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
+import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.item.TooltipContext;
@@ -12,8 +16,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -80,5 +86,17 @@ public abstract class ItemStackMixin {
                 list.add(Text.empty());
             list.add(txt.formatted(a >= m ? Formatting.RED : Formatting.WHITE));
         }
+    }
+
+    @WrapMethod(method = "getMaxCount")
+    public int stackablePotions(Operation<Integer> original) {
+        ItemStack self = (ItemStack) (Object) this;
+        if (!(self.getItem() instanceof PotionItem) || self.getItem() instanceof AntidotePotionItem) return original.call();
+
+        int stackSize = ConfigEntries.potionStackSize;
+        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(self));
+        if (data != null) stackSize = data.stackSize;
+
+        return stackSize;
     }
 }

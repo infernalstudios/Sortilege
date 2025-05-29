@@ -411,11 +411,14 @@ public class ModConfig {
                   "immunity_time": 300
                 },
                 "potion": {
+                  "stack_size": 3,
                   // Value to multiply all potions effects length by.
                   //    For example, if this is 2, then all effects gained *from potions* will last twice as long
                   "duration_multiplier": 1.5,
                   // How many ticks should drinking a potion take. 20t = 1s
-                  "default_drinking_time": 15
+                  "drinking_time": 20,
+                  // How many ticks of cooldown potions get after being drank or thrown
+                  "cooldown": 200
                 },
                 "cauldron": {
                   // Should cauldron brewing be enabled

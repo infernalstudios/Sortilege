@@ -16,6 +16,7 @@
     "ItemStackMixin",
     "LeveledCauldronBlockMixin",
     "LifecycledResourceManagerImplMixin",
+    "LingeringPotionItemMixin",
     "LivingEntityMixin",
     "PlayerAdvancementTrackerMixin",
     "PlayerEntityMixin",
@@ -27,6 +28,7 @@
     "ShieldItemMixin",
     "SimpleRegistryMixin",
     "SmithingTransformRecipeMixin",
+    "ThrowablePotionItemMixin",
     "UnbreakingEnchantmentMixin",
     "accessor.RegistryEntryReferenceAccessor",
     "accessor.StatusEffectInstanceAccessor"

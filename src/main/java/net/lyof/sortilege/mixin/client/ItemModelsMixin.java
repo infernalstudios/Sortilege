@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
@@ -30,15 +31,14 @@ public class ItemModelsMixin {
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
         if (!(stack.getItem() instanceof PotionItem) || stack.getItem() instanceof AntidotePotionItem) return original.call(stack);
 
-        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));
-        if (data == null) return original.call(stack);
+        Identifier potion = Registries.POTION.getId(PotionUtil.getPotion(stack));
 
-        String path = "";
-        if (stack.isOf(Items.SPLASH_POTION)) path = "splash/";
-        else if (stack.isOf(Items.LINGERING_POTION)) path = "lingering/";
+        String path = "potions/";
+        if (stack.isOf(Items.SPLASH_POTION)) path += "splash/";
+        else if (stack.isOf(Items.LINGERING_POTION)) path += "lingering/";
 
-        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Identifier.of(data.potion.getNamespace(),
-                "potions/" + path + data.potion.getPath()), "inventory"));
+        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Identifier.of(potion.getNamespace(),
+                path + potion.getPath()), "inventory"));
         if (model == this.modelManager.getMissingModel())
             return original.call(stack);
         return model;

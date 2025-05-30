@@ -1,5 +1,6 @@
 package net.lyof.sortilege.item.custom.potion;
 
+import net.lyof.sortilege.Sortilege;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Pair;
@@ -26,8 +27,8 @@ public class PotionCooldownManager {
 
         Pair<Integer, Integer> time = COOLDOWNS.get(user.getWorld().isClient()).get(user).get(key);
         if (time.getRight() < user.age) {
-            COOLDOWNS.get(true).get(user).remove(key);
-            COOLDOWNS.get(false).get(user).remove(key);
+            if (COOLDOWNS.get(true).containsKey(user)) COOLDOWNS.get(true).get(user).remove(key);
+            if (COOLDOWNS.get(false).containsKey(user)) COOLDOWNS.get(false).get(user).remove(key);
             return 0;
         }
         return 1 - (user.age - time.getLeft()) / (float ) (time.getRight() - time.getLeft());

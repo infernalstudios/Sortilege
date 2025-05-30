@@ -4,22 +4,19 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
-import net.lyof.sortilege.item.custom.potion.CustomPotionData;
-import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,27 +27,41 @@ import java.util.Map;
 
 @Mixin(ItemModels.class)
 public class ItemModelsMixin {
-    @Unique private static final Map<ItemStack, BakedModel> CACHE = new HashMap<>();
+    @Unique private static final Map<String, BakedModel> CACHE = new HashMap<>();
 
     @Shadow @Final private BakedModelManager modelManager;
 
     @WrapMethod(method = "getModel(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/client/render/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
         if (!(stack.getItem() instanceof PotionItem) || stack.getItem() instanceof AntidotePotionItem) return original.call(stack);
-        if (CACHE.containsKey(stack)) return CACHE.get(stack);
+        if (!stack.hasNbt()) return original.call(stack);
+        
+        Identifier id = new Identifier(stack.getNbt().getString("Potion"));
+        String key = stack.getItem().getClass().getName() + "@" + Integer.toHexString(stack.getItem().hashCode()) + "/" + id;
+        if (CACHE.containsKey(key)) return CACHE.get(key);
 
-        Identifier potion = Registries.POTION.getId(PotionUtil.getPotion(stack));
+        String base = "";
+        if (stack.isOf(Items.SPLASH_POTION)) base = "splash/";
+        else if (stack.isOf(Items.LINGERING_POTION)) base = "lingering/";
 
-        String path = "potions/";
-        if (stack.isOf(Items.SPLASH_POTION)) path += "splash/";
-        else if (stack.isOf(Items.LINGERING_POTION)) path += "lingering/";
+        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Identifier.of(id.getNamespace(),
+                "potions/" + base + id.getPath()), "inventory"));
 
-        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Identifier.of(potion.getNamespace(),
-                path + potion.getPath()), "inventory"));
+        if (model == this.modelManager.getMissingModel()) {
+            String type = "";
+            if (id.getPath().startsWith("strong_"))
+                type = "strong_";
+            else if (id.getPath().startsWith("long_"))
+                type = "long_";
+
+            model = this.modelManager.getModel(new ModelIdentifier(Identifier.of("minecraft",
+                    type + base.replace("/", "_") + "potion"), "inventory"));
+        }
+
         if (model == this.modelManager.getMissingModel())
             model = original.call(stack);
 
-        CACHE.put(stack, model);
+        CACHE.put(key, model);
         return model;
     }
 }

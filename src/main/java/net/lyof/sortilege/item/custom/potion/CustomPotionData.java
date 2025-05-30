@@ -37,7 +37,7 @@ public class CustomPotionData {
         this.stackSize = stackSize;
 
         if (create && !Registries.POTION.containsId(potion))
-            REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "_" + potion.getPath()));
+            REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
     }
 
 

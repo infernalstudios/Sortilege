@@ -7,7 +7,6 @@ import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredDataResourcePack;
-import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.resource.*;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.input.CharSequenceInputStream;

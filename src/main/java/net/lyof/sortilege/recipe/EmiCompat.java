@@ -1,5 +1,6 @@
 package net.lyof.sortilege.recipe;
 
+import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -25,6 +26,7 @@ import net.minecraft.item.Items;
 import java.util.List;
 import java.util.Map;
 
+@EmiEntrypoint
 public class EmiCompat implements EmiPlugin {
     public static final EmiRecipeCategory ENCHANTING_CATEGORY = new EmiRecipeCategory(Sortilege.makeID("enchanting"),
             EmiStack.of(Items.ENCHANTING_TABLE),

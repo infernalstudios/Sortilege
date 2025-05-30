@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Random;
 
 public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
+    public static final List<SpecialSmithingEmiRecipe> INSTANCES = new ArrayList<>();
+
     protected final int uniq;
     protected List<Item> bases;
     protected EmiIngredient additions;
@@ -32,9 +34,14 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
         this.additions = additions;
         this.recipe = recipe;
         this.generateInputs();
+
+        INSTANCES.add(this);
     }
 
-    protected void generateInputs() {
+    public void generateInputs() {
+        this.inputs.clear();
+        this.outputs.clear();
+
         for (Item item : Registries.ITEM) {
             if (this.recipe.testBase(item.getDefaultStack())) this.bases.add(item);
         }

@@ -19,8 +19,7 @@ public class PotionMixin implements IPotionShenanigans {
     @Unique private List<StatusEffectInstance> customEffects = null;
     @Unique private boolean lengthened = false;
 
-    @Override
-    public void sorti$setImmunity(StatusEffect effect, int time) {}
+    @Override public void sorti$setImmunity(StatusEffect effect, int time) {}
 
     @Override
     public void sorti$resetPotionCache() {

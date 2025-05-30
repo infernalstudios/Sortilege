@@ -1,8 +1,9 @@
-package net.lyof.sortilege.item.custom.potion;
+package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;

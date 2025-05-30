@@ -8,6 +8,7 @@ import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
+import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
@@ -97,6 +98,7 @@ public abstract class LivingEntityMixin extends Entity implements IPotionShenani
     @Inject(method = "drop", at = @At("HEAD"))
     public void giveKillXP(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
+        PotionCooldownManager.clear(self);
 
         if (self instanceof PlayerEntity player && this.getWorld() instanceof ServerWorld world) {
             int steal_xp = (int) Math.round(XPHelper.getTotalxp(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);

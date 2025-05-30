@@ -2,7 +2,7 @@ package net.lyof.sortilege.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
+import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;

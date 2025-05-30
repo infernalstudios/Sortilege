@@ -4,19 +4,18 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.item.custom.potion.AntidotePotionItem;
+import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.potion.PotionUtil;
@@ -24,9 +23,13 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -37,9 +40,7 @@ import java.util.List;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
     @Shadow public abstract ItemStack copy();
-
     @Shadow public abstract NbtCompound getOrCreateNbt();
-
     @Shadow public abstract boolean isIn(TagKey<Item> tag);
 
     @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
@@ -98,5 +99,35 @@ public abstract class ItemStackMixin {
         if (data != null) stackSize = data.stackSize;
 
         return stackSize;
+    }
+
+
+    @Unique
+    private void setPotionCooldown(ItemStack self, LivingEntity user) {
+        int cooldown = ConfigEntries.potionCooldown;
+        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(self));
+        if (data != null) cooldown = data.cooldown;
+
+        PotionCooldownManager.set(self, user, cooldown);
+    }
+
+    @Inject(method = "finishUsing", at = @At("HEAD"))
+    public void putOnCooldown(World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
+        ItemStack self = (ItemStack) (Object) this;
+        if (!(self.getItem() instanceof PotionItem) || self.getItem() instanceof AntidotePotionItem) return;
+
+        this.setPotionCooldown(self, user);
+    }
+
+    @WrapMethod(method = "use")
+    public TypedActionResult<ItemStack> handleUse(World world, PlayerEntity user, Hand hand,
+                                                      Operation<TypedActionResult<ItemStack>> original) {
+        ItemStack self = (ItemStack) (Object) this;
+        if (PotionCooldownManager.getProgress(self, user) > 0) return TypedActionResult.fail(self);
+
+        if (self.getItem() instanceof ThrowablePotionItem)
+            this.setPotionCooldown(self, user);
+
+        return original.call(world, user, hand);
     }
 }

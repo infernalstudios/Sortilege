@@ -5,11 +5,13 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -70,6 +72,10 @@ public class LapisShieldItem extends Item implements Equipment {
     public static void onSuccessfulUse(ItemStack stack, LivingEntity entity, float amount) {
         if (!entity.getWorld().isClient()) LapisShieldItem.addCooldown(stack, entity.age);
         sendCooldownUpdate(entity, entity.age);
+
+        if (entity instanceof PlayerEntity player)
+            player.getItemCooldownManager().set(ModItems.LAPIS_SHIELD, ConfigEntries.lapisShieldCooldown);
+
         ModParticles.spawnWisps(entity.getWorld(), entity.getX(), entity.getY() + entity.getEyeHeight(entity.getPose()) / 2, entity.getZ(),
                 16, new float[]{0.3f, 0.3f, 1f});
 

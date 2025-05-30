@@ -5,8 +5,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
@@ -18,7 +16,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
 
@@ -47,15 +44,5 @@ public class PotionItemMixin {
         if (cooldown > 0)
             tooltip.add(Text.translatable("sortilege.staff.cooldown", cooldown / 20f)
                 .formatted(Formatting.GRAY));
-    }
-
-    @Inject(method = "finishUsing", at = @At("HEAD"))
-    public void putOnCooldown(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        int cooldown = ConfigEntries.potionCooldown;
-        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));
-        if (data != null) cooldown = data.cooldown;
-
-        if (user instanceof PlayerEntity player)
-            player.getItemCooldownManager().set(stack.getItem(), cooldown);
     }
 }

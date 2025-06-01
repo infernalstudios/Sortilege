@@ -2,6 +2,6 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "minecraft:item/potion_overlay",
-    "layer1": "minecraft:item/iron_nugget"
+    "layer1": "sortilege:item/strong_potion"
   }
 }

@@ -2,6 +2,6 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "minecraft:item/potion_overlay",
-    "layer1": "minecraft:item/ghast_tear"
+    "layer1": "sortilege:item/long_lingering_potion"
   }
 }

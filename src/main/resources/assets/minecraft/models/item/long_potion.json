@@ -2,6 +2,6 @@
   "parent": "item/generated",
   "textures": {
     "layer0": "minecraft:item/potion_overlay",
-    "layer1": "minecraft:item/gold_nugget"
+    "layer1": "sortilege:item/long_potion"
   }
 }

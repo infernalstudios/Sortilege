@@ -1,5 +1,7 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -14,15 +16,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnvilScreenHandler.class)
-public abstract class AnvilScreenHandlerMixin extends ForgingScreenHandler {
+public abstract class AnvilScreenHandlerMixin {
     @Shadow @Final private Property levelCost;
 
-    public AnvilScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(type, syncId, playerInventory, context);
-    }
-
-    @Inject(method = "updateResult", at = @At("RETURN"))
-    public void noAnvilCost(CallbackInfo ci) {
+    @WrapMethod(method = "updateResult")
+    public void noAnvilCost(Operation<Void> original) {
+        original.call();
         if (ConfigEntries.noXPAnvil) this.levelCost.set(0);
     }
 

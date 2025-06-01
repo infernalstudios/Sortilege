@@ -123,7 +123,7 @@ public abstract class ItemStackMixin {
     public TypedActionResult<ItemStack> handleUse(World world, PlayerEntity user, Hand hand,
                                                       Operation<TypedActionResult<ItemStack>> original) {
         ItemStack self = (ItemStack) (Object) this;
-        if (PotionCooldownManager.getProgress(self, user) > 0) return TypedActionResult.fail(self);
+        if (PotionCooldownManager.getProgress(self, user, 0) > 0) return TypedActionResult.fail(self);
 
         if (self.getItem() instanceof ThrowablePotionItem)
             this.setPotionCooldown(self, user);

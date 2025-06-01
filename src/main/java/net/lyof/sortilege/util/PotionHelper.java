@@ -2,9 +2,12 @@ package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,5 +56,16 @@ public class PotionHelper {
 
     public static Potion getRandomPotion() {
         return MathHelper.randi(GEN_ALLOWED_POTIONS);
+    }
+
+    public static String getPotionItemType(ItemStack stack) {
+        if (!stack.hasNbt()) return "";
+        Identifier id = new Identifier(stack.getNbt().getString("Potion"));
+
+        String base = "";
+        if (stack.isOf(Items.SPLASH_POTION)) base = "/splash";
+        else if (stack.isOf(Items.LINGERING_POTION)) base = "/lingering";
+
+        return id + base;
     }
 }

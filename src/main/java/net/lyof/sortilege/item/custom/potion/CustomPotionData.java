@@ -125,16 +125,4 @@ public class CustomPotionData {
             return ref;
         }).toList();
     }
-
-
-    public static String getPotionItemType(ItemStack stack) {
-        if (!stack.hasNbt()) return "";
-        Identifier id = new Identifier(stack.getNbt().getString("Potion"));
-
-        String base = "";
-        if (stack.isOf(Items.SPLASH_POTION)) base = "/splash";
-        else if (stack.isOf(Items.LINGERING_POTION)) base = "/lingering";
-
-        return id + base;
-    }
 }

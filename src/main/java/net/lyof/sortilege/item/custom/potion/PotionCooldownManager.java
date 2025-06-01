@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item.custom.potion;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Pair;
@@ -16,11 +17,11 @@ public class PotionCooldownManager {
     public static void set(ItemStack stack, LivingEntity user, int length) {
         COOLDOWNS.get(user.getWorld().isClient()).putIfAbsent(user, new HashMap<>());
         COOLDOWNS.get(user.getWorld().isClient()).get(user)
-                .putIfAbsent(CustomPotionData.getPotionItemType(stack), new Pair<>(user.age, user.age + length));
+                .putIfAbsent(PotionHelper.getPotionItemType(stack), new Pair<>(user.age, user.age + length));
     }
 
-    public static float getProgress(ItemStack stack, LivingEntity user) {
-        String key = CustomPotionData.getPotionItemType(stack);
+    public static float getProgress(ItemStack stack, LivingEntity user, float tickDelta) {
+        String key = PotionHelper.getPotionItemType(stack);
 
         if (!COOLDOWNS.get(user.getWorld().isClient()).containsKey(user)
                 || !COOLDOWNS.get(user.getWorld().isClient()).get(user).containsKey(key)) return 0;
@@ -31,7 +32,7 @@ public class PotionCooldownManager {
             if (COOLDOWNS.get(false).containsKey(user)) COOLDOWNS.get(false).get(user).remove(key);
             return 0;
         }
-        return 1 - (user.age - time.getLeft()) / (float ) (time.getRight() - time.getLeft());
+        return 1 - (user.age - time.getLeft() + tickDelta) / (float) (time.getRight() - time.getLeft());
     }
 
     public static void clear() {

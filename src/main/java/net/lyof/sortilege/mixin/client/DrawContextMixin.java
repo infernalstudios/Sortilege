@@ -43,8 +43,8 @@ public abstract class DrawContextMixin {
     public float getStackCooldown(ItemCooldownManager instance, Item item, float tickDelta, Operation<Float> original,
                                   TextRenderer textRenderer, ItemStack stack, int x, int y, @Nullable String countOverride) {
 
-        if (item instanceof PotionItem && !(item instanceof AntidotePotionItem)) {
-            float progress = PotionCooldownManager.getProgress(stack, this.client.player);
+        if (item instanceof PotionItem && !(item instanceof AntidotePotionItem) && this.client.player != null) {
+            float progress = PotionCooldownManager.getProgress(stack, this.client.player, tickDelta);
             if (progress > 0)
                 return progress;
         }

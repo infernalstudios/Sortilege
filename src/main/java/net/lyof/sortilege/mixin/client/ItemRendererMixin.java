@@ -1,7 +1,9 @@
 package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.MockItemRenderer;
+import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.client.MinecraftClient;
@@ -21,8 +23,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
+    @Unique private static final float px = 1/16f;
+
     @Unique
     private static final Identifier GLINT_TEXTURE = Sortilege.makeID("textures/models/staff/glint.png");
+    @Unique
+    private static final Identifier SHIELD_GLOW_LAYER = Sortilege.makeID("textures/models/lapis_shield_glow_layer.png");
 
     @Inject(method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V", at = @At(
             value = "INVOKE",
@@ -38,12 +44,23 @@ public class ItemRendererMixin {
             matrices.push();
 
             matrices.scale(1.005f, 1.005f, 1.005f);
-            //matrices.translate(0.995f, -0.005f, 0.495f);
             matrices.translate(0, 0.995, 0.4975);
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
 
             MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light,
                     GLINT_TEXTURE, staff.getColor(stack));
+
+            matrices.pop();
+        }
+
+        if (stack.getItem() instanceof LapisShieldItem && !LapisShieldItem.isOnCooldown(stack)) {
+            matrices.push();
+
+            matrices.scale(1.1f, 1.1f, 1.1f);
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+            matrices.translate(-6*px, -4*px, -1.5*px);
+
+            MockItemRenderer.renderItem(matrices, vertexConsumers, -1, SHIELD_GLOW_LAYER);
 
             matrices.pop();
         }

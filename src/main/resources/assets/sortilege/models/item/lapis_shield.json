@@ -1,14 +1,14 @@
 {
-  "parent": "item/generated",
+  "parent": "sortilege:item/lapis_shield_base",
   "textures": {
-    "layer0": "sortilege:item/limitite"
+    "texture": "sortilege:item/lapis_shield"
   },
   "overrides": [
     {
       "predicate": {
         "sortilege:cooldown": 1
       },
-      "model": "sortilege:item/netherite_staff"
+      "model": "sortilege:item/lapis_shield_cooldown"
     }
   ]
 }

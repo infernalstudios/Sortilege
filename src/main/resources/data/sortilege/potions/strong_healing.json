@@ -1,4 +1,5 @@
 {
   "potion": "minecraft:strong_healing",
-  "drinking_time": 10
+  "drinking_time": 10,
+  "cooldown": 300
 }

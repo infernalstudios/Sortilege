@@ -80,7 +80,7 @@ public class LapisShieldItem extends Item implements Equipment {
                 16, new float[]{0.3f, 0.3f, 1f});
 
         if (amount >= 3f) {
-            stack.damage(1, entity, e -> e.sendToolBreakStatus(Hand.OFF_HAND));
+            stack.damage((int) amount/2, entity, e -> e.sendToolBreakStatus(Hand.OFF_HAND));
             if (stack.isEmpty())
                 entity.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + entity.getWorld().random.nextFloat() * 0.4F);
         }

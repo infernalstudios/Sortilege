@@ -6,7 +6,10 @@ import net.lyof.sortilege.item.MockItemRenderer;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.setup.ModTags;
+import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -35,7 +38,8 @@ public class ItemRendererMixin {
             target = "Lnet/minecraft/client/render/item/ItemRenderer;renderBakedItemModel(Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V",
             shift = At.Shift.AFTER)
     )
-    public void renderItem(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
+    public void renderItem(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices,
+                           VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         MinecraftClient minecraft = MinecraftClient.getInstance();
 
         if (minecraft.world == null || stack == null) return;
@@ -56,11 +60,11 @@ public class ItemRendererMixin {
         if (stack.getItem() instanceof LapisShieldItem && !LapisShieldItem.isOnCooldown(stack)) {
             matrices.push();
 
-            matrices.scale(1.1f, 1.1f, 1.1f);
+            matrices.scale(1.005f, 1.005f, 1.005f);
             matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
             matrices.translate(-6*px, -4*px, -1.5*px);
 
-            MockItemRenderer.renderItem(matrices, vertexConsumers, -1, SHIELD_GLOW_LAYER);
+            MockItemRenderer.renderItem(matrices, vertexConsumers, 15728880, SHIELD_GLOW_LAYER);
 
             matrices.pop();
         }

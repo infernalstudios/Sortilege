@@ -43,10 +43,7 @@ public class MockItemRenderer {
                                   int light, Identifier texture, float thickness, int red, int green, int blue) {
 
         VertexConsumer buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(texture));
-        if (light < 0) {
-            light = 0xffffff;
-            buffer = bufferSource.getBuffer(RenderLayer.getEntityTranslucentEmissive(texture));
-        }
+        if (light < 0) light = 15728880;
 
         matrixStack.push();
 

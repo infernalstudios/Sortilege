@@ -60,11 +60,11 @@ public class ItemModelsMixin {
         return model;
     }
 
-    @Unique private static ModelIdentifier getId(String namespace, String name) {
-        String key = namespace + ":" + name;
+    @Unique private static ModelIdentifier getId(String namespace, String path) {
+        String key = namespace + ":" + path;
         if (ID_CACHE.containsKey(key)) return ID_CACHE.get(key);
 
-        ID_CACHE.put(key, new ModelIdentifier(Identifier.of(namespace, name), "inventory"));
+        ID_CACHE.put(key, new ModelIdentifier(Identifier.of(namespace, path), "inventory"));
         return ID_CACHE.get(key);
     }
 }

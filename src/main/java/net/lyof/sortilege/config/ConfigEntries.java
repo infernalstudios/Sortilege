@@ -1,5 +1,7 @@
 package net.lyof.sortilege.config;
 
+import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +72,7 @@ public class ConfigEntries {
         antidoteStackSize = new ConfigEntry<>("brewing.antidote.stack_size", 16).get();
         antidoteImmunityTime = new ConfigEntry<>("brewing.antidote.immunity_time", 300).get();
 
-        potionStackSize = new ConfigEntry<>("brewing.potion.stack_size", 3).get();
+        potionStackSize = new ConfigEntry<>("brewing.potion.stack_size", 8).get();
         potionDurationMultiplier = new ConfigEntry<>("brewing.potion.duration_multiplier", 1.5).get();
         potionDrinkingTime = new ConfigEntry<>("brewing.potion.drinking_time", 20).get();
         potionCooldown = new ConfigEntry<>("brewing.potion.cooldown", 200).get();

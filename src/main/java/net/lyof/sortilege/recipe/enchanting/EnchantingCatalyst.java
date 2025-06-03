@@ -1,5 +1,6 @@
 package net.lyof.sortilege.recipe.enchanting;
 
+import com.google.gson.JsonObject;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -46,12 +47,11 @@ public class EnchantingCatalyst {
         return !getEnchantments(item).isEmpty();
     }
 
-    @SuppressWarnings("unchecked")
-    public static void read(Map<String, ?> json) {
-        if (json.containsKey("item") && json.containsKey("enchantments") && json.get("enchantments") instanceof List l) {
-            Item item = Registries.ITEM.get(new Identifier(String.valueOf(json.get("item"))));
-            List<Enchantment> enchants = l.stream()
-                    .map(id -> Registries.ENCHANTMENT.get(new Identifier(String.valueOf(id)))).filter(Objects::nonNull).toList();
+    public static void read(JsonObject json) {
+        if (json.has("item") && json.has("enchantments") && json.get("enchantments").isJsonArray()) {
+            Item item = Registries.ITEM.get(new Identifier(json.get("item").getAsString()));
+            List<Enchantment> enchants = json.get("enchantments").getAsJsonArray().asList().stream()
+                    .map(id -> Registries.ENCHANTMENT.get(new Identifier(id.getAsString()))).filter(Objects::nonNull).toList();
 
             register(item, enchants);
         }

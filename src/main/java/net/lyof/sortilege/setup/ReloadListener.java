@@ -2,6 +2,7 @@ package net.lyof.sortilege.setup;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
@@ -9,7 +10,7 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.recipe.brewing.custom.BrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.ItemBrewingRecipe;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
@@ -20,7 +21,6 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
-import java.util.Objects;
 
 public class ReloadListener implements SimpleSynchronousResourceReloadListener {
     @Override
@@ -58,14 +58,17 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener {
                 Resource resource = entry.getValue();
 
                 String content = new String(resource.getInputStream().readAllBytes());
-                Map<String, ?> map = new Gson().fromJson(content, Map.class);
+                JsonElement json = new Gson().fromJson(content, JsonElement.class);
 
-                if (map == null) continue;
+                if (json == null || !json.isJsonObject()) continue;
+                JsonObject jsono = json.getAsJsonObject();
 
-                if (map.containsKey("type") && Objects.equals(String.valueOf(map.get("type")), Sortilege.MOD_ID + ":brewing"))
-                    BrewingRecipe.read(map);
-                else if (map.containsKey("type") && Objects.equals(String.valueOf(map.get("type")), Sortilege.MOD_ID + ":enchanting_catalyst"))
-                    EnchantingCatalyst.read(map);
+                if (jsono.has("type") && jsono.get("type").getAsString().equals(Sortilege.MOD_ID + ":item_brewing"))
+                    ItemBrewingRecipe.read(jsono);
+                else if (jsono.has("type") && jsono.get("type").getAsString().equals(Sortilege.MOD_ID + ":potion_brewing"))
+                    BetterBrewingRegistry.register(jsono);
+                else if (jsono.has("type") && jsono.get("type").getAsString().equals(Sortilege.MOD_ID + ":enchanting_catalyst"))
+                    EnchantingCatalyst.read(jsono);
 
             } catch (Throwable e) {
                 Sortilege.log("Could not read data file " + entry.getKey());

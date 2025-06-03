@@ -1,5 +1,6 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
+import com.google.gson.JsonObject;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.IBetterBrewingRecipe;
 import net.minecraft.item.Item;
@@ -7,10 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
-import java.util.Map;
 import java.util.Random;
 
-public class BrewingRecipe implements IBetterBrewingRecipe {
+public class ItemBrewingRecipe implements IBetterBrewingRecipe {
     @Override
     public boolean isInput(ItemStack stack) {
         return stack.isOf(this.input);
@@ -46,6 +46,7 @@ public class BrewingRecipe implements IBetterBrewingRecipe {
         return this.output.getDefaultStack();
     }
 
+
     @Override
     public String toString() {
         return "BrewingRecipe{" +
@@ -59,19 +60,19 @@ public class BrewingRecipe implements IBetterBrewingRecipe {
     public Item ingredient;
     public Item output;
 
-    public BrewingRecipe(Item in, Item add, Item out) {
+    public ItemBrewingRecipe(Item in, Item add, Item out) {
         this.input = in;
         this.ingredient = add;
         this.output = out;
     }
 
-    public static void read(Map<String, ?> json) {
-        if (json.containsKey("input") && json.containsKey("ingredient") && json.containsKey("output")) {
-            Item in = Registries.ITEM.get(new Identifier(String.valueOf(json.get("input"))));
-            Item add = Registries.ITEM.get(new Identifier(String.valueOf(json.get("ingredient"))));
-            Item out = Registries.ITEM.get(new Identifier(String.valueOf(json.get("output"))));
+    public static void read(JsonObject json) {
+        if (json.has("input") && json.has("ingredient") && json.has("output")) {
+            Item in = Registries.ITEM.get(new Identifier(json.get("input").getAsString()));
+            Item add = Registries.ITEM.get(new Identifier(json.get("ingredient").getAsString()));
+            Item out = Registries.ITEM.get(new Identifier(json.get("output").getAsString()));
 
-            BetterBrewingRegistry.register(new BrewingRecipe(in, add, out));
+            BetterBrewingRegistry.register(new ItemBrewingRecipe(in, add, out));
         }
     }
 }

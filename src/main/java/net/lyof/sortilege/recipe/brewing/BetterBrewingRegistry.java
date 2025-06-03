@@ -1,9 +1,16 @@
 package net.lyof.sortilege.recipe.brewing;
 
+import com.google.gson.JsonObject;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.brewing.custom.AntidoteBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.ItemBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.recipe.BrewingRecipeRegistry;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +36,16 @@ public class BetterBrewingRegistry {
 
     public static void register(IBetterBrewingRecipe recipe) {
         RECIPES.add(recipe);
+    }
+
+    public static void register(JsonObject json) {
+        if (json.has("input") && json.has("ingredient") && json.has("output")) {
+            Potion in = Registries.POTION.get(new Identifier(json.get("input").getAsString()));
+            Item add = Registries.ITEM.get(new Identifier(json.get("ingredient").getAsString()));
+            Potion out = Registries.POTION.get(new Identifier(json.get("output").getAsString()));
+
+            BrewingRecipeRegistry.registerPotionRecipe(in, add, out);
+        }
     }
 
 

@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item;
+package net.lyof.sortilege.item.custom.rendering;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class MockItemRenderer {
     public static final float DEFAULT_THICKNESS = 0.065f;
+    public static final int MAX_LIGHT = 15728880;
 
     public static void renderItem(MatrixStack matrixStack, VertexConsumerProvider bufferSource, int light, Identifier texture) {
         renderTintedItem(matrixStack, bufferSource, light, texture, 0xFFFFFF);
@@ -43,7 +44,7 @@ public class MockItemRenderer {
                                   int light, Identifier texture, float thickness, int red, int green, int blue) {
 
         VertexConsumer buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(texture));
-        if (light < 0) light = 15728880;
+        if (light < 0) light = MAX_LIGHT;
 
         matrixStack.push();
 

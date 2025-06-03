@@ -6,9 +6,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
+import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,12 +27,14 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LapisShieldItem extends Item implements Equipment {
+public class LapisShieldItem extends Item implements Equipment, AddedRenderItem {
     public LapisShieldItem(Settings settings) {
         super(settings);
     }
@@ -97,5 +103,22 @@ public class LapisShieldItem extends Item implements Equipment {
                 ServerPlayNetworking.send(player, ModPackets.LAPIS_SHIELD_COOLDOWN, buf);
             }
         }
+    }
+
+
+    private static final Identifier SHIELD_GLOW_LAYER = Sortilege.makeID("textures/models/lapis_shield_glow_layer.png");
+
+    @Override
+    public boolean shouldRender(ItemStack stack) {
+        return !LapisShieldItem.isOnCooldown(stack);
+    }
+
+    @Override
+    public void render(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        matrices.scale(1.005f, 1.005f, 1.005f);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrices.translate(-6 * PX_UNIT, -4 * PX_UNIT, -1.5 * PX_UNIT);
+
+        MockItemRenderer.renderItem(matrices, vertexConsumers, -1, SHIELD_GLOW_LAYER);
     }
 }

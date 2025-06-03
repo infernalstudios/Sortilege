@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.armor.rendering;
+package net.lyof.sortilege.item.custom.rendering.custom;
 
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.lyof.sortilege.Sortilege;

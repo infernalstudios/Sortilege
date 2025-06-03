@@ -11,6 +11,8 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
+import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
@@ -19,6 +21,8 @@ import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -46,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StaffItem extends ToolItem implements DyeableItem {
+public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
 
     public @Nullable ModConfig.StaffInfo rawInfos;
@@ -423,5 +427,22 @@ public class StaffItem extends ToolItem implements DyeableItem {
     @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.BOW;
+    }
+
+
+    private static final Identifier COLOR_OVERLAY = Sortilege.makeID("textures/models/staff/glint.png");
+
+    @Override
+    public boolean shouldRender(ItemStack stack) {
+        return this.hasColor(stack) && !stack.isIn(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
+    }
+
+    @Override
+    public void render(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        matrices.scale(1.005f, 1.005f, 1.005f);
+        matrices.translate(0, 0.995, 0.4975);
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+
+        MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light, COLOR_OVERLAY, this.getColor(stack));
     }
 }

@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.armor.rendering;
+package net.lyof.sortilege.item.custom.rendering.custom;
 
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.client.model.*;

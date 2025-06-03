@@ -1,6 +1,5 @@
 package net.lyof.sortilege.item.custom.potion;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;

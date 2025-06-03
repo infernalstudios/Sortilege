@@ -1,7 +1,5 @@
 package net.lyof.sortilege.config;
 
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
-
 import java.util.List;
 import java.util.Map;
 

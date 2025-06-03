@@ -21,7 +21,8 @@ import java.util.Map;
 
 @Mixin(ItemModels.class)
 public class ItemModelsMixin {
-    @Unique private static final Map<String, BakedModel> CACHE = new HashMap<>();
+    @Unique private static final Map<String, BakedModel> MODEL_CACHE = new HashMap<>();
+    @Unique private static final Map<String, ModelIdentifier> ID_CACHE = new HashMap<>();
 
     @Shadow @Final private BakedModelManager modelManager;
 
@@ -32,14 +33,14 @@ public class ItemModelsMixin {
         
         Identifier id = new Identifier(stack.getNbt().getString("Potion"));
         String key = stack.getItem().getClass().getName() + "@" + Integer.toHexString(stack.getItem().hashCode()) + "/" + id;
-        if (CACHE.containsKey(key)) return CACHE.get(key);
+        if (MODEL_CACHE.containsKey(key)) return MODEL_CACHE.get(key);
 
         String base = "";
         if (stack.isOf(Items.SPLASH_POTION)) base = "splash/";
         else if (stack.isOf(Items.LINGERING_POTION)) base = "lingering/";
 
-        BakedModel model = this.modelManager.getModel(new ModelIdentifier(Identifier.of(id.getNamespace(),
-                "potions/" + base + id.getPath()), "inventory"));
+        BakedModel model = this.modelManager.getModel(getId(id.getNamespace(),
+                "potions/" + base + id.getPath()));
 
         if (model == this.modelManager.getMissingModel()) {
             String type = "";
@@ -48,14 +49,22 @@ public class ItemModelsMixin {
             else if (id.getPath().startsWith("long_"))
                 type = "long_";
 
-            model = this.modelManager.getModel(new ModelIdentifier(Identifier.of("minecraft",
-                    type + base.replace("/", "_") + "potion"), "inventory"));
+            model = this.modelManager.getModel(getId("minecraft",
+                    type + base.replace("/", "_") + "potion"));
         }
 
         if (model == this.modelManager.getMissingModel())
             model = original.call(stack);
 
-        CACHE.put(key, model);
+        MODEL_CACHE.put(key, model);
         return model;
+    }
+
+    @Unique private static ModelIdentifier getId(String namespace, String name) {
+        String key = namespace + ":" + name;
+        if (ID_CACHE.containsKey(key)) return ID_CACHE.get(key);
+
+        ID_CACHE.put(key, new ModelIdentifier(Identifier.of(namespace, name), "inventory"));
+        return ID_CACHE.get(key);
     }
 }

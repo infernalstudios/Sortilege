@@ -1,13 +1,11 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
 import com.google.gson.JsonObject;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
@@ -17,11 +15,8 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 
 import java.util.Collections;
 import java.util.List;

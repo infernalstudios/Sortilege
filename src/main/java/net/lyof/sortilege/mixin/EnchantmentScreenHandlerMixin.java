@@ -6,8 +6,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
-import net.lyof.sortilege.util.IMixinAccess;
 import net.lyof.sortilege.util.MathHelper;
+import net.lyof.sortilege.util.MixinAccess;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(EnchantmentScreenHandler.class)
-public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implements IMixinAccess {
+public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implements MixinAccess {
     @Shadow @Final private Inventory inventory;
     @Shadow @Final private ScreenHandlerContext context;
     @Shadow @Final private Random random;

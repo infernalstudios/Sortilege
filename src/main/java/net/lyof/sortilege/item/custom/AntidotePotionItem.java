@@ -3,7 +3,7 @@ package net.lyof.sortilege.item.custom;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
+import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
@@ -80,7 +80,7 @@ public class AntidotePotionItem extends PotionItem {
                 // todo: particles?
             }
             if (ConfigEntries.antidoteImmunityTime > 0)
-                ((IPotionShenanigans) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
+                ((PotionShenanigans) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
         }
 
         if (player != null) {

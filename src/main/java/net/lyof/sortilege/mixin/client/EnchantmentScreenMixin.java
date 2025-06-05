@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
-import net.lyof.sortilege.util.IMixinAccess;
+import net.lyof.sortilege.util.MixinAccess;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.EnchantmentScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -35,12 +35,12 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         int j = (this.height - this.backgroundHeight) / 2;
 
         for (int k = 0; k < 3; k++) {
-            if (((IMixinAccess) this.handler).getProperty(k) == 1)
+            if (((MixinAccess) this.handler).getProperty(k) == 1)
                 context.drawTexture(CATALYST_TEXTURE, i + 60, j + 14 + 19 * k, 36, 0, 108, 19);
         }
 
-        if (((IMixinAccess) this.handler).getProperty(3) == 1 && ConfigEntries.overrideDefaultEnchanting
-                && ((IMixinAccess) this.handler).getProperty(4) == 0
+        if (((MixinAccess) this.handler).getProperty(3) == 1 && ConfigEntries.overrideDefaultEnchanting
+                && ((MixinAccess) this.handler).getProperty(4) == 0
                 && this.isPointWithinBounds(60, 14, 108, 57, mouseX, mouseY)) {
 
             context.drawTooltip(this.textRenderer, Text.translatable("sortilege.enchanting.requires_catalyst").formatted(Formatting.RED),
@@ -50,7 +50,7 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/EnchantmentScreen;drawMouseoverTooltip(Lnet/minecraft/client/gui/DrawContext;II)V", shift = At.Shift.BEFORE))
     public void drawCatalystSlot(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (((IMixinAccess) this.handler).getProperty(3) == 0) return;
+        if (((MixinAccess) this.handler).getProperty(3) == 0) return;
 
         int i = (this.width - this.backgroundWidth) / 2;
         int j = (this.height - this.backgroundHeight) / 2;
@@ -67,7 +67,7 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
 
     @WrapOperation(method = "doTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))
     public float forceRenderBook(float value, float min, float max, Operation<Float> original) {
-        if (((IMixinAccess) this.handler).getProperty(3) == 1 && this.handler.enchantmentPower[0] == 0
+        if (((MixinAccess) this.handler).getProperty(3) == 1 && this.handler.enchantmentPower[0] == 0
                 && this.handler.enchantmentPower[1] == 0 && this.handler.enchantmentPower[2] == 0)
             value += 0.4f;
 

@@ -7,8 +7,8 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
-import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
+import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements IPotionShenanigans {
+public abstract class LivingEntityMixin extends Entity implements PotionShenanigans {
     @Unique private final Map<StatusEffect, Integer> effectImmunities = new HashMap<>();
 
     @Override

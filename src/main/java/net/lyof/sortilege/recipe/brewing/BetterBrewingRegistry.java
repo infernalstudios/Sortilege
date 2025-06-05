@@ -1,16 +1,6 @@
 package net.lyof.sortilege.recipe.brewing;
 
-import com.google.gson.JsonObject;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.recipe.brewing.custom.AntidoteBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
-import net.minecraft.recipe.BrewingRecipeRegistry;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;

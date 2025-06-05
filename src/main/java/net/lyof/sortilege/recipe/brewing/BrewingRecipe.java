@@ -6,10 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.screen.BrewingStandScreenHandler;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 

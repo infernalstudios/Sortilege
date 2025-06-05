@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
-import net.lyof.sortilege.item.custom.potion.IPotionShenanigans;
+import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
 import net.lyof.sortilege.mixin.accessor.StatusEffectInstanceAccessor;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.List;
 
 @Mixin(Potion.class)
-public class PotionMixin implements IPotionShenanigans {
+public class PotionMixin implements PotionShenanigans {
     @Unique private List<StatusEffectInstance> customEffects = null;
     @Unique private boolean lengthened = false;
 

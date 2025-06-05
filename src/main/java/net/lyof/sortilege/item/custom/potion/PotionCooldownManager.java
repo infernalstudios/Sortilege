@@ -31,7 +31,7 @@ public class PotionCooldownManager {
             if (COOLDOWNS.get(false).containsKey(user)) COOLDOWNS.get(false).get(user).remove(key);
             return 0;
         }
-        return 1 - (user.age - time.getLeft() + tickDelta) / (float) (time.getRight() - time.getLeft());
+        return (time.getRight() - user.age - tickDelta) / (float) (time.getRight() - time.getLeft());
     }
 
     public static void clear() {

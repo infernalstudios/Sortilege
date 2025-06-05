@@ -91,7 +91,7 @@ public class CustomPotionData {
         CACHE.clear();
 
         for (Potion potion : Registries.POTION)
-            ((IPotionShenanigans) potion).sorti$resetPotionCache();
+            ((PotionShenanigans) potion).sorti$resetPotionCache();
 
         REGISTRY.clear();
     }

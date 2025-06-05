@@ -23,6 +23,8 @@ import java.util.List;
 public class PotionItemMixin {
     @WrapMethod(method = "getMaxUseTime")
     public int getConfiguredUseTime(ItemStack stack, Operation<Integer> original) {
+        if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return original.call(stack);
+
         CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));
         if (data != null) return data.drinkingTime;
         return ConfigEntries.potionDrinkingTime <= 0 ? original.call(stack) : ConfigEntries.potionDrinkingTime;
@@ -30,6 +32,8 @@ public class PotionItemMixin {
 
     @Inject(method = "appendTooltip", at = @At("HEAD"))
     public void appendDrinkingTime(ItemStack stack, World world, List<Text> tooltip, TooltipContext context, CallbackInfo ci) {
+        if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return;
+
         int drinkingTime = ConfigEntries.potionDrinkingTime;
         int cooldown = ConfigEntries.potionCooldown;
         CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));

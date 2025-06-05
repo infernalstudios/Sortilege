@@ -114,7 +114,8 @@ public abstract class ItemStackMixin {
     @Inject(method = "finishUsing", at = @At("HEAD"))
     public void putOnCooldown(World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack self = (ItemStack) (Object) this;
-        if (!(self.getItem() instanceof PotionItem) || self.getItem() instanceof AntidotePotionItem) return;
+        if (!(self.getItem() instanceof PotionItem) || self.getItem() instanceof AntidotePotionItem
+                || PotionUtil.getPotion(self).getEffects().isEmpty()) return;
 
         this.setPotionCooldown(self, user);
     }
@@ -125,7 +126,7 @@ public abstract class ItemStackMixin {
         ItemStack self = (ItemStack) (Object) this;
         if (PotionCooldownManager.getProgress(self, user, 0) > 0) return TypedActionResult.fail(self);
 
-        if (self.getItem() instanceof ThrowablePotionItem)
+        if (self.getItem() instanceof ThrowablePotionItem && !PotionUtil.getPotion(self).getEffects().isEmpty())
             this.setPotionCooldown(self, user);
 
         return original.call(world, user, hand);

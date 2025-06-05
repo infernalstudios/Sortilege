@@ -1,7 +1,11 @@
 package net.lyof.sortilege.recipe;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.AntidoteBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.SimpleBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.minecraft.inventory.Inventory;
@@ -30,6 +34,8 @@ public class ModRecipeTypes {
 
     public static RecipeType<CauldronBrewingRecipe> CAULDRON_BREWING = register("cauldron_brewing");
 
+    public static RecipeType<BrewingRecipe> BREWING = register("brewing");
+
 
     public static RecipeSerializer<SoulbindingRecipe> SOULBINDING_SERIALIZER
             = register("soulbind_smithing", new SoulbindingRecipe.Serializer());
@@ -39,4 +45,13 @@ public class ModRecipeTypes {
 
     public static RecipeSerializer<CauldronBrewingRecipe> CAULDRON_BREWING_SERIALIZER
             = register("cauldron_brewing", new CauldronBrewingRecipe.Serializer());
+
+    public static RecipeSerializer<PotionBrewingRecipe> POTION_BREWING_SERIALIZER
+            = register("antidote_to_potion_brewing", new PotionBrewingRecipe.Serializer());
+
+    public static RecipeSerializer<AntidoteBrewingRecipe> ANTIDOTE_BREWING_SERIALIZER
+            = register("potion_to_antidote_brewing", new AntidoteBrewingRecipe.Serializer());
+
+    public static RecipeSerializer<SimpleBrewingRecipe> BREWING_SERIALIZER
+            = register("brewing", new SimpleBrewingRecipe.Serializer());
 }

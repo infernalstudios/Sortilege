@@ -581,7 +581,8 @@ public class ModConfig {
                         "beam_color": [
                           [0.25, 0, 1],
                           [0.35, 0.25, 1]
-                        ]
+                        ],
+                        "on_hit_self": "/set_gripcrystal_mana 2"
                       }
                     },
                     {

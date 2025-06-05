@@ -6,7 +6,7 @@
     "AnvilScreenHandlerMixin",
     "BrewingRecipeRegistryMixin",
     "BrewingStandBlockEntityMixin",
-    "BrewingStandScreenHandlerMixin",
+    "BrewingStandScreenHandlerPotionSlotMixin",
     "ChunkRegionMixin",
     "CraftingScreenHandlerMixin",
     "DamageEnchantmentMixin",

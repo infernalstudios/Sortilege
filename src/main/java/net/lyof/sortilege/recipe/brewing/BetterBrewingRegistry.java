@@ -1,9 +1,9 @@
 package net.lyof.sortilege.recipe.brewing;
 
 import com.google.gson.JsonObject;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.brewing.custom.AntidoteBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.custom.ItemBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,17 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BetterBrewingRegistry {
-    public static void register() {
-        if (ConfigEntries.antidoteEnabled) {
-            register(new AntidoteBrewingRecipe());
-            register(new PotionBrewingRecipe());
-        }
-    }
+    private static final List<BrewingRecipe> RECIPES = new ArrayList<>();
+    private static final List<String> FABRIC_RECIPES = new ArrayList<>();
 
-
-    private static List<IBetterBrewingRecipe> RECIPES = new ArrayList<>();
-
-    public static List<IBetterBrewingRecipe> getAll() {
+    public static List<BrewingRecipe> getAll() {
         return RECIPES;
     }
 
@@ -34,18 +27,16 @@ public class BetterBrewingRegistry {
         RECIPES.clear();
     }
 
-    public static void register(IBetterBrewingRecipe recipe) {
+    public static void register(BrewingRecipe recipe) {
         RECIPES.add(recipe);
     }
 
-    public static void register(JsonObject json) {
-        if (json.has("input") && json.has("ingredient") && json.has("output")) {
-            Potion in = Registries.POTION.get(new Identifier(json.get("input").getAsString()));
-            Item add = Registries.ITEM.get(new Identifier(json.get("ingredient").getAsString()));
-            Potion out = Registries.POTION.get(new Identifier(json.get("output").getAsString()));
+    public static void store(String recipe) {
+        FABRIC_RECIPES.add(recipe);
+    }
 
-            BrewingRecipeRegistry.registerPotionRecipe(in, add, out);
-        }
+    public static boolean isStored(String recipe) {
+        return FABRIC_RECIPES.contains(recipe);
     }
 
 
@@ -53,8 +44,8 @@ public class BetterBrewingRegistry {
         return findRecipe(input, ingredient) != null;
     }
 
-    public static IBetterBrewingRecipe findRecipe(ItemStack input, ItemStack ingredient) {
-        for (IBetterBrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
+    public static BrewingRecipe findRecipe(ItemStack input, ItemStack ingredient) {
+        for (BrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
             if (recipe.isIngredient(ingredient) && recipe.isInput(input)) return recipe;
         }
         return null;

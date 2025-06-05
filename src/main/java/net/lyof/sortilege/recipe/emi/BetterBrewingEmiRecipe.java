@@ -4,7 +4,7 @@ import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.lyof.sortilege.recipe.brewing.IBetterBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.Items;
@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Random;
 
 public class BetterBrewingEmiRecipe extends BasicEmiRecipe {
-    protected final IBetterBrewingRecipe recipe;
+    protected final BrewingRecipe recipe;
     protected final int uniq;
     private static final Identifier BACKGROUND = Identifier.of("minecraft", "textures/gui/container/brewing_stand.png");
     private static final EmiStack BLAZE_POWDER = EmiStack.of(Items.BLAZE_POWDER);
 
-    public BetterBrewingEmiRecipe(IBetterBrewingRecipe recipe) {
-        super(VanillaEmiRecipeCategories.BREWING, null, 120, 61);
+    public BetterBrewingEmiRecipe(BrewingRecipe recipe) {
+        super(VanillaEmiRecipeCategories.BREWING, recipe.getId(), 120, 61);
         this.recipe = recipe;
         this.uniq = MathHelper.rnd.nextInt();
         this.inputs.add(EmiStack.of(recipe.getIngredient()));

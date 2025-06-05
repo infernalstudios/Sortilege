@@ -1,10 +1,12 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.fabricmc.fabric.impl.resource.loader.ResourceManagerHelperImpl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredDataResourcePack;
 import net.minecraft.resource.*;
@@ -131,11 +133,7 @@ public class LifecycledResourceManagerImplMixin {
     }
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void reloadConfigs(ResourceType type, List<ResourcePack> packs, CallbackInfo ci) {
-        CustomPotionData.MODELS.clear();
-        for (Identifier model : ResourceFinder.json("models/item/potions").findResources((ResourceManager) (Object) this).keySet())
-            CustomPotionData.MODELS.add(ResourceFinder.json("models/item").toResourceId(model));
-
-        ModConfig.register();
+    private void preload(ResourceType type, List<ResourcePack> packs, CallbackInfo ci) {
+        ReloadListener.INSTANCE.preload((ResourceManager) (Object) this);
     }
 }

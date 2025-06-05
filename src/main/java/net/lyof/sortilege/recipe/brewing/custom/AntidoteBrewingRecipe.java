@@ -1,22 +1,40 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
+import com.google.gson.JsonObject;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
-import net.lyof.sortilege.recipe.brewing.IBetterBrewingRecipe;
+import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
+import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class AntidoteBrewingRecipe implements IBetterBrewingRecipe {
+public class AntidoteBrewingRecipe implements BrewingRecipe {
+    public final Identifier id;
+
+    public AntidoteBrewingRecipe(Identifier id) {
+        this.id = id;
+    }
+
+
     @Override
     public boolean isInput(ItemStack stack) {
         return stack.getItem() instanceof PotionItem &&
@@ -66,8 +84,28 @@ public class AntidoteBrewingRecipe implements IBetterBrewingRecipe {
         return ModItems.ANTIDOTE.getDefaultStack();
     }
 
+
     @Override
-    public String toString() {
-        return "Potion to Antidote";
+    public Identifier getId() {
+        return this.id;
+    }
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return ModRecipeTypes.ANTIDOTE_BREWING_SERIALIZER;
+    }
+
+    public static class Serializer implements RecipeSerializer<AntidoteBrewingRecipe> {
+        public AntidoteBrewingRecipe read(Identifier id, JsonObject json) {
+            AntidoteBrewingRecipe recipe = new AntidoteBrewingRecipe(id);
+            BetterBrewingRegistry.register(recipe);
+            return recipe;
+        }
+
+        public AntidoteBrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
+            return new AntidoteBrewingRecipe(identifier);
+        }
+
+        public void write(PacketByteBuf packetByteBuf, AntidoteBrewingRecipe recipe) {}
     }
 }

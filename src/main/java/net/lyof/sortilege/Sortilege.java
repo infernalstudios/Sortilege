@@ -2,6 +2,7 @@ package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.mixin.resource.loader.LifecycledResourceManagerImplMixin;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
 import net.lyof.sortilege.block.ModBlocks;
@@ -41,7 +42,7 @@ public class Sortilege implements ModInitializer {
 		ModLootModifiers.register();
 		ModRecipeTypes.register();
 
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new ReloadListener());
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
 	}
 
 	public static Identifier makeID(String name) {

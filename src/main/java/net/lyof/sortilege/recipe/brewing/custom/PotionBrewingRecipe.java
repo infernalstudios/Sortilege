@@ -1,18 +1,36 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
+import com.google.gson.JsonObject;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
-import net.lyof.sortilege.recipe.brewing.IBetterBrewingRecipe;
+import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
+import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.JsonHelper;
 
 import java.util.Random;
 
-public class PotionBrewingRecipe implements IBetterBrewingRecipe {
+public class PotionBrewingRecipe implements BrewingRecipe {
+    public final Identifier id;
+
+    public PotionBrewingRecipe(Identifier id) {
+        this.id = id;
+    }
+
+
     @Override
     public boolean isInput(ItemStack stack) {
         return stack.getItem() instanceof AntidotePotionItem &&
@@ -30,6 +48,7 @@ public class PotionBrewingRecipe implements IBetterBrewingRecipe {
         Potion effect = PotionUtil.getPotion(input);
         return PotionUtil.setPotion(Items.POTION.getDefaultStack(), PotionHelper.getDefaultPotion(effect));
     }
+
 
     @Override
     public ItemStack getIngredient() {
@@ -52,8 +71,28 @@ public class PotionBrewingRecipe implements IBetterBrewingRecipe {
         return Items.POTATO.getDefaultStack();
     }
 
+
     @Override
-    public String toString() {
-        return "Antidote to Potion";
+    public Identifier getId() {
+        return this.id;
+    }
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return ModRecipeTypes.POTION_BREWING_SERIALIZER;
+    }
+
+    public static class Serializer implements RecipeSerializer<PotionBrewingRecipe> {
+        public PotionBrewingRecipe read(Identifier id, JsonObject json) {
+            PotionBrewingRecipe recipe = new PotionBrewingRecipe(id);
+            BetterBrewingRegistry.register(recipe);
+            return recipe;
+        }
+
+        public PotionBrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
+            return new PotionBrewingRecipe(identifier);
+        }
+
+        public void write(PacketByteBuf packetByteBuf, PotionBrewingRecipe recipe) {}
     }
 }

@@ -10,7 +10,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.IBetterBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.emi.BetterBrewingEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CatalystEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CauldronBrewingEmiRecipe;
@@ -48,7 +48,7 @@ public class EmiCompat implements EmiPlugin {
         registry.addRecipe(new SpecialSmithingEmiRecipe(new LimitBreakRecipe(Sortilege.makeID("limit_break_instance")),
                 EmiIngredient.of(ModTags.Items.LIMIT_BREAKER)));
 
-        for (IBetterBrewingRecipe recipe : BetterBrewingRegistry.getAll())
+        for (BrewingRecipe recipe : BetterBrewingRegistry.getAll())
             registry.addRecipe(new BetterBrewingEmiRecipe(recipe));
 
         for (Map.Entry<Item, List<Enchantment>> entry : EnchantingCatalyst.CATALYSTS.entrySet())

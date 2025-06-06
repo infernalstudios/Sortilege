@@ -14,6 +14,7 @@
     "DispenserBlockMixin",
     "EnchantmentHelperMixin",
     "EnchantmentScreenHandlerMixin",
+    "ExperienceOrbEntityMixin",
     "ItemStackMixin",
     "LeveledCauldronBlockMixin",
     "LifecycledResourceManagerImplMixin",

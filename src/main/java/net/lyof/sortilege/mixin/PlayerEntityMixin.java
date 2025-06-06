@@ -31,8 +31,6 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @Shadow public int experienceLevel;
     @Shadow public float experienceProgress;
-    @Shadow public int totalExperience;
-    @Shadow protected int enchantmentTableSeed;
     @Shadow public abstract boolean isCreative();
     @Shadow public abstract void addExperience(int experience);
 

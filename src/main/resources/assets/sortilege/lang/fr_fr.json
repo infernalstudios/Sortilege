@@ -29,7 +29,7 @@
   "item.sortilege.spawner_staff": "Sceptre du générateur",
   "item.sortilege.netherite_staff" : "Sceptre en Netherite",
   "item.sortilege.electrum_staff": "Sceptre en électrum",
-  "item.sortilege.pearlescent_staff": "Sceptre perlescent",
+  "item.sortilege.pearlescent_staff": "Sceptre nacré",
 
   "sortilege.staff.experience_cost": "Utilise %s XP",
   "sortilege.staff.cooldown": "Recharge: %ss",

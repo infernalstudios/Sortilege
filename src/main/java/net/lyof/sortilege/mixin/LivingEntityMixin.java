@@ -1,8 +1,10 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
@@ -15,6 +17,8 @@ import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -208,5 +212,12 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
                 this.effectImmunities.remove(effect.getEffectType());
         }
         return original.call(effect);
+    }
+
+    @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
+    private static DefaultAttributeContainer.Builder addStaffAttributes(DefaultAttributeContainer.Builder original) {
+        for (EntityAttribute attribute : ModAttributes.GLOBALS)
+            original.add(attribute);
+        return original;
     }
 }

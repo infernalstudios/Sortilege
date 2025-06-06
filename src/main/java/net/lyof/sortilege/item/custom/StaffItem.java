@@ -261,9 +261,9 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
 
         int cost = this.getXPCost(staff);
-        float damage = this.getAttackDamage(staff);
-        int range = this.getAttackRange(staff);
-        int targetsLeft = this.getPierce(staff);
+        float damage = (float) entity.getAttributeValue(ModAttributes.STAFF_DAMAGE);
+        int range = (int) entity.getAttributeValue(ModAttributes.STAFF_RANGE);
+        int targetsLeft = (int) entity.getAttributeValue(ModAttributes.STAFF_PIERCE);
 
 
         if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {

@@ -23,13 +23,7 @@ public abstract class ExperienceOrbEntityMixin extends Entity {
     public PlayerEntity ignoreCappedPlayers(World instance, Entity entity, double v, Operation<PlayerEntity> original) {
         if (ConfigEntries.xpLevelCap > -1 && instance.getPlayers().size() > 1)
             return instance.getClosestPlayer(entity.getX(), entity.getY(), entity.getZ(), v,
-                    e -> (e instanceof PlayerEntity p) && !p.isSpectator() && !p.isCreative() && p.experienceLevel < ConfigEntries.xpLevelCap);
+                    e -> e instanceof PlayerEntity p && !p.isSpectator() && !p.isCreative() && p.experienceLevel < ConfigEntries.xpLevelCap);
         return original.call(instance, entity, v);
-    }
-
-    @Inject(method = "onPlayerCollision", at = @At("HEAD"), cancellable = true)
-    public void cancelCappedPlayerCollision(PlayerEntity player, CallbackInfo ci) {
-        if (ConfigEntries.xpLevelCap > -1 && player.experienceLevel >= ConfigEntries.xpLevelCap && this.getWorld().getPlayers().size() > 1)
-            ci.cancel();
     }
 }

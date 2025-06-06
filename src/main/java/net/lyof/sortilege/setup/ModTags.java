@@ -3,7 +3,6 @@ package net.lyof.sortilege.setup;
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;

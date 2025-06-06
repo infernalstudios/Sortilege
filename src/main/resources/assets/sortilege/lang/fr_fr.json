@@ -11,12 +11,12 @@
 
   "tag.item.sortilege.is_limit_break_material": "Briseur de limite",
   "tag.item.sortilege.is_soulbind_material": "Lieur d'âme",
-  "tag.item.sortilege.unbreakable": "Incassable",
+  "tag.item.sortilege.unbreakable": "Indestructible",
   "tag.item.sortilege.keep_on_death": "Hérité",
   "tag.item.sortilege.staffs": "Sceptres",
 
   "emi.category.sortilege.enchanting": "Enchantement",
-  "emi.category.sortilege.cauldron_brewing": "Chaudron",
+  "emi.category.sortilege.cauldron_brewing": "Alchimie (Chaudron)",
 
 
   "item.sortilege.wooden_staff" : "Sceptre en bois",
@@ -34,9 +34,9 @@
   "sortilege.staff.experience_cost": "Utilise %s XP",
   "sortilege.staff.cooldown": "Recharge: %ss",
 
-  "attribute.name.generic.staff_damage": "Dégâts Magiques",
-  "attribute.name.generic.staff_pierce": "Transpercement",
-  "attribute.name.generic.staff_range": "Portée",
+  "attribute.name.generic.staff_damage": "dégâts magiques",
+  "attribute.name.generic.staff_pierce": "transpercement",
+  "attribute.name.generic.staff_range": "portée",
 
   "enchantment.sortilege.potency": "Pouvoir",
   "enchantment.sortilege.potency.desc": "Augmente les dégâts du sceptre.",

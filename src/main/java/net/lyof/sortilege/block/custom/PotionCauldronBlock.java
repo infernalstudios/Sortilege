@@ -5,6 +5,7 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;

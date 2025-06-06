@@ -11,6 +11,7 @@
     "CraftingScreenHandlerMixin",
     "DamageEnchantmentMixin",
     "DamageSourcesMixin",
+    "DispenserBlockMixin",
     "EnchantmentHelperMixin",
     "EnchantmentScreenHandlerMixin",
     "ItemStackMixin",
@@ -29,6 +30,7 @@
     "SimpleRegistryMixin",
     "SmithingTransformRecipeMixin",
     "UnbreakingEnchantmentMixin",
+    "accessor.ItemDispenserBehaviorAccessor",
     "accessor.RegistryEntryReferenceAccessor",
     "accessor.StatusEffectInstanceAccessor"
   ],

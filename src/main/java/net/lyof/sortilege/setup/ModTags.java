@@ -27,6 +27,8 @@ public class ModTags {
         public static TagKey<Item> UNBREAKABLE = create("unbreakable");
         public static TagKey<Item> NO_DYE_OVERLAY_STAFFS = create("staffs/no_dye_overlay");
 
+        public static TagKey<Item> REFILLS_CAULDRONS = create("refills_cauldrons");
+
         private static TagKey<Item> create(String name) {
             return TagKey.of(RegistryKeys.ITEM, Sortilege.makeID(name));
         }

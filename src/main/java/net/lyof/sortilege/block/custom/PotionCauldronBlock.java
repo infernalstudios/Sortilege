@@ -149,7 +149,7 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
 
                 item.getStack().decrement(state.get(LEVEL));
             }*/
-            if (item.getStack().isOf(Items.BLAZE_POWDER) && !this.isFull(state) && ConfigEntries.cauldronBlazeRefill) {
+            if (item.getStack().isIn(ModTags.Items.REFILLS_CAULDRONS) && !this.isFull(state) && ConfigEntries.cauldronBlazeRefill) {
                 world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
 

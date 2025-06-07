@@ -1,6 +1,8 @@
 package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
@@ -12,6 +14,7 @@ import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
+import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.resource.ResourceType;
@@ -42,6 +45,8 @@ public class Sortilege implements ModInitializer {
 		ModRecipeTypes.register();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
+				sender.sendPacket(ModPackets.INITIALIZE, PacketByteBufs.create()));
 	}
 
 	public static Identifier makeID(String name) {

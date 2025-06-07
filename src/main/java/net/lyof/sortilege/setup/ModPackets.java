@@ -6,4 +6,5 @@ import net.minecraft.util.Identifier;
 public class ModPackets {
     public static final Identifier WISP_PARTICLE_DISPLAY = Sortilege.makeID("wisp_particle_display");
     public static final Identifier LAPIS_SHIELD_COOLDOWN = Sortilege.makeID("lapis_shield_cooldown");
+    public static final Identifier INITIALIZE = Sortilege.makeID("initalize");
 }

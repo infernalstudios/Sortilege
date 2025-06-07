@@ -5,7 +5,7 @@ import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.AntidoteBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.custom.SimpleBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.MixBrewingRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.minecraft.inventory.Inventory;
@@ -52,6 +52,6 @@ public class ModRecipeTypes {
     public static RecipeSerializer<AntidoteBrewingRecipe> ANTIDOTE_BREWING_SERIALIZER
             = register("potion_to_antidote_brewing", new AntidoteBrewingRecipe.Serializer());
 
-    public static RecipeSerializer<SimpleBrewingRecipe> BREWING_SERIALIZER
-            = register("brewing", new SimpleBrewingRecipe.Serializer());
+    public static RecipeSerializer<MixBrewingRecipe> BREWING_SERIALIZER
+            = register("brewing", new MixBrewingRecipe.Serializer());
 }

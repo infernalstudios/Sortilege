@@ -28,9 +28,13 @@ public class MathHelper {
     }
 
     public static <T> T randi(List<T> list) {
+        return randi(list, rnd);
+    }
+
+    public static <T> T randi(List<T> list, Random random) {
         if (list.size() == 1) return list.get(0);
         if (list.isEmpty()) return null;
-        return list.get(randint(list.size() - 1));
+        return list.get(random.nextInt(list.size()));
     }
 
     public static <T> T randi(List<T> list, net.minecraft.util.math.random.Random rnd) {

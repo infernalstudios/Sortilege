@@ -34,10 +34,4 @@ public abstract class BrewingRecipeRegistryMixin {
 
         cir.setReturnValue(recipe.craft(input, ingredient));
     }
-
-    @WrapMethod(method = "registerPotionRecipe")
-    private static void avoidDuplicates(Potion input, Item item, Potion output, Operation<Void> original) {
-        if (!BetterBrewingRegistry.isStored(input + "/" + item + "/" + output))
-            original.call(input, item, output);
-    }
 }

@@ -215,7 +215,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
-    private static DefaultAttributeContainer.Builder addStaffAttributes(DefaultAttributeContainer.Builder original) {
+    private static DefaultAttributeContainer.Builder addGlobalAttributes(DefaultAttributeContainer.Builder original) {
         for (EntityAttribute attribute : ModAttributes.GLOBALS)
             original.add(attribute);
         return original;

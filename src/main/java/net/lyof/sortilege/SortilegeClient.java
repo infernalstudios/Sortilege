@@ -15,6 +15,7 @@ import net.lyof.sortilege.item.custom.rendering.custom.WitchHatRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.setup.ModPackets;
+import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.entity.Entity;
@@ -76,5 +77,8 @@ public class SortilegeClient implements ClientModInitializer {
                     LapisShieldItem.addCooldown(stack, cooldown);
             });
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, (client, handler, buf, responseSender) ->
+                ReloadListener.INSTANCE.reloadClient());
     }
 }

@@ -3,6 +3,7 @@ package net.lyof.sortilege.setup;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
@@ -17,6 +18,7 @@ import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
@@ -107,5 +109,21 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                 Sortilege.log("Could not read data file " + entry.getKey());
             }
         }
+    }
+
+    public void reloadClient() {
+        ItemHelper.ENCHLIMIT_CACHE.clear();
+
+        RecipeLock.clear();
+        for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
+            RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
+                    new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
+        }
+
+        PotionHelper.clear();
+        PotionHelper.load();
+
+        if (FabricLoader.getInstance().isModLoaded("emi"))
+            SpecialSmithingEmiRecipe.INSTANCES.forEach(SpecialSmithingEmiRecipe::generateInputs);
     }
 }

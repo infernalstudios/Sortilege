@@ -10,7 +10,6 @@ import dev.emi.emi.api.stack.EmiStack;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.custom.MixBrewingRecipe;
 import net.lyof.sortilege.recipe.emi.BetterBrewingEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CatalystEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CauldronBrewingEmiRecipe;

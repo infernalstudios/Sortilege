@@ -1,9 +1,7 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
-import net.lyof.sortilege.Sortilege;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;

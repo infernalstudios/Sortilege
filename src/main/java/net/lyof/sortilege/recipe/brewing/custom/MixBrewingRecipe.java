@@ -1,21 +1,15 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
 import com.google.gson.JsonObject;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.potion.Potion;
-import net.minecraft.recipe.BrewingRecipeRegistry;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-
-import java.util.Random;
 
 public abstract class MixBrewingRecipe implements BrewingRecipe {
     private final Identifier id;

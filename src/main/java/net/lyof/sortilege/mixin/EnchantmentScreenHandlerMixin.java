@@ -73,7 +73,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V",
             at = @At(value = "TAIL"))
-    public void allowOtherItems(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, CallbackInfo ci) {
+    public void addCatalystSlot(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, CallbackInfo ci) {
         if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
             return;
 

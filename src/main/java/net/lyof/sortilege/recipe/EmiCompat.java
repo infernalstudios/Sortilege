@@ -51,9 +51,8 @@ public class EmiCompat implements EmiPlugin {
         for (Map.Entry<Item, List<Enchantment>> entry : EnchantingCatalyst.CATALYSTS.entrySet())
             registry.addRecipe(new CatalystEmiRecipe(entry.getKey(), entry.getValue()));
 
-        for (BrewingRecipe recipe : registry.getRecipeManager().listAllOfType(ModRecipeTypes.BREWING)) {
+        for (BrewingRecipe recipe : registry.getRecipeManager().listAllOfType(ModRecipeTypes.BREWING))
             registry.addRecipe(new BetterBrewingEmiRecipe(recipe));
-        }
 
         for (CauldronBrewingRecipe recipe : registry.getRecipeManager().listAllOfType(ModRecipeTypes.CAULDRON_BREWING))
             registry.addRecipe(new CauldronBrewingEmiRecipe(recipe));

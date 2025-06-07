@@ -2,24 +2,23 @@
   "tooltip.press_shift.left": "Натисніть [",
   "tooltip.press_shift.center": "Крастися",
   "tooltip.press_shift.right": "]",
-
   "sortilege.death_screen.position": "Місцезнаходження:",
   "sortilege.crafting.requires_level": "Вам треба хочаб рівень %s!",
-
-
-  "item.sortilege.wooden_staff" : "Дерев'яна патериця",
-  "item.sortilege.stone_staff" : "Кам'яна патериця",
-  "item.sortilege.iron_staff" : "Залізна патериця",
-  "item.sortilege.golden_staff" : "Золота патериця",
-  "item.sortilege.diamond_staff" : "Діамантова патериця",
-  "item.sortilege.netherite_staff" : "Незеритова патериця",
-
-  "sortilege.staff.experience_cost": "Коштує %s Досвід",
-
+  "item.sortilege.wooden_staff": "Дерев'яна патериця",
+  "item.sortilege.stone_staff": "Кам'яна патериця",
+  "item.sortilege.iron_staff": "Залізна патериця",
+  "item.sortilege.golden_staff": "Золота патериця",
+  "item.sortilege.diamond_staff": "Діамантова патериця",
+  "item.sortilege.netherite_staff": "Незеритова патериця",
+  "item.sortilege.crystalline_staff": "Кристалічна патериця",
+  "item.sortilege.gripcrystal_staff": "Ґрипкристальна патериця",
+  "item.sortilege.spawner_staff": "Спавнерська патериця",
+  "item.sortilege.electrum_staff": "Електрумна патериця",
+  "item.sortilege.pearlescent_staff": "Перлиносцентна патериця",
+  "sortilege.staff.experience_cost": "Коштує %s досвіду",
   "attribute.name.generic.staff_damage": "Магічна шкода",
   "attribute.name.generic.staff_pierce": "Пробивання",
   "attribute.name.generic.staff_range": "Дальність",
-
   "enchantment.sortilege.potency": "Потенція",
   "enchantment.sortilege.potency.desc": "Збільшує патеричну шкоду.",
   "enchantment.sortilege.stability": "Стабільність",
@@ -42,24 +41,44 @@
   "enchantment.sortilege.blitz.desc": "Патериця разить ціль шоком.",
   "enchantment.sortilege.ignorance_curse": "Прокляття невігластва",
   "enchantment.sortilege.ignorance_curse.desc": "Змушує патерицю використовувати XP задля використання.",
-
   "enchantment.sortilege.magic_protection": "Магічний захист",
   "enchantment.sortilege.magic_protection.desc": "Зменшує шкоду заподіяною магією.",
   "enchantment.sortilege.arcane": "Аркана",
   "enchantment.sortilege.arcane.desc": "Конвертує завдану шкоду на тип магії.",
   "enchantment.sortilege.soulbound": "Прикутий душею",
   "enchantment.sortilege.soulbound.desc": "Залишається після смерті.",
-
   "sortilege.enchantments": "Зачарування",
-
-
   "item.sortilege.witch_hat": "Капелюх відьми",
-
-
   "item.sortilege.antidote": "Антидот",
-  "sortilege.antidote.cures": "Лікує:",
-
-
+  "item.sortilege.antidote.cures": "Лікує:",
   "item.sortilege.limitite": "Лімінит",
-  "sortilege.limitite.desc": "Поєднайте з предметом на столі коваля, щоб його максимальне число зачарувань!"
+  "item.sortilege.limitite.desc": "Поєднайте з предметом на столі коваля, щоб його максимальне число зачарувань!",
+  "sortilege.crafting.requires_advancement": "Вам потрібно завершити %s!",
+  "sortilege.enchanting.requires_catalyst": "Ви повинні використовувати каталізатор!",
+  "tag.item.sortilege.is_limit_break_material": "Матеріал змінювання ліміту чарування",
+  "tag.item.sortilege.is_soulbind_material": "Матеріал для зв'язування душ",
+  "tag.item.sortilege.unbreakable": "Незламна",
+  "tag.item.sortilege.keep_on_death": "Зберігається після смерті",
+  "tag.item.sortilege.staffs": "Патериці",
+  "emi.category.sortilege.enchanting": "Чарування",
+  "emi.category.sortilege.cauldron_brewing": "Зілляваріння в казані",
+  "sortilege.staff.cooldown": "%sс час перезарядки",
+  "enchantment.sortilege.focus": "Фокус",
+  "enchantment.sortilege.focus.desc": "Зменшує час перезарядки.",
+  "enchantment.sortilege.bonk": "Боньк",
+  "enchantment.sortilege.bonk.desc": "Робить патерицю зброєю ближнього бою.",
+  "sortilege.catalyst": "Коли використано, щоб зачарувати:",
+  "sortilege.potion.drinking_time": "Потребує %sс, щоб випити",
+  "item.sortilege.lapis_shield": "Лазуритовий щит",
+  "item.sortilege.lapis_shield.desc": " Пасивно блокує фронтальні атаки кожні %sс",
+  "advancement.sortilege.get_wooden_staff": "Ти чарівник, {playerName}",
+  "advancement.sortilege.get_wooden_staff.desc": "Отримайте свою першу магічну патерицю.",
+  "advancement.sortilege.dye_staff": "Кольори магії",
+  "advancement.sortilege.dye_staff.desc": "Використайте барвник на патерицю, щоб змінити колір її променя.",
+  "advancement.sortilege.get_netherite_staff": "Бузинна паличка",
+  "advancement.sortilege.get_netherite_staff.desc": "Покращте діамантову патерицю до незеритової.",
+  "advancement.sortilege.use_limitite": "Безкінечність +1",
+  "advancement.sortilege.use_limitite.desc": "Збільшіть ліміт зачарувань предмету, використовуючи лімінит.",
+  "advancement.sortilege.get_witch_hat": "Божевільний Капелюшник",
+  "advancement.sortilege.get_witch_hat.desc": "Убийте відьму та візьміть її капелюх."
 }

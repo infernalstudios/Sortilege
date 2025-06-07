@@ -20,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(PlayerAdvancementTracker.class)
 public class PlayerAdvancementTrackerMixin {
     @Shadow private ServerPlayerEntity owner;
-    @Unique
-    private static final Identifier GET_WOODEN_STAFF = Sortilege.makeID("get_wooden_staff");
 
     @WrapOperation(method = "grantCriterion", at = @At(value = "INVOKE", target = "Lnet/minecraft/advancement/Advancement;toHoverableText()Lnet/minecraft/text/Text;"))
     public Text formatGetWoodenStaffAdvancement(Advancement instance, Operation<Text> original) {

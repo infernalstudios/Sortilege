@@ -1,0 +1,96 @@
+{
+  "tooltip.press_shift.left": "Pressione [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Posição:",
+  "sortilege.crafting.requires_level": "Você precisa de ao menos %s níveis!",
+  "sortilege.crafting.requires_advancement": "Você precisa ter completado %s!",
+
+  "sortilege.enchanting.requires_catalyst": "Você deve usar um catalisador!",
+
+  "tag.item.sortilege.is_limit_break_material": "Material de Quebra de Limite",
+  "tag.item.sortilege.is_soulbind_material": "Material de Soulbinding",
+  "tag.item.sortilege.unbreakable": "Inquebrável",
+  "tag.item.sortilege.keep_on_death": "Mantido ao morrer",
+  "tag.item.sortilege.staffs": "Cajados",
+
+  "emi.category.sortilege.enchanting": "Enchantamento",
+  "emi.category.sortilege.cauldron_brewing": "Fermentação em Caldeirão",
+
+
+  "item.sortilege.wooden_staff" : "Cajado de Madeira",
+  "item.sortilege.stone_staff" : "Cajado de Pedra",
+  "item.sortilege.iron_staff" : "Cajado de Ferro",
+  "item.sortilege.golden_staff" : "Cajado de Ouro",
+  "item.sortilege.diamond_staff" : "Cajado de Diamante",
+  "item.sortilege.netherite_staff" : "Cajado de Netherita",
+
+  "sortilege.staff.experience_cost": "Custa %s XP",
+  "sortilege.staff.cooldown": "%ss Recarga",
+
+  "attribute.name.generic.staff_damage": "Dano Mágico",
+  "attribute.name.generic.staff_pierce": "Perfurar",
+  "attribute.name.generic.staff_range": "Alcance",
+
+  "enchantment.sortilege.potency": "Potência",
+  "enchantment.sortilege.potency.desc": "Aumenta o dano do Cajado.",
+  "enchantment.sortilege.stability": "Estabilidade",
+  "enchantment.sortilege.stability.desc": "Aumenta o alcance do Cajado.",
+  "enchantment.sortilege.chaining": "Encadeamento",
+  "enchantment.sortilege.chaining.desc": "Aumenta o perfuramento do Cajado.",
+  "enchantment.sortilege.wisdom": "Sabedoria",
+  "enchantment.sortilege.wisdom.desc": "Diminui o custo de XP do Cajado.",
+  "enchantment.sortilege.push": "Empurrar",
+  "enchantment.sortilege.push.desc": "Lança alvos atingidos pelo Cajado junto com o feixe.",
+  "enchantment.sortilege.pull": "Puxar",
+  "enchantment.sortilege.pull.desc": "Atrai alvos atingidos pelo Cajado junto com o feixe.",
+  "enchantment.sortilege.focus": "Foco",
+  "enchantment.sortilege.focus.desc": "Reduz o tempo de recarga do Cajado.",
+  "enchantment.sortilege.brazier": "Brazeiro",
+  "enchantment.sortilege.brazier.desc": "Queima alvos atingidos pelo Cajado.",
+  "enchantment.sortilege.blizzard": "Nevasca",
+  "enchantment.sortilege.blizzard.desc": "Congela alvos atingidos pelo Cajado.",
+  "enchantment.sortilege.blast": "Volátil",
+  "enchantment.sortilege.blast.desc": "Faz o feixe do Cajado explodir no impacto.",
+  "enchantment.sortilege.blitz": "Carregado",
+  "enchantment.sortilege.blitz.desc": "Eletrocuta alvos atingidos pelo Cajado.",
+  "enchantment.sortilege.bonk": "Bonk",
+  "enchantment.sortilege.bonk.desc": "Torna o Cajado usável como uma arma corpo-a-corpo.",
+  "enchantment.sortilege.ignorance_curse": "Maldição da Ignorância",
+  "enchantment.sortilege.ignorance_curse.desc": "Faz com que o Cajado use XP para castar.",
+
+  "enchantment.sortilege.magic_protection": "Proteção Mágica",
+  "enchantment.sortilege.magic_protection.desc": "Reduz dano de magias.",
+  "enchantment.sortilege.arcane": "Arcano",
+  "enchantment.sortilege.arcane.desc": "Converte dano causado para dano mágico.",
+  "enchantment.sortilege.soulbound": "Soulbound",
+  "enchantment.sortilege.soulbound.desc": "É mantido após a morte.",
+
+  "sortilege.enchantments": "Encantamentos",
+  "sortilege.catalyst": "Quanto usado para encantar:",
+
+  "item.sortilege.witch_hat": "Chapéu de Bruxa",
+
+  "item.sortilege.antidote": "Antídoto",
+  "item.sortilege.antidote.cures": "Maldições:",
+
+  "sortilege.potion.drinking_time": "Leva %ss para beber",
+
+  "item.sortilege.limitite": "Limitite",
+  "item.sortilege.limitite.desc": "Use com Lapis em uma Mesa de Ferraria para aumentar o número de espaços de encantamento de um item!",
+
+  "item.sortilege.lapis_shield": "Escudo de Lapis",
+  "item.sortilege.lapis_shield.desc": "Passivamente blqueia ataques frontais a cada %ss",
+
+  "advancement.sortilege.get_wooden_staff": "Você é um Mago, {playerName}",
+  "advancement.sortilege.get_wooden_staff.desc": "Obtenha seu primeiro Cajado.",
+  "advancement.sortilege.dye_staff": "A Cor da Magia",
+  "advancement.sortilege.dye_staff.desc": "Use corante em um cajado para mudar a cor de seu feixe.",
+  "advancement.sortilege.get_netherite_staff": "A Varinha das Varinhas",
+  "advancement.sortilege.get_netherite_staff.desc": "Melhore um cajado para Netherita.",
+  "advancement.sortilege.use_limitite": "Infinidade +1",
+  "advancement.sortilege.use_limitite.desc": "Aumente o limite de encantamento de um item usando limitite.",
+  "advancement.sortilege.get_witch_hat": "Chapeleiro Maluco",
+  "advancement.sortilege.get_witch_hat.desc": "Mate uma bruxa e consiga o chapéu dela."
+}

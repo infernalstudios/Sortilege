@@ -117,6 +117,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         EnchantingCatalyst.clear();
         EnchantingCatalyst.read(packet);
 
+        CustomPotionData.clear();
+        CustomPotionData.read(packet);
+
         PotionHelper.clear();
         PotionHelper.load();
 

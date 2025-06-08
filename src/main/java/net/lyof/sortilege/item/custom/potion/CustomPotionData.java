@@ -7,6 +7,7 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.potion.Potion;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
@@ -71,6 +72,56 @@ public class CustomPotionData {
             effects.add(new StatusEffectInstance(effect, duration, amplifier));
         }
         return effects;
+    }
+
+    public static void read(PacketByteBuf packet) {
+        int data = packet.readInt();
+
+        for (int i = 0; i < data; i++) {
+            Identifier potion = packet.readIdentifier();
+            int stackSize = packet.readInt();
+            int drinkingTime = packet.readInt();
+            int cooldown = packet.readInt();
+
+            int size = packet.readInt();
+            List<StatusEffectInstance> effects;
+            if (size == -1)
+                effects = null;
+            else {
+                effects = new ArrayList<>();
+                for (int j = 0; j < size; j++) {
+                    StatusEffect effect = Registries.STATUS_EFFECT.get(packet.readIdentifier());
+                    int duration = packet.readInt();
+                    int amplifier = packet.readInt();
+
+                    effects.add(new StatusEffectInstance(effect, duration, amplifier));
+                }
+            }
+
+            INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
+        }
+    }
+
+    public static void write(PacketByteBuf packet) {
+        packet.writeInt(INSTANCES.size());
+
+        for (CustomPotionData data : INSTANCES) {
+            packet.writeIdentifier(data.potion);
+            packet.writeInt(data.stackSize);
+            packet.writeInt(data.drinkingTime);
+            packet.writeInt(data.cooldown);
+
+            if (data.effects == null)
+                packet.writeInt(-1);
+            else {
+                packet.writeInt(data.effects.size());
+                for (StatusEffectInstance effect : data.effects) {
+                    packet.writeIdentifier(Registries.STATUS_EFFECT.getId(effect.getEffectType()));
+                    packet.writeInt(effect.getDuration());
+                    packet.writeInt(effect.getAmplifier());
+                }
+            }
+        }
     }
 
 

@@ -11,6 +11,7 @@ import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
@@ -50,6 +51,7 @@ public class Sortilege implements ModInitializer {
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			PacketByteBuf packet = PacketByteBufs.create();
 			EnchantingCatalyst.write(packet);
+			CustomPotionData.write(packet);
 
 			sender.sendPacket(ModPackets.INITIALIZE, packet);
 		});

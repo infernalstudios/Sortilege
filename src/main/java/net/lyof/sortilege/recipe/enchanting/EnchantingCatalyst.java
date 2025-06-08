@@ -1,12 +1,14 @@
 package net.lyof.sortilege.recipe.enchanting;
 
 import com.google.gson.JsonObject;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
@@ -47,6 +49,7 @@ public class EnchantingCatalyst {
         return !getEnchantments(item).isEmpty();
     }
 
+
     public static void read(JsonObject json) {
         if (json.has("item") && json.has("enchantments") && json.get("enchantments").isJsonArray()) {
             Item item = Registries.ITEM.get(new Identifier(json.get("item").getAsString()));
@@ -54,6 +57,31 @@ public class EnchantingCatalyst {
                     .map(id -> Registries.ENCHANTMENT.get(new Identifier(id.getAsString()))).filter(Objects::nonNull).toList();
 
             register(item, enchants);
+        }
+    }
+
+    public static void read(PacketByteBuf packet) {
+        int entries = packet.readInt();
+        for (int i = 0; i < entries; i++) {
+            Item key = Registries.ITEM.get(packet.readIdentifier());
+            int enchants = packet.readInt();
+
+            List<Enchantment> value = new ArrayList<>();
+            for (int j = 0; j < enchants; j++)
+                value.add(Registries.ENCHANTMENT.get(packet.readIdentifier()));
+
+            CATALYSTS.putIfAbsent(key, value);
+        }
+    }
+
+    public static void write(PacketByteBuf packet) {
+        packet.writeInt(CATALYSTS.size());
+        for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
+            packet.writeIdentifier(Registries.ITEM.getId(entry.getKey()));
+            packet.writeInt(entry.getValue().size());
+
+            for (Enchantment enchant : entry.getValue())
+                packet.writeIdentifier(Registries.ENCHANTMENT.getId(enchant));
         }
     }
 }

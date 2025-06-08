@@ -17,6 +17,7 @@ import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;
@@ -35,21 +36,13 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
 
     @Override
     public void reload(ResourceManager manager) {
-        ItemHelper.ENCHLIMIT_CACHE.clear();
-
         // Recipe locks
-        RecipeLock.clear();
         for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
             RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
                     new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
         }
 
-        // Brewing recipes
-        PotionHelper.clear();
         PotionHelper.load();
-
-        // Enchantment catalysts
-        EnchantingCatalyst.clear();
 
         for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
                 path -> path.toString().endsWith(".json")).entrySet()) {
@@ -79,10 +72,13 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
     public void preload(ResourceManager manager) {
         ModConfig.register();
 
+        ItemHelper.ENCHLIMIT_CACHE.clear();
+        RecipeLock.clear();
+        PotionHelper.clear();
         BetterBrewingRegistry.clear();
-
         CustomPotionData.clear();
         PotionCooldownManager.clear();
+        EnchantingCatalyst.clear();
 
         if (manager instanceof FabricLifecycledResourceManager fabricManager && fabricManager.fabric_getResourceType() == ResourceType.CLIENT_RESOURCES) {
             CustomPotionData.MODELS.clear();
@@ -109,7 +105,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         }
     }
 
-    public void reloadClient() {
+    public void reloadClient(PacketByteBuf packet) {
         ItemHelper.ENCHLIMIT_CACHE.clear();
 
         RecipeLock.clear();
@@ -117,6 +113,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
             RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
                     new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
         }
+
+        EnchantingCatalyst.clear();
+        EnchantingCatalyst.read(packet);
 
         PotionHelper.clear();
         PotionHelper.load();

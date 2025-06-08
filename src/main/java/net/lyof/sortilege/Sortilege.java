@@ -13,10 +13,12 @@ import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -45,8 +47,12 @@ public class Sortilege implements ModInitializer {
 		ModRecipeTypes.register();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
-				sender.sendPacket(ModPackets.INITIALIZE, PacketByteBufs.create()));
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			PacketByteBuf packet = PacketByteBufs.create();
+			EnchantingCatalyst.write(packet);
+
+			sender.sendPacket(ModPackets.INITIALIZE, packet);
+		});
 	}
 
 	public static Identifier makeID(String name) {

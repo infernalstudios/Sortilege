@@ -79,6 +79,6 @@ public class SortilegeClient implements ClientModInitializer {
         });
 
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, (client, handler, buf, responseSender) ->
-                ReloadListener.INSTANCE.reloadClient());
+                ReloadListener.INSTANCE.reloadClient(buf));
     }
 }

@@ -22,19 +22,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class AntidoteBrewingRecipe implements BrewingRecipe {
-    public final Identifier id;
-
-    public AntidoteBrewingRecipe(Identifier id) {
-        this.id = id;
+public class P2ABrewingRecipe extends BrewingRecipe {
+    public P2ABrewingRecipe(Identifier id) {
+        super(id);
     }
-
 
     @Override
     public boolean isInput(ItemStack stack) {
-        return stack.getItem() instanceof PotionItem &&
-                !(stack.getItem() instanceof AntidotePotionItem) &&
-                PotionUtil.getPotionEffects(stack).size() >= 1;
+        return PotionHelper.isPotionItem(stack) && !PotionUtil.getPotionEffects(stack).isEmpty();
     }
 
     @Override
@@ -48,7 +43,7 @@ public class AntidoteBrewingRecipe implements BrewingRecipe {
         Collections.shuffle(effects);
 
         Potion potion = Potions.EMPTY;
-        while (potion == Potions.EMPTY && effects.size() > 0) {
+        while (potion == Potions.EMPTY && !effects.isEmpty()) {
             if (!effects.get(0).getEffectType().isInstant())
                 potion = PotionHelper.getDefaultPotion(effects.get(0).getEffectType());
             if (potion == Potions.EMPTY) effects.remove(0);
@@ -81,26 +76,21 @@ public class AntidoteBrewingRecipe implements BrewingRecipe {
 
 
     @Override
-    public Identifier getId() {
-        return this.id;
-    }
-
-    @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.ANTIDOTE_BREWING_SERIALIZER;
     }
 
-    public static class Serializer implements RecipeSerializer<AntidoteBrewingRecipe> {
-        public AntidoteBrewingRecipe read(Identifier id, JsonObject json) {
-            AntidoteBrewingRecipe recipe = new AntidoteBrewingRecipe(id);
+    public static class Serializer implements RecipeSerializer<P2ABrewingRecipe> {
+        public P2ABrewingRecipe read(Identifier id, JsonObject json) {
+            P2ABrewingRecipe recipe = new P2ABrewingRecipe(id);
             BetterBrewingRegistry.register(recipe);
             return recipe;
         }
 
-        public AntidoteBrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            return new AntidoteBrewingRecipe(identifier);
+        public P2ABrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
+            return new P2ABrewingRecipe(identifier);
         }
 
-        public void write(PacketByteBuf packetByteBuf, AntidoteBrewingRecipe recipe) {}
+        public void write(PacketByteBuf packetByteBuf, P2ABrewingRecipe recipe) {}
     }
 }

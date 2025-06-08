@@ -1,17 +1,20 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
+import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 
 import java.util.Random;
 
-public class ItemMixBrewingRecipe extends MixBrewingRecipe {
+public class ItemBrewingRecipe extends BrewingRecipe {
     public Item input;
     public Item ingredient;
     public Item output;
 
-    public ItemMixBrewingRecipe(Item in, Item add, Item out, Identifier id) {
+    public ItemBrewingRecipe(Item in, Item add, Item out, Identifier id) {
         super(id);
         this.input = in;
         this.ingredient = add;
@@ -52,5 +55,11 @@ public class ItemMixBrewingRecipe extends MixBrewingRecipe {
     @Override
     public ItemStack getOutput() {
         return this.output.getDefaultStack();
+    }
+
+
+    @Override
+    public RecipeSerializer<?> getSerializer() {
+        return ModRecipeTypes.BREWING_SERIALIZER;
     }
 }

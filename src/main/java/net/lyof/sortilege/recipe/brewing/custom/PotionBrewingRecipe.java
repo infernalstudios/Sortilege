@@ -1,93 +1,73 @@
 package net.lyof.sortilege.recipe.brewing.custom;
 
-import com.google.gson.JsonObject;
-import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
-import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
+import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 
+import java.util.List;
 import java.util.Random;
 
-public class PotionBrewingRecipe implements BrewingRecipe {
-    public final Identifier id;
+public class PotionBrewingRecipe extends BrewingRecipe {
+    public Potion input;
+    public Item ingredient;
+    public Potion output;
 
-    public PotionBrewingRecipe(Identifier id) {
-        this.id = id;
+    public PotionBrewingRecipe(Potion in, Item add, Potion out, Identifier id) {
+        super(id);
+        this.input = in;
+        this.ingredient = add;
+        this.output = out;
     }
-
 
     @Override
     public boolean isInput(ItemStack stack) {
-        return stack.getItem() instanceof AntidotePotionItem &&
-                PotionUtil.getPotion(stack) != Potions.EMPTY &&
-                PotionUtil.getPotion(stack).getEffects().size() == 1;
+        return PotionHelper.isPotionItem(stack) && PotionUtil.getPotion(stack) == this.input;
     }
 
     @Override
     public boolean isIngredient(ItemStack stack) {
-        return stack.isOf(Items.INK_SAC);
+        return ItemStack.areItemsEqual(stack, this.getIngredient());
     }
 
     @Override
     public ItemStack craft(ItemStack input, ItemStack ingredient) {
-        Potion effect = PotionUtil.getPotion(input);
-        return PotionUtil.setPotion(Items.POTION.getDefaultStack(), PotionHelper.getDefaultPotion(effect));
+        return PotionUtil.setPotion(input.copy(), this.output);
     }
 
 
     @Override
     public ItemStack getIngredient() {
-        return Items.INK_SAC.getDefaultStack();
+        return this.ingredient.getDefaultStack();
     }
 
     @Override
     public ItemStack getInput() {
-        return ModItems.ANTIDOTE.getDefaultStack();
+        return PotionUtil.setPotion(Items.POTION.getDefaultStack(), this.input);
     }
 
     @Override
     public ItemStack getInput(Random random) {
-        int i = random.nextInt(PotionHelper.POTIONS.size());
-        return PotionUtil.setPotion(ModItems.ANTIDOTE.getDefaultStack(), (Potion) PotionHelper.POTIONS.values().toArray()[i]);
+        return PotionUtil.setPotion(MathHelper.randi(List.of(Items.POTION.getDefaultStack(),
+                Items.SPLASH_POTION.getDefaultStack(),
+                Items.LINGERING_POTION.getDefaultStack()), random), this.input);
     }
 
     @Override
     public ItemStack getOutput() {
-        return Items.POTATO.getDefaultStack();
+        return PotionUtil.setPotion(Items.POTION.getDefaultStack(), this.output);
     }
 
-
-    @Override
-    public Identifier getId() {
-        return this.id;
-    }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.POTION_BREWING_SERIALIZER;
-    }
-
-    public static class Serializer implements RecipeSerializer<PotionBrewingRecipe> {
-        public PotionBrewingRecipe read(Identifier id, JsonObject json) {
-            PotionBrewingRecipe recipe = new PotionBrewingRecipe(id);
-            BetterBrewingRegistry.register(recipe);
-            return recipe;
-        }
-
-        public PotionBrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            return new PotionBrewingRecipe(identifier);
-        }
-
-        public void write(PacketByteBuf packetByteBuf, PotionBrewingRecipe recipe) {}
+        return ModRecipeTypes.BREWING_SERIALIZER;
     }
 }

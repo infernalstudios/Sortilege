@@ -1,9 +1,11 @@
 package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.PotionItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.registry.Registries;
@@ -67,5 +69,9 @@ public class PotionHelper {
         else if (stack.isOf(Items.LINGERING_POTION)) base = "/lingering";
 
         return id + base;
+    }
+
+    public static boolean isPotionItem(ItemStack stack) {
+        return stack.getItem() instanceof PotionItem && !(stack.getItem() instanceof AntidotePotionItem);
     }
 }

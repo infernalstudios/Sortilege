@@ -440,7 +440,7 @@ public class ModConfig {
               "equipment": {
                 "lapis_shield": {
                   // Should the Witch Hat be registered as an item
-                  "enabled": true,
+                  "enable": true,
                   // How many durability points do Lapis Shields have
                   "durability": 152,
                   // How many ticks between each Lapis Shield dodge, in ticks (20t = 1s)
@@ -539,7 +539,7 @@ public class ModConfig {
                     },
                     {
                       "crystalline_staff": {
-                        "tier": "GOLD",
+                        "tier": "IRON",
                         "enchantability": 19,
                         "damage": 4,
                         "pierce": 3,

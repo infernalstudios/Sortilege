@@ -58,7 +58,13 @@ public class ConfiguredData {
 
         register(Sortilege.makeID("lang/en_us.json"), () -> true, Instances::generateTranslations);
 
-        register(Identifier.of("enchdesc", "lang/en_us.json"), () -> true, Instances::changeEnchantmentDescriptions);
+        register(Identifier.of("enchdesc", "lang/en_us.json"),
+                () -> FabricLoader.getInstance().isModLoaded("enchdesc"),
+                Instances::changeEnchantmentDescriptions);
+
+        register(Identifier.of("quark", "attribute_tooltips.json"),
+                () -> FabricLoader.getInstance().isModLoaded("quark"),
+                Instances::changeQuarkAttributeDisplay);
     }
 
 
@@ -141,6 +147,56 @@ public class ConfiguredData {
                             + " Max level makes the item unbreakable"));
 
             return o.toString();
+        }
+
+        public static String changeQuarkAttributeDisplay(JsonElement json) {
+            if (json == null) return "";
+            if (!json.isJsonObject()) return "";
+
+            json.getAsJsonObject().add("sortilege:generic.staff_damage", getJson("""
+                    {
+                      "display": {
+                        "mainhand": "flat",
+                        "offhand": "flat",
+                        "feet": "difference",
+                        "legs": "difference",
+                        "chest": "difference",
+                        "head": "difference",
+                        "potion": "difference"
+                      },
+                      "texture": "quark:attribute/staff_damage",
+                      "compare": "higher_better"
+                    }"""));
+            json.getAsJsonObject().add("sortilege:generic.staff_range", getJson("""
+                    {
+                      "display": {
+                        "mainhand": "flat",
+                        "offhand": "flat",
+                        "feet": "difference",
+                        "legs": "difference",
+                        "chest": "difference",
+                        "head": "difference",
+                        "potion": "difference"
+                      },
+                      "texture": "quark:attribute/staff_range",
+                      "compare": "higher_better"
+                    }"""));
+            json.getAsJsonObject().add("sortilege:generic.staff_pierce", getJson("""
+                    {
+                      "display": {
+                        "mainhand": "flat",
+                        "offhand": "flat",
+                        "feet": "difference",
+                        "legs": "difference",
+                        "chest": "difference",
+                        "head": "difference",
+                        "potion": "difference"
+                      },
+                      "texture": "quark:attribute/staff_pierce",
+                      "compare": "higher_better"
+                    }"""));
+
+            return gson.toJson(json);
         }
     }
 }

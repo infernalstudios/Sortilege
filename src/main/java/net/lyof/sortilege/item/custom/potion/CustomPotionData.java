@@ -3,8 +3,11 @@ package net.lyof.sortilege.item.custom.potion;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.PacketByteBuf;
@@ -75,37 +78,34 @@ public class CustomPotionData {
     }
 
     public static void read(PacketByteBuf packet) {
-        int data = packet.readInt();
+        Identifier potion = packet.readIdentifier();
+        int stackSize = packet.readInt();
+        int drinkingTime = packet.readInt();
+        int cooldown = packet.readInt();
 
-        for (int i = 0; i < data; i++) {
-            Identifier potion = packet.readIdentifier();
-            int stackSize = packet.readInt();
-            int drinkingTime = packet.readInt();
-            int cooldown = packet.readInt();
+        int size = packet.readInt();
+        List<StatusEffectInstance> effects;
+        if (size == -1)
+            effects = null;
+        else {
+            effects = new ArrayList<>();
+            for (int j = 0; j < size; j++) {
+                StatusEffect effect = Registries.STATUS_EFFECT.get(packet.readIdentifier());
+                int duration = packet.readInt();
+                int amplifier = packet.readInt();
 
-            int size = packet.readInt();
-            List<StatusEffectInstance> effects;
-            if (size == -1)
-                effects = null;
-            else {
-                effects = new ArrayList<>();
-                for (int j = 0; j < size; j++) {
-                    StatusEffect effect = Registries.STATUS_EFFECT.get(packet.readIdentifier());
-                    int duration = packet.readInt();
-                    int amplifier = packet.readInt();
-
-                    effects.add(new StatusEffectInstance(effect, duration, amplifier));
-                }
+                effects.add(new StatusEffectInstance(effect, duration, amplifier));
             }
-
-            INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
         }
+
+        INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
     }
 
-    public static void write(PacketByteBuf packet) {
-        packet.writeInt(INSTANCES.size());
-
+    public static void write(PacketSender sender) {
         for (CustomPotionData data : INSTANCES) {
+            PacketByteBuf packet = PacketByteBufs.create();
+            packet.writeInt(2);
+
             packet.writeIdentifier(data.potion);
             packet.writeInt(data.stackSize);
             packet.writeInt(data.drinkingTime);
@@ -121,6 +121,8 @@ public class CustomPotionData {
                     packet.writeInt(effect.getAmplifier());
                 }
             }
+
+            sender.sendPacket(ModPackets.INITIALIZE, packet);
         }
     }
 

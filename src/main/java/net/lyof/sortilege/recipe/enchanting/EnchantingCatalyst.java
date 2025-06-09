@@ -1,8 +1,11 @@
 package net.lyof.sortilege.recipe.enchanting;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.EnchantedBookItem;
@@ -61,27 +64,28 @@ public class EnchantingCatalyst {
     }
 
     public static void read(PacketByteBuf packet) {
-        int entries = packet.readInt();
-        for (int i = 0; i < entries; i++) {
-            Item key = Registries.ITEM.get(packet.readIdentifier());
-            int enchants = packet.readInt();
+        Item key = Registries.ITEM.get(packet.readIdentifier());
+        int enchants = packet.readInt();
 
-            List<Enchantment> value = new ArrayList<>();
-            for (int j = 0; j < enchants; j++)
-                value.add(Registries.ENCHANTMENT.get(packet.readIdentifier()));
+        List<Enchantment> value = new ArrayList<>();
+        for (int j = 0; j < enchants; j++)
+            value.add(Registries.ENCHANTMENT.get(packet.readIdentifier()));
 
-            CATALYSTS.putIfAbsent(key, value);
-        }
+        CATALYSTS.putIfAbsent(key, value);
     }
 
-    public static void write(PacketByteBuf packet) {
-        packet.writeInt(CATALYSTS.size());
+    public static void write(PacketSender sender) {
         for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
+            PacketByteBuf packet = PacketByteBufs.create();
+            packet.writeInt(1);
+
             packet.writeIdentifier(Registries.ITEM.getId(entry.getKey()));
             packet.writeInt(entry.getValue().size());
 
             for (Enchantment enchant : entry.getValue())
                 packet.writeIdentifier(Registries.ENCHANTMENT.getId(enchant));
+
+            sender.sendPacket(ModPackets.INITIALIZE, packet);
         }
     }
 }

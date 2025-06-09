@@ -11,9 +11,11 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
+import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.rendering.custom.WitchHatRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.particle.custom.WispParticle;
+import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
@@ -42,7 +44,7 @@ public class SortilegeClient implements ClientModInitializer {
             });
     }
 
-    public static void registerPackets() {
+    private static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, (client, handler, buf, responseSender) -> {
             double x = buf.readDouble(), y = buf.readDouble(), z = buf.readDouble();
             float r = buf.readFloat(), g = buf.readFloat(), b = buf.readFloat();
@@ -78,7 +80,15 @@ public class SortilegeClient implements ClientModInitializer {
             });
         });
 
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, (client, handler, buf, responseSender) ->
-                ReloadListener.INSTANCE.reloadClient(buf));
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, (client, handler, buf, responseSender) -> {
+            int eventType = buf.readInt();
+
+            if (eventType == 0)
+                ReloadListener.INSTANCE.reloadClient();
+            else if (eventType == 1)
+                EnchantingCatalyst.read(buf);
+            else if (eventType == 2)
+                CustomPotionData.read(buf);
+        });
     }
 }

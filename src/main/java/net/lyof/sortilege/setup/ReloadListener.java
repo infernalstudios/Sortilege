@@ -105,7 +105,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         }
     }
 
-    public void reloadClient(PacketByteBuf packet) {
+    public void reloadClient() {
         ItemHelper.ENCHLIMIT_CACHE.clear();
 
         RecipeLock.clear();
@@ -115,10 +115,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         }
 
         EnchantingCatalyst.clear();
-        EnchantingCatalyst.read(packet);
-
         CustomPotionData.clear();
-        CustomPotionData.read(packet);
 
         PotionHelper.clear();
         PotionHelper.load();

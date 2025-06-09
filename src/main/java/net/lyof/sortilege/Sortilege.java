@@ -47,15 +47,21 @@ public class Sortilege implements ModInitializer {
 		ModLootModifiers.register();
 		ModRecipeTypes.register();
 
+		registerEvents();
+	}
+
+	private static void registerEvents() {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			PacketByteBuf packet = PacketByteBufs.create();
-			EnchantingCatalyst.write(packet);
-			CustomPotionData.write(packet);
-
+			packet.writeInt(0);
 			sender.sendPacket(ModPackets.INITIALIZE, packet);
+
+			EnchantingCatalyst.write(sender);
+			CustomPotionData.write(sender);
 		});
 	}
+
 
 	public static Identifier makeID(String name) {
 		return Identifier.of(MOD_ID, name);

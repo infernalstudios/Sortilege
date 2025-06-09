@@ -1,6 +1,10 @@
 package net.lyof.sortilege.recipe.crafting;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.lyof.sortilege.Sortilege;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -13,6 +17,7 @@ import java.util.Objects;
 public abstract class RecipeLock {
     public abstract boolean matches(ServerPlayerEntity player);
     public abstract MutableText getFailMessage(ServerPlayerEntity player);
+    @Environment(EnvType.CLIENT) public abstract MutableText getFailMessage();
 
     public static RecipeLock NONE = new RecipeLock() {
         @Override
@@ -22,6 +27,12 @@ public abstract class RecipeLock {
 
         @Override
         public MutableText getFailMessage(ServerPlayerEntity player) {
+            return Text.empty();
+        }
+
+        @Environment(EnvType.CLIENT)
+        @Override
+        public MutableText getFailMessage() {
             return Text.empty();
         }
     };
@@ -60,6 +71,12 @@ public abstract class RecipeLock {
             return Text.translatable("sortilege.crafting.requires_level", lvl);
         }
 
+        @Environment(EnvType.CLIENT)
+        @Override
+        public MutableText getFailMessage() {
+            return Text.translatable("sortilege.crafting.requires_level", lvl);
+        }
+
         @Override
         public String toString() {
             return "LevelLock{" +
@@ -81,6 +98,15 @@ public abstract class RecipeLock {
         @Override
         public MutableText getFailMessage(ServerPlayerEntity player) {
             Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancementLoader().get(new Identifier(this.id));
+            if (advc == null) return Text.empty();
+            return Text.translatable("sortilege.crafting.requires_advancement", advc.toHoverableText());
+        }
+
+        @Environment(EnvType.CLIENT)
+        @Override
+        public MutableText getFailMessage() {
+            Advancement advc = Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getAdvancementHandler()
+                    .getManager().get(new Identifier(this.id));
             if (advc == null) return Text.empty();
             return Text.translatable("sortilege.crafting.requires_advancement", advc.toHoverableText());
         }

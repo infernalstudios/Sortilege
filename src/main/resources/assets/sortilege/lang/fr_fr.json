@@ -6,6 +6,7 @@
   "sortilege.death_screen.position": "Position:",
   "sortilege.crafting.requires_level": "Vous devez être au moins niveau %s!",
   "sortilege.crafting.requires_advancement": "Vous devez obtenir %s!",
+  "sortilege.crafting.emi.locked_recipe": "Recette verrouillée",
 
   "sortilege.enchanting.requires_catalyst": "Vous devez utilisez un catalyste!",
 

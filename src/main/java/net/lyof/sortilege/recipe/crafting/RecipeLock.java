@@ -77,13 +77,14 @@ public abstract class RecipeLock {
 
         @Override
         public MutableText getFailMessage(ServerPlayerEntity player) {
-            return Text.translatable("sortilege.crafting.requires_level", lvl);
+            return Text.translatable("sortilege.crafting.requires_level", this.lvl);
         }
 
         @Environment(EnvType.CLIENT)
         @Override
         public MutableText getFailMessage() {
-            return Text.translatable("sortilege.crafting.requires_level", lvl);
+            return Text.translatable("sortilege.crafting.requires_level",
+                    Text.literal("" + this.lvl).formatted(Formatting.YELLOW));
         }
 
         @Override

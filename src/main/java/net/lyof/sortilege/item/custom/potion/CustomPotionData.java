@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
@@ -103,7 +102,7 @@ public class CustomPotionData {
         INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
     }
 
-    public static void write(ServerPlayerEntity player) {
+    public static void send(ServerPlayerEntity player) {
         for (CustomPotionData data : INSTANCES) {
             PacketByteBuf packet = PacketByteBufs.create();
             packet.writeInt(2);

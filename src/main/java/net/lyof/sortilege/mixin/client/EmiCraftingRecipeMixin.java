@@ -1,12 +1,10 @@
-package net.lyof.sortilege.mixin;
+package net.lyof.sortilege.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.server.integrated.IntegratedServer;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +22,8 @@ public class EmiCraftingRecipeMixin {
         RecipeLock lock = RecipeLock.get(this.id.toString());
         if (lock == RecipeLock.NONE) return;
 
-        widgets.addText(lock.getFailMessage(), 10, 60, 0xffff00, false);
+        widgets.addText(Text.translatable("sortilege.crafting.emi.lock"), 0, 60, 0xffffff, true);
+        widgets.addText(lock.getFailMessage(), 4, 68, 0xffff00, false);
     }
 
     @ModifyReturnValue(method = "getDisplayHeight", at = @At("RETURN"))

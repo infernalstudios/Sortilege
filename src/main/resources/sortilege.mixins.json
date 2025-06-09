@@ -43,7 +43,7 @@
     "client.AdvancementDisplayMixin",
     "client.DeathScreenMixin",
     "client.DrawContextMixin",
-    "EmiCraftingRecipeMixin",
+    "client.EmiCraftingRecipeMixin",
     "client.EnchantmentScreenMixin",
     "client.InGameHudMixin",
     "client.ItemMixin",

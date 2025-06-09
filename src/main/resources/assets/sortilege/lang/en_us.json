@@ -5,7 +5,7 @@
 
   "sortilege.death_screen.position": "Position:",
   "sortilege.crafting.requires_level": "You need at least %s levels!",
-  "sortilege.crafting.requires_advancement": "You need to have completed %s!",
+  "sortilege.crafting.requires_advancement": "You need to complete %s!",
 
   "sortilege.enchanting.requires_catalyst": "You must use a catalyst!",
 

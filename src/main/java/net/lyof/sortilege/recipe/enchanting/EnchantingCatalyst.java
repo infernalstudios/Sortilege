@@ -2,9 +2,7 @@ package net.lyof.sortilege.recipe.enchanting;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.enchantment.Enchantment;
@@ -76,7 +74,7 @@ public class EnchantingCatalyst {
         CATALYSTS.putIfAbsent(key, value);
     }
 
-    public static void write(ServerPlayerEntity player) {
+    public static void send(ServerPlayerEntity player) {
         for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
             PacketByteBuf packet = PacketByteBufs.create();
             packet.writeInt(1);

@@ -3,7 +3,6 @@ package net.lyof.sortilege;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lyof.sortilege.attribute.ModAttributes;
@@ -16,6 +15,7 @@ import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
+import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.setup.ModPackets;
@@ -59,8 +59,9 @@ public class Sortilege implements ModInitializer {
 			packet.writeInt(0);
 			ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
 
-			EnchantingCatalyst.write(player);
-			CustomPotionData.write(player);
+			EnchantingCatalyst.send(player);
+			CustomPotionData.send(player);
+			RecipeLock.send(player);
 		});
 	}
 

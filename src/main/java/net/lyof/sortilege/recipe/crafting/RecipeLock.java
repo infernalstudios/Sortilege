@@ -2,17 +2,26 @@ package net.lyof.sortilege.recipe.crafting;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public abstract class RecipeLock {
     public abstract boolean matches(ServerPlayerEntity player);
@@ -105,10 +114,8 @@ public abstract class RecipeLock {
         @Environment(EnvType.CLIENT)
         @Override
         public MutableText getFailMessage() {
-            Advancement advc = Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).getAdvancementHandler()
-                    .getManager().get(new Identifier(this.id));
-            if (advc == null) return Text.empty();
-            return Text.translatable("sortilege.crafting.requires_advancement", advc.toHoverableText());
+            if (!TITLES.containsKey(this.id)) return Text.empty();
+            return TITLES.get(this.id);
         }
 
         @Override
@@ -116,6 +123,40 @@ public abstract class RecipeLock {
             return "AdvancementLock{" +
                     "id='" + id + '\'' +
                     '}';
+        }
+    }
+
+
+    private static final Map<String, MutableText> TITLES = new HashMap<>();
+
+    public static void read(PacketByteBuf packet) {
+        String id = packet.readString();
+        boolean isTranslatable = packet.readBoolean();
+        String title = packet.readString();
+
+        TITLES.putIfAbsent(id, Text.translatable("sortilege.crafting.requires_advancement",
+                Text.literal("[")
+                        .append(isTranslatable ? Text.translatable(title) : Text.literal(title))
+                        .append("]").formatted(Formatting.GREEN)));
+    }
+
+    public static void send(ServerPlayerEntity player) {
+        for (RecipeLock lock : RECIPE_LOCKS.values()) {
+            if (!(lock instanceof AdvancementLock advancementLock)) continue;
+            Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancementLoader()
+                    .get(new Identifier(advancementLock.id));
+            if (advc == null || advc.getDisplay() == null) continue;
+
+            PacketByteBuf packet = PacketByteBufs.create();
+            packet.writeInt(3);
+
+            packet.writeString(advancementLock.id);
+            Text title = advc.getDisplay().getTitle();
+            packet.writeBoolean(title.getContent() instanceof TranslatableTextContent);
+            packet.writeString(title.getContent() instanceof TranslatableTextContent content ?
+                    content.getKey() : title.getString());
+
+            ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
         }
     }
 }

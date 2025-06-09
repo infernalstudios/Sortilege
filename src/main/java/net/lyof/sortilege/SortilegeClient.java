@@ -15,6 +15,7 @@ import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.rendering.custom.WitchHatRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.particle.custom.WispParticle;
+import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
@@ -89,6 +90,8 @@ public class SortilegeClient implements ClientModInitializer {
                 EnchantingCatalyst.read(buf);
             else if (eventType == 2)
                 CustomPotionData.read(buf);
+            else if (eventType == 3)
+                RecipeLock.read(buf);
         });
     }
 }

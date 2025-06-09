@@ -1,8 +1,10 @@
 package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
@@ -52,13 +54,13 @@ public class Sortilege implements ModInitializer {
 
 	private static void registerEvents() {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
-		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
 			PacketByteBuf packet = PacketByteBufs.create();
 			packet.writeInt(0);
-			sender.sendPacket(ModPackets.INITIALIZE, packet);
+			ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
 
-			EnchantingCatalyst.write(sender);
-			CustomPotionData.write(sender);
+			EnchantingCatalyst.write(player);
+			CustomPotionData.write(player);
 		});
 	}
 

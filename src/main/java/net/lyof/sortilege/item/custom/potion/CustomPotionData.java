@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
 import net.lyof.sortilege.setup.ModPackets;
@@ -17,6 +18,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryOwner;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,7 +103,7 @@ public class CustomPotionData {
         INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
     }
 
-    public static void write(PacketSender sender) {
+    public static void write(ServerPlayerEntity player) {
         for (CustomPotionData data : INSTANCES) {
             PacketByteBuf packet = PacketByteBufs.create();
             packet.writeInt(2);
@@ -122,7 +124,7 @@ public class CustomPotionData {
                 }
             }
 
-            sender.sendPacket(ModPackets.INITIALIZE, packet);
+            ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
         }
     }
 

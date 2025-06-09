@@ -105,7 +105,7 @@ public class ModConfig {
                     this.colors.add(new float[]{triple.get(0).floatValue(), triple.get(1).floatValue(), triple.get(2).floatValue()});
             }
             catch (Exception e) {
-                Sortilege.log("Encountered an error while parsing a Staff's beam color");
+                Sortilege.log("Encountered an error while parsing a Staff's beam color", 2);
             }
             this.fireRes = fire_res;
             this.dependency = dependency;
@@ -189,7 +189,7 @@ public class ModConfig {
         }
 
         if (getVersion() > VERSION.get())
-            Sortilege.log("Your Sortilege configs are outdated! Consider deleting them so they can refresh");
+            Sortilege.log("Your Sortilege configs are outdated! Consider deleting them so they can refresh", 1);
 
 
         List<Pair<String, StaffInfo>> result = new ArrayList<>();

@@ -60,7 +60,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                     EnchantingCatalyst.read(jsono);
 
             } catch (Throwable e) {
-                Sortilege.log("Could not read data file " + entry.getKey());
+                Sortilege.log("Could not read data file " + entry.getKey(), 2);
             }
         }
 
@@ -100,7 +100,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                 CustomPotionData.read(json.getAsJsonObject());
             }
             catch (Throwable e) {
-                Sortilege.log("Could not read data file " + entry.getKey());
+                Sortilege.log("Could not read data file " + entry.getKey(), 2);
             }
         }
     }

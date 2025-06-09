@@ -67,7 +67,7 @@ public class SortilegeClient implements ClientModInitializer {
             client.execute(() -> {
                 Entity e = handler.getWorld().getEntityById(id);
                 if (!(e instanceof LivingEntity entity)) {
-                    Sortilege.log("Something went wrong while receiving a packet");
+                    Sortilege.log("Something went wrong while receiving a packet", 2);
                     return;
                 }
                 ItemStack stack = entity.getOffHandStack();

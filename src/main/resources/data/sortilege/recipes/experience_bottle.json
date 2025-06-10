@@ -1,0 +1,12 @@
+{
+  "type": "sortilege:brewing",
+  "input": {
+    "item": "minecraft:glass_bottle"
+  },
+  "ingredient": {
+    "item": "minecraft:echo_shard"
+  },
+  "output": {
+    "item": "minecraft:experience_bottle"
+  }
+}

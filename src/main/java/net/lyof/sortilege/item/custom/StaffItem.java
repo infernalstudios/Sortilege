@@ -172,7 +172,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND) {
+        if (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 
             if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
@@ -301,9 +301,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
         if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
             server.getServer().getCommandManager().executeWithPrefix(
-                    new ServerCommandSource(player, new Vec3d(x, y, z), Vec2f.ZERO, server,
-                            4, "", Text.literal(""), server.getServer(), player)
-                            .withOutput(CommandOutput.DUMMY),
+                    player.getCommandSource().withOutput(CommandOutput.DUMMY),
                     this.rawInfos.on_shoot);
         }
 

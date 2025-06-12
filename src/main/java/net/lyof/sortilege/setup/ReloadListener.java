@@ -17,7 +17,6 @@ import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.PotionHelper;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
 import net.minecraft.resource.ResourceManager;

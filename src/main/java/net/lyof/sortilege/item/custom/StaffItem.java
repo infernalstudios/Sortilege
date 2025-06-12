@@ -104,8 +104,10 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     private int getCooldown(ItemStack stack, PlayerEntity player) {
         float multiplier = 1 - ItemHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
+
         if (stack.isIn(ModTags.Items.XP_BOOSTED))
             multiplier -= player.experienceLevel / 200f;
+
         multiplier = Math.max(multiplier, 0);
         return (int) (this.cooldown * multiplier);
     }

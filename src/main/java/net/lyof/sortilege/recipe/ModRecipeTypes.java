@@ -1,10 +1,10 @@
 package net.lyof.sortilege.recipe;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.custom.P2ABrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.A2PBrewingRecipe;
+import net.lyof.sortilege.recipe.brewing.custom.P2ABrewingRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.minecraft.inventory.Inventory;

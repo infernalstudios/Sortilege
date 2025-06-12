@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
+import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedModelManager;
@@ -28,11 +29,11 @@ public class ItemModelsMixin {
 
     @WrapMethod(method = "getModel(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/client/render/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
-        if (!(stack.getItem() instanceof PotionItem) || stack.getItem() instanceof AntidotePotionItem) return original.call(stack);
+        if (!PotionHelper.isPotionItem(stack)) return original.call(stack);
         if (!stack.hasNbt()) return original.call(stack);
         
         Identifier id = new Identifier(stack.getNbt().getString("Potion"));
-        String key = stack.getItem().getClass().getName() + "@" + Integer.toHexString(stack.getItem().hashCode()) + "/" + id;
+        String key = PotionHelper.getPotionItemType(stack);
         if (MODEL_CACHE.containsKey(key)) return MODEL_CACHE.get(key);
 
         String base = "";

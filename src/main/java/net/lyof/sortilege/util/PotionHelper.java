@@ -72,6 +72,6 @@ public class PotionHelper {
     }
 
     public static boolean isPotionItem(ItemStack stack) {
-        return stack.getItem() instanceof PotionItem && !(stack.getItem() instanceof AntidotePotionItem);
+        return stack.isOf(Items.POTION) || stack.isOf(Items.SPLASH_POTION) || stack.isOf(Items.LINGERING_POTION);
     }
 }

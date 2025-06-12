@@ -117,7 +117,7 @@ public class LapisShieldItem extends Item implements Equipment, AddedRenderItem 
     public void render(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         matrices.scale(1.005f, 1.005f, 1.005f);
         matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
-        matrices.translate(-6 * PX_UNIT, -4 * PX_UNIT, -1.5 * PX_UNIT);
+        matrices.translate(-6 * PX_UNIT, -4 * PX_UNIT, -2 * PX_UNIT);
 
         MockItemRenderer.renderItem(matrices, vertexConsumers, -1, SHIELD_GLOW_LAYER);
     }

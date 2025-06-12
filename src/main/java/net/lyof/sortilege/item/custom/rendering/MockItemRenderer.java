@@ -44,7 +44,10 @@ public class MockItemRenderer {
                                   int light, Identifier texture, float thickness, int red, int green, int blue) {
 
         VertexConsumer buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(texture));
-        if (light < 0) light = MAX_LIGHT;
+        if (light < 0) {
+            light = MAX_LIGHT;
+            thickness = 0;
+        }
 
         matrixStack.push();
 
@@ -87,6 +90,8 @@ public class MockItemRenderer {
                 computeUV(0.0f, 1, 1, 1), computeUV(1, 1, 1, 1),
                 light, 0, 0, -1, red, green, blue
         );
+
+        if (halfZ == 0) return;
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {

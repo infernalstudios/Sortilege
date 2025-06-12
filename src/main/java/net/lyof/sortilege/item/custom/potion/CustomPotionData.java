@@ -102,7 +102,7 @@ public class CustomPotionData {
         INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
     }
 
-    public static void send(ServerPlayerEntity player) {
+    public static void write(List<PacketByteBuf> packets) {
         for (CustomPotionData data : INSTANCES) {
             PacketByteBuf packet = PacketByteBufs.create();
             packet.writeInt(2);
@@ -123,7 +123,7 @@ public class CustomPotionData {
                 }
             }
 
-            ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
+            packets.add(packet);
         }
     }
 

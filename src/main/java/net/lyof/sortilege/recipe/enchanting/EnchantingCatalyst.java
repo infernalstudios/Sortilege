@@ -74,7 +74,7 @@ public class EnchantingCatalyst {
         CATALYSTS.putIfAbsent(key, value);
     }
 
-    public static void send(ServerPlayerEntity player) {
+    public static void write(List<PacketByteBuf> packets) {
         for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
             PacketByteBuf packet = PacketByteBufs.create();
             packet.writeInt(1);
@@ -85,7 +85,7 @@ public class EnchantingCatalyst {
             for (Enchantment enchant : entry.getValue())
                 packet.writeIdentifier(Registries.ENCHANTMENT.getId(enchant));
 
-            ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
+            packets.add(packet);
         }
     }
 }

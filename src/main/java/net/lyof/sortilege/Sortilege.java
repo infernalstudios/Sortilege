@@ -27,6 +27,9 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Sortilege implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Sortilege");
 	public static final String MOD_ID = "sortilege";
@@ -55,13 +58,17 @@ public class Sortilege implements ModInitializer {
 	private static void registerEvents() {
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
+			List<PacketByteBuf> packets = new ArrayList<>();
+
 			PacketByteBuf packet = PacketByteBufs.create();
 			packet.writeInt(0);
-			ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
+			packets.add(packet);
 
-			EnchantingCatalyst.send(player);
-			CustomPotionData.send(player);
-			RecipeLock.send(player);
+			EnchantingCatalyst.write(packets);
+			CustomPotionData.write(packets);
+			RecipeLock.write(packets, player);
+
+			packets.forEach(p -> ServerPlayNetworking.send(player, ModPackets.INITIALIZE, p));
 		});
 	}
 

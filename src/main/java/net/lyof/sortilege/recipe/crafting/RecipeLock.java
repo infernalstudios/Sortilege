@@ -4,17 +4,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.advancement.Advancement;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.HoverEvent;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
@@ -141,7 +134,7 @@ public abstract class RecipeLock {
                         .append("]").formatted(Formatting.GREEN)));
     }
 
-    public static void send(ServerPlayerEntity player) {
+    public static void write(List<PacketByteBuf> packets, ServerPlayerEntity player) {
         for (RecipeLock lock : RECIPE_LOCKS.values()) {
             if (!(lock instanceof AdvancementLock advancementLock)) continue;
             Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancementLoader()
@@ -157,7 +150,7 @@ public abstract class RecipeLock {
             packet.writeString(title.getContent() instanceof TranslatableTextContent content ?
                     content.getKey() : title.getString());
 
-            ServerPlayNetworking.send(player, ModPackets.INITIALIZE, packet);
+            packets.add(packet);
         }
     }
 }

@@ -37,7 +37,7 @@ public class ModEnchants {
     public static Enchantment CHAINING = register("chaining",
             new StaffEnchantment(Enchantment.Rarity.COMMON, 3));
     public static Enchantment WISDOM = register("wisdom",
-            new StaffEnchantment(Enchantment.Rarity.RARE, 2,
+            new StaffEnchantment(Enchantment.Rarity.RARE, 3,
                     null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.focus")));
 
     public static Enchantment PUSH = register("push",

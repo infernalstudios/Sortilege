@@ -466,7 +466,7 @@ public class ModConfig {
                   },
                 
                   // Amount of xp points needed to use a staff, if not set
-                  "default_xp_cost": 2,
+                  "default_xp_cost": 3,
                   // Time staffs need to be held down (in ticks) before shooting, if not set
                   "default_charge_time": 1,
                   "entries": [

@@ -172,7 +172,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND) {
+        if (slot == EquipmentSlot.MAINHAND && this.pierce > 0) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 
             if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {

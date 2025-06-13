@@ -54,9 +54,8 @@ public class SoulbindingRecipe implements SmithingRecipe {
 
     @Override
     public boolean testBase(ItemStack stack) {
-        return stack.getMaxCount() == 1 && ModEnchants.SOULBOUND != null && !stack.isFood()
-                && !(stack.getItem() instanceof BucketItem) && !(stack.getItem() instanceof BlockItem)
-                && !ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack) && !stack.isIn(ModTags.Items.SOULBIND_BLACKLIST);
+        return ModEnchants.SOULBOUND != null && !ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)
+                && ModEnchants.SOULBOUND.isAcceptableItem(stack);
     }
 
     @Override

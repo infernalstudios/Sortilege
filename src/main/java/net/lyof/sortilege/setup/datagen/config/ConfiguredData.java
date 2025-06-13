@@ -50,27 +50,29 @@ public class ConfiguredData {
         register(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
                 () -> ConfigEntries.witchHatEnabled, Common::changeVoluntaryExileParent);
 
-        register(Identifier.of("miningmaster", "recipes/smithing/power_pyrite_smithing.json"),
-                () -> ModEnchants.POTENCY != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:potency"));
-        register(Identifier.of("miningmaster", "recipes/smithing/kinetic_opal_smithing.json"),
-                () -> ModEnchants.PUSH != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:push"));
-        register(Identifier.of("miningmaster", "recipes/smithing/ice_sapphire_smithing.json"),
-                () -> ModEnchants.BLIZZARD != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:blizzard"));
-        register(Identifier.of("miningmaster", "recipes/smithing/fire_ruby_smithing.json"),
-                () -> ModEnchants.BRAZIER != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:brazier"));
-        register(Identifier.of("miningmaster", "recipes/smithing/air_malachite_smithing.json"),
-                () -> ModEnchants.STABILITY != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:stability"));
-        register(Identifier.of("miningmaster", "recipes/smithing/spirit_garnet_smithing.json"),
-                () -> ModEnchants.WISDOM != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:wisdom"));
-        register(Identifier.of("miningmaster", "recipes/smithing/haste_peridot_smithing.json"),
-                () -> ModEnchants.FOCUS != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
-                json -> Common.changeMiningMasterGem(json, "sortilege:focus"));
+        if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
+            register(Identifier.of("miningmaster", "recipes/smithing/power_pyrite_smithing.json"),
+                    () -> ModEnchants.POTENCY != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:potency"));
+            register(Identifier.of("miningmaster", "recipes/smithing/kinetic_opal_smithing.json"),
+                    () -> ModEnchants.PUSH != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:push"));
+            register(Identifier.of("miningmaster", "recipes/smithing/ice_sapphire_smithing.json"),
+                    () -> ModEnchants.BLIZZARD != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:blizzard"));
+            register(Identifier.of("miningmaster", "recipes/smithing/fire_ruby_smithing.json"),
+                    () -> ModEnchants.BRAZIER != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:brazier"));
+            register(Identifier.of("miningmaster", "recipes/smithing/air_malachite_smithing.json"),
+                    () -> ModEnchants.STABILITY != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:stability"));
+            register(Identifier.of("miningmaster", "recipes/smithing/spirit_garnet_smithing.json"),
+                    () -> ModEnchants.WISDOM != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:wisdom"));
+            register(Identifier.of("miningmaster", "recipes/smithing/haste_peridot_smithing.json"),
+                    () -> ModEnchants.FOCUS != null,
+                    json -> Common.changeMiningMasterGem(json, "sortilege:focus"));
+        }
     }
 
     public static void registerClient() {

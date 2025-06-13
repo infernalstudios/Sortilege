@@ -61,13 +61,4 @@ public abstract class ItemStackMixin {
                 list.add(ItemHelper.getShiftTooltip());
         }
     }
-
-    @WrapOperation(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;getAttributeModifiers(Lnet/minecraft/entity/EquipmentSlot;)Lcom/google/common/collect/Multimap;"))
-    public Multimap<EntityAttribute, EntityAttributeModifier> hideOffHandStaffAttributes(ItemStack instance, EquipmentSlot slot,
-                                                                                         Operation<Multimap<EntityAttribute, EntityAttributeModifier>> original) {
-
-        if (this.getItem() instanceof StaffItem && slot == EquipmentSlot.OFFHAND)
-            return ImmutableMultimap.of();
-        return original.call(instance, slot);
-    }
 }

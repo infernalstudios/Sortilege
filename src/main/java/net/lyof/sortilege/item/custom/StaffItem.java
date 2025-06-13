@@ -172,7 +172,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     @Override
     public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) {
+        if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 
             if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
@@ -263,9 +263,9 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
 
         int cost = this.getXPCost(staff);
-        float damage = (float) entity.getAttributeValue(ModAttributes.STAFF_DAMAGE);
-        int range = (int) entity.getAttributeValue(ModAttributes.STAFF_RANGE);
-        int targetsLeft = (int) entity.getAttributeValue(ModAttributes.STAFF_PIERCE);
+        float damage = this.getAttackDamage(staff);
+        int range = this.getAttackRange(staff);
+        int targetsLeft = this.getPierce(staff);
 
 
         if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {

@@ -763,7 +763,7 @@ public class ModConfig {
                           [0.27, 0.67, 0.95],
                           [0.24, 0.34, 0.84]
                         ],
-                        "on_hit_target": "/setblock ~ ~ ~ minecraft:water[level=16] keep",
+                        "on_hit_target": "/setblock ~ ~ ~ minecraft:water[level=15] keep",
                         "dependency": "aquaculture"
                       }
                     }

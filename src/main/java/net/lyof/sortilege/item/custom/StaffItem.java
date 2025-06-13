@@ -306,8 +306,6 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                     this.rawInfos.on_shoot);
         }
 
-        DamageSource damagetype = player.getDamageSources().indirectMagic(player, player);
-
         List<float[]> colors = this.getBeamColors(staff, element);
 
         int step = 5;

@@ -28,6 +28,9 @@
   "item.sortilege.diamond_staff" : "Diamond Staff",
   "item.sortilege.netherite_staff" : "Netherite Staff",
 
+  "aquaculture.neptunium_staff.tooltip.title": "Neptune's Flood",
+  "aquaculture.neptunium_staff.tooltip.desc": "Conjures water at your foes, even in hot environments",
+
   "sortilege.staff.experience_cost": "Costs %s XP",
   "sortilege.staff.cooldown": "%ss Cooldown",
 

@@ -1,0 +1,35 @@
+{
+  "type": "miningmaster:forging_recipe",
+  "gems": [
+    {
+        "item": "miningmaster:divine_beryl"
+    },
+    {
+        "item": "miningmaster:divine_beryl"
+    },
+    {
+        "item": "miningmaster:divine_beryl"
+    },
+    {
+        "item": "miningmaster:heart_rhodonite"
+    },
+    {
+        "item": "miningmaster:heart_rhodonite"
+    },
+    {
+        "item": "miningmaster:heart_rhodonite"
+    }
+  ],
+    "catalyst": {
+        "item": "sortilege:spider_kunzite_staff"
+    },
+    "result": {
+        "item": "sortilege:ultima_staff"
+    },
+  "enchantments": [
+    {
+        "enchantment": "sortilege:blitz",
+        "lvl": 4
+    }
+  ]
+}

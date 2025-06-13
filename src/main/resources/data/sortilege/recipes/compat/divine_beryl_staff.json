@@ -1,0 +1,26 @@
+{
+  "type": "miningmaster:forging_recipe",
+  "gems": [
+    {
+        "item": "miningmaster:divine_beryl"
+    },
+    {
+        "item": "miningmaster:divine_beryl"
+    },
+    {
+        "item": "miningmaster:divine_beryl"
+    }
+  ],
+    "catalyst": {
+        "item": "sortilege:diamond_staff"
+    },
+    "result": {
+        "item": "sortilege:divine_beryl_staff"
+    },
+  "enchantments": [
+    {
+        "enchantment": "sortilege:blitz",
+        "lvl": 4
+    }
+  ]
+}

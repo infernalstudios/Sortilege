@@ -1,0 +1,22 @@
+{
+  "type": "miningmaster:forging_recipe",
+  "gems": [
+    {
+        "item": "miningmaster:spider_kunzite"
+    },
+    {
+        "item": "miningmaster:spider_kunzite"
+    },
+    {
+        "item": "miningmaster:spider_kunzite"
+    }
+  ],
+    "catalyst": {
+        "item": "sortilege:diamond_staff"
+    },
+    "result": {
+        "item": "sortilege:spider_kunzite_staff"
+    },
+  "enchantments": [
+  ]
+}

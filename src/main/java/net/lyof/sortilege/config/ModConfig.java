@@ -466,7 +466,7 @@ public class ModConfig {
                   },
                 
                   // Amount of xp points needed to use a staff, if not set
-                  "default_xp_cost": 0,
+                  "default_xp_cost": 3,
                   // Time staffs need to be held down (in ticks) before shooting, if not set
                   "default_charge_time": 1,
                   "entries": [
@@ -514,7 +514,7 @@ public class ModConfig {
                       "wooden_staff": {
                         "tier": "WOOD",
                         "damage": 3,
-                        "pierce": 1,
+                        "pierce": 2,
                         "range": 6,
                         "cooldown": 20
                       }
@@ -617,11 +617,14 @@ public class ModConfig {
                         "durability": 1851,
                         "repair_item": "miningmaster:divine_beryl",
                         "enchantability": 15,
-                        "damage": 6,
+                        "damage": 5,
                         "pierce": 3,
-                        "range": 16,
+                        "range": 14,
                         "cooldown": 25,
-                        "dependency": "miningmaster"
+                        "dependency": "miningmaster",
+                        "beam_color": [
+                          [0, 0.4, 0.1]
+                        ]
                         // will have blitz 4 applied
                       }
                     },
@@ -630,13 +633,16 @@ public class ModConfig {
                         "durability": 1851,
                         "repair_item": "miningmaster:heart_rhodonite",
                         "enchantability": 15,
-                        "damage": 6,
+                        "damage": 5,
                         "pierce": 3,
-                        "range": 16,
+                        "range": 14,
                         "fire_resistant": false,
                         "cooldown": 25,
                         "dependency": "miningmaster",
-                        "on_hit_self": "/effect give @s minecraft:instant_health"
+                        "on_hit_self": "/effect give @s minecraft:instant_health",
+                        "beam_color": [
+                          [1, 0.4, 0.5]
+                        ]
                       }
                     },
                     {
@@ -644,13 +650,16 @@ public class ModConfig {
                         "durability": 1851,
                         "repair_item": "miningmaster:spider_kunzite",
                         "enchantability": 15,
-                        "damage": 6,
+                        "damage": 5,
                         "pierce": 3,
-                        "range": 16,
+                        "range": 14,
                         "fire_resistant": false,
                         "cooldown": 25,
                         "dependency": "miningmaster",
-                        "on_hit_target": "/effect give @s minecraft:poison 3 1"
+                        "on_hit_target": "/effect give @s minecraft:poison 3 1",
+                        "beam_color": [
+                          [1, 0.8, 0.8]
+                        ]
                       }
                     },
                     {
@@ -731,7 +740,12 @@ public class ModConfig {
                         "cooldown": 20,
                         "dependency": "miningmaster",
                         "on_hit_target": "/effect give @s minecraft:poison 3 1",
-                        "on_hit_self": "/effect give @s minecraft:instant_health"
+                        "on_hit_self": "/effect give @s minecraft:instant_health",
+                        "beam_color": [
+                          [0, 0.4, 0.1],
+                          [1, 0.4, 0.5],
+                          [1, 0.8, 0.8]
+                        ]
                         // will have blitz 4 applied
                       }
                     },
@@ -740,7 +754,7 @@ public class ModConfig {
                         "durability": 1796,
                         "repair_item": "aquaculture:neptunium_ingot",
                         "enchantability": 14,
-                        "damage": 5,
+                        "damage": 6,
                         "pierce": 1,
                         "range": 12,
                         "cooldown": 20,

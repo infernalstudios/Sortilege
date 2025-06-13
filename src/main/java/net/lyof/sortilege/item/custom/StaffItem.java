@@ -121,10 +121,11 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 ColorHelper.Argb.getBlue(rgb) / 255f};
 
         if (rgb == 10511680) {
+            if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
+                return this.rawInfos.colors;
+
             if (element != null)
                 result.addAll(element.colors);
-            if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
-                result.addAll(this.rawInfos.colors);
             if (result.isEmpty())
                 result.add(COLOR_NONE);
             if (stack.hasEnchantments())

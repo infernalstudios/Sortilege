@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,34 +46,56 @@ public class ConfiguredData {
 
 
     public static void register() {
-        register(Sortilege.makeID("tags/items/staffs.json"), () -> true, Instances::generateStaffTag);
+        register(Sortilege.makeID("tags/items/staffs.json"), () -> true, Common::generateStaffTag);
         register(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
-                () -> ConfigEntries.witchHatEnabled, Instances::changeVoluntaryExileParent);
+                () -> ConfigEntries.witchHatEnabled, Common::changeVoluntaryExileParent);
+
+        register(Identifier.of("miningmaster", "recipes/smithing/power_pyrite_smithing.json"),
+                () -> ModEnchants.POTENCY != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:potency"));
+        register(Identifier.of("miningmaster", "recipes/smithing/kinetic_opal_smithing.json"),
+                () -> ModEnchants.PUSH != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:push"));
+        register(Identifier.of("miningmaster", "recipes/smithing/ice_sapphire_smithing.json"),
+                () -> ModEnchants.BLIZZARD != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:blizzard"));
+        register(Identifier.of("miningmaster", "recipes/smithing/fire_ruby_smithing.json"),
+                () -> ModEnchants.BRAZIER != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:brazier"));
+        register(Identifier.of("miningmaster", "recipes/smithing/air_malachite_smithing.json"),
+                () -> ModEnchants.STABILITY != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:stability"));
+        register(Identifier.of("miningmaster", "recipes/smithing/spirit_garnet_smithing.json"),
+                () -> ModEnchants.WISDOM != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:wisdom"));
+        register(Identifier.of("miningmaster", "recipes/smithing/haste_peridot_smithing.json"),
+                () -> ModEnchants.FOCUS != null && FabricLoader.getInstance().isModLoaded("miningmaster"),
+                json -> Common.changeMiningMasterGem(json, "sortilege:focus"));
     }
 
     public static void registerClient() {
         for (Pair<String, ModConfig.StaffInfo> staff : ModConfig.STAFFS)
             register(Sortilege.makeID("models/item/" + staff.getFirst() + ".json"),
                     () -> FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency),
-                    json -> Instances.generateDefaultModel(json, staff.getFirst()));
+                    json -> Client.generateDefaultModel(json, staff.getFirst()));
 
-        register(Sortilege.makeID("lang/en_us.json"), () -> true, Instances::generateTranslations);
+        register(Sortilege.makeID("lang/en_us.json"), () -> true, Client::generateTranslations);
 
         register(Identifier.of("enchdesc", "lang/en_us.json"),
                 () -> FabricLoader.getInstance().isModLoaded("enchdesc"),
-                Instances::changeEnchantmentDescriptions);
+                Client::changeEnchantmentDescriptions);
 
         register(Identifier.of("quark", "attribute_tooltips.json"),
                 () -> FabricLoader.getInstance().isModLoaded("quark"),
-                Instances::changeQuarkAttributeDisplay);
+                Client::changeQuarkAttributeDisplay);
+    }
+
+    protected static JsonElement getJson(String string) {
+        return gson.fromJson(string, JsonElement.class);
     }
 
 
-    private static class Instances {
-        private static JsonElement getJson(String string) {
-            return gson.fromJson(string, JsonElement.class);
-        }
-
+    private static class Common {
         public static String generateStaffTag(JsonElement json) {
             if (json == null) json = new JsonObject();
             json.getAsJsonObject().add("values", new JsonArray());
@@ -89,7 +112,17 @@ public class ConfiguredData {
             return json.toString();
         }
 
+        public static String changeMiningMasterGem(JsonElement json, String addedEnchant) {
+            if (json == null) return "{}";
+            if (!json.isJsonObject() || !json.getAsJsonObject().has("enchantments")
+                    || !json.getAsJsonObject().get("enchantments").isJsonArray()) return json.toString();
 
+            json.getAsJsonObject().get("enchantments").getAsJsonArray().add(addedEnchant);
+            return json.toString();
+        }
+    }
+
+    public static class Client {
         public static String generateDefaultModel(JsonElement json, String path) {
             if (json != null) return json.toString();
 
@@ -132,19 +165,19 @@ public class ConfiguredData {
             if (ConfigEntries.betterFireProt > 0)
                 o.asMap().replace("enchantment.minecraft.fire_protection.desc",
                         new JsonPrimitive(o.get("enchantment.minecraft.fire_protection.desc").getAsString()
-                            + " Wearing a full set at max level completely negates them."));
+                                + " Wearing a full set at max level completely negates them."));
             if (ConfigEntries.betterBane)
                 o.asMap().replace("enchantment.minecraft.bane_of_arthropods.desc",
                         new JsonPrimitive(o.get("enchantment.minecraft.bane_of_arthropods.desc").getAsString()
-                            + " Also slows down opponents."));
+                                + " Also slows down opponents."));
             if (ConfigEntries.betterFeatherFalling > 0)
                 o.asMap().replace("enchantment.minecraft.feather_falling.desc",
                         new JsonPrimitive(o.get("enchantment.minecraft.feather_falling.desc").getAsString()
-                            + " They are completely negated at max level."));
+                                + " They are completely negated at max level."));
             if (ConfigEntries.betterUnbreaking > 0)
                 o.asMap().replace("enchantment.minecraft.unbreaking.desc",
                         new JsonPrimitive(o.get("enchantment.minecraft.unbreaking.desc").getAsString()
-                            + " Max level makes the item unbreakable"));
+                                + " Max level makes the item unbreakable"));
 
             return o.toString();
         }

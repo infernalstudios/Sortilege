@@ -1,0 +1,22 @@
+{
+  "type": "miningmaster:forging_recipe",
+  "gems": [
+    {
+        "item": "miningmaster:heart_rhodonite"
+    },
+    {
+        "item": "miningmaster:heart_rhodonite"
+    },
+    {
+        "item": "miningmaster:heart_rhodonite"
+    }
+  ],
+    "catalyst": {
+        "item": "sortilege:diamond_staff"
+    },
+    "result": {
+        "item": "sortilege:heart_rhodonite_staff"
+    },
+  "enchantments": [
+  ]
+}

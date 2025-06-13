@@ -26,7 +26,7 @@ public class ModConfig {
     public static final ConfigEntry<Double> VERSION = new ConfigEntry<>("TECHNICAL.VERSION_DO_NOT_EDIT", 0d);
     public static final ConfigEntry<Boolean> RELOAD = new ConfigEntry<>("TECHNICAL.FORCE_RESET", false);
 
-    public static Map CONFIG = new TreeMap<>();
+    public static Map CONFIG = new HashMap<>();
 
     public static List<Pair<String, StaffInfo>> STAFFS = new ArrayList<>();
 
@@ -165,7 +165,7 @@ public class ModConfig {
                 writer.write(DEFAULT_CONFIG);
                 writer.close();
 
-                Sortilege.log("Sortilege Config file created");
+                Sortilege.log("Sortilege Config file created", 1);
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -539,7 +539,6 @@ public class ModConfig {
                     },
                     {
                       "crystalline_staff": {
-                        "tier": "IRON",
                         "enchantability": 19,
                         "damage": 4,
                         "pierce": 3,
@@ -561,6 +560,18 @@ public class ModConfig {
                       }
                     },
                     {
+                      "silver_staff": {
+                        "durability": 157,
+                        "repair_item": "#forge:ingots/silver",
+                        "enchantability": 18,
+                        "damage": 4,
+                        "pierce": 2,
+                        "range": 15,
+                        "cooldown": 20,
+                        "dependency": "caverns_and_chasms"
+                      }
+                    },
+                    {
                       "diamond_staff": {
                         "tier": "DIAMOND",
                         "damage": 5,
@@ -571,7 +582,6 @@ public class ModConfig {
                     },
                     {
                       "gripcrystal_staff": {
-                        "tier": "DIAMOND",
                         "damage": 5,
                         "pierce": 2,
                         "range": 12,
@@ -587,7 +597,6 @@ public class ModConfig {
                     },
                     {
                       "spawner_staff": {
-                        "tier": "DIAMOND",
                         "damage": 4,
                         "pierce": 3,
                         "range": 14,
@@ -604,18 +613,48 @@ public class ModConfig {
                       }
                     },
                     {
-                      "netherite_staff": {
-                        "tier": "NETHERITE",
+                      "divine_beryl_staff": {
+                        "durability": 1851,
+                        "repair_item": "miningmaster:divine_beryl",
+                        "enchantability": 15,
                         "damage": 6,
                         "pierce": 3,
                         "range": 16,
-                        "fire_resistant": true,
-                        "cooldown": 25
+                        "cooldown": 25,
+                        "dependency": "miningmaster"
+                        // will have blitz 4 applied
+                      }
+                    },
+                    {
+                      "heart_rhodonite_staff": {
+                        "durability": 1851,
+                        "repair_item": "miningmaster:heart_rhodonite",
+                        "enchantability": 15,
+                        "damage": 6,
+                        "pierce": 3,
+                        "range": 16,
+                        "fire_resistant": false,
+                        "cooldown": 25,
+                        "dependency": "miningmaster",
+                        "on_hit_self": "/effect give @s minecraft:instant_health"
+                      }
+                    },
+                    {
+                      "spider_kunzite_staff": {
+                        "durability": 1851,
+                        "repair_item": "miningmaster:spider_kunzite",
+                        "enchantability": 15,
+                        "damage": 6,
+                        "pierce": 3,
+                        "range": 16,
+                        "fire_resistant": false,
+                        "cooldown": 25,
+                        "dependency": "miningmaster",
+                        "on_hit_target": "/effect give @s minecraft:poison 3 1"
                       }
                     },
                     {
                       "electrum_staff": {
-                        "tier": "NETHERITE",
                         "durability": 1561,
                         "repair_item": "oreganized:electrum_ingot",
                         "enchantability": 14,
@@ -629,8 +668,17 @@ public class ModConfig {
                       }
                     },
                     {
-                      "pearlescent_staff": {
+                      "netherite_staff": {
                         "tier": "NETHERITE",
+                        "damage": 6,
+                        "pierce": 3,
+                        "range": 16,
+                        "fire_resistant": true,
+                        "cooldown": 25
+                      }
+                    },
+                    {
+                      "pearlescent_staff": {
                         "damage": 7,
                         "pierce": 1,
                         "range": 20,
@@ -642,6 +690,67 @@ public class ModConfig {
                           [0.5, 0, 0.75],
                           [0.75, 0.25, 1]
                         ]
+                      }
+                    },
+                    {
+                      "necromium_staff": {
+                        "durability": 2031,
+                        "repair_item": "caverns_and_chasms:necromium_ingot",
+                        "enchantability": 15,
+                        "damage": 5,
+                        "pierce": 2,
+                        "range": 16,
+                        "fire_resistant": true,
+                        "cooldown": 25,
+                        "on_hit_target": "/effect give @e[distance=..2] slowness 5 2",
+                        "dependency": "caverns_and_chasms"
+                      }
+                    },
+                    {
+                      "enderite_staff": {
+                        "durability": 4096,
+                        "repair_item": "enderitemod:enderite_ingot",
+                        "enchantability": 17,
+                        "damage": 7,
+                        "pierce": 3,
+                        "range": 16,
+                        "fire_resistant": true,
+                        "cooldown": 25,
+                        "on_hit_target": "/tp @s ~ ~5 ~",
+                        "dependency": "enderitemod"
+                      }
+                    },
+                    {
+                      "ultima_staff": {
+                        "durability": 2341,
+                        "repair_item": "minecraft:diamond",
+                        "enchantability": 20,
+                        "damage": 7,
+                        "pierce": 3,
+                        "range": 16,
+                        "cooldown": 20,
+                        "dependency": "miningmaster",
+                        "on_hit_target": "/effect give @s minecraft:poison 3 1",
+                        "on_hit_self": "/effect give @s minecraft:instant_health"
+                        // will have blitz 4 applied
+                      }
+                    },
+                    {
+                      "neptunium_staff": {
+                        "durability": 1796,
+                        "repair_item": "aquaculture:neptunium_ingot",
+                        "enchantability": 14,
+                        "damage": 5,
+                        "pierce": 1,
+                        "range": 12,
+                        "cooldown": 20,
+                        "beam_color": [
+                          [0.25, 0.46, 0.89],
+                          [0.27, 0.67, 0.95],
+                          [0.24, 0.34, 0.84]
+                        ],
+                        "on_hit_target": "/setblock ~ ~ ~ minecraft:water[level=16] keep",
+                        "dependency": "aquaculture"
                       }
                     }
                   ]

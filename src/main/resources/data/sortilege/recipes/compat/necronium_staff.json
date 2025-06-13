@@ -2,13 +2,13 @@
   "type": "minecraft:smithing_transform",
   "category": "equipment",
   "addition": {
-    "item": "minecraft:netherite_ingot"
+    "tag": "forge:ingots/necromium"
   },
   "base": {
     "item": "sortilege:diamond_staff"
   },
   "result": {
-    "item": "sortilege:netherite_staff"
+    "item": "sortilege:necromium_staff"
   },
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

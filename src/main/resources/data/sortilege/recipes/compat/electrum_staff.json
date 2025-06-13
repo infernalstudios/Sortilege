@@ -1,5 +1,6 @@
 {
   "type": "minecraft:smithing_transform",
+  "group": "staff/electrum",
   "addition": {
     "item": "oreganized:electrum_ingot"
   },

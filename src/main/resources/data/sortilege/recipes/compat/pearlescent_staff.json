@@ -1,5 +1,6 @@
 {
   "type": "minecraft:smithing_transform",
+  "category": "equipment",
   "addition": {
     "item": "unusualend:pearlescent_ingot"
   },

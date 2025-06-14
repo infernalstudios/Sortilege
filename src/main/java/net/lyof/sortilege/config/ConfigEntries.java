@@ -22,6 +22,7 @@ public class ConfigEntries {
         overrideDefaultEnchanting = new ConfigEntry<>("enchantments.enchant_catalyst.override_default_enchanting", false).get();
 
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
+        miningMasterIntegration = new ConfigEntry<>("enchantments.mining_master_integration", true).get();
 
         magicProtCompatibility = new ConfigEntry<>("enchantments.magic_protection_protection_compatibility", false).get();
         betterFeatherFalling = new ConfigEntry<>("enchantments.better_feather_falling", 4).get();
@@ -113,6 +114,7 @@ public class ConfigEntries {
     public static boolean overrideDefaultEnchanting;
 
     public static boolean allowInventoryEnchanting;
+    public static boolean miningMasterIntegration;
 
     public static boolean magicProtCompatibility;
     public static int betterFeatherFalling;

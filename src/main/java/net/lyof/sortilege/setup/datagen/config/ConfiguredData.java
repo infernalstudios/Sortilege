@@ -52,25 +52,25 @@ public class ConfiguredData {
 
         if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
             register(Identifier.of("miningmaster", "recipes/smithing/power_pyrite_smithing.json"),
-                    () -> ModEnchants.POTENCY != null,
+                    () -> ModEnchants.POTENCY != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:potency"));
             register(Identifier.of("miningmaster", "recipes/smithing/kinetic_opal_smithing.json"),
-                    () -> ModEnchants.PUSH != null,
+                    () -> ModEnchants.PUSH != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:push"));
             register(Identifier.of("miningmaster", "recipes/smithing/ice_sapphire_smithing.json"),
-                    () -> ModEnchants.BLIZZARD != null,
+                    () -> ModEnchants.BLIZZARD != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:blizzard"));
             register(Identifier.of("miningmaster", "recipes/smithing/fire_ruby_smithing.json"),
-                    () -> ModEnchants.BRAZIER != null,
+                    () -> ModEnchants.BRAZIER != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:brazier"));
             register(Identifier.of("miningmaster", "recipes/smithing/air_malachite_smithing.json"),
-                    () -> ModEnchants.STABILITY != null,
+                    () -> ModEnchants.STABILITY != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:stability"));
             register(Identifier.of("miningmaster", "recipes/smithing/spirit_garnet_smithing.json"),
-                    () -> ModEnchants.WISDOM != null,
+                    () -> ModEnchants.WISDOM != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:wisdom"));
             register(Identifier.of("miningmaster", "recipes/smithing/haste_peridot_smithing.json"),
-                    () -> ModEnchants.FOCUS != null,
+                    () -> ModEnchants.FOCUS != null && ConfigEntries.miningMasterIntegration,
                     json -> Common.changeMiningMasterGem(json, "sortilege:focus"));
         }
     }

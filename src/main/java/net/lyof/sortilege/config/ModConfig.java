@@ -293,6 +293,8 @@ public class ModConfig {
                 
                 // Allow using Enchanted Books on items in inventory
                 "allow_inventory_enchanting": false,
+                // Should Mining Master's gem smithing recipes be edited so that they also give staff enchantments
+                "mining_master_integration": true,
                 
                 // Should the Magic Protection enchantment be compatible with vanilla Protection enchantments
                 "magic_protection_protection_compatibility": false,

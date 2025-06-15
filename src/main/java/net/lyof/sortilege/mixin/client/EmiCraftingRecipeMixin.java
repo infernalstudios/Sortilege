@@ -26,10 +26,10 @@ public abstract class EmiCraftingRecipeMixin {
     @Shadow @Final protected Identifier id;
 
     @Shadow public abstract int getDisplayHeight();
-    @Shadow public abstract int getDisplayWidth();
 
     @Inject(method = "addWidgets", at = @At("TAIL"))
     public void addLockInfo(WidgetHolder widgets, CallbackInfo ci) {
+        if (this.id == null) return;
         RecipeLock lock = RecipeLock.get(this.id.toString());
         if (lock == RecipeLock.NONE) return;
 
@@ -47,7 +47,7 @@ public abstract class EmiCraftingRecipeMixin {
 
     @ModifyReturnValue(method = "getDisplayHeight", at = @At("RETURN"))
     public int addLockHeight(int original) {
-        if (RecipeLock.get(this.id.toString()) != RecipeLock.NONE)
+        if (this.id != null && RecipeLock.get(this.id.toString()) != RecipeLock.NONE)
             original += 13;
         return original;
     }

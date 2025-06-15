@@ -1,8 +1,6 @@
 package net.lyof.sortilege.enchant.common;
 
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;

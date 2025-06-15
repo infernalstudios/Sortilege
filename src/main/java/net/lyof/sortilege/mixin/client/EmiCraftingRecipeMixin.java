@@ -24,7 +24,6 @@ public abstract class EmiCraftingRecipeMixin {
     @Unique private static final Identifier LOCK_BUTTON = Sortilege.makeID("textures/gui/emi/lock_button.png");
 
     @Shadow @Final protected Identifier id;
-
     @Shadow public abstract int getDisplayHeight();
 
     @Inject(method = "addWidgets", at = @At("TAIL"))

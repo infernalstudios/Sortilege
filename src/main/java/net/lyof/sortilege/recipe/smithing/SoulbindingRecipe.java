@@ -6,8 +6,6 @@ import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;

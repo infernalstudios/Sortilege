@@ -36,7 +36,7 @@ public abstract class PlayerEntityMixin extends LivingEntity {
 
     @WrapMethod(method = "applyEnchantmentCosts")
     public void applyEnchantmentCosts(ItemStack enchantedItem, int levelcost, Operation<Void> original) {
-        if (ConfigEntries.doIncreasedEnchantCosts && ConfigEntries.increasedEnchantCosts.size() == 3)
+        if (levelcost > 0 && ConfigEntries.doIncreasedEnchantCosts && ConfigEntries.increasedEnchantCosts.size() == 3)
             levelcost = (int) Math.round(ConfigEntries.increasedEnchantCosts.get(levelcost - 1));
 
         original.call(enchantedItem, levelcost);

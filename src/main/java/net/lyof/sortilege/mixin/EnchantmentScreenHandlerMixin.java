@@ -43,8 +43,6 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Shadow @Final public int[] enchantmentPower;
 
-    @Shadow public abstract int getSeed();
-
     protected EnchantmentScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId) {
         super(type, syncId);
     }

@@ -82,7 +82,6 @@ public class Sortilege implements ModInitializer {
 		return log(message, 0);
 	}
 
-	@Deprecated
 	public static <T> T log(T message, int level) {
 		if (level == 0)
         	LOGGER.info("[Sortilege] {}", message);
@@ -90,6 +89,8 @@ public class Sortilege implements ModInitializer {
 			LOGGER.warn("[Sortilege] {}", message);
 		else if (level == 2)
 			LOGGER.error("[Sortilege] {}", message);
+		else if (level == 3)
+			LOGGER.debug("[Sortilege] {}", message);
 		return message;
 	}
 }

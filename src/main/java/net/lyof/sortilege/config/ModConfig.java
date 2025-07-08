@@ -165,7 +165,7 @@ public class ModConfig {
                 writer.write(DEFAULT_CONFIG);
                 writer.close();
 
-                Sortilege.log("Sortilege Config file created", 1);
+                Sortilege.log("Sortilege Config file created", 3);
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -471,6 +471,9 @@ public class ModConfig {
                   "default_xp_cost": 3,
                   // Time staffs need to be held down (in ticks) before shooting, if not set
                   "default_charge_time": 1,
+                  // Should staffs be able to pierce through walls, at a rate of 1 block per pierce value
+                  "pierce_blocks": false,
+                  
                   "entries": [
                     {
                       // Example entry, not loaded in game as it's only for demonstration purposes

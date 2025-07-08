@@ -321,7 +321,13 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             pos = new BlockPos((int) Math.round(x-0.5), (int) Math.round(y-0.5), (int) Math.round(z-0.5));
             List<Entity> entities = player.getWorld().getOtherEntities(player, new Box(pos).expand(0.1));
 
-            if (targetsLeft <= 0 || world.getBlockState(pos).isSolid())
+            if (world.getBlockState(pos).isSolid()) {
+                if (ConfigEntries.staffsPierceBlocks)
+                    targetsLeft--;
+                else
+                    break;
+            }
+            if (targetsLeft <= 0)
                 break;
 
             index = 0;
@@ -371,14 +377,14 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (targetsHit.contains(target.getUuidAsString())) return;
 
         World world = attacker.getWorld();
-        int element_level = ItemHelper.getEnchantLevel(element, stack);
+        int elementLevel = ItemHelper.getEnchantLevel(element, stack);
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
 
         if (damage > 0)
             target.damage(attacker.getDamageSources().indirectMagic(attacker, attacker), damage);
         targetsHit.add(target.getUuidAsString());
 
-        if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
+        if (world instanceof ServerWorld server && this.rawInfos != null) {
             server.getServer().getCommandManager().executeWithPrefix(
                     attacker.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
                     this.rawInfos.on_hit_self);
@@ -392,8 +398,8 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             target.setVelocity(direction.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
 
         if (element != null)
-            element.triggerAttack(target, ItemHelper.getEnchantLevel(element, stack));
-        if (element == ModEnchants.BLAST && element_level > 1 && propagate) {
+            element.triggerAttack(target, elementLevel);
+        if (element == ModEnchants.BLAST && elementLevel > 1 && propagate) {
             this.triggerBlastAttack(attacker, stack, direction, damage, target.getX(), target.getY() + target.getStandingEyeHeight()/2, target.getZ(),
                     2, targetsHit);
         }

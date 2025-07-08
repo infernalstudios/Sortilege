@@ -93,6 +93,7 @@ public class ConfigEntries {
 
         staffsDefaultCost = new ConfigEntry<>("equipment.staffs.default_xp_cost", 0).get();
         staffsDefaultCharge = new ConfigEntry<>("equipment.staffs.default_charge_time", 1).get();
+        staffsPierceBlocks = new ConfigEntry<>("equipment.staffs.pierce_blocks", false).get();
 
         staffEntries = new ConfigEntry<List<Map<String, Map<String, Object>>>>("equipment.staffs.entries", List.of()).get();
     }
@@ -182,6 +183,7 @@ public class ConfigEntries {
 
     public static int staffsDefaultCost;
     public static int staffsDefaultCharge;
+    public static boolean staffsPierceBlocks;
 
     public static List<Map<String, Map<String, Object>>> staffEntries = List.of();
 }

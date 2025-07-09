@@ -9,6 +9,7 @@ import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -92,7 +93,7 @@ public abstract class ItemStackMixin {
     @WrapMethod(method = "getMaxCount")
     public int stackablePotions(Operation<Integer> original) {
         ItemStack self = (ItemStack) (Object) this;
-        if (!(self.getItem() instanceof PotionItem) || self.getItem() instanceof AntidotePotionItem) return original.call();
+        if (!PotionHelper.isPotionItem(self)) return original.call();
 
         int stackSize = ConfigEntries.potionStackSize;
         CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(self));
@@ -114,8 +115,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "finishUsing", at = @At("HEAD"))
     public void putOnCooldown(World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack self = (ItemStack) (Object) this;
-        if (!(self.getItem() instanceof PotionItem) || self.getItem() instanceof AntidotePotionItem
-                || PotionUtil.getPotion(self).getEffects().isEmpty()) return;
+        if (!PotionHelper.isPotionItem(self) || PotionUtil.getPotion(self).getEffects().isEmpty()) return;
 
         this.setPotionCooldown(self, user);
     }

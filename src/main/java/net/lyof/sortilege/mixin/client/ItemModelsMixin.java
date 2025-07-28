@@ -2,6 +2,7 @@ package net.lyof.sortilege.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.model.BakedModel;
@@ -27,6 +28,7 @@ public class ItemModelsMixin {
 
     @WrapMethod(method = "getModel(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/client/render/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
+        if (!ConfigEntries.potionTextures) return original.call(stack);
         if (!PotionHelper.isPotionItem(stack)) return original.call(stack);
         if (!stack.hasNbt()) return original.call(stack);
         
@@ -43,9 +45,9 @@ public class ItemModelsMixin {
 
         if (model == this.modelManager.getMissingModel()) {
             String type = "";
-            if (id.getPath().startsWith("strong_"))
+            if (id.getPath().startsWith("strong_") || id.getPath().endsWith("_strong"))
                 type = "strong_";
-            else if (id.getPath().startsWith("long_"))
+            else if (id.getPath().startsWith("long_") || id.getPath().endsWith("_long"))
                 type = "long_";
 
             model = this.modelManager.getModel(getId("minecraft",

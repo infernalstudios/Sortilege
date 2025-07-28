@@ -230,7 +230,7 @@ public class ModConfig {
     public static final String DEFAULT_CONFIG = """
             {
               "TECHNICAL": {
-                "VERSION_DO_NOT_EDIT": 2.0,
+                "VERSION_DO_NOT_EDIT": 2.1,
                 "FORCE_RESET": false
               },
               
@@ -421,7 +421,14 @@ public class ModConfig {
                   // How many ticks should drinking a potion take. 20t = 1s
                   "drinking_time": 20,
                   // How many ticks of cooldown potions get after being drank or thrown
-                  "cooldown": 200
+                  "cooldown": 200,
+                  
+                  // Should potions have the ability to have different textures depending on their content.
+                  //   Setting this to false will disable texture variants for long/strong potions, as well as per potion ones
+                  "custom_potion_textures": true,
+                  // Should potions' properties be editable by datapack. Keep in mind that to fully disable modifications to potions,
+                  //   You also need to set stack_size to 1, duration_multiplier to 1, drinking_time to 32 and cooldown to 0
+                  "custom_potion_data": true
                 },
                 "cauldron": {
                   // Should cauldron brewing be enabled

@@ -76,6 +76,9 @@ public class ConfigEntries {
         potionDrinkingTime = new ConfigEntry<>("brewing.potion.drinking_time", 20).get();
         potionCooldown = new ConfigEntry<>("brewing.potion.cooldown", 200).get();
 
+        potionTextures = new ConfigEntry<>("brewing.potion.custom_potion_textures", true).get();
+        potionData = new ConfigEntry<>("brewing.potion.custom_potion_data", true).get();
+
         cauldronBrewingEnabled = new ConfigEntry<>("brewing.cauldron.enable", true).get();
         cauldronBlazeRefill = new ConfigEntry<>("brewing.cauldron.blaze_powder_refill", true).get();
         fillSwampHutCauldrons = new ConfigEntry<>("brewing.cauldron.fill_swamp_huts_randomly", true).get();
@@ -165,6 +168,9 @@ public class ConfigEntries {
     public static double potionDurationMultiplier;
     public static int potionDrinkingTime;
     public static int potionCooldown;
+
+    public static boolean potionTextures;
+    public static boolean potionData;
 
     public static boolean cauldronBrewingEnabled;
     public static boolean cauldronBlazeRefill;

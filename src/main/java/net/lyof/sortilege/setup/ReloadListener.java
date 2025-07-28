@@ -79,7 +79,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         PotionCooldownManager.clear();
         EnchantingCatalyst.clear();
 
-        if (manager instanceof FabricLifecycledResourceManager fabricManager && fabricManager.fabric_getResourceType() == ResourceType.CLIENT_RESOURCES) {
+        if (ConfigEntries.potionTextures && manager instanceof FabricLifecycledResourceManager fabricManager &&
+                fabricManager.fabric_getResourceType() == ResourceType.CLIENT_RESOURCES) {
             CustomPotionData.MODELS.clear();
             for (Identifier model : ResourceFinder.json("models/item/potions").findResources(manager).keySet())
                 CustomPotionData.MODELS.add(ResourceFinder.json("models/item").toResourceId(model));

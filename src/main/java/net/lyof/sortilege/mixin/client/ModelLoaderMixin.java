@@ -1,5 +1,6 @@
 package net.lyof.sortilege.mixin.client;
 
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.render.model.ModelLoader;
@@ -24,6 +25,8 @@ public abstract class ModelLoaderMixin {
             ordinal = 3, shift = At.Shift.AFTER))
     public void loadPotionTextures(BlockColors blockColors, Profiler profiler, Map<Identifier, JsonUnbakedModel> jsonUnbakedModels,
                                    Map<Identifier, List<ModelLoader.SourceTrackedData>> blockStates, CallbackInfo ci) {
+
+        if (!ConfigEntries.potionTextures) return;
 
         for (Identifier id : CustomPotionData.MODELS)
             this.addModel(new ModelIdentifier(id, "inventory"));

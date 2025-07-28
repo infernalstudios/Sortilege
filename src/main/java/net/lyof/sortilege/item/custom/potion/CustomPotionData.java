@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
 import net.minecraft.entity.effect.StatusEffect;
@@ -29,6 +30,7 @@ public class CustomPotionData {
     public int drinkingTime;
     public int cooldown;
     public int stackSize;
+    public boolean create;
 
     public CustomPotionData(Identifier potion, List<StatusEffectInstance> effects, int drinkingTime, int cooldown,
                             int stackSize, boolean create) {
@@ -37,8 +39,9 @@ public class CustomPotionData {
         this.drinkingTime = drinkingTime;
         this.cooldown = cooldown;
         this.stackSize = stackSize;
+        this.create = create;
 
-        if (create && !Registries.POTION.containsId(potion))
+        if (this.create && !Registries.POTION.containsId(potion))
             REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
     }
 
@@ -80,6 +83,7 @@ public class CustomPotionData {
         int stackSize = packet.readInt();
         int drinkingTime = packet.readInt();
         int cooldown = packet.readInt();
+        boolean create = packet.readBoolean();
 
         int size = packet.readInt();
         List<StatusEffectInstance> effects;
@@ -96,7 +100,7 @@ public class CustomPotionData {
             }
         }
 
-        INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, false));
+        INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, create));
     }
 
     public static void write(List<PacketByteBuf> packets) {
@@ -108,6 +112,7 @@ public class CustomPotionData {
             packet.writeInt(data.stackSize);
             packet.writeInt(data.drinkingTime);
             packet.writeInt(data.cooldown);
+            packet.writeBoolean(data.create);
 
             if (data.effects == null)
                 packet.writeInt(-1);
@@ -130,6 +135,8 @@ public class CustomPotionData {
 
     @Nullable
     public static CustomPotionData get(Potion potion) {
+        if (!ConfigEntries.potionData) return null;
+
         if (CACHE.containsKey(potion)) return CACHE.get(potion);
         CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(Registries.POTION.getId(potion)))
                 .findFirst().orElse(null);

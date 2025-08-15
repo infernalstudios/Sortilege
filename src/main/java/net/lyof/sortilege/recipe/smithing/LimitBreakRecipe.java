@@ -30,7 +30,7 @@ public class LimitBreakRecipe implements SmithingRecipe {
 
     @Override
     public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
-        ItemStack stack = inventory.getStack(1).copy();
+        ItemStack stack = inventory.getStack(1).copyWithCount(1);
         ItemHelper.addExtraEnchantSlot(stack);
         return stack;
     }

@@ -82,9 +82,15 @@ public class ModEnchants {
                             new float[]{1f, 1f, 0.75f}),
                     (target, level) -> {
                 target.setVelocity(0, -1, 0);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level, 1));
+                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level, 0));
                 target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40 * level, 1));
             }));
+    public static Enchantment BLESSING = register("blessing",
+            new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
+                    List.of(new float[]{1f, 0.75f, 0.75f},
+                            new float[]{1f, 0.5f, 0.5f},
+                            new float[]{1f, 0.25f, 0.25f}),
+                    null));
 
     public static Enchantment BONK = register("bonk",
             new StaffEnchantment(Enchantment.Rarity.RARE, 1));

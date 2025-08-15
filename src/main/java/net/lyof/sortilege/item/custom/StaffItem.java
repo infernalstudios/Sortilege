@@ -23,6 +23,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -144,14 +146,10 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     public Set<ElementalStaffEnchantment> getElements(ItemStack stack) {
         Set<ElementalStaffEnchantment> elements = new HashSet<>();
-        if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
-            elements.add((ElementalStaffEnchantment) ModEnchants.BRAZIER);
-        if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, stack))
-            elements.add((ElementalStaffEnchantment) ModEnchants.BLIZZARD);
-        if (ItemHelper.hasEnchant(ModEnchants.BLAST, stack))
-            elements.add((ElementalStaffEnchantment) ModEnchants.BLAST);
-        if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
-            elements.add((ElementalStaffEnchantment) ModEnchants.BLITZ);
+        for (Enchantment enchant : EnchantmentHelper.get(stack).keySet()) {
+            if (enchant instanceof ElementalStaffEnchantment element)
+                elements.add(element);
+        }
         return elements;
     }
 
@@ -350,7 +348,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 index++;
             }
         }
-        if (elements.contains(ModEnchants.BLAST))
+        if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLAST))
             this.triggerBlastAttack(player, staff, elements, look, damage, x, y, z, 2, targetsHit);
             //world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
@@ -374,8 +372,22 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         World world = attacker.getWorld();
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
 
-        if (damage > 0)
+        float d = damage;
+        if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
+            if (target.getType().isIn(ModTags.Entities.UNDEAD))
+                d = d * (1 + ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f);
+            else
+                d = -d * ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.75f;
+        }
+
+        if (d > 0)
             target.damage(attacker.getDamageSources().indirectMagic(attacker, attacker), damage);
+        else if (d < 0) {
+            target.heal(-d);
+            ModParticles.spawnWisps(world, target.getX(), target.getY() + target.getStandingEyeHeight() / 2, target.getZ(),
+                    10, new float[]{1, 0.5f, 0.5f});
+        }
+
         targetsHit.add(target.getUuidAsString());
 
         if (world instanceof ServerWorld server && this.rawInfos != null) {

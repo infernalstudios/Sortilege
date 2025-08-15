@@ -12,6 +12,7 @@ public class ModTags {
     public static class Entities {
         public static TagKey<EntityType<?>> BOUNTIES = create("bounties");
         public static TagKey<EntityType<?>> UNEXPERIENCED = create("unexperienced");
+        public static TagKey<EntityType<?>> UNDEAD = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of("minecraft", "undead"));
 
         private static TagKey<EntityType<?>> create(String name) {
             return TagKey.of(RegistryKeys.ENTITY_TYPE, Sortilege.makeID(name));

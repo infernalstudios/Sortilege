@@ -322,6 +322,7 @@ public class ModConfig {
                   "blizzard": true,
                   "blast": true,
                   "blitz": true,
+                  "blessing": true,
                   "bonk": true,
                   "ignorance_curse": true,
                   

@@ -37,7 +37,7 @@ public abstract class ItemStackMixin {
                 if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
                     list.add(Text.empty());
 
-                list.add(Text.translatable("sortilege.catalyst").formatted(Formatting.DARK_PURPLE));
+                list.add(Text.translatable("item.sortilege.catalyst.desc").formatted(Formatting.DARK_PURPLE));
 
                 for (Enchantment e : EnchantingCatalyst.getEnchantments(self).keySet()) {
                     MutableText text = Text.translatable(e.getTranslationKey());

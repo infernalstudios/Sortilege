@@ -46,7 +46,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
@@ -110,7 +112,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         return (int) (this.cooldown * multiplier);
     }
 
-    public List<float[]> getBeamColors(ItemStack stack, @Nullable ElementalStaffEnchantment element) {
+    public List<float[]> getBeamColors(ItemStack stack, Set<ElementalStaffEnchantment> elements) {
         List<float[]> result = new ArrayList<>();
 
         int rgb = this.getColor(stack);
@@ -122,7 +124,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
                 return this.rawInfos.colors;
 
-            if (element != null)
+            for (ElementalStaffEnchantment element : elements)
                 result.addAll(element.colors);
             if (result.isEmpty())
                 result.add(COLOR_NONE);
@@ -138,6 +140,19 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         }
 
         return result;
+    }
+
+    public Set<ElementalStaffEnchantment> getElements(ItemStack stack) {
+        Set<ElementalStaffEnchantment> elements = new HashSet<>();
+        if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
+            elements.add((ElementalStaffEnchantment) ModEnchants.BRAZIER);
+        if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, stack))
+            elements.add((ElementalStaffEnchantment) ModEnchants.BLIZZARD);
+        if (ItemHelper.hasEnchant(ModEnchants.BLAST, stack))
+            elements.add((ElementalStaffEnchantment) ModEnchants.BLAST);
+        if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
+            elements.add((ElementalStaffEnchantment) ModEnchants.BLITZ);
+        return elements;
     }
 
     private static final String OVERCHARGE_NBT = Sortilege.MOD_ID +  "Overcharge";
@@ -250,16 +265,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (!(entity instanceof PlayerEntity player))
             return staff;
 
-        ElementalStaffEnchantment element = null;
-        if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
-        else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD;
-        else if (ItemHelper.hasEnchant(ModEnchants.BLAST, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BLAST;
-        else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, staff))
-            element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
-
+        Set<ElementalStaffEnchantment> elements = this.getElements(staff);
 
         int cost = this.getXPCost(staff);
         float damage = this.getAttackDamage(staff);
@@ -304,7 +310,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                     this.rawInfos.on_shoot);
         }
 
-        List<float[]> colors = this.getBeamColors(staff, element);
+        List<float[]> colors = this.getBeamColors(staff, elements);
 
         int step = 5;
         // Main loop, displaying particles and hurting mobs on its way
@@ -331,13 +337,12 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 break;
 
             index = 0;
-            while (!entities.isEmpty() && entities.size() > index
-                    && targetsLeft > 0) {
+            while (!entities.isEmpty() && entities.size() > index && targetsLeft > 0) {
 
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target.getUuidAsString())) {
 
-                    this.triggerAttack(target, player, staff, element, look, true, damage, targetsHit);
+                    this.triggerAttack(target, player, staff, elements, look, true, damage, targetsHit);
 
                     //targetsHit.add(target.getUuidAsString());
                     targetsLeft--;
@@ -345,8 +350,8 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 index++;
             }
         }
-        if (element == ModEnchants.BLAST)
-            this.triggerBlastAttack(player, staff, look, damage, x, y, z, 2, targetsHit);
+        if (elements.contains(ModEnchants.BLAST))
+            this.triggerBlastAttack(player, staff, elements, look, damage, x, y, z, 2, targetsHit);
             //world.createExplosion(player, x, y, z, 1, World.ExplosionSourceType.NONE);
 
         return staff;
@@ -355,29 +360,18 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
-            ElementalStaffEnchantment element = null;
-            if (ItemHelper.hasEnchant(ModEnchants.BRAZIER, stack))
-                element = (ElementalStaffEnchantment) ModEnchants.BRAZIER;
-            else if (ItemHelper.hasEnchant(ModEnchants.BLIZZARD, stack))
-                element = (ElementalStaffEnchantment) ModEnchants.BLIZZARD;
-            else if (ItemHelper.hasEnchant(ModEnchants.BLAST, stack))
-                element = (ElementalStaffEnchantment) ModEnchants.BLAST;
-            else if (ItemHelper.hasEnchant(ModEnchants.BLITZ, stack))
-                element = (ElementalStaffEnchantment) ModEnchants.BLITZ;
-
-            this.triggerAttack(target, attacker, stack, element, MathHelper.getLookVector(attacker), true,
+            this.triggerAttack(target, attacker, stack, this.getElements(stack), MathHelper.getLookVector(attacker), true,
                     this.getAttackDamage(stack), new ArrayList<>());
         }
         return super.postHit(stack, target, attacker);
     }
 
-    public void triggerAttack(LivingEntity target, LivingEntity attacker, ItemStack stack, @Nullable ElementalStaffEnchantment element,
+    public void triggerAttack(LivingEntity target, LivingEntity attacker, ItemStack stack, Set<ElementalStaffEnchantment> elements,
                               Vec3d direction, boolean propagate, float damage, List<String> targetsHit) {
 
         if (targetsHit.contains(target.getUuidAsString())) return;
 
         World world = attacker.getWorld();
-        int elementLevel = ItemHelper.getEnchantLevel(element, stack);
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
 
         if (damage > 0)
@@ -397,15 +391,19 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (kinesis != 0)
             target.setVelocity(direction.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
 
-        if (element != null)
+        for (ElementalStaffEnchantment element : elements) {
+            int elementLevel = ItemHelper.getEnchantLevel(element, stack);
+
             element.triggerAttack(target, elementLevel);
-        if (element == ModEnchants.BLAST && elementLevel > 1 && propagate) {
-            this.triggerBlastAttack(attacker, stack, direction, damage, target.getX(), target.getY() + target.getStandingEyeHeight()/2, target.getZ(),
-                    2, targetsHit);
+            if (element == ModEnchants.BLAST && elementLevel > 1 && propagate) {
+                this.triggerBlastAttack(attacker, stack, elements, direction, damage,
+                        target.getX(), target.getY() + target.getStandingEyeHeight() / 2, target.getZ(),
+                        2, targetsHit);
+            }
         }
     }
 
-    public void triggerBlastAttack(LivingEntity attacker, ItemStack stack, Vec3d direction, float damage,
+    public void triggerBlastAttack(LivingEntity attacker, ItemStack stack, Set<ElementalStaffEnchantment> elements, Vec3d direction, float damage,
                                    double x, double y, double z, double radius, List<String> targetsHit) {
 
         if (attacker.getWorld().isClient())
@@ -416,8 +414,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
         for (Entity entity : attacker.getWorld().getOtherEntities(attacker, new Box(pos.subtract(offset), pos.add(offset)))) {
             if (entity instanceof LivingEntity living) {
-                this.triggerAttack(living, attacker, stack, (ElementalStaffEnchantment) ModEnchants.BLAST, direction,
-                        false, damage, targetsHit);
+                this.triggerAttack(living, attacker, stack, elements, direction, false, damage, targetsHit);
             }
         }
     }

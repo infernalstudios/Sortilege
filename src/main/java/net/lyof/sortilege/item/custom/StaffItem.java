@@ -191,7 +191,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID,
                         "Weapon modifier", this.getAttackDamage(stack)-1, EntityAttributeModifier.Operation.ADDITION));
                 builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID,
-                        "Weapon modifier", -2.4, EntityAttributeModifier.Operation.ADDITION));
+                        "Weapon modifier", -3, EntityAttributeModifier.Operation.ADDITION));
             }
 
             builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(),

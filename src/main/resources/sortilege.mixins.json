@@ -41,6 +41,7 @@
   "client": [
     "accessor.ScreenAccessor",
     "client.AdvancementDisplayMixin",
+    "client.AnvilScreenMixin",
     "client.DeathScreenMixin",
     "client.DrawContextMixin",
     "client.EmiCraftingRecipeMixin",

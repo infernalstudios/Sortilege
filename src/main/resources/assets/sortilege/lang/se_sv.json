@@ -1,0 +1,96 @@
+{
+  "tooltip.press_shift.left": "Tryck på [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Plats:",
+  "sortilege.crafting.requires_level": "Du behöver minst %s nivåer!",
+  "sortilege.crafting.requires_advancement": "Du måste ha avklarat %s!",
+
+  "sortilege.enchanting.requires_catalyst": "Du måste använda en katalysator!",
+
+  "tag.item.sortilege.is_limit_break_material": "Limit Break Material",
+  "tag.item.sortilege.is_soulbind_material": "Själbundet Material",
+  "tag.item.sortilege.unbreakable": "Oförstörbar",
+  "tag.item.sortilege.keep_on_death": "Spara vid Död",
+  "tag.item.sortilege.staffs": "Stavar",
+
+  "emi.category.sortilege.enchanting": "Förtrolla",
+  "emi.category.sortilege.cauldron_brewing": "Kittelbryggning",
+
+
+  "item.sortilege.wooden_staff" : "Trästav",
+  "item.sortilege.stone_staff" : "Stenstav",
+  "item.sortilege.iron_staff" : "Järnstav",
+  "item.sortilege.golden_staff" : "Guldstav",
+  "item.sortilege.diamond_staff" : "Diamantstav",
+  "item.sortilege.netherite_staff" : "Netheritestav",
+
+  "sortilege.staff.experience_cost": "Kostar %s XP",
+  "sortilege.staff.cooldown": "%ss Nedkylning",
+
+  "attribute.name.generic.staff_damage": "Magisk skada",
+  "attribute.name.generic.staff_pierce": "Tränga",
+  "attribute.name.generic.staff_range": "Räckvidd",
+
+  "enchantment.sortilege.potency": "Potens",
+  "enchantment.sortilege.potency.desc": "Höjer Stavens Skada.",
+  "enchantment.sortilege.stability": "Stabilitet",
+  "enchantment.sortilege.stability.desc": "Höjer Stavens Räckvidd.",
+  "enchantment.sortilege.chaining": "Kedja",
+  "enchantment.sortilege.chaining.desc": "Höjer Stavens Tränga.",
+  "enchantment.sortilege.wisdom": "Klokhet",
+  "enchantment.sortilege.wisdom.desc": "Sänker Stavens XP kostnad.",
+  "enchantment.sortilege.push": "Tryck",
+  "enchantment.sortilege.push.desc": "Knuffar bort fienden som träffas av Stavens stråle.",
+  "enchantment.sortilege.pull": "Ryck",
+  "enchantment.sortilege.pull.desc": "Drar fienden som träffas av Stavens stråla mot dig.",
+  "enchantment.sortilege.focus": "Fokus",
+  "enchantment.sortilege.focus.desc": "Sänker Stavens Nedkylning.",
+  "enchantment.sortilege.brazier": "Brand",
+  "enchantment.sortilege.brazier.desc": "Bränner fienden som träffas av Staven.",
+  "enchantment.sortilege.blizzard": "Snöstorm",
+  "enchantment.sortilege.blizzard.desc": "Fryser fienden som träffas av Staven.",
+  "enchantment.sortilege.blast": "Explosion",
+  "enchantment.sortilege.blast.desc": "Gör att Stavens stråle Exploderar vid kontakt.",
+  "enchantment.sortilege.blitz": "Blixt",
+  "enchantment.sortilege.blitz.desc": "Stöter Fienden som träffas av Stavens stråle.",
+  "enchantment.sortilege.bonk": "Bonk",
+  "enchantment.sortilege.bonk.desc": "Gör att Staven kan användas som ett svärd.",
+  "enchantment.sortilege.ignorance_curse": "Förbannelse av Ignorans",
+  "enchantment.sortilege.ignorance_curse.desc": "Gör att staven använder din XP.",
+
+  "enchantment.sortilege.magic_protection": "Magiskt skydd",
+  "enchantment.sortilege.magic_protection.desc": "Sänker skadan från magi.",
+  "enchantment.sortilege.arcane": "Magisk",
+  "enchantment.sortilege.arcane.desc": "Konverterar normal skada till en magisk variant.",
+  "enchantment.sortilege.soulbound": "Själbundet",
+  "enchantment.sortilege.soulbound.desc": "Är kvar vid död.",
+
+  "sortilege.enchantments": "Förtrollningar",
+  "sortilege.catalyst": "När använd att förtrolla:",
+
+  "item.sortilege.witch_hat": "Häxhatt",
+
+  "item.sortilege.antidote": "Antidota",
+  "item.sortilege.antidote.cures": "Botemedel:",
+
+  "sortilege.potion.drinking_time": "Tar %ss att dricka ",
+
+  "item.sortilege.limitite": "Limitit",
+  "item.sortilege.limitite.desc": "Använd med lapis på ett smedjebord för att öka sakens förtrollningskapacitet!",
+
+  "item.sortilege.lapis_shield": "Lapis Sköld",
+  "item.sortilege.lapis_shield.desc": " Attackerar passivt block framför var %ss",
+
+  "advancement.sortilege.get_wooden_staff": "Du är en trollkarl, {playerName}",
+  "advancement.sortilege.get_wooden_staff.desc": "Få din första magiska stav.",
+  "advancement.sortilege.dye_staff": "En magisk färg",
+  "advancement.sortilege.dye_staff.desc": "Använd en färg för att ändra färgen på Stavens stråle.",
+  "advancement.sortilege.get_netherite_staff": "En dedikerad trollkarl",
+  "advancement.sortilege.get_netherite_staff.desc": "Upgradera en Diamantstav till en Netheritestav.",
+  "advancement.sortilege.use_limitite": "Hur mycket behöver du!?",
+  "advancement.sortilege.use_limitite.desc": "Höj en saks förtrollningskapacitet med Limitit.",
+  "advancement.sortilege.get_witch_hat": "Häxhatare",
+  "advancement.sortilege.get_witch_hat.desc": "Besegra en häxa för att få hennes hatt."
+}

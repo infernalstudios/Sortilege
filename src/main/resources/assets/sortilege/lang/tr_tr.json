@@ -1,0 +1,96 @@
+{
+  "tooltip.press_shift.left": "[",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]'e basılı tut",
+
+  "sortilege.death_screen.position": "Pozisyon:",
+  "sortilege.crafting.requires_level": "En az %s kadar tecrübeye ihtiyacın var!",
+  "sortilege.crafting.requires_advancement": "%s Başarımını tamamlamış olmalısın!",
+
+  "sortilege.enchanting.requires_catalyst": "Katalizör kullanmalısın!",
+
+  "tag.item.sortilege.is_limit_break_material": "Limit Arttırma Materyali",
+  "tag.item.sortilege.is_soulbind_material": "Soulbinding Material",
+  "tag.item.sortilege.unbreakable": "Kırılmaz",
+  "tag.item.sortilege.keep_on_death": "Ölümde Korunur",
+  "tag.item.sortilege.staffs": "Asalar",
+
+  "emi.category.sortilege.enchanting": "Büyüleme",
+  "emi.category.sortilege.cauldron_brewing": "Kazanda İksircilik",
+
+
+  "item.sortilege.wooden_staff" : "Tahta Asa",
+  "item.sortilege.stone_staff" : "Taş Asa",
+  "item.sortilege.iron_staff" : "Demir Asa",
+  "item.sortilege.golden_staff" : "Altın Asa",
+  "item.sortilege.diamond_staff" : "Elmas Asa",
+  "item.sortilege.netherite_staff" : "Netherite Asa",
+
+  "sortilege.staff.experience_cost": "%s Tecrübe",
+  "sortilege.staff.cooldown": "%ss Bekleme Süresi",
+
+  "attribute.name.generic.staff_damage": "Büyü Hasarı",
+  "attribute.name.generic.staff_pierce": "Delme",
+  "attribute.name.generic.staff_range": "Menzil",
+
+  "enchantment.sortilege.potency": "Kudret",
+  "enchantment.sortilege.potency.desc": "Asa hasarını arttırır.",
+  "enchantment.sortilege.stability": "Stabilite",
+  "enchantment.sortilege.stability.desc": "Asa menzilini arttırır.",
+  "enchantment.sortilege.chaining": "Zincirleme",
+  "enchantment.sortilege.chaining.desc": "Asa'nın delme gücünü arttırır.",
+  "enchantment.sortilege.wisdom": "Bilgin",
+  "enchantment.sortilege.wisdom.desc": "Asa'nın tecrübe gereksinimini azaltır.",
+  "enchantment.sortilege.push": "İttirici",
+  "enchantment.sortilege.push.desc": "Asa ile ışın boyunca vurulan hedefleri fırlatır.",
+  "enchantment.sortilege.pull": "Çekici",
+  "enchantment.sortilege.pull.desc": "Asa ile ışın boyunca vurulan hedefleri çeker.",
+  "enchantment.sortilege.focus": "Odak",
+  "enchantment.sortilege.focus.desc": "Asa'nın bekleme süresini kısaltır.",
+  "enchantment.sortilege.brazier": "Fitil",
+  "enchantment.sortilege.brazier.desc": "Asa ile vurulan hedefleri yakar.",
+  "enchantment.sortilege.blizzard": "Ayaz",
+  "enchantment.sortilege.blizzard.desc": "Asa ile vurulan hedefleri dondurur.",
+  "enchantment.sortilege.blast": "Bomba",
+  "enchantment.sortilege.blast.desc": "Asa'nın ışınının çarpınca patlamasını sağlar.",
+  "enchantment.sortilege.blitz": "Kıvılcım",
+  "enchantment.sortilege.blitz.desc": "Asa ile vurulan hedeflere şok etkisi verir.",
+  "enchantment.sortilege.bonk": "Sopa",
+  "enchantment.sortilege.bonk.desc": "Asa'yı yakın menzil dövüş silahına dönüştürür.",
+  "enchantment.sortilege.ignorance_curse": "Cahillik Laneti",
+  "enchantment.sortilege.ignorance_curse.desc": "Asa'nın tecrübe kullanarak büyü yapmasını zorunlu kılar.",
+
+  "enchantment.sortilege.magic_protection": "Büyü Koruması",
+  "enchantment.sortilege.magic_protection.desc": "Büyü hasarını azaltır.",
+  "enchantment.sortilege.arcane": "Sihir",
+  "enchantment.sortilege.arcane.desc": "Verilen hasarı büyü hasarı olarak verir.",
+  "enchantment.sortilege.soulbound": "Bağlanmış",
+  "enchantment.sortilege.soulbound.desc": "Ölümden sonra kalır.",
+
+  "sortilege.enchantments": "Büyüler",
+  "sortilege.catalyst": "Büyüleme için kullanıldığında:",
+
+  "item.sortilege.witch_hat": "Cadı Şapkası",
+
+  "item.sortilege.antidote": "Panzehir",
+  "item.sortilege.antidote.cures": "İyileştirir:",
+
+  "sortilege.potion.drinking_time": "İçmek %ss sürer",
+
+  "item.sortilege.limitite": "Limitite",
+  "item.sortilege.limitite.desc": "Bir Demirci Masası üzerinde Lapis ile birlikte kullanarak bir eşyanın büyü yuvalarını arttırın!",
+
+  "item.sortilege.lapis_shield": "Lapis Kalkan",
+  "item.sortilege.lapis_shield.desc": " Önden gelen saldırıları %ss bir pasif olarak engeller.",
+
+  "advancement.sortilege.get_wooden_staff": "Sen Bir Büyücüsün, {playerName}",
+  "advancement.sortilege.get_wooden_staff.desc": "Büyücülük için ilk asa eşyanı yap.",
+  "advancement.sortilege.dye_staff": "Sihirin Renkleri",
+  "advancement.sortilege.dye_staff.desc": "Asa ışını rengini değiştirmek için Asa üzerinde boya kullanın.",
+  "advancement.sortilege.get_netherite_staff": "Ak Sakallı Asa",
+  "advancement.sortilege.get_netherite_staff.desc": "Elmas Asa'yı Netherite Asa'ya yükseltin.",
+  "advancement.sortilege.use_limitite": "Sonsuzluk Taşları",
+  "advancement.sortilege.use_limitite.desc": "Bir eşyanın büyü limitini arttırmak için Limitite kullanın.",
+  "advancement.sortilege.get_witch_hat": "Şapkacı",
+  "advancement.sortilege.get_witch_hat.desc": "Bir cadıdan şapkasını alın."
+}

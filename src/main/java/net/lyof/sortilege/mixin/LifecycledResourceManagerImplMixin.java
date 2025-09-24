@@ -30,17 +30,15 @@ public class LifecycledResourceManagerImplMixin {
         Sortilege.log("Applying configured data: " + data.target);
 
         String result = "";
-        if (resource.isEmpty())
-            result = data.apply(null);
-        else {
-            try {
+
+        try {
+            if (resource.isEmpty())
+                result = data.apply(null);
+            else
                 result = data.apply(new String(resource.get().getInputStream().readAllBytes()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                Sortilege.log("Failed to apply configured data due to an error", 2);
-                e.printStackTrace();
-            }
+        } catch (Exception e) {
+            Sortilege.log("Failed to apply configured data due to an error", 2);
+            e.printStackTrace();
         }
 
         String finalResult = result;

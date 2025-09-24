@@ -138,6 +138,8 @@ public class ConfiguredData {
         }
 
         public static String generateTranslations(JsonElement json) {
+            if (json == null) json = new JsonObject();
+
             for (Pair<String, ModConfig.StaffInfo> staff : ModConfig.STAFFS) {
                 if (!FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency)) continue;
 
@@ -162,6 +164,7 @@ public class ConfiguredData {
         }
 
         public static String changeEnchantmentDescriptions(JsonElement json) {
+            if (json == null) return "{}";
             JsonObject o = (JsonObject) json;
 
             if (ConfigEntries.betterFireProt > 0)

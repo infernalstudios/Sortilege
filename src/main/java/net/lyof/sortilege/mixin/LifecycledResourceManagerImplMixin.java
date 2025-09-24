@@ -37,6 +37,9 @@ public class LifecycledResourceManagerImplMixin {
                 result = data.apply(new String(resource.get().getInputStream().readAllBytes()));
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (Exception e) {
+                Sortilege.log("Failed to apply configured data due to an error", 2);
+                e.printStackTrace();
             }
         }
 

@@ -28,6 +28,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.Tameable;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -338,7 +339,8 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             while (!entities.isEmpty() && entities.size() > index && targetsLeft > 0) {
 
                 if (entities.get(index) instanceof LivingEntity target
-                        && !targetsHit.contains(target.getUuidAsString())) {
+                        && !targetsHit.contains(target.getUuidAsString())
+                        && !(target instanceof Tameable tameable && tameable.getOwner() == player)) {
 
                     this.triggerAttack(target, player, staff, elements, look, true, damage, targetsHit);
 
@@ -425,8 +427,8 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         Vec3d offset = new Vec3d(radius, radius, radius);
 
         for (Entity entity : attacker.getWorld().getOtherEntities(attacker, new Box(pos.subtract(offset), pos.add(offset)))) {
-            if (entity instanceof LivingEntity living) {
-                this.triggerAttack(living, attacker, stack, elements, direction, false, damage, targetsHit);
+            if (entity instanceof LivingEntity target && !(target instanceof Tameable tameable && tameable.getOwner() == attacker)) {
+                this.triggerAttack(target, attacker, stack, elements, direction, false, damage, targetsHit);
             }
         }
     }

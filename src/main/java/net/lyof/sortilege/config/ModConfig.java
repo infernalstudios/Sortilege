@@ -428,7 +428,7 @@ public class ModConfig {
                   //   Setting this to false will disable texture variants for long/strong potions, as well as per potion ones
                   "custom_potion_textures": true,
                   // Should potions' properties be editable by datapack. Keep in mind that to fully disable modifications to potions,
-                  //   You also need to set stack_size to 1, duration_multiplier to 1, drinking_time to 32 and cooldown to 0
+                  //   You also need to set stack_size to 1, duration_multiplier to 1, drinking_time to 0 and cooldown to 0
                   "custom_potion_data": true
                 },
                 "cauldron": {

@@ -139,11 +139,14 @@ public class ConfiguredData {
 
         public static String generateTranslations(JsonElement json) {
             if (json == null) json = new JsonObject();
+            JsonObject o = (JsonObject) json;
 
             for (Pair<String, ModConfig.StaffInfo> staff : ModConfig.STAFFS) {
                 if (!FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency)) continue;
 
                 String id = staff.getFirst();
+                if (o.has("item." + Sortilege.MOD_ID + "." + id)) continue;
+
                 StringBuilder translation = new StringBuilder(id.toUpperCase().charAt(0) + "");
                 for (int i = 1; i < id.length(); i++) {
                     if (id.charAt(i - 1) == '_')
@@ -153,14 +156,14 @@ public class ConfiguredData {
                     else
                         translation.append(id.charAt(i));
                 }
-                json.getAsJsonObject().addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
+                o.addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
             }
 
             if (ConfigEntries.betterMagicProt)
-                json.getAsJsonObject().asMap().replace("enchantment.sortilege.magic_protection.desc",
+                o.asMap().replace("enchantment.sortilege.magic_protection.desc",
                         new JsonPrimitive("Reduces damage from magic, and gives a chance to dodge attacks."));
 
-            return json.toString();
+            return o.toString();
         }
 
         public static String changeEnchantmentDescriptions(JsonElement json) {

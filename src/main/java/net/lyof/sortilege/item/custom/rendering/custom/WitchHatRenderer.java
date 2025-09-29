@@ -14,7 +14,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
 public class WitchHatRenderer implements ArmorRenderer {
-    private static final WitchHatModel<?> model = new WitchHatModel<>(WitchHatModel.getTexturedModelData().createModel());
+    private static WitchHatModel<?> model = null;
 
 
     @Override
@@ -22,6 +22,9 @@ public class WitchHatRenderer implements ArmorRenderer {
                        EquipmentSlot slot, int light, BipedEntityModel<LivingEntity> contextModel) {
 
         if (!stack.isEmpty() && stack.isOf(ModItems.WITCH_HAT)) {
+            if (model == null)
+                model = new WitchHatModel<>(WitchHatModel.getTexturedModelData().createModel());
+
             matrices.push();
             contextModel.getHead().rotate(matrices);
             matrices.translate(0.0D, -1.75D, 0.0D);

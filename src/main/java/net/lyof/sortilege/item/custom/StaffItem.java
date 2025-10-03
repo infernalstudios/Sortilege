@@ -212,14 +212,25 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext flag) {
         super.appendTooltip(stack, world, tooltip, flag);
 
+        boolean b = false;
         if (world != null && world.isClient())
             tooltip.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
                     .formatted(Formatting.GRAY));
         if (this.getXPCost(stack) > 0) {
             tooltip.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
                     .formatted(Formatting.GREEN));
-            tooltip.add(Text.empty());
+            b = true;
         }
+
+        // Undergarden compat
+        if (stack.isIn(ModTags.Items.FROSTSTEEL_ITEMS))
+            tooltip.add(Text.translatable("tooltip.froststeel_sword").formatted(Formatting.AQUA));
+        if (stack.isIn(ModTags.Items.UTHERIUM_ITEMS))
+            tooltip.add(Text.translatable("tooltip.utheric_sword").formatted(Formatting.RED));
+        if (stack.isIn(ModTags.Items.FORGOTTEN_ITEMS))
+            tooltip.add(Text.translatable("tooltip.forgotten_sword").formatted(Formatting.GREEN));
+
+        if (b) tooltip.add(Text.empty());
     }
 
     public int getOverchargeBarColor(ItemStack stack) {
@@ -373,17 +384,10 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
         World world = attacker.getWorld();
         float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
-
-        float d = damage;
-        if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
-            if (target.getType().isIn(ModTags.Entities.UNDEAD))
-                d = d * (1 + ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f);
-            else
-                d = -d * ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.75f;
-        }
+        float d = this.modifyDamageDealt(damage, stack, target, elements);
 
         if (d > 0)
-            target.damage(attacker.getDamageSources().indirectMagic(attacker, attacker), damage);
+            target.damage(attacker.getDamageSources().indirectMagic(attacker, attacker), d);
         else if (d < 0) {
             target.heal(-d);
             ModParticles.spawnWisps(world, target.getX(), target.getY() + target.getStandingEyeHeight() / 2, target.getZ(),
@@ -431,6 +435,23 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 this.triggerAttack(target, attacker, stack, elements, direction, false, damage, targetsHit);
             }
         }
+    }
+
+    public float modifyDamageDealt(float damage, ItemStack stack, LivingEntity target, Set<ElementalStaffEnchantment> elements) {
+        if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
+            if (target.getType().isIn(ModTags.Entities.UNDEAD))
+                damage *= 1 + ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
+            else
+                damage *= ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
+        }
+
+        // Undergarden compat
+        if (target.getType().isIn(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.isIn(ModTags.Items.FORGOTTEN_ITEMS))
+            damage *= 1.5f;
+        if (target.getType().isIn(ModTags.Entities.ROTSPAWN) && stack.isIn(ModTags.Items.UTHERIUM_ITEMS))
+            damage *= 1.5f;
+
+        return damage;
     }
 
     @Override

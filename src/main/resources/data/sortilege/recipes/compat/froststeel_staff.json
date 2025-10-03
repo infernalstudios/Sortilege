@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/froststeel",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "M": {
+      "tag": "forge:ingots/froststeel"
+    }
+  },
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "result": {
+    "item": "sortilege:froststeel_staff"
+  }
+}

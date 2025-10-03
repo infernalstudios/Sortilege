@@ -715,9 +715,9 @@ public class ModConfig {
                       }
                     },
                     {
-                      "necromium_staff": {
+                      "necronium_staff": {
                         "durability": 2031,
-                        "repair_item": "caverns_and_chasms:necromium_ingot",
+                        "repair_item": "caverns_and_chasms:necronium_ingot",
                         "enchantability": 15,
                         "damage": 5,
                         "pierce": 2,
@@ -778,6 +778,55 @@ public class ModConfig {
                         ],
                         "on_hit_target": "/setblock ~ ~ ~ minecraft:water[level=15] keep",
                         "dependency": "aquaculture"
+                      }
+                    },
+                    {
+                      "cloggrum_staff": {
+                        "durability": 286,
+                        "damage": 7,
+                        "pierce": 1,
+                        "range": 12,
+                        "cooldown": 30,
+                        "enchantability": 8,
+                        "repair_item": "#forge:ingots/cloggrum",
+                        "dependency": "undergarden"
+                      }
+                    },
+                    {
+                      "froststeel_staff": {
+                        "durability": 575,
+                        "damage": 5,
+                        "pierce": 1,
+                        "range": 10,
+                        "cooldown": 20,
+                        "enchantability": 20,
+                        "repair_item": "#forge:ingots/froststeel",
+                        "dependency": "undergarden",
+                        "on_hit_target": "/effect give @s undergarden:chilly 30 2 true"
+                      }
+                    },
+                    {
+                      "utherium_staff": {
+                        "durability": 1279,
+                        "damage": 5.5,
+                        "pierce": 2,
+                        "range": 12,
+                        "cooldown": 25,
+                        "enchantability": 17,
+                        "repair_item": "#forge:ingots/utherium",
+                        "dependency": "undergarden"
+                      }
+                    },
+                    {
+                      "forgotten_staff": {
+                        "durability": 1876,
+                        "damage": 6,
+                        "pierce": 4,
+                        "range": 14,
+                        "cooldown": 25,
+                        "enchantability": 2,
+                        "repair_item": "#forge:ingots/forgotten_metal",
+                        "dependency": "undergarden"
                       }
                     }
                   ]

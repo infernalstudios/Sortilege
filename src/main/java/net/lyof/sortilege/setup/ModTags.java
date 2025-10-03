@@ -12,11 +12,17 @@ public class ModTags {
     public static class Entities {
         public static TagKey<EntityType<?>> BOUNTIES = create("bounties");
         public static TagKey<EntityType<?>> UNEXPERIENCED = create("unexperienced");
-        public static TagKey<EntityType<?>> UNDEAD = TagKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of("minecraft", "undead"));
 
         private static TagKey<EntityType<?>> create(String name) {
             return TagKey.of(RegistryKeys.ENTITY_TYPE, Sortilege.makeID(name));
         }
+
+        public static TagKey<EntityType<?>> UNDEAD = TagKey.of(RegistryKeys.ENTITY_TYPE,
+                Identifier.of("minecraft", "undead"));
+        public static TagKey<EntityType<?>> UNDERGARDEN_ENTITIES = TagKey.of(RegistryKeys.ENTITY_TYPE,
+                Identifier.of("undergarden", "undergarden_entities"));
+        public static TagKey<EntityType<?>> ROTSPAWN = TagKey.of(RegistryKeys.ENTITY_TYPE,
+                Identifier.of("undergarden", "rotspawn"));
     }
 
     public static class Items {
@@ -34,6 +40,15 @@ public class ModTags {
         }
 
         public static TagKey<Item> XP_BOOSTED = TagKey.of(RegistryKeys.ITEM, new Identifier("phantasm", "gets_xp_speed_boost"));
+
+        public static final TagKey<Item> CLOGGRUM_ITEMS = TagKey.of(RegistryKeys.ITEM,
+                new Identifier("undergarden", "cloggrum_items"));
+        public static final TagKey<Item> FROSTSTEEL_ITEMS = TagKey.of(RegistryKeys.ITEM,
+                new Identifier("undergarden", "froststeel_items"));
+        public static final TagKey<Item> UTHERIUM_ITEMS = TagKey.of(RegistryKeys.ITEM,
+                new Identifier("undergarden", "utherium_items"));
+        public static final TagKey<Item> FORGOTTEN_ITEMS = TagKey.of(RegistryKeys.ITEM,
+                new Identifier("undergarden", "forgotten_items"));
     }
 
     public static class Blocks {

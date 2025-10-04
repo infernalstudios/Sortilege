@@ -212,16 +212,6 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext flag) {
         super.appendTooltip(stack, world, tooltip, flag);
 
-        boolean b = false;
-        if (world != null && world.isClient())
-            tooltip.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
-                    .formatted(Formatting.GRAY));
-        if (this.getXPCost(stack) > 0) {
-            tooltip.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
-                    .formatted(Formatting.GREEN));
-            b = true;
-        }
-
         // Undergarden compat
         if (stack.isIn(ModTags.Items.FROSTSTEEL_ITEMS))
             tooltip.add(Text.translatable("tooltip.froststeel_sword").formatted(Formatting.AQUA));
@@ -230,7 +220,14 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (stack.isIn(ModTags.Items.FORGOTTEN_ITEMS))
             tooltip.add(Text.translatable("tooltip.forgotten_sword").formatted(Formatting.GREEN));
 
-        if (b) tooltip.add(Text.empty());
+        if (world != null && world.isClient())
+            tooltip.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
+                    .formatted(Formatting.GRAY));
+        if (this.getXPCost(stack) > 0) {
+            tooltip.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
+                    .formatted(Formatting.GREEN));
+            tooltip.add(Text.empty());
+        }
     }
 
     public int getOverchargeBarColor(ItemStack stack) {

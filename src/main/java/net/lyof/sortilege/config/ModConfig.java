@@ -150,7 +150,7 @@ public class ModConfig {
     public static void register(boolean force) {
         String path = FabricLoader.getInstance().getConfigDir().resolve(Sortilege.MOD_ID + ".json").toString();
 
-        Sortilege.log("Loading Configs for Sortilege");
+        Sortilege.log("Loading Configs for Sortilege", 0);
 
         // Create config file if it doesn't exist already
         File config = new File(path);

@@ -27,7 +27,7 @@ import java.util.function.Predicate;
 public class LifecycledResourceManagerImplMixin {
     @Unique
     private static Resource readAndApply(Optional<Resource> resource, ConfiguredData data) {
-        Sortilege.log("Applying configured data: " + data.target);
+        Sortilege.log("Applying configured data: " + data.target, 0);
 
         String result = "";
 
@@ -102,7 +102,7 @@ public class LifecycledResourceManagerImplMixin {
             for (Identifier id : toRemove)
                 original.remove(id);
 
-            Sortilege.log("Neutralized recipes " + toRemove + ", as their corresponding staffs are not loaded.");
+            Sortilege.log("Neutralized recipes " + toRemove + ", as their corresponding staffs are not loaded.", 0);
         }
 
         return original;

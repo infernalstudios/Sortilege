@@ -1,5 +1,6 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.config.ConfigEntries;
@@ -30,12 +31,12 @@ public abstract class AnvilScreenHandlerMixin {
         if (ConfigEntries.noXPAnvil) cir.setReturnValue(true);
     }
 
-    @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 40))
+    @ModifyExpressionValue(method = "updateResult", at = @At(value = "CONSTANT", args = "intValue=40"))
     private int notTooExpensive40(int i) {
         return Integer.MAX_VALUE;
     }
 
-    @ModifyConstant(method = "updateResult", constant = @Constant(intValue = 39))
+    @ModifyExpressionValue(method = "updateResult", at = @At(value = "CONSTANT", args = "intValue=39"))
     private int notTooExpensive39(int i) {
         return Integer.MAX_VALUE - 1;
     }

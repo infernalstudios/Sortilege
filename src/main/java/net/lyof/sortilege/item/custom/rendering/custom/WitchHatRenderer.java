@@ -16,14 +16,12 @@ import net.minecraft.item.ItemStack;
 public class WitchHatRenderer implements ArmorRenderer {
     private static WitchHatModel<?> model = null;
 
-
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, ItemStack stack, LivingEntity entity,
                        EquipmentSlot slot, int light, BipedEntityModel<LivingEntity> contextModel) {
 
         if (!stack.isEmpty() && stack.isOf(ModItems.WITCH_HAT)) {
-            if (model == null)
-                model = new WitchHatModel<>(WitchHatModel.getTexturedModelData().createModel());
+            if (model == null) model = new WitchHatModel<>(WitchHatModel.getTexturedModelData().createModel());
 
             matrices.push();
             contextModel.getHead().rotate(matrices);

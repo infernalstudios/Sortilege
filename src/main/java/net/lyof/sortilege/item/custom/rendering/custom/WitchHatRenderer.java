@@ -12,9 +12,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 
 public class WitchHatRenderer implements ArmorRenderer {
     private static WitchHatModel<?> model = null;
+    private static final Identifier TEXTURE = Sortilege.makeID("textures/models/armor/witch_hat.png");
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, ItemStack stack, LivingEntity entity,
@@ -27,7 +29,7 @@ public class WitchHatRenderer implements ArmorRenderer {
             contextModel.getHead().rotate(matrices);
             matrices.translate(0.0D, -1.75D, 0.0D);
             matrices.scale(1.19F, 1.19F, 1.19F);
-            VertexConsumer vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, model.getLayer(Sortilege.makeID("textures/models/armor/witch_hat.png")), false, stack.hasGlint());
+            VertexConsumer vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, model.getLayer(TEXTURE), false, stack.hasGlint());
             model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
             matrices.pop();
         }

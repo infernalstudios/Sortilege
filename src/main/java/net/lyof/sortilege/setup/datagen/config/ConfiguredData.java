@@ -124,6 +124,7 @@ public class ConfiguredData {
         }
     }
 
+
     public static class Client {
         public static String generateDefaultModel(JsonElement json, String path) {
             if (json != null) return json.toString();

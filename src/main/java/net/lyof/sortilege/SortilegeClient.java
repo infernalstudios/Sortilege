@@ -46,52 +46,9 @@ public class SortilegeClient implements ClientModInitializer {
     }
 
     private static void registerPackets() {
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, (client, handler, buf, responseSender) -> {
-            double x = buf.readDouble(), y = buf.readDouble(), z = buf.readDouble();
-            float r = buf.readFloat(), g = buf.readFloat(), b = buf.readFloat();
-            int amount = buf.readInt(), spread = amount == 1 ? 0 : 2;
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, ModPackets.Client::initialize);
 
-            client.execute(() -> {
-                for (int i = 0; i < amount; i++) {
-                    client.world.addParticle(ModParticles.WISP_PIXEL, x + (0.5 - Math.random()) * spread,
-                            y + (0.5 - Math.random()) * spread,
-                            z + (0.5 - Math.random()) * spread,
-                            r, g, b);
-                }
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.LAPIS_SHIELD_COOLDOWN, (client, handler, buf, responseSender) -> {
-            int id = buf.readInt();
-            int cooldown = buf.readInt();
-
-            client.execute(() -> {
-                Entity e = handler.getWorld().getEntityById(id);
-                if (!(e instanceof LivingEntity entity)) {
-                    Sortilege.log("Something went wrong while receiving a packet", 2);
-                    return;
-                }
-                ItemStack stack = entity.getOffHandStack();
-                if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
-
-                if (cooldown == 0)
-                    LapisShieldItem.removeCooldown(stack);
-                else
-                    LapisShieldItem.addCooldown(stack, cooldown);
-            });
-        });
-
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, (client, handler, buf, responseSender) -> {
-            int eventType = buf.readInt();
-
-            if (eventType == 0)
-                ReloadListener.INSTANCE.reloadClient();
-            else if (eventType == 1)
-                EnchantingCatalyst.read(buf);
-            else if (eventType == 2)
-                CustomPotionData.read(buf);
-            else if (eventType == 3)
-                RecipeLock.read(buf);
-        });
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, ModPackets.Client::wispParticleDisplay);
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.LAPIS_SHIELD_COOLDOWN, ModPackets.Client::lapisShieldCooldown);
     }
 }

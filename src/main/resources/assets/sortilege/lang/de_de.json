@@ -1,0 +1,95 @@
+{
+  "tooltip.press_shift.left": "Drücke [",
+  "tooltip.press_shift.center": "Shift",
+  "tooltip.press_shift.right": "]",
+
+  "sortilege.death_screen.position": "Position:",
+  "sortilege.crafting.requires_level": "Du benötigst mindestens %s Level!",
+  "sortilege.crafting.requires_advancement": "Du musst %s abgeschlossen haben!",
+
+  "sortilege.enchanting.requires_catalyst": "Du musst einen Katalysator verwenden!",
+
+  "tag.item.sortilege.is_limit_break_material": "Limit-Break-Material",
+  "tag.item.sortilege.is_soulbind_material": "Seelenbindungs-Material",
+  "tag.item.sortilege.unbreakable": "Unzerstörbar",
+  "tag.item.sortilege.keep_on_death": "Behält man beim Tod",
+  "tag.item.sortilege.staffs": "Stäbe",
+
+  "emi.category.sortilege.enchanting": "Verzauberung",
+  "emi.category.sortilege.cauldron_brewing": "Kessel-Brauen",
+
+  "item.sortilege.wooden_staff": "Holzstab",
+  "item.sortilege.stone_staff": "Steinstab",
+  "item.sortilege.iron_staff": "Eisenstab",
+  "item.sortilege.golden_staff": "Goldstab",
+  "item.sortilege.diamond_staff": "Diamantstab",
+  "item.sortilege.netherite_staff": "Netheritstab",
+
+  "sortilege.staff.experience_cost": "Kosten %s XP",
+  "sortilege.staff.cooldown": "%s s Abklingzeit",
+
+  "attribute.name.generic.staff_damage": "Magischer Schaden",
+  "attribute.name.generic.staff_pierce": "Durchdringung",
+  "attribute.name.generic.staff_range": "Reichweite",
+
+  "enchantment.sortilege.potency": "Potenz",
+  "enchantment.sortilege.potency.desc": "Erhöht den Stabschaden.",
+  "enchantment.sortilege.stability": "Stabilität",
+  "enchantment.sortilege.stability.desc": "Erhöht die Reichweite des Stabs.",
+  "enchantment.sortilege.chaining": "Kettenwirkung",
+  "enchantment.sortilege.chaining.desc": "Erhöht die Durchdringung des Stabs.",
+  "enchantment.sortilege.wisdom": "Weisheit",
+  "enchantment.sortilege.wisdom.desc": "Verringert die XP-Kosten des Stabs.",
+  "enchantment.sortilege.push": "Schub",
+  "enchantment.sortilege.push.desc": "Schleudert getroffene Ziele entlang des Strahls.",
+  "enchantment.sortilege.pull": "Zug",
+  "enchantment.sortilege.pull.desc": "Zieht getroffene Ziele entlang des Strahls an.",
+  "enchantment.sortilege.focus": "Fokus",
+  "enchantment.sortilege.focus.desc": "Reduziert die Abklingzeit des Stabs.",
+  "enchantment.sortilege.brazier": "Fackel",
+  "enchantment.sortilege.brazier.desc": "Entzündet getroffene Ziele.",
+  "enchantment.sortilege.blizzard": "Blizzard",
+  "enchantment.sortilege.blizzard.desc": "Friert getroffene Ziele ein.",
+  "enchantment.sortilege.blast": "Explosion",
+  "enchantment.sortilege.blast.desc": "Lässt den Strahl des Stabs bei Aufprall explodieren.",
+  "enchantment.sortilege.blitz": "Blitz",
+  "enchantment.sortilege.blitz.desc": "Schockt getroffene Ziele.",
+  "enchantment.sortilege.bonk": "Bonk",
+  "enchantment.sortilege.bonk.desc": "Macht den Stab als Nahkampfwaffe nutzbar.",
+  "enchantment.sortilege.ignorance_curse": "Fluch der Ignoranz",
+  "enchantment.sortilege.ignorance_curse.desc": "Der Stab verbraucht XP zum Wirken.",
+
+  "enchantment.sortilege.magic_protection": "Magieschutz",
+  "enchantment.sortilege.magic_protection.desc": "Reduziert magischen Schaden.",
+  "enchantment.sortilege.arcane": "Arkan",
+  "enchantment.sortilege.arcane.desc": "Wandelt verursachten Schaden in magischen Schaden um.",
+  "enchantment.sortilege.soulbound": "Seelengebunden",
+  "enchantment.sortilege.soulbound.desc": "Bleibt nach dem Tod erhalten.",
+
+  "sortilege.enchantments": "Verzauberungen",
+  "sortilege.catalyst": "Beim Verzaubern verwenden:",
+
+  "item.sortilege.witch_hat": "Hexenhut",
+
+  "item.sortilege.antidote": "Gegengift",
+  "item.sortilege.antidote.cures": "Heilt:",
+
+  "sortilege.potion.drinking_time": "Dauert %s s zum Trinken",
+
+  "item.sortilege.limitite": "Limitit",
+  "item.sortilege.limitite.desc": "Mit Lapis auf einer Schmiedetafel verwenden, um die Verzauberungsslots eines Items zu erhöhen!",
+
+  "item.sortilege.lapis_shield": "Lapis-Schild",
+  "item.sortilege.lapis_shield.desc": "Blockt passiv Frontangriffe alle %s s",
+
+  "advancement.sortilege.get_wooden_staff": "Du bist ein Zauberer, {playerName}",
+  "advancement.sortilege.get_wooden_staff.desc": "Besorge deinen ersten magischen Stab.",
+  "advancement.sortilege.dye_staff": "Die Farbe der Magie",
+  "advancement.sortilege.dye_staff.desc": "Färbe den Strahl eines Stabs mit Farbstoff ein.",
+  "advancement.sortilege.get_netherite_staff": "Der Älteste Zauberstab",
+  "advancement.sortilege.get_netherite_staff.desc": "Upgrade einen Diamantstab zu Netherit.",
+  "advancement.sortilege.use_limitite": "Infinity +1",
+  "advancement.sortilege.use_limitite.desc": "Erhöhe das Verzauberungslimit eines Items mit Limitit.",
+  "advancement.sortilege.get_witch_hat": "Verrückter Hutmacher",
+  "advancement.sortilege.get_witch_hat.desc": "Töte eine Hexe und erbe ihren Hut."
+}

@@ -715,9 +715,9 @@ public class ModConfig {
                       }
                     },
                     {
-                      "necronium_staff": {
+                      "necromium_staff": {
                         "durability": 2031,
-                        "repair_item": "caverns_and_chasms:necronium_ingot",
+                        "repair_item": "caverns_and_chasms:necromium_ingot",
                         "enchantability": 15,
                         "damage": 5,
                         "pierce": 2,

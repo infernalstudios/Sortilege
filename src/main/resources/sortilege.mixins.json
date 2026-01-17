@@ -31,6 +31,7 @@
     "SimpleRegistryMixin",
     "SmithingTransformRecipeMixin",
     "UnbreakingEnchantmentMixin",
+    "WitchEntityMixin",
     "accessor.ItemDispenserBehaviorAccessor",
     "accessor.RegistryEntryReferenceAccessor",
     "accessor.StatusEffectInstanceAccessor"

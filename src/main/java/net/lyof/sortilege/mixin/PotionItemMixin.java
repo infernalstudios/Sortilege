@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.mob.WitchEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.PotionItem;

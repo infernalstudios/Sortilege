@@ -26,7 +26,7 @@ public class PotionCooldownManager {
                 || !COOLDOWNS.get(user.getWorld().isClient()).get(user).containsKey(key)) return 0;
 
         Pair<Integer, Integer> time = COOLDOWNS.get(user.getWorld().isClient()).get(user).get(key);
-        if (time.getRight() < user.age) {
+        if (time.getRight() < user.age || time.getRight() <= time.getLeft()) {
             if (COOLDOWNS.get(true).containsKey(user)) COOLDOWNS.get(true).get(user).remove(key);
             if (COOLDOWNS.get(false).containsKey(user)) COOLDOWNS.get(false).get(user).remove(key);
             return 0;

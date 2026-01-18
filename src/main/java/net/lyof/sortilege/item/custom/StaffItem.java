@@ -32,6 +32,7 @@ import net.minecraft.entity.Tameable;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.*;
@@ -441,7 +442,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
             if (target.getType().isIn(ModTags.Entities.UNDEAD))
                 damage *= 1 + ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
-            else
+            else if (!ConfigEntries.altBlessing || !(target instanceof Monster))
                 damage *= ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
         }
 

@@ -308,6 +308,10 @@ public class ModConfig {
                 "better_fire_protection": 4,
                 // Should Bane of Arthropods apply a 0.5*(level + 1) seconds of slowness on hit
                 "better_bane_of_arthropods": true,
+                // Should Blessing damage all hostile mobs, and deal extra damage to entities tagged as `minecraft:undead`.
+                //   If set to false, only the entities in this tag will be damaged
+                //   Non damaged entities are healed instead
+                "alternate_blessing": true,
                 
                 // Set these to false to disable the corresponding enchantment from appearing in game (it won't be registered)
                 "enabled_enchants": {

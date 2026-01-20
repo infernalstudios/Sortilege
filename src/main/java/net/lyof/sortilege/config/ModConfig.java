@@ -89,7 +89,7 @@ public class ModConfig {
                 this.tier.getDurability() : dura;
             if (repair.isEmpty())
                 this.repair = () -> this.tier.getRepairIngredient();
-            if (repair.startsWith("#")) {
+            else if (repair.startsWith("#")) {
                 TagKey<Item> tag = TagKey.of(RegistryKeys.ITEM, new Identifier(repair.substring(1)));
                 this.repair = () -> Ingredient.fromTag(tag);
             }

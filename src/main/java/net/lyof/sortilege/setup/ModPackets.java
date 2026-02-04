@@ -45,7 +45,7 @@ public class ModPackets {
 
             client.execute(() -> {
                 for (int i = 0; i < amount; i++) {
-                    client.world.addParticle(ModParticles.WISP_PIXEL, x + (0.5 - Math.random()) * spread,
+                    client.world.addImportantParticle(ModParticles.WISP_PIXEL, x + (0.5 - Math.random()) * spread,
                             y + (0.5 - Math.random()) * spread,
                             z + (0.5 - Math.random()) * spread,
                             r, g, b);

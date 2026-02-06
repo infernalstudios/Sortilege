@@ -14,7 +14,8 @@
   "tag.item.sortilege.is_limit_break_material": "Limit Break Material",
   "tag.item.sortilege.is_soulbind_material": "Soulbinding Material",
   "tag.item.sortilege.unbreakable": "Unbreakable",
-  "tag.item.sortilege.keep_on_death": "Kept on Death",
+  "tag.item.sortilege.kept_on_death": "Kept on Death",
+  "tag.item.sortilege.refills_cauldrons": "Cauldron Fuel",
   "tag.item.sortilege.staffs": "Staffs",
 
   "emi.category.sortilege.enchanting": "Enchanting",

@@ -329,7 +329,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
             ModParticles.spawnWisps(world, x, y, z, 1, MathHelper.randi(colors));
 
-            if (i*2 % step != 0)
+            if (i % step != 0)
                 continue;
 
             pos = new BlockPos((int) Math.round(x-0.5), (int) Math.round(y-0.5), (int) Math.round(z-0.5));

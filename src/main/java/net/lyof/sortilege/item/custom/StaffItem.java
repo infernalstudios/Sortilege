@@ -333,9 +333,11 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 continue;
 
             pos = new BlockPos((int) Math.round(x-0.5), (int) Math.round(y-0.5), (int) Math.round(z-0.5));
+            Vec3d vec = new Vec3d(x, y, z).subtract(pos.getX(), pos.getY(), pos.getZ());
             List<Entity> entities = player.getWorld().getOtherEntities(player, new Box(pos).expand(0.1));
 
-            if (world.getBlockState(pos).isSolid()) {
+            if (world.getBlockState(pos).getCollisionShape(world, pos).getBoundingBoxes()
+                    .stream().anyMatch(box -> box.contains(vec))) {
                 if (ConfigEntries.staffsPierceBlocks)
                     targetsLeft--;
                 else

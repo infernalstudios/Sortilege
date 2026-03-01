@@ -312,6 +312,8 @@ public class ModConfig {
                 //   If set to false, only the entities in this tag will be damaged
                 //   Non damaged entities are healed instead
                 "alternate_blessing": true,
+                // If true, Curse of Storytelling will have a cyan name. Only cosmetic
+                "alternate_storytelling_curse": false,
                 
                 // Set these to false to disable the corresponding enchantment from appearing in game (it won't be registered)
                 "enabled_enchants": {

@@ -3,7 +3,7 @@ package net.lyof.sortilege.enchant;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.armor.MagicProtectionEnchantment;
-import net.lyof.sortilege.enchant.common.CurseEnchantment;
+import net.lyof.sortilege.enchant.common.StorytellingEnchantment;
 import net.lyof.sortilege.enchant.common.SoulboundEnchantment;
 import net.lyof.sortilege.enchant.staff.CurseStaffEnchantment;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
@@ -111,5 +111,5 @@ public class ModEnchants {
     public static final Enchantment SOULBOUND = register("soulbound",
             new SoulboundEnchantment());
     public static final Enchantment STORYTELLING_CURSE = register("storytelling_curse",
-            new CurseEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.VANISHABLE, EquipmentSlot.values()));
+            new StorytellingEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.VANISHABLE, EquipmentSlot.values()));
 }

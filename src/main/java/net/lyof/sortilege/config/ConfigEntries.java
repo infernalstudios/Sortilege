@@ -31,6 +31,7 @@ public class ConfigEntries {
         betterFireProt = new ConfigEntry<>("enchantments.better_fire_protection", 4).get();
         betterBane = new ConfigEntry<>("enchantments.better_bane_of_arthropods", true).get();
         altBlessing = new ConfigEntry<>("enchantments.alternate_blessing", true).get();
+        altStorytelling = new ConfigEntry<>("enchantments.alternate_storytelling_curse", false).get();
 
         enabledEnchants = new ConfigEntry<Map<String, Boolean>>("enchantments.enabled_enchants", Map.of()).get();
 
@@ -128,6 +129,7 @@ public class ConfigEntries {
     public static int betterFireProt;
     public static boolean betterBane;
     public static boolean altBlessing;
+    public static boolean altStorytelling;
 
     public static Map<String, Boolean> enabledEnchants = Map.of();
 

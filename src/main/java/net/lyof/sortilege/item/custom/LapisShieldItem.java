@@ -9,8 +9,10 @@ import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
 import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
 import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
@@ -86,7 +88,7 @@ public class LapisShieldItem extends Item implements Equipment, AddedRenderItem 
                 16, new float[]{0.3f, 0.3f, 1f});
 
         if (amount >= 3f) {
-            stack.damage((int) amount/2, entity, e -> e.sendToolBreakStatus(Hand.OFF_HAND));
+            stack.damage(Math.max(1, (int) amount/2), entity, e -> e.sendToolBreakStatus(Hand.OFF_HAND));
             if (stack.isEmpty())
                 entity.playSound(SoundEvents.ITEM_SHIELD_BREAK, 0.8F, 0.8F + entity.getWorld().random.nextFloat() * 0.4F);
         }

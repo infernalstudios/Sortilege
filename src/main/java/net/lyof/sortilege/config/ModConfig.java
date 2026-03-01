@@ -332,7 +332,8 @@ public class ModConfig {
                   
                   "magic_protection": true,
                   "arcane": true,
-                  "soulbound": true
+                  "soulbound": true,
+                  "storytelling_curse": true
                 }
               },
               

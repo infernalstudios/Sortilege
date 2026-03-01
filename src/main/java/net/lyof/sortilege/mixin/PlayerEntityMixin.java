@@ -4,10 +4,13 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
+import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -95,5 +98,12 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         LapisShieldItem.onSuccessfulUse(stack, self, amount);
         if (!this.getWorld().isClient())
             self.incrementStat(Stats.USED.getOrCreateStat(ModItems.LAPIS_SHIELD));
+    }
+
+    @WrapMethod(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;")
+    private ItemEntity preventStorytoldDrop(ItemStack stack, boolean throwRandomly, boolean retainOwnership, Operation<ItemEntity> original) {
+        if (!throwRandomly && ItemHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
+            return null;
+        return original.call(stack, throwRandomly, retainOwnership);
     }
 }

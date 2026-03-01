@@ -1,5 +1,6 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -11,6 +12,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,8 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(value = PlayerInventory.class, priority = 1001)
-public class PlayerInventoryMixin {
+public abstract class PlayerInventoryMixin {
     @Shadow @Final public DefaultedList<ItemStack> main;
+
+    @Shadow public abstract ItemStack getMainHandStack();
 
     @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))
     public int skipEquipped(List<ItemStack> list, Operation<Integer> original) {
@@ -47,5 +51,12 @@ public class PlayerInventoryMixin {
         if (stack.isIn(ModTags.Items.KEEP_ON_DEATH)) return true;
 
         return original.call(stack);
+    }
+
+    @WrapMethod(method = "dropSelectedItem")
+    private ItemStack preventStorytoldDrop(boolean entireStack, Operation<ItemStack> original) {
+        if (ItemHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, this.getMainHandStack()))
+            return ItemStack.EMPTY;
+        return original.call(entireStack);
     }
 }

@@ -74,6 +74,8 @@
   "enchantment.sortilege.arcane.desc": "Converts damage dealt to magic type.",
   "enchantment.sortilege.soulbound": "Soulbound",
   "enchantment.sortilege.soulbound.desc": "Stays after death.",
+  "enchantment.sortilege.storytelling_curse": "Curse of Storytelling",
+  "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost.",
 
   "sortilege.enchantments": "Enchantments",
   "item.sortilege.catalyst.desc": "When used to Enchant:",

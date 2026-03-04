@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
+import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.client.item.TooltipContext;
@@ -18,9 +19,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -67,17 +71,21 @@ public class AntidotePotionItem extends PotionItem {
     }
 
     @Override
-    public ItemStack finishUsing(ItemStack stack, World level, LivingEntity entity) {
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity entity) {
         PlayerEntity player = entity instanceof PlayerEntity ? (PlayerEntity) entity : null;
         if (player instanceof ServerPlayerEntity)
             Criteria.CONSUME_ITEM.trigger((ServerPlayerEntity) player, stack);
 
-        if (!level.isClient()) {
+        if (!world.isClient()) {
             StatusEffect effect = PotionUtil.getPotionEffects(stack).get(0).getEffectType();
 
             if (entity.hasStatusEffect(effect)) {
                 entity.removeStatusEffect(effect);
-                // todo: particles?
+                int color = PotionUtil.getColor(stack);
+                float r = ColorHelper.Argb.getRed(color) / 255f,
+                      g = ColorHelper.Argb.getGreen(color) / 255f,
+                      b = ColorHelper.Argb.getBlue(color) / 255f;
+                ModParticles.spawnWisps(world, entity.getX(), entity.getEyeY(), entity.getZ(), 16, new float[]{r, g, b});
             }
             if (ConfigEntries.antidoteImmunityTime > 0)
                 ((PotionShenanigans) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);

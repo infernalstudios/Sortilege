@@ -1,9 +1,12 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
@@ -46,15 +49,18 @@ public abstract class ItemStackMixin {
     @Shadow public abstract NbtCompound getOrCreateNbt();
     @Shadow public abstract boolean isIn(TagKey<Item> tag);
 
+    @Shadow public abstract Item getItem();
+
+    @Shadow public abstract String getTranslationKey();
+
     @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
         ItemStack itemstack = this.copy();
         int a = ItemHelper.getUsedEnchantSlots(itemstack);
         int limit = ItemHelper.getTotalEnchantSlots(itemstack);
         if (limit >= 0) {
-            if (!this.getOrCreateNbt().contains("Enchantments", 9)) {
+            if (!this.getOrCreateNbt().contains("Enchantments", 9))
                 this.getOrCreateNbt().put("Enchantments", new NbtList());
-            }
 
             if (a < limit || (ConfigEntries.cursesAddSlots && enchantment.isCursed())) {
                 NbtList listtag = this.getOrCreateNbt().getList("Enchantments", 10);
@@ -63,6 +69,13 @@ public abstract class ItemStackMixin {
 
             ci.cancel();
         }
+    }
+
+    @ModifyReturnValue(method = "isIn", at = @At("RETURN"))
+    private boolean isInKinetic(boolean original, TagKey<Item> tag) {
+        if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof StaffItem)
+            return original && ItemHelper.hasEnchant(ModEnchants.BONK, (ItemStack) (Object) this);
+        return original;
     }
 
     @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)

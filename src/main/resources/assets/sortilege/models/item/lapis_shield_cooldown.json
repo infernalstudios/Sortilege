@@ -1,6 +1,7 @@
 {
   "parent": "sortilege:item/lapis_shield_base",
   "textures": {
-    "texture": "sortilege:item/lapis_shield_cooldown"
+    "texture": "sortilege:item/lapis_shield_cooldown",
+    "particle": "sortilege:item/lapis_shield"
   }
 }

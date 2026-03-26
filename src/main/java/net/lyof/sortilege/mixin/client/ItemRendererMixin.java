@@ -20,11 +20,9 @@ public class ItemRendererMixin {
             target = "Lnet/minecraft/client/render/item/ItemRenderer;renderBakedItemModel(Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V",
             shift = At.Shift.AFTER)
     )
-    public void renderItem(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices,
+    public void addItemRender(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices,
                            VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
-        MinecraftClient minecraft = MinecraftClient.getInstance();
-
-        if (minecraft.world == null || stack == null) return;
+        if (stack == null) return;
 
         if (stack.getItem() instanceof AddedRenderItem added && added.shouldRender(stack)) {
             matrices.push();

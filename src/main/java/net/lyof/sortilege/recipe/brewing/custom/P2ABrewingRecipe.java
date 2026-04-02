@@ -16,6 +16,7 @@ import net.minecraft.potion.Potions;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -37,7 +38,7 @@ public class P2ABrewingRecipe extends BrewingRecipe {
 
     @Override
     public ItemStack craft(ItemStack input, ItemStack ingredient) {
-        List<StatusEffectInstance> effects = PotionUtil.getPotionEffects(input);
+        List<StatusEffectInstance> effects = new ArrayList<>(PotionUtil.getPotionEffects(input));
         Collections.shuffle(effects);
 
         Potion potion = Potions.EMPTY;

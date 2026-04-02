@@ -7,7 +7,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
 import net.lyof.sortilege.util.MathHelper;
-import net.lyof.sortilege.util.MixinAccess;
+import net.lyof.sortilege.util.inject.EnchantInfoHolder;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 @Mixin(EnchantmentScreenHandler.class)
-public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implements MixinAccess {
+public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implements EnchantInfoHolder {
     @Shadow @Final private Inventory inventory;
     @Shadow @Final private ScreenHandlerContext context;
     @Shadow @Final private Random random;
@@ -57,16 +57,19 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     @Unique public final int[] catalyzed = new int[3];
 
     @Override
-    public int getProperty(int i) {
-        if (i == 3) {
-            ItemStack stack = this.inventory.getStack(0);
-            return stack.isEmpty() || !stack.isEnchantable() || (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
-                    ? 0 : 1;
-        }
-        if (i >= 4) {
-            return this.catalyst.getStack(0).isEmpty() ? 0 : 1;
-        }
-        return this.catalyzed[i];
+    public boolean sorti_isCatalyzed(int slot) {
+        return this.catalyzed[slot] == 1;
+    }
+
+    @Override
+    public boolean sorti_hasCatalyst() {
+        return !this.catalyst.getStack(0).isEmpty();
+    }
+
+    @Override
+    public boolean sorti_hasEnchantableItem() {
+        ItemStack stack = this.inventory.getStack(0);
+        return !stack.isEmpty() && stack.isEnchantable() && (ConfigEntries.bookCatalysts || !EnchantingCatalyst.isEmpty());
     }
 
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V",

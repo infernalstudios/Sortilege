@@ -19,10 +19,10 @@ public class PotionMixin implements PotionShenanigans {
     @Unique private List<StatusEffectInstance> customEffects = null;
     @Unique private boolean lengthened = false;
 
-    @Override public void sorti$setImmunity(StatusEffect effect, int time) {}
+    @Override public void sorti_setImmunity(StatusEffect effect, int time) {}
 
     @Override
-    public void sorti$resetPotionCache() {
+    public void sorti_resetPotionCache() {
         this.customEffects = null;
     }
 

@@ -14,6 +14,7 @@ import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
+import net.lyof.sortilege.util.inject.BountyHolder;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
@@ -25,6 +26,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.Monster;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
@@ -44,11 +46,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements PotionShenanigans {
+public abstract class LivingEntityMixin extends Entity implements PotionShenanigans, BountyHolder {
+    @Unique private static final String BOUNTY_KEY = "sorti_StolenXP";
+
     @Unique private final Map<StatusEffect, Integer> effectImmunities = new HashMap<>();
+    @Unique private int stolenxp = 0;
 
     @Override
-    public void sorti$setImmunity(StatusEffect effect, int time) {
+    public void sorti_setImmunity(StatusEffect effect, int time) {
         int timeOff = this.age + time;
         if (this.effectImmunities.containsKey(effect)) {
             if (this.effectImmunities.get(effect) < timeOff)
@@ -56,6 +61,16 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
         }
         else
             this.effectImmunities.put(effect, timeOff);
+    }
+
+    @Override
+    public void sorti_setExperience(int i) {
+        this.stolenxp = i;
+    }
+
+    @Override
+    public int sorti_getExperience() {
+        return this.stolenxp;
     }
 
     @Shadow @Nullable protected PlayerEntity attackingPlayer;
@@ -67,6 +82,16 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
+    }
+
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeCustom(NbtCompound nbt, CallbackInfo ci) {
+        nbt.putInt(BOUNTY_KEY, this.sorti_getExperience());
+    }
+
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readCustom(NbtCompound nbt, CallbackInfo ci) {
+        this.sorti_setExperience(nbt.getInt(BOUNTY_KEY));
     }
 
     @ModifyArg(method = "dropXp", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ExperienceOrbEntity;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/Vec3d;I)V"))
@@ -93,33 +118,26 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
         }
     }
 
-    @Inject(method = "initDataTracker", at = @At("HEAD"))
-    public void trackXPBounty(CallbackInfo ci) {
-        this.getDataTracker().startTracking(XPHelper.BOUNTY, 0);
-    }
-
-
     @Inject(method = "drop", at = @At("HEAD"))
     public void giveKillXP(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
         PotionCooldownManager.clear(self);
 
         if (self instanceof PlayerEntity player && this.getWorld() instanceof ServerWorld world) {
-            int steal_xp = (int) Math.round(XPHelper.getTotalxp(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);
+            int stealxp = (int) Math.round(XPHelper.getTotalXP(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);
             Entity source = damageSource.getAttacker();
 
             if (source instanceof PlayerEntity playerattacker)
-                playerattacker.addExperience(steal_xp);
+                playerattacker.addExperience(stealxp);
             else if (source instanceof LivingEntity attacker) {
-                attacker.getDataTracker().set(XPHelper.BOUNTY, steal_xp);
+                ((BountyHolder) attacker).sorti_setExperience(stealxp);
                 if (ConfigEntries.glowingKiller) attacker.setGlowing(true);
             }
-            else ExperienceOrbEntity.spawn(world, this.getPos(), steal_xp);
+            else ExperienceOrbEntity.spawn(world, this.getPos(), stealxp);
         }
 
-        if (this.getDataTracker().containsKey(XPHelper.BOUNTY) && this.getWorld() instanceof ServerWorld world) {
-            ExperienceOrbEntity.spawn(world, this.getPos(), this.getDataTracker().get(XPHelper.BOUNTY));
-        }
+        if (this.getWorld() instanceof ServerWorld world)
+            ExperienceOrbEntity.spawn(world, this.getPos(), this.sorti_getExperience());
 
         if (self instanceof Monster && Math.random() < ConfigEntries.bountyChance
                 && (ConfigEntries.bountyWhitelist == self.getType().isIn(ModTags.Entities.BOUNTIES))

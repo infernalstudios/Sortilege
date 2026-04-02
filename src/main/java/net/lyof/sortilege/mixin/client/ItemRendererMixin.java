@@ -1,7 +1,6 @@
 package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;

@@ -19,12 +19,10 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.stat.Stats;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
@@ -88,7 +86,7 @@ public class AntidotePotionItem extends PotionItem {
                 ModParticles.spawnWisps(world, entity.getX(), entity.getEyeY(), entity.getZ(), 16, new float[]{r, g, b});
             }
             if (ConfigEntries.antidoteImmunityTime > 0)
-                ((PotionShenanigans) entity).sorti$setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
+                ((PotionShenanigans) entity).sorti_setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
         }
 
         if (player != null) {

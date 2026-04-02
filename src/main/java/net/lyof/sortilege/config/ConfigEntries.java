@@ -60,8 +60,6 @@ public class ConfigEntries {
         attackerXPRatio = new ConfigEntry<>("death.xp_keeping.attacker_ratio", 0.6).get();
         dropXPRatio = new ConfigEntry<>("death.xp_keeping.drop_ratio", 0.1).get();
 
-        stolenXpData = new ConfigEntry<>("death.xp_keeping.stolen_xp_data", 41).get();
-
         keepEquipped = new ConfigEntry<>("death.keep_equipped", false).get();
         consumeSoulbound = new ConfigEntry<>("death.consume_soulbound", false).get();
 
@@ -155,7 +153,6 @@ public class ConfigEntries {
     public static double selfXPRatio;
     public static double attackerXPRatio;
     public static double dropXPRatio;
-    public static int stolenXpData;
 
     public static boolean keepEquipped;
     public static boolean consumeSoulbound;

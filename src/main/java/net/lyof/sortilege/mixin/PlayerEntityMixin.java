@@ -77,8 +77,8 @@ public abstract class PlayerEntityMixin extends LivingEntity {
     @Inject(method = "getXpToDrop", at = @At("HEAD"), cancellable = true)
     public void keepXP(CallbackInfoReturnable<Integer> cir) {
         if (ConfigEntries.doXPKeep && this.getWorld() instanceof ServerWorld world) {
-            int safe_xp = (int) Math.round(XPHelper.getTotalxp(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.selfXPRatio);
-            int drop_xp = (int) Math.round(XPHelper.getTotalxp(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.dropXPRatio);
+            int safe_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.selfXPRatio);
+            int drop_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.dropXPRatio);
 
             this.experienceLevel = 0;
             this.experienceProgress = 0f;

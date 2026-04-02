@@ -394,9 +394,7 @@ public class ModConfig {
                   // Ratio of xp stolen by the attacker, and dropped back when it's killed
                   "attacker_ratio": 0.6,
                   // Ratio of xp dropped on the ground on death
-                  "drop_ratio": 0.1,
-                  // Entity data id to use to store stolen xp. Only change this if the default is causing conflicts
-                  "stolen_xp_data": 41
+                  "drop_ratio": 0.1
                 },
                 // Keep equipped items (armor and hotbar) on death
                 "keep_equipped": false,

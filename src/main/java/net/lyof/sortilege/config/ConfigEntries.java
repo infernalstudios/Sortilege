@@ -76,6 +76,7 @@ public class ConfigEntries {
         potionDrinkingTime = new ConfigEntry<>("brewing.potion.drinking_time", 20).get();
         potionCooldown = new ConfigEntry<>("brewing.potion.cooldown", 200).get();
 
+        potionTooltip = new ConfigEntry<>("brewing.potion.show_expanded_tooltip", true).get();
         potionTextures = new ConfigEntry<>("brewing.potion.custom_potion_textures", true).get();
         potionData = new ConfigEntry<>("brewing.potion.custom_potion_data", true).get();
 
@@ -170,6 +171,7 @@ public class ConfigEntries {
     public static int potionDrinkingTime;
     public static int potionCooldown;
 
+    public static boolean potionTooltip;
     public static boolean potionTextures;
     public static boolean potionData;
 

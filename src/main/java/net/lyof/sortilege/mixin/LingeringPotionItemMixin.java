@@ -20,7 +20,8 @@ import java.util.List;
 public class LingeringPotionItemMixin {
     @Inject(method = "appendTooltip", at = @At("HEAD"))
     public void appendDrinkingTime(ItemStack stack, World world, List<Text> tooltip, TooltipContext context, CallbackInfo ci) {
-         if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return;
+        if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return;
+        if (!ConfigEntries.potionTooltip) return;
 
         int cooldown = ConfigEntries.potionCooldown;
         CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));

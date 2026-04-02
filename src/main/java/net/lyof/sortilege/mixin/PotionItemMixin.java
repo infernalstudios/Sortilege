@@ -33,6 +33,7 @@ public class PotionItemMixin {
     @Inject(method = "appendTooltip", at = @At("HEAD"))
     public void appendDrinkingTime(ItemStack stack, World world, List<Text> tooltip, TooltipContext context, CallbackInfo ci) {
         if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return;
+        if (!ConfigEntries.potionTooltip) return;
 
         int drinkingTime = ConfigEntries.potionDrinkingTime;
         int cooldown = ConfigEntries.potionCooldown;

@@ -429,6 +429,9 @@ public class ModConfig {
                   // How many ticks of cooldown potions get after being drank or thrown
                   "cooldown": 200,
                   
+                  // Should extra information like drinking time and cooldown be shown in a potion's tooltip
+                  "show_expanded_tooltip": true,
+                  
                   // Should potions have the ability to have different textures depending on their content.
                   //   Setting this to false will disable texture variants for long/strong potions, as well as per potion ones
                   "custom_potion_textures": true,

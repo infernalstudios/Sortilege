@@ -9,33 +9,46 @@ import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class ModPackets {
     public static final Identifier INITIALIZE = Sortilege.makeID("initalize");
+    public static final int INIT_RELOAD = 0;
+    public static final int INIT_CATALYST = 1;
+    public static final int INIT_POTION = 2;
+    public static final int INIT_LOCK = 3;
+    public static final int INIT_KNOWLEDGE = 4;
 
     public static final Identifier WISP_PARTICLE_DISPLAY = Sortilege.makeID("wisp_particle_display");
     public static final Identifier LAPIS_SHIELD_COOLDOWN = Sortilege.makeID("lapis_shield_cooldown");
+    public static final Identifier LEARN_ENCHANTMENT = Sortilege.makeID("learn_enchantment");
 
 
     public static class Client {
         public static void initialize(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
             int eventType = buf.readInt();
 
-            if (eventType == 0)
+            if (eventType == INIT_RELOAD)
                 ReloadListener.INSTANCE.reloadClient();
-            else if (eventType == 1)
+            else if (eventType == INIT_CATALYST)
                 EnchantingCatalyst.read(buf);
-            else if (eventType == 2)
+            else if (eventType == INIT_POTION)
                 CustomPotionData.read(buf);
-            else if (eventType == 3)
+            else if (eventType == INIT_LOCK)
                 RecipeLock.read(buf);
+            else if (eventType == INIT_KNOWLEDGE) {
+                EnchantKnowledge knowledge = EnchantKnowledge.read(buf, client.player);
+                client.execute(() -> ((EnchantLearner) client.player).sorti_setKnowledge(Sortilege.log(knowledge)));
+            }
         }
 
         public static void wispParticleDisplay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
@@ -70,6 +83,15 @@ public class ModPackets {
                     LapisShieldItem.removeCooldown(stack);
                 else
                     LapisShieldItem.addCooldown(stack, cooldown);
+            });
+        }
+
+        public static void learnEnchantment(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+            int enchant = buf.readInt();
+            int level = buf.readInt();
+
+            client.execute(() -> {
+                ((EnchantLearner) client.player).sorti_getKnowledge().learn(Registries.ENCHANTMENT.get(enchant), level);
             });
         }
     }

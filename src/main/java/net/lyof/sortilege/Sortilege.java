@@ -17,6 +17,8 @@ import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
@@ -67,6 +69,7 @@ public class Sortilege implements ModInitializer {
 			EnchantingCatalyst.write(packets);
 			CustomPotionData.write(packets);
 			RecipeLock.write(packets, player);
+			((EnchantLearner) player).sorti_getKnowledge().write(packets);
 
 			packets.forEach(p -> ServerPlayNetworking.send(player, ModPackets.INITIALIZE, p));
 		});

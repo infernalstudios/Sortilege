@@ -3,6 +3,7 @@ package net.lyof.sortilege.recipe.enchanting.catalyst;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.EnchantedBookItem;
@@ -74,7 +75,7 @@ public class EnchantingCatalyst {
     public static void write(List<PacketByteBuf> packets) {
         for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
             PacketByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(1);
+            packet.writeInt(ModPackets.INIT_CATALYST);
 
             packet.writeIdentifier(Registries.ITEM.getId(entry.getKey()));
             packet.writeInt(entry.getValue().size());

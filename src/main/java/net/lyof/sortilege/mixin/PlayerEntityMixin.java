@@ -119,6 +119,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
         return this.sorti_knowledge;
     }
 
+    @Override
+    public void sorti_setKnowledge(EnchantKnowledge knowledge) {
+        this.sorti_knowledge = knowledge;
+    }
+
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void writeCustom(NbtCompound nbt, CallbackInfo ci) {
         if (this.sorti_knowledge != null)

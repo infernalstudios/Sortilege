@@ -138,7 +138,7 @@ public abstract class ItemStackMixin {
 
     @WrapMethod(method = "use")
     public TypedActionResult<ItemStack> handleUse(World world, PlayerEntity user, Hand hand,
-                                                      Operation<TypedActionResult<ItemStack>> original) {
+                                                  Operation<TypedActionResult<ItemStack>> original) {
         ItemStack self = (ItemStack) (Object) this;
 
         if (user != null) {

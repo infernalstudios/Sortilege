@@ -3,6 +3,7 @@ package net.lyof.sortilege.recipe.crafting;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -143,7 +144,7 @@ public abstract class RecipeLock {
             if (advc == null || advc.getDisplay() == null) continue;
 
             PacketByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(3);
+            packet.writeInt(ModPackets.INIT_LOCK);
 
             packet.writeString(advancementLock.id);
             Text title = advc.getDisplay().getTitle();

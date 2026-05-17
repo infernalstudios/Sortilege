@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
+import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.network.PacketByteBuf;
@@ -105,7 +106,7 @@ public class CustomPotionData {
     public static void write(List<PacketByteBuf> packets) {
         for (CustomPotionData data : INSTANCES) {
             PacketByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(2);
+            packet.writeInt(ModPackets.INIT_POTION);
 
             packet.writeIdentifier(data.potion);
             packet.writeInt(data.stackSize);

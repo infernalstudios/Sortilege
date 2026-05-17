@@ -3,10 +3,13 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.entity.EntityType;
@@ -14,23 +17,24 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.stat.Stats;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity {
+public abstract class PlayerEntityMixin extends LivingEntity implements EnchantLearner {
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
-
 
     @Shadow public int experienceLevel;
     @Shadow public float experienceProgress;
@@ -105,5 +109,25 @@ public abstract class PlayerEntityMixin extends LivingEntity {
         if (!throwRandomly && ItemHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
             return null;
         return original.call(stack, throwRandomly, retainOwnership);
+    }
+
+
+    @Unique private EnchantKnowledge sorti_knowledge;
+
+    @Override
+    public EnchantKnowledge sorti_getKnowledge() {
+        return this.sorti_knowledge;
+    }
+
+    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
+    private void writeCustom(NbtCompound nbt, CallbackInfo ci) {
+        if (this.sorti_knowledge != null)
+            nbt.put(EnchantKnowledge.KEY, this.sorti_knowledge.write(new NbtCompound()));
+    }
+
+    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
+    private void readCustom(NbtCompound nbt, CallbackInfo ci) {
+        this.sorti_knowledge = EnchantKnowledge.read(nbt);
+        Sortilege.log(this.sorti_knowledge);
     }
 }

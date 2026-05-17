@@ -8,7 +8,7 @@ import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;

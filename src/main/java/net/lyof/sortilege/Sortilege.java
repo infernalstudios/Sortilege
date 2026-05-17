@@ -16,7 +16,7 @@ import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;

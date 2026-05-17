@@ -14,7 +14,7 @@ import net.lyof.sortilege.recipe.emi.BetterBrewingEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CatalystEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CauldronBrewingEmiRecipe;
 import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
-import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.lyof.sortilege.setup.ModTags;

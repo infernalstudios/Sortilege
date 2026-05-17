@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.inject.EnchantInfoHolder;
 import net.minecraft.enchantment.Enchantment;

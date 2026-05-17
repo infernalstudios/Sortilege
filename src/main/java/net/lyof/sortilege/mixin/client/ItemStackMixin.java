@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.screen.Screen;

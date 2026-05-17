@@ -1,4 +1,4 @@
-package net.lyof.sortilege.recipe.enchanting;
+package net.lyof.sortilege.recipe.enchanting.catalyst;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

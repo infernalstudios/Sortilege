@@ -14,7 +14,7 @@ import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
-import net.lyof.sortilege.recipe.enchanting.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.resource.Resource;

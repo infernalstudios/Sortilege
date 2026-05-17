@@ -4,8 +4,11 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.inject.EnchantInfoHolder;
 import net.minecraft.enchantment.Enchantment;
@@ -40,45 +43,47 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     @Shadow @Final private Inventory inventory;
     @Shadow @Final private ScreenHandlerContext context;
     @Shadow @Final private Random random;
-
     @Shadow @Final public int[] enchantmentPower;
 
     protected EnchantmentScreenHandlerMixin(@Nullable ScreenHandlerType<?> type, int syncId) {
         super(type, syncId);
     }
 
-    @Unique private final Inventory catalyst = new SimpleInventory(1) {
+    @Unique private final Inventory sorti_catalyst = new SimpleInventory(1) {
         @Override
         public void markDirty() {
             super.markDirty();
             EnchantmentScreenHandlerMixin.this.onContentChanged(EnchantmentScreenHandlerMixin.this.inventory);
         }
     };
-    @Unique public final int[] catalyzed = new int[3];
+    @Unique private final int[] sorti_catalyzed = new int[3];
+    @Unique private PlayerEntity sorti_player = null;
 
     @Override
     public boolean sorti_isCatalyzed(int slot) {
-        return this.catalyzed[slot] == 1;
+        return this.sorti_catalyzed[slot] == 1;
     }
 
     @Override
     public boolean sorti_hasCatalyst() {
-        return !this.catalyst.getStack(0).isEmpty();
+        return !this.sorti_catalyst.getStack(0).isEmpty();
     }
 
     @Override
     public boolean sorti_hasEnchantableItem() {
         ItemStack stack = this.inventory.getStack(0);
-        return !stack.isEmpty() && stack.isEnchantable() && (ConfigEntries.bookCatalysts || !EnchantingCatalyst.isEmpty());
+        return !stack.isEmpty() && stack.isEnchantable() && (ConfigEntries.bookCatalysts || !EnchantingCatalyst.isDisabled());
     }
 
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V",
             at = @At(value = "TAIL"))
-    public void addCatalystSlot(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context, CallbackInfo ci) {
-        if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
+    public void addCatalystSlot(int syncId, PlayerInventory inventory, ScreenHandlerContext context, CallbackInfo ci) {
+        this.sorti_player = inventory.player;
+
+        if (EnchantingCatalyst.isDisabled())
             return;
 
-        this.addSlot(new Slot(this.catalyst, 0, 25, 20){
+        this.addSlot(new Slot(this.sorti_catalyst, 0, 25, 20){
             @Override
             public boolean canInsert(ItemStack stack) {
                 return EnchantingCatalyst.isCatalyst(stack);
@@ -91,14 +96,14 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
             }
         });
 
-        this.addProperty(Property.create(this.catalyzed, 0));
-        this.addProperty(Property.create(this.catalyzed, 1));
-        this.addProperty(Property.create(this.catalyzed, 2));
+        this.addProperty(Property.create(this.sorti_catalyzed, 0));
+        this.addProperty(Property.create(this.sorti_catalyzed, 1));
+        this.addProperty(Property.create(this.sorti_catalyzed, 2));
     }
 
     @Inject(method = "onClosed", at = @At("HEAD"))
     public void dropCatalyst(PlayerEntity player, CallbackInfo ci) {
-        this.context.run((world, pos) -> this.dropInventory(player, this.catalyst));
+        this.context.run((world, pos) -> this.dropInventory(player, this.sorti_catalyst));
     }
 
     @WrapOperation(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;generateEnchantments(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/item/ItemStack;IZ)Ljava/util/List;"))
@@ -109,53 +114,70 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     }
 
     @ModifyReturnValue(method = "generateEnchantments", at = @At("RETURN"))
-    public List<EnchantmentLevelEntry> applyCatalyst(List<EnchantmentLevelEntry> original, ItemStack stack, int slot, int level) {
+    public List<EnchantmentLevelEntry> generateSortiEnchantments(List<EnchantmentLevelEntry> original, ItemStack stack, int slot, int level) {
         int power = this.enchantmentPower[slot];
-        if (original.isEmpty())
-            this.enchantmentPower[slot] = 0;
-        this.catalyzed[slot] = 0;
+        this.sorti_catalyzed[slot] = 0;
 
-        if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
-            return original;
+        // We need a mutable list
+        List<EnchantmentLevelEntry> result = new ArrayList<>(original);
 
-        Map<Enchantment, Integer> enchants = EnchantingCatalyst.getEnchantments(this.catalyst.getStack(0));
-        if (enchants.isEmpty())
-            return original;
+        // Catalyst logic
+        Map<Enchantment, Integer> enchants = EnchantingCatalyst.getEnchantments(this.sorti_catalyst.getStack(0));
+        if (!enchants.isEmpty()) {
+            // Randomize seed
+            for (int i = 0; i < slot; i++) this.random.nextDouble();
 
-        for (int i = 0; i < slot; i++)
-            this.random.nextDouble();
+            // Get catalyzed enchant
+            Enchantment chosen = MathHelper.randi(enchants.keySet().stream().filter(enchant -> enchant.isAcceptableItem(stack)
+                    || stack.isOf(Items.BOOK)).toList(), this.random);
+            if (chosen == null) return original;
 
-        Enchantment chosen = MathHelper.randi(enchants.keySet().stream().filter(enchant -> enchant.isAcceptableItem(stack)
-                        || stack.isOf(Items.BOOK)).toList(), this.random);
+            // Randomize seed
+            for (int i = 0; i < Registries.ENCHANTMENT.getRawId(chosen) % 8; i++) this.random.nextDouble();
 
-        if (chosen == null)
-            return original;
+            // Catalysts don't always apply
+            if (this.random.nextDouble() <= ConfigEntries.catalystChance) {
+                int lvl = chosen.getMaxLevel();
+                // Higher level in costier slots
+                for (int i = 0; i < 3 - slot; i++)
+                    lvl = Math.min(lvl, this.random.nextInt(chosen.getMaxLevel()));
+                lvl += 1;
 
-        for (int i = 0; i < Registries.ENCHANTMENT.getRawId(chosen) % 8; i++)
-            this.random.nextDouble();
+                // Nerf books, because they are reusable
+                if (this.sorti_catalyst.getStack(0).getItem() instanceof EnchantedBookItem)
+                    lvl = Math.min(lvl, enchants.get(chosen));
 
-        if (this.random.nextDouble() > ConfigEntries.catalystChance)
-            return original;
+                // Remove incompatible and duplicate enchants
+                result.removeIf(entry -> !entry.enchantment.canCombine(chosen));
+                /*
+                for (EnchantmentLevelEntry entry : original) {
+                    if (entry.enchantment == chosen && entry.level > lvl)
+                        lvl = entry.level;
+                    else if (entry.enchantment.canCombine(chosen))
+                        result.add(entry);
+                }*/
+                result.add(0, new EnchantmentLevelEntry(chosen, lvl));
 
-        int lvl = chosen.getMaxLevel();
-        for (int i = 0; i < 3 - slot; i++)
-            lvl = Math.min(lvl, this.random.nextInt(chosen.getMaxLevel()));
-        lvl += 1;
-        if (this.catalyst.getStack(0).getItem() instanceof EnchantedBookItem)
-            lvl = Math.min(lvl, enchants.get(chosen));
-
-        List<EnchantmentLevelEntry> result = new ArrayList<>();
-
-        for (EnchantmentLevelEntry entry : original) {
-            if (entry.enchantment == chosen && entry.level > lvl)
-                lvl = entry.level;
-            else if (entry.enchantment.canCombine(chosen))
-                result.add(entry);
+                // Slot was successfully catalyzed
+                this.sorti_catalyzed[slot] = 1;
+                this.enchantmentPower[slot] = power;
+            }
         }
-        result.add(0, new EnchantmentLevelEntry(chosen, lvl));
 
-        this.catalyzed[slot] = 1;
-        this.enchantmentPower[slot] = power;
+        // Knowledge logic
+        // TODO: configuration
+        if (true && this.sorti_player != null) {
+            EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge();
+
+            result.removeIf(entry -> !knowledge.isKnown(entry.enchantment));
+            List<EnchantmentLevelEntry> list = new ArrayList<>();
+            for (EnchantmentLevelEntry entry : result)
+                list.add(new EnchantmentLevelEntry(entry.enchantment,
+                        Math.min(entry.level, knowledge.getKnownLevel(entry.enchantment))));
+            result = list;
+        }
+
+        if (result.isEmpty()) this.enchantmentPower[slot] = 0;
         return result;
     }
 
@@ -163,31 +185,30 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     public boolean useCatalyst(PlayerEntity player, int id, Operation<Boolean> original) {
         boolean result = original.call(player, id);
 
-        if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
+        if (EnchantingCatalyst.isDisabled())
             return result;
 
         if (result) {
-            if (!(this.catalyst.getStack(0).getItem() instanceof EnchantedBookItem))
-                this.catalyst.getStack(0).decrement(1);
-            this.catalyzed[0] = 0;
-            this.catalyzed[1] = 0;
-            this.catalyzed[2] = 0;
+            if (!(this.sorti_catalyst.getStack(0).getItem() instanceof EnchantedBookItem))
+                this.sorti_catalyst.getStack(0).decrement(1);
+            this.sorti_catalyzed[0] = 0;
+            this.sorti_catalyzed[1] = 0;
+            this.sorti_catalyzed[2] = 0;
         }
         return result;
     }
 
     @Inject(method = "quickMove", at = @At("HEAD"), cancellable = true)
     public void moveCatalyst(PlayerEntity player, int slotid, CallbackInfoReturnable<ItemStack> cir) {
-        if (!ConfigEntries.bookCatalysts && EnchantingCatalyst.isEmpty())
+        if (EnchantingCatalyst.isDisabled())
             return;
-
 
         Slot slot = this.getSlot(slotid);
         ItemStack stack = this.inventory.getStack(0);
 
-        if (slot.inventory == this.catalyst && !this.insertItem(slot.getStack(), 2, 38, true)) {
+        if (slot.inventory == this.sorti_catalyst && !this.insertItem(slot.getStack(), 2, 38, true)) {
             slot.onTakeItem(player, slot.getStack());
-            this.catalyst.markDirty();
+            this.sorti_catalyst.markDirty();
             cir.setReturnValue(ItemStack.EMPTY);
         }
         else if (EnchantingCatalyst.isCatalyst(slot.getStack())
@@ -202,9 +223,9 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     public void updateCatalystOverlay(Inventory inventory, CallbackInfo ci) {
         ItemStack stack = this.inventory.getStack(0);
         if (stack.isEmpty() || !stack.isEnchantable()) {
-            this.catalyzed[0] = 0;
-            this.catalyzed[1] = 0;
-            this.catalyzed[2] = 0;
+            this.sorti_catalyzed[0] = 0;
+            this.sorti_catalyzed[1] = 0;
+            this.sorti_catalyzed[2] = 0;
         }
     }
 }

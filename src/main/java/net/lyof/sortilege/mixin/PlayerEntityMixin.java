@@ -128,6 +128,5 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustom(NbtCompound nbt, CallbackInfo ci) {
         this.sorti_knowledge = EnchantKnowledge.read(nbt);
-        Sortilege.log(this.sorti_knowledge);
     }
 }

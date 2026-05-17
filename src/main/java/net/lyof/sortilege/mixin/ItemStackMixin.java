@@ -4,11 +4,14 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.ItemHelper;
 import net.lyof.sortilege.util.PotionHelper;
@@ -50,8 +53,6 @@ public abstract class ItemStackMixin {
     @Shadow public abstract boolean isIn(TagKey<Item> tag);
 
     @Shadow public abstract Item getItem();
-
-    @Shadow public abstract String getTranslationKey();
 
     @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
@@ -139,6 +140,14 @@ public abstract class ItemStackMixin {
     public TypedActionResult<ItemStack> handleUse(World world, PlayerEntity user, Hand hand,
                                                       Operation<TypedActionResult<ItemStack>> original) {
         ItemStack self = (ItemStack) (Object) this;
+
+        if (user != null) {
+            EnchantKnowledge knowledge = ((EnchantLearner) user).sorti_getKnowledge();
+            Sortilege.log(knowledge);
+            if (knowledge != null) knowledge.learn(self);
+        }
+
+        if (!PotionHelper.isPotionItem(self)) return original.call(world, user, hand);
         if (PotionCooldownManager.getProgress(self, user, 0) > 0) return TypedActionResult.fail(self);
 
         if (self.getItem() instanceof ThrowablePotionItem && !PotionUtil.getPotion(self).getEffects().isEmpty())

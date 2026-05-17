@@ -31,8 +31,8 @@ public class EnchantingCatalyst {
     }
 
 
-    public static boolean isEmpty() {
-        return CATALYSTS.isEmpty();
+    public static boolean isDisabled() {
+        return !ConfigEntries.bookCatalysts && CATALYSTS.isEmpty();
     }
 
     public static Map<Enchantment, Integer> getEnchantments(ItemStack catalyst) {

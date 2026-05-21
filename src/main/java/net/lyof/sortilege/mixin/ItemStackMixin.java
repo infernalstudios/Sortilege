@@ -48,7 +48,6 @@ import java.util.List;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    @Shadow public abstract ItemStack copy();
     @Shadow public abstract NbtCompound getOrCreateNbt();
     @Shadow public abstract boolean isIn(TagKey<Item> tag);
 
@@ -56,9 +55,10 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
-        ItemStack itemstack = this.copy();
-        int a = ItemHelper.getUsedEnchantSlots(itemstack);
-        int limit = ItemHelper.getTotalEnchantSlots(itemstack);
+        ItemStack self = (ItemStack) (Object) this;
+
+        int a = ItemHelper.getUsedEnchantSlots(self);
+        int limit = ItemHelper.getTotalEnchantSlots(self);
         if (limit >= 0) {
             if (!this.getOrCreateNbt().contains("Enchantments", 9))
                 this.getOrCreateNbt().put("Enchantments", new NbtList());
@@ -70,6 +70,8 @@ public abstract class ItemStackMixin {
 
             ci.cancel();
         }
+
+        Thread.dumpStack();
     }
 
     @ModifyReturnValue(method = "isIn", at = @At("RETURN"))

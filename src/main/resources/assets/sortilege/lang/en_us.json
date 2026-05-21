@@ -13,7 +13,7 @@
 
   "sortilege.enchantments": "Enchantments",
   "item.sortilege.catalyst.desc": "When used to Enchant:",
-  "item.sortilege.learnable.desc": " (Learnable!)",
+  "item.sortilege.learnable.desc": " [Learnable]",
 
   "sortilege.potion.drinking_time": "Takes %ss to drink",
 

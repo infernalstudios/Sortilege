@@ -39,7 +39,6 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
                 context.drawTexture(CATALYST_TEXTURE, i + 60, j + 14 + 19 * k, 36, 0, 108, 19);
 
             else if (this.handler.enchantmentPower[k] == 0 && ((EnchantInfoHolder) this.handler).sorti_hasEnchantableItem()
-                    && ConfigEntries.enableKnowledge
                     && this.isPointWithinBounds(60, 14 + 19*k, 108, 18, mouseX, mouseY)) {
                 context.drawTooltip(this.textRenderer, Text.translatable("sortilege.enchanting.requires_catalyst").formatted(Formatting.RED),
                         mouseX, mouseY);

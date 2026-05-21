@@ -9,6 +9,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.function.EnchantRandomlyLootFunction;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
@@ -30,7 +31,7 @@ public class EnchantKnowledge {
     }
 
     public boolean isLearnable(ItemStack stack, Enchantment enchant, int value) {
-        if (stack.isOf(Items.ENCHANTED_BOOK) || !stack.hasNbt()/* || !stack.getNbt().getBoolean(ITEM_KEY)*/) return false;
+        if (stack.isOf(Items.ENCHANTED_BOOK) || !stack.hasNbt() || !stack.getNbt().getBoolean(ITEM_KEY)) return false;
         return this.getKnownLevel(enchant) < value;
     }
 

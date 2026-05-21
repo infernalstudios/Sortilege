@@ -278,17 +278,24 @@ public class ModConfig {
                   }
                 },
                 
-                "enchant_catalyst": {
-                  // Should Enchanted Books be usable as catalysts to increase the odds of getting their enchantments
-                  // If this is set to false and no catalyst is loaded from datapacks, the module will be disabled
-                  "allow_books": true,
-                  // Chance (0 - 1) for non book catalysts to activate for each option in the enchanting table
-                  "activation_chance": 0.5,
-                  // Should items usable as catalysts display it in their tooltip
-                  "show_in_tooltip": true,
+                "enchant_table": {
+                  "catalyst": {
+                    // Should Enchanted Books be usable as catalysts to increase the odds of getting their enchantments
+                    // If this is set to false and no catalyst is loaded from datapacks, the module will be disabled
+                    "allow_books": true,
+                    // Chance (0 - 1) for non book catalysts to activate for each option in the enchanting table
+                    "activation_chance": 0.5,
+                    // Should items usable as catalysts display it in their tooltip
+                    "show_in_tooltip": true,
+                    
+                    // If true, enchanting tables will only be able to apply catalysts and won't provide enchants by themselves
+                    "override_default": false
+                  },
                   
-                  // If true, the default enchant logic will be removed, meaning a catalyst *must* be used in order to get enchants at an enchanting table
-                  "override_default_enchanting": false
+                  "knowledge": {
+                    // Toggle this module. If true, enchants must be discovered as loot or catalyzed before they can be obtained at an enchanting table 
+                    "enable": true
+                  }
                 },
                 
                 // Allow using Enchanted Books on items in inventory

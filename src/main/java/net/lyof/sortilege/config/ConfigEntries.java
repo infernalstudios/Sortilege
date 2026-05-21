@@ -15,11 +15,13 @@ public class ConfigEntries {
         limititeLootWeight = new ConfigEntry<>("enchantments.enchant_limiter.limitite.loot_weight", 24).get();
         maxLimitBreak = new ConfigEntry<>("enchantments.enchant_limiter.limitite.max_limit_break", 3).get();
 
-        bookCatalysts = new ConfigEntry<>("enchantments.enchant_catalyst.allow_books", true).get();
-        catalystChance = new ConfigEntry<>("enchantments.enchant_catalyst.activation_chance", 0.5d).get();
-        catalystTooltip = new ConfigEntry<>("enchantments.enchant_catalyst.show_in_tooltip", true).get();
+        bookCatalysts = new ConfigEntry<>("enchantments.enchant_table.catalyst.allow_books", true).get();
+        catalystChance = new ConfigEntry<>("enchantments.enchant_table.catalyst.activation_chance", 0.5d).get();
+        catalystTooltip = new ConfigEntry<>("enchantments.enchant_table.catalyst.show_in_tooltip", true).get();
+        catalystOnly = new ConfigEntry<>("enchantments.enchant_table.catalyst.override_default", false).get();
 
-        overrideDefaultEnchanting = new ConfigEntry<>("enchantments.enchant_catalyst.override_default_enchanting", false).get();
+        enableKnowledge = new ConfigEntry<>("enchantments.enchant_table.knowledge.enable", true).get();
+        knowledgeTooltip = new ConfigEntry<>("enchantments.enchant_table.knowledge.show_in_tooltip", true).get();
 
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
         miningMasterIntegration = new ConfigEntry<>("enchantments.mining_master_integration", true).get();
@@ -115,8 +117,10 @@ public class ConfigEntries {
     public static boolean bookCatalysts;
     public static double catalystChance;
     public static boolean catalystTooltip;
+    public static boolean catalystOnly;
 
-    public static boolean overrideDefaultEnchanting;
+    public static boolean enableKnowledge;
+    public static boolean knowledgeTooltip;
 
     public static boolean allowInventoryEnchanting;
     public static boolean miningMasterIntegration;

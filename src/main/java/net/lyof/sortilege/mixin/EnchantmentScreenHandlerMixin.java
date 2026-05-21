@@ -72,7 +72,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
     @Override
     public boolean sorti_hasEnchantableItem() {
         ItemStack stack = this.inventory.getStack(0);
-        return !stack.isEmpty() && stack.isEnchantable() && (ConfigEntries.bookCatalysts || !EnchantingCatalyst.isDisabled());
+        return !stack.isEmpty() && stack.isEnchantable() && !EnchantingCatalyst.isDisabled();
     }
 
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V",
@@ -108,7 +108,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @WrapOperation(method = "generateEnchantments", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;generateEnchantments(Lnet/minecraft/util/math/random/Random;Lnet/minecraft/item/ItemStack;IZ)Ljava/util/List;"))
     public List<EnchantmentLevelEntry> overrideDefaultEnchanting(Random random, ItemStack stack, int level, boolean treasureAllowed, Operation<List<EnchantmentLevelEntry>> original) {
-        if (ConfigEntries.overrideDefaultEnchanting)
+        if (ConfigEntries.catalystOnly)
             return new ArrayList<>();
         return original.call(random, stack, level, treasureAllowed);
     }
@@ -120,6 +120,18 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
         // We need a mutable list
         List<EnchantmentLevelEntry> result = new ArrayList<>(original);
+
+        // Knowledge logic
+        if (ConfigEntries.enableKnowledge && this.sorti_player != null) {
+            EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge();
+
+            result.removeIf(entry -> !knowledge.isKnown(entry.enchantment));
+            List<EnchantmentLevelEntry> list = new ArrayList<>();
+            for (EnchantmentLevelEntry entry : result)
+                list.add(new EnchantmentLevelEntry(entry.enchantment,
+                        Math.min(entry.level, knowledge.getKnownLevel(entry.enchantment))));
+            result = list;
+        }
 
         // Catalyst logic
         Map<Enchantment, Integer> enchants = EnchantingCatalyst.getEnchantments(this.sorti_catalyst.getStack(0));
@@ -149,32 +161,12 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
                 // Remove incompatible and duplicate enchants
                 result.removeIf(entry -> !entry.enchantment.canCombine(chosen));
-                /*
-                for (EnchantmentLevelEntry entry : original) {
-                    if (entry.enchantment == chosen && entry.level > lvl)
-                        lvl = entry.level;
-                    else if (entry.enchantment.canCombine(chosen))
-                        result.add(entry);
-                }*/
                 result.add(0, new EnchantmentLevelEntry(chosen, lvl));
 
                 // Slot was successfully catalyzed
                 this.sorti_catalyzed[slot] = 1;
                 this.enchantmentPower[slot] = power;
             }
-        }
-
-        // Knowledge logic
-        // TODO: configuration
-        if (true && this.sorti_player != null) {
-            EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge();
-
-            result.removeIf(entry -> !knowledge.isKnown(entry.enchantment));
-            List<EnchantmentLevelEntry> list = new ArrayList<>();
-            for (EnchantmentLevelEntry entry : result)
-                list.add(new EnchantmentLevelEntry(entry.enchantment,
-                        Math.min(entry.level, knowledge.getKnownLevel(entry.enchantment))));
-            result = list;
         }
 
         if (result.isEmpty()) this.enchantmentPower[slot] = 0;

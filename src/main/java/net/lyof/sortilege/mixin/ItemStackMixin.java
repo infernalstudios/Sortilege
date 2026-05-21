@@ -86,26 +86,6 @@ public abstract class ItemStackMixin {
             cir.setReturnValue(false);
     }
 
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
-    public void showEnchantLimit(@Nullable PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir,
-                                 @Local List<Text> list) {
-        ItemStack self = (ItemStack) (Object) this;
-
-        int a = ItemHelper.getUsedEnchantSlots(self);
-        int m = ItemHelper.getTotalEnchantSlots(self);
-
-        if ((a > 0 || ItemHelper.getExtraEnchantSlots(self) > 0 || ConfigEntries.alwaysShowEnchantLimit) &&
-                m > 0 && self.getItem().getEnchantability() > 0 && !self.isOf(Items.ENCHANTED_BOOK)) {
-
-            MutableText txt = Text.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
-                    a + "/" + m + " " + Text.translatable("sortilege.enchantments").getString());
-
-            if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
-                list.add(Text.empty());
-            list.add(txt.formatted(a >= m ? Formatting.RED : Formatting.WHITE));
-        }
-    }
-
     @WrapMethod(method = "getMaxCount")
     public int stackablePotions(Operation<Integer> original) {
         ItemStack self = (ItemStack) (Object) this;
@@ -143,8 +123,8 @@ public abstract class ItemStackMixin {
 
         if (user != null) {
             EnchantKnowledge knowledge = ((EnchantLearner) user).sorti_getKnowledge();
-            Sortilege.log(knowledge);
-            if (knowledge != null) knowledge.learn(self);
+            Sortilege.log(user.getWorld().isClient() + " " + knowledge);
+            if (knowledge != null && !user.getWorld().isClient()) knowledge.learn(self);
         }
 
         if (!PotionHelper.isPotionItem(self)) return original.call(world, user, hand);

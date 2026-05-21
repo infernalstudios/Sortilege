@@ -37,14 +37,13 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         for (int k = 0; k < 3; k++) {
             if (((EnchantInfoHolder) this.handler).sorti_isCatalyzed(k))
                 context.drawTexture(CATALYST_TEXTURE, i + 60, j + 14 + 19 * k, 36, 0, 108, 19);
-        }
 
-        if (((EnchantInfoHolder) this.handler).sorti_hasEnchantableItem() && ConfigEntries.overrideDefaultEnchanting
-                && !((EnchantInfoHolder) this.handler).sorti_hasCatalyst()
-                && this.isPointWithinBounds(60, 14, 108, 57, mouseX, mouseY)) {
-
-            context.drawTooltip(this.textRenderer, Text.translatable("sortilege.enchanting.requires_catalyst").formatted(Formatting.RED),
-                    mouseX, mouseY);
+            else if (this.handler.enchantmentPower[k] == 0 && ((EnchantInfoHolder) this.handler).sorti_hasEnchantableItem()
+                    && ConfigEntries.enableKnowledge
+                    && this.isPointWithinBounds(60, 14 + 19*k, 108, 18, mouseX, mouseY)) {
+                context.drawTooltip(this.textRenderer, Text.translatable("sortilege.enchanting.requires_catalyst").formatted(Formatting.RED),
+                        mouseX, mouseY);
+            }
         }
     }
 
@@ -59,10 +58,7 @@ public abstract class EnchantmentScreenMixin extends HandledScreen<EnchantmentSc
         int x = frame >= 9 ? 18 : 0;
         int y = (frame % 9) * 18;
 
-        context.getMatrices().push();
-        context.getMatrices().translate(0, 0, 200);
-        context.drawTexture(CATALYST_TEXTURE, i + 24, j + 19, x, y, 18, 18);
-        context.getMatrices().pop();
+        context.drawTexture(CATALYST_TEXTURE, i + 24, j + 19, 200, x, y, 18, 18, 256, 256);
     }
 
     @WrapOperation(method = "doTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/MathHelper;clamp(FFF)F"))

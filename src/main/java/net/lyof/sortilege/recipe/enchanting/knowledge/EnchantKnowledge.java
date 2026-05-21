@@ -2,11 +2,13 @@ package net.lyof.sortilege.recipe.enchanting.knowledge;
 
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
@@ -19,12 +21,17 @@ import java.util.List;
 import java.util.Map;
 
 public class EnchantKnowledge {
-    protected Map<Enchantment, Integer> known;
+    protected final Map<Enchantment, Integer> known;
     protected PlayerEntity player;
 
     public EnchantKnowledge(PlayerEntity player) {
         this.known = new HashMap<>();
         this.player = player;
+    }
+
+    public boolean isLearnable(ItemStack stack, Enchantment enchant, int value) {
+        if (stack.isOf(Items.ENCHANTED_BOOK) || !stack.hasNbt()/* || !stack.getNbt().getBoolean(ITEM_KEY)*/) return false;
+        return this.getKnownLevel(enchant) < value;
     }
 
     public void learn(ItemStack stack) {
@@ -41,13 +48,13 @@ public class EnchantKnowledge {
         else if (level > current) this.known.replace(enchant, level);
         else flag = false;
 
-        if (flag && !this.player.getWorld().isClient()) {
+        if (flag && this.player instanceof ServerPlayerEntity serverPlayer && serverPlayer.networkHandler != null) {
             PacketByteBuf packet = PacketByteBufs.create();
 
             packet.writeInt(Registries.ENCHANTMENT.getRawId(enchant));
             packet.writeInt(level);
 
-            ServerPlayNetworking.send((ServerPlayerEntity) this.player, ModPackets.LEARN_ENCHANTMENT, packet);
+            ServerPlayNetworking.send(serverPlayer, ModPackets.LEARN_ENCHANTMENT, packet);
         }
     }
 
@@ -67,7 +74,8 @@ public class EnchantKnowledge {
         return builder.append("}").toString();
     }
 
-    public static final String KEY = "sorti_EnchantKnowledge";
+    public static final String PLAYER_KEY = "sorti_EnchantKnowledge";
+    public static final String ITEM_KEY = "sorti_IsLearnable";
 
     public NbtCompound write(NbtCompound nbt) {
         for (Map.Entry<Enchantment, Integer> entry : this.known.entrySet())
@@ -77,9 +85,9 @@ public class EnchantKnowledge {
 
     public static EnchantKnowledge read(NbtCompound nbt, PlayerEntity player) {
         EnchantKnowledge self = new EnchantKnowledge(player);
-        if (!nbt.contains(KEY, NbtElement.COMPOUND_TYPE)) return self;
+        if (!nbt.contains(PLAYER_KEY, NbtElement.COMPOUND_TYPE)) return self;
 
-        nbt = nbt.getCompound(KEY);
+        nbt = nbt.getCompound(PLAYER_KEY);
         for (String enchant : nbt.getKeys())
             self.learn(Registries.ENCHANTMENT.get(new Identifier(enchant)), nbt.getInt(enchant));
 

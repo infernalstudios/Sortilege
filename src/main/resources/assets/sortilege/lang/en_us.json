@@ -11,6 +11,12 @@
 
   "sortilege.enchanting.requires_catalyst": "You must use a catalyst!",
 
+  "sortilege.enchantments": "Enchantments",
+  "item.sortilege.catalyst.desc": "When used to Enchant:",
+  "item.sortilege.learnable.desc": " (Learnable!)",
+
+  "sortilege.potion.drinking_time": "Takes %ss to drink",
+
   "tag.item.sortilege.is_limit_break_material": "Limit Break Material",
   "tag.item.sortilege.is_soulbind_material": "Soulbinding Material",
   "tag.item.sortilege.unbreakable": "Unbreakable",
@@ -77,15 +83,10 @@
   "enchantment.sortilege.storytelling_curse": "Curse of Storytelling",
   "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost.",
 
-  "sortilege.enchantments": "Enchantments",
-  "item.sortilege.catalyst.desc": "When used to Enchant:",
-
   "item.sortilege.witch_hat": "Witch Hat",
 
   "item.sortilege.antidote": "Antidote",
   "item.sortilege.antidote.cures": "Cures:",
-
-  "sortilege.potion.drinking_time": "Takes %ss to drink",
 
   "item.sortilege.limitite": "Limitite",
   "item.sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",

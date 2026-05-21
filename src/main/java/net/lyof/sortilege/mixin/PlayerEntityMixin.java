@@ -3,7 +3,6 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
@@ -127,11 +126,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
     @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
     private void writeCustom(NbtCompound nbt, CallbackInfo ci) {
         if (this.sorti_knowledge != null)
-            nbt.put(EnchantKnowledge.KEY, this.sorti_knowledge.write(new NbtCompound()));
+            nbt.put(EnchantKnowledge.PLAYER_KEY, this.sorti_knowledge.write(new NbtCompound()));
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
     private void readCustom(NbtCompound nbt, CallbackInfo ci) {
-        this.sorti_knowledge = EnchantKnowledge.read(nbt);
+        this.sorti_knowledge = EnchantKnowledge.read(nbt, (PlayerEntity) (Object) this);
     }
 }

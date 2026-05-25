@@ -17,6 +17,7 @@
     "EnchantRandomlyLootFunctionMixin",
     "EnchantWithLevelsLootFunctionMixin",
     "ExperienceOrbEntityMixin",
+    "GrindstoneScreenHandlerMixin",
     "ItemStackMixin",
     "LeveledCauldronBlockMixin",
     "LifecycledResourceManagerImplMixin",

@@ -15,6 +15,7 @@
     "EnchantmentHelperMixin",
     "EnchantmentScreenHandlerMixin",
     "EnchantRandomlyLootFunctionMixin",
+    "EnchantWithLevelsLootFunctionMixin",
     "ExperienceOrbEntityMixin",
     "ItemStackMixin",
     "LeveledCauldronBlockMixin",

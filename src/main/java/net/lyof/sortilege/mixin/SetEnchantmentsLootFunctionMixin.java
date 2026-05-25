@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class SetEnchantmentsLootFunctionMixin {
     @Inject(method = "process", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;set(Ljava/util/Map;Lnet/minecraft/item/ItemStack;)V"))
     private void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
-        if (Sortilege.log(ConfigEntries.enableKnowledge))
+        if (ConfigEntries.enableKnowledge)
             stack.getOrCreateNbt().putBoolean(EnchantKnowledge.ITEM_KEY, true);
     }
 }

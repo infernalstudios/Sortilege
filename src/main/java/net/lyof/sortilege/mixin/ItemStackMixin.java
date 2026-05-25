@@ -70,8 +70,6 @@ public abstract class ItemStackMixin {
 
             ci.cancel();
         }
-
-        Thread.dumpStack();
     }
 
     @ModifyReturnValue(method = "isIn", at = @At("RETURN"))

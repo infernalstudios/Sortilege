@@ -1,6 +1,5 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.minecraft.enchantment.Enchantment;
@@ -16,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EnchantRandomlyLootFunctionMixin {
     @Inject(method = "addEnchantmentToStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;addEnchantment(Lnet/minecraft/enchantment/Enchantment;I)V"))
     private static void makeLearnable(ItemStack stack, Enchantment enchantment, Random random, CallbackInfoReturnable<ItemStack> cir) {
-        if (ConfigEntries.enableKnowledge)
+        if (ConfigEntries.knowledgeEnabled)
             stack.getOrCreateNbt().putBoolean(EnchantKnowledge.ITEM_KEY, true);
     }
 }

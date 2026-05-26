@@ -94,7 +94,7 @@ public abstract class ItemStackMixin {
                                       List<Text> tooltip) {
         original.call(instance, (Consumer<? super Enchantment>) e -> {
             Consumer<? super Enchantment> a = action;
-            if (ConfigEntries.knowledgeTooltip && ConfigEntries.enableKnowledge && sorti_player instanceof EnchantLearner learner
+            if (ConfigEntries.knowledgeTooltip && ConfigEntries.knowledgeEnabled && sorti_player instanceof EnchantLearner learner
                     && sorti_stack != null
                     && learner.sorti_getKnowledge().isLearnable(sorti_stack, e, ItemHelper.getEnchantLevel(e, sorti_stack)))
                 a = a.andThen(i -> {

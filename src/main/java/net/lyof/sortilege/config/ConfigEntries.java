@@ -20,7 +20,7 @@ public class ConfigEntries {
         catalystTooltip = new ConfigEntry<>("enchantments.enchant_table.catalyst.show_in_tooltip", true).get();
         catalystOnly = new ConfigEntry<>("enchantments.enchant_table.catalyst.override_default", false).get();
 
-        enableKnowledge = new ConfigEntry<>("enchantments.enchant_table.knowledge.enable", true).get();
+        knowledgeEnabled = new ConfigEntry<>("enchantments.enchant_table.knowledge.enable", true).get();
         knowledgeTooltip = new ConfigEntry<>("enchantments.enchant_table.knowledge.show_in_tooltip", true).get();
 
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
@@ -119,7 +119,7 @@ public class ConfigEntries {
     public static boolean catalystTooltip;
     public static boolean catalystOnly;
 
-    public static boolean enableKnowledge;
+    public static boolean knowledgeEnabled;
     public static boolean knowledgeTooltip;
 
     public static boolean allowInventoryEnchanting;

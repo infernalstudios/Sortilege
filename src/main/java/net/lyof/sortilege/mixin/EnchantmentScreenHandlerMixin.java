@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
@@ -122,7 +121,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         List<EnchantmentLevelEntry> result = new ArrayList<>(original);
 
         // Knowledge logic
-        if (ConfigEntries.enableKnowledge && this.sorti_player != null) {
+        if (ConfigEntries.knowledgeEnabled && this.sorti_player != null) {
             EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge();
 
             result.removeIf(entry -> !knowledge.isKnown(entry.enchantment));

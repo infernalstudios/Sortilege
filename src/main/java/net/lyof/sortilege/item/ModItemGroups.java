@@ -11,6 +11,7 @@ public class ModItemGroups {
     public static void register() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.addAfter(Items.EXPERIENCE_BOTTLE, ModItems.LIMITITE);
+            if (ConfigEntries.knowledgeEnabled) entries.addAfter(Items.ENCHANTED_BOOK, ModItems.KNOWLEDGE_BOOK);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             if (ConfigEntries.lapisShieldEnabled) entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);

@@ -6,10 +6,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
-import net.lyof.sortilege.item.custom.AntidotePotionItem;
-import net.lyof.sortilege.item.custom.LapisShieldItem;
-import net.lyof.sortilege.item.custom.LimititeItem;
-import net.lyof.sortilege.item.custom.StaffItem;
+import net.lyof.sortilege.item.custom.*;
 import net.lyof.sortilege.item.custom.armor.ModArmorMaterials;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
@@ -28,23 +25,26 @@ public class ModItems {
             String id = pair.getFirst();
             ModConfig.StaffInfo staff = pair.getSecond();
             if (FabricLoader.getInstance().isModLoaded(staff.dependency))
-                STAFFS.add(register(id, new StaffItem(staff, new FabricItemSettings())));
+                STAFFS.add(register(true, id, new StaffItem(staff, new FabricItemSettings())));
         }
     }
 
-    public static Item register(String name, Item item) {
-        return Registry.register(Registries.ITEM, Sortilege.makeID(name), item);
+    public static Item register(boolean config, String name, Item item) {
+        return config ? Registry.register(Registries.ITEM, Sortilege.makeID(name), item) : Items.AIR;
     }
 
 
-    public static final Item LIMITITE = register("limitite", new LimititeItem(new FabricItemSettings()));
+    public static final Item LIMITITE = register(true, "limitite", new LimititeItem(new FabricItemSettings()));
 
-    public static final Item ANTIDOTE = ConfigEntries.antidoteEnabled ? register("antidote",
-            new AntidotePotionItem(new FabricItemSettings().maxCount(ConfigEntries.antidoteStackSize))) : Items.AIR;
+    public static final Item ANTIDOTE = register(ConfigEntries.antidoteEnabled, "antidote",
+            new AntidotePotionItem(new FabricItemSettings().maxCount(ConfigEntries.antidoteStackSize)));
 
-    public static final Item WITCH_HAT = ConfigEntries.witchHatEnabled ? register("witch_hat",
-            new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings())) : Items.AIR;
+    public static final Item WITCH_HAT = register(ConfigEntries.witchHatEnabled, "witch_hat",
+            new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings()));
 
-    public static final Item LAPIS_SHIELD = ConfigEntries.lapisShieldEnabled ? register("lapis_shield",
-            new LapisShieldItem(new FabricItemSettings().maxDamage(ConfigEntries.lapisShieldDurability))) : Items.AIR;
+    public static final Item LAPIS_SHIELD = register(ConfigEntries.lapisShieldEnabled, "lapis_shield",
+            new LapisShieldItem(new FabricItemSettings().maxDamage(ConfigEntries.lapisShieldDurability)));
+
+    public static final Item KNOWLEDGE_BOOK = register(ConfigEntries.knowledgeEnabled, "knowledge_book",
+            new KnowledgeBookItem(new FabricItemSettings().maxCount(1)));
 }

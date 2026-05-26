@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BrewingStandScreenHandlerPotionSlotMixin {
     @Inject(method = "matches", at = @At("HEAD"), cancellable = true)
     private static void matches(ItemStack stack, CallbackInfoReturnable<Boolean> cir){
-        for (BrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
-            if (recipe.isInput(stack)) cir.setReturnValue(true);
-        }
+        if (BetterBrewingRegistry.isInput(stack)) cir.setReturnValue(true);
     }
 }

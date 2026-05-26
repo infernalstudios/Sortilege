@@ -116,36 +116,36 @@ public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
             return recipe;
         }
 
-        public BrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            int type = packetByteBuf.readInt();
+        public BrewingRecipe read(Identifier identifier, PacketByteBuf packet) {
+            int type = packet.readInt();
             switch (type) {
                 case 0:
-                    Item ini = Registries.ITEM.get(packetByteBuf.readIdentifier());
-                    Item addi = Registries.ITEM.get(packetByteBuf.readIdentifier());
-                    Item outi = Registries.ITEM.get(packetByteBuf.readIdentifier());
+                    Item ini = Registries.ITEM.get(packet.readIdentifier());
+                    Item addi = Registries.ITEM.get(packet.readIdentifier());
+                    Item outi = Registries.ITEM.get(packet.readIdentifier());
                     return new ItemBrewingRecipe(ini, addi, outi, identifier);
                 case 1:
-                    Potion inp = Registries.POTION.get(packetByteBuf.readIdentifier());
-                    Item addp = Registries.ITEM.get(packetByteBuf.readIdentifier());
-                    Potion outp = Registries.POTION.get(packetByteBuf.readIdentifier());
+                    Potion inp = Registries.POTION.get(packet.readIdentifier());
+                    Item addp = Registries.ITEM.get(packet.readIdentifier());
+                    Potion outp = Registries.POTION.get(packet.readIdentifier());
                     return new PotionBrewingRecipe(inp, addp, outp, identifier);
                 default:
                     return null;
             }
         }
 
-        public void write(PacketByteBuf packetByteBuf, BrewingRecipe recipe) {
+        public void write(PacketByteBuf packet, BrewingRecipe recipe) {
             if (recipe instanceof ItemBrewingRecipe itemRecipe) {
-                packetByteBuf.writeInt(0);
-                packetByteBuf.writeIdentifier(Registries.ITEM.getId(itemRecipe.input));
-                packetByteBuf.writeIdentifier(Registries.ITEM.getId(itemRecipe.ingredient));
-                packetByteBuf.writeIdentifier(Registries.ITEM.getId(itemRecipe.output));
+                packet.writeInt(0);
+                packet.writeIdentifier(Registries.ITEM.getId(itemRecipe.input));
+                packet.writeIdentifier(Registries.ITEM.getId(itemRecipe.ingredient));
+                packet.writeIdentifier(Registries.ITEM.getId(itemRecipe.output));
             }
             else if (recipe instanceof PotionBrewingRecipe potionRecipe) {
-                packetByteBuf.writeInt(1);
-                packetByteBuf.writeIdentifier(Registries.POTION.getId(potionRecipe.input));
-                packetByteBuf.writeIdentifier(Registries.ITEM.getId(potionRecipe.ingredient));
-                packetByteBuf.writeIdentifier(Registries.POTION.getId(potionRecipe.output));
+                packet.writeInt(1);
+                packet.writeIdentifier(Registries.POTION.getId(potionRecipe.input));
+                packet.writeIdentifier(Registries.ITEM.getId(potionRecipe.ingredient));
+                packet.writeIdentifier(Registries.POTION.getId(potionRecipe.output));
             }
         }
     }

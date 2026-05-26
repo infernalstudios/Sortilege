@@ -14,9 +14,7 @@ public class BrewingStandBlockEntityMixin {
     @Inject(method = "isValid", at = @At("HEAD"), cancellable = true)
     public void isValid(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (slot != 3 && slot != 4) {
-            for (BrewingRecipe recipe : BetterBrewingRegistry.getAll()) {
-                if (recipe.isInput(stack)) cir.setReturnValue(true);
-            }
+            if (BetterBrewingRegistry.isInput(stack)) cir.setReturnValue(true);
         }
     }
 }

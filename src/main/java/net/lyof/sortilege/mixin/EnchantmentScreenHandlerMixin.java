@@ -122,7 +122,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
         // Knowledge logic
         if (ConfigEntries.knowledgeEnabled && this.sorti_player != null) {
-            EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge();
+            EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge(stack);
 
             result.removeIf(entry -> !knowledge.isKnown(entry.enchantment));
             List<EnchantmentLevelEntry> list = new ArrayList<>();

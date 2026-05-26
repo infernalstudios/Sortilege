@@ -15,7 +15,6 @@ public class GrindingSlot extends Slot {
     }
 
     public boolean canInsert(ItemStack stack) {
-        Sortilege.log(stack);
         return this.parent.canInsert(stack) || (ConfigEntries.knowledgeEnabled && stack.isOf(ModItems.KNOWLEDGE_BOOK));
     }
 }

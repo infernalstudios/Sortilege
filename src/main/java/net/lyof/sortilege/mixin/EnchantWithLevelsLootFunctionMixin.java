@@ -15,6 +15,6 @@ public class EnchantWithLevelsLootFunctionMixin {
     @Inject(method = "process", at = @At("HEAD"))
     private static void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
         if (ConfigEntries.knowledgeEnabled)
-            stack.getOrCreateNbt().putBoolean(EnchantKnowledge.ITEM_KEY, true);
+            stack.getOrCreateNbt().putBoolean(EnchantKnowledge.LEARNABLE_KEY, true);
     }
 }

@@ -15,6 +15,6 @@ public class SetEnchantmentsLootFunctionMixin {
     @Inject(method = "process", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;set(Ljava/util/Map;Lnet/minecraft/item/ItemStack;)V"))
     private void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
         if (ConfigEntries.knowledgeEnabled)
-            stack.getOrCreateNbt().putBoolean(EnchantKnowledge.ITEM_KEY, true);
+            stack.getOrCreateNbt().putBoolean(EnchantKnowledge.LEARNABLE_KEY, true);
     }
 }

@@ -16,6 +16,6 @@ public class EnchantRandomlyLootFunctionMixin {
     @Inject(method = "addEnchantmentToStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;addEnchantment(Lnet/minecraft/enchantment/Enchantment;I)V"))
     private static void makeLearnable(ItemStack stack, Enchantment enchantment, Random random, CallbackInfoReturnable<ItemStack> cir) {
         if (ConfigEntries.knowledgeEnabled)
-            stack.getOrCreateNbt().putBoolean(EnchantKnowledge.ITEM_KEY, true);
+            stack.getOrCreateNbt().putBoolean(EnchantKnowledge.LEARNABLE_KEY, true);
     }
 }

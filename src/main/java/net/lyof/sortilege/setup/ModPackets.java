@@ -26,11 +26,9 @@ public class ModPackets {
     public static final int INIT_CATALYST = 1;
     public static final int INIT_POTION = 2;
     public static final int INIT_LOCK = 3;
-    public static final int INIT_KNOWLEDGE = 4;
 
     public static final Identifier WISP_PARTICLE_DISPLAY = Sortilege.makeID("wisp_particle_display");
     public static final Identifier LAPIS_SHIELD_COOLDOWN = Sortilege.makeID("lapis_shield_cooldown");
-    public static final Identifier LEARN_ENCHANTMENT = Sortilege.makeID("learn_enchantment");
 
 
     public static class Client {
@@ -45,10 +43,6 @@ public class ModPackets {
                 CustomPotionData.read(buf);
             else if (eventType == INIT_LOCK)
                 RecipeLock.read(buf);
-            else if (eventType == INIT_KNOWLEDGE) {
-                EnchantKnowledge knowledge = EnchantKnowledge.read(buf, client.player);
-                client.execute(() -> ((EnchantLearner) client.player).sorti_setKnowledge(Sortilege.log(knowledge)));
-            }
         }
 
         public static void wispParticleDisplay(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
@@ -83,15 +77,6 @@ public class ModPackets {
                     LapisShieldItem.removeCooldown(stack);
                 else
                     LapisShieldItem.addCooldown(stack, cooldown);
-            });
-        }
-
-        public static void learnEnchantment(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
-            int enchant = buf.readInt();
-            int level = buf.readInt();
-
-            client.execute(() -> {
-                ((EnchantLearner) client.player).sorti_getKnowledge().learn(Registries.ENCHANTMENT.get(enchant), level);
             });
         }
     }

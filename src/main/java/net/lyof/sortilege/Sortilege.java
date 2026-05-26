@@ -69,7 +69,6 @@ public class Sortilege implements ModInitializer {
 			EnchantingCatalyst.write(packets);
 			CustomPotionData.write(packets);
 			RecipeLock.write(packets, player);
-			((EnchantLearner) player).sorti_getKnowledge().write(packets);
 
 			packets.forEach(p -> ServerPlayNetworking.send(player, ModPackets.INITIALIZE, p));
 		});

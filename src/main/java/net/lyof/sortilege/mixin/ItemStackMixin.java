@@ -121,12 +121,6 @@ public abstract class ItemStackMixin {
                                                   Operation<TypedActionResult<ItemStack>> original) {
         ItemStack self = (ItemStack) (Object) this;
 
-        if (user != null) {
-            EnchantKnowledge knowledge = ((EnchantLearner) user).sorti_getKnowledge();
-            Sortilege.log(user.getWorld().isClient() + " " + knowledge);
-            if (knowledge != null && !user.getWorld().isClient()) knowledge.learn(self);
-        }
-
         if (!PotionHelper.isPotionItem(self)) return original.call(world, user, hand);
         if (PotionCooldownManager.getProgress(self, user, 0) > 0) return TypedActionResult.fail(self);
 

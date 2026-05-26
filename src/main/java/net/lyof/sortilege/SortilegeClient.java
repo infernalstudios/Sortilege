@@ -43,6 +43,5 @@ public class SortilegeClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, ModPackets.Client::wispParticleDisplay);
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.LAPIS_SHIELD_COOLDOWN, ModPackets.Client::lapisShieldCooldown);
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.LEARN_ENCHANTMENT, ModPackets.Client::learnEnchantment);
     }
 }

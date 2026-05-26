@@ -93,16 +93,15 @@ public abstract class ItemStackMixin {
     private static void showLearnable(Optional<Enchantment> instance, Consumer<? super Enchantment> action, Operation<Void> original,
                                       List<Text> tooltip) {
         original.call(instance, (Consumer<? super Enchantment>) e -> {
-            Consumer<? super Enchantment> a = action;
-            if (ConfigEntries.knowledgeTooltip && ConfigEntries.knowledgeEnabled && sorti_player instanceof EnchantLearner learner
-                    && sorti_stack != null
-                    && learner.sorti_getKnowledge().isLearnable(sorti_stack, e, ItemHelper.getEnchantLevel(e, sorti_stack)))
-                a = a.andThen(i -> {
-                    Text text = Text.empty().append(tooltip.get(tooltip.size() - 1))
-                            .append(Text.translatable("item.sortilege.learnable.desc").formatted(Formatting.LIGHT_PURPLE));
-                    tooltip.set(tooltip.size() - 1, text);
-                });
-            a.accept(e);
+            action.accept(e);
+
+            if (ConfigEntries.knowledgeTooltip && sorti_player instanceof EnchantLearner learner && sorti_stack != null
+                    && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, ItemHelper.getEnchantLevel(e, sorti_stack))) {
+
+                Text text = Text.empty().append(tooltip.get(tooltip.size() - 1))
+                        .append(Text.translatable("item.sortilege.learnable.desc").formatted(Formatting.LIGHT_PURPLE));
+                tooltip.set(tooltip.size() - 1, text);
+            }
         });
     }
 

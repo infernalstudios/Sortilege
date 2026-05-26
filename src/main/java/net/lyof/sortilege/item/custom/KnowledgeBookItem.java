@@ -29,86 +29,47 @@ import java.util.List;
 import java.util.Map;
 
 public class KnowledgeBookItem extends Item {
-    protected final Map<Enchantment, Integer> known;
+    private static ItemStack knowledgeCacher = null;
+    private static EnchantKnowledge knowledge = null;
 
     public KnowledgeBookItem(Settings settings) {
         super(settings);
-        this.known = new HashMap<>();
     }
 
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext context) {
         super.appendTooltip(stack, level, list, context);
 
-        if (Screen.hasShiftDown())
-            list.add(Text.translatable("item.sortilege.knowledge_book.desc").formatted(Formatting.YELLOW));
-        else
+        if (Screen.hasShiftDown()) {
+            list.add(Text.translatable("item.sortilege.knowledge_book.desc0").formatted(Formatting.YELLOW));
+            list.add(Text.translatable("item.sortilege.knowledge_book.desc1").formatted(Formatting.YELLOW));
+        } else
             list.add(ItemHelper.getShiftTooltip());
-    }
 
-    /*
-    public boolean isLearnable(ItemStack stack, Enchantment enchant, int value) {
-        if (stack.isOf(Items.ENCHANTED_BOOK) || !stack.hasNbt() || !stack.getNbt().getBoolean(ITEM_KEY)) return false;
-        return this.getKnownLevel(enchant) < value;
-    }
-
-    public void learn(ItemStack stack) {
-        for (Map.Entry<Enchantment, Integer> entry : EnchantmentHelper.get(stack).entrySet())
-            this.learn(entry.getKey(), entry.getValue());
-    }
-
-    public void learn(Enchantment enchant, int level) {
-        if (enchant == null || level <= 0) return;
-
-        boolean flag = true;
-        int current = this.getKnownLevel(enchant);
-        if (current == 0) this.known.put(enchant, level);
-        else if (level > current) this.known.replace(enchant, level);
-        else flag = false;
-
-        if (flag && this.player instanceof ServerPlayerEntity serverPlayer && serverPlayer.networkHandler != null) {
-            PacketByteBuf packet = PacketByteBufs.create();
-
-            packet.writeInt(Registries.ENCHANTMENT.getRawId(enchant));
-            packet.writeInt(level);
-
-            ServerPlayNetworking.send(serverPlayer, ModPackets.LEARN_ENCHANTMENT, packet);
+        for (Map.Entry<Enchantment, Integer> entry : getKnowledge(stack).getEntries()) {
+            list.add(Text.of(entry.getKey().getTranslationKey() + " " + entry.getValue()));
         }
     }
 
-    public boolean isKnown(Enchantment enchant) {
-        return this.known.containsKey(enchant);
+    public static void learn(ItemStack self, ItemStack stack) {
+        EnchantKnowledge knowledge = getKnowledge(self);
+
+        for (Map.Entry<Enchantment, Integer> entry : stack.getItem() instanceof KnowledgeBookItem
+                ? getKnowledge(stack).getEntries() : EnchantmentHelper.get(stack).entrySet())
+            knowledge.learn(entry.getKey(), entry.getValue());
+
+        setKnowledge(self, knowledge);
     }
 
-    public int getKnownLevel(Enchantment enchant) {
-        return this.known.getOrDefault(enchant, 0);
+    public static EnchantKnowledge getKnowledge(ItemStack self) {
+        if (self == knowledgeCacher) return knowledge;
+
+        knowledge = EnchantKnowledge.read(self.getOrCreateNbt());
+        knowledgeCacher = self;
+        return knowledge;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder("EnchantKnowledge{known=");
-        for (Map.Entry<Enchantment, Integer> entry : this.known.entrySet())
-            builder.append(Registries.ENCHANTMENT.getId(entry.getKey()).toString()).append(": ").append(entry.getValue()).append(", ");
-        return builder.append("}").toString();
+    public static void setKnowledge(ItemStack self, EnchantKnowledge knowledge) {
+        self.getOrCreateNbt().put(EnchantKnowledge.KNOWLEDGE_KEY, knowledge.write(new NbtCompound()));
     }
-
-    public static final String BOOK_KEY = "sorti_EnchantKnowledge";
-    public static final String ITEM_KEY = "sorti_IsLearnable";
-
-    public NbtCompound write(NbtCompound nbt) {
-        for (Map.Entry<Enchantment, Integer> entry : this.known.entrySet())
-            nbt.putInt(Registries.ENCHANTMENT.getId(entry.getKey()).toString(), entry.getValue());
-        return nbt;
-    }
-
-    public static EnchantKnowledge read(NbtCompound nbt, PlayerEntity player) {
-        EnchantKnowledge self = new EnchantKnowledge(player);
-        if (!nbt.contains(BOOK_KEY, NbtElement.COMPOUND_TYPE)) return self;
-
-        nbt = nbt.getCompound(BOOK_KEY);
-        for (String enchant : nbt.getKeys())
-            self.learn(Registries.ENCHANTMENT.get(new Identifier(enchant)), nbt.getInt(enchant));
-
-        return self;
-    }*/
 }

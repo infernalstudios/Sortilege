@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
@@ -110,27 +111,28 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
         return original.call(stack, throwRandomly, retainOwnership);
     }
 
-
-    @Unique private EnchantKnowledge sorti_knowledge;
-
-    @Override
-    public EnchantKnowledge sorti_getKnowledge() {
-        return this.sorti_knowledge;
-    }
+    @Unique private ItemStack sorti_knowledgeCacher = null;
+    @Unique private EnchantKnowledge sorti_knowledge = null;
 
     @Override
-    public void sorti_setKnowledge(EnchantKnowledge knowledge) {
+    public EnchantKnowledge sorti_getKnowledge(ItemStack cacher) {
+        if (this.sorti_knowledgeCacher == cacher)
+            return this.sorti_knowledge;
+
+        EnchantKnowledge knowledge = new EnchantKnowledge();
+        PlayerEntity self = (PlayerEntity) (Object) this;
+
+        ItemStack stack;
+        for (int i = 0; i < self.getInventory().size(); i++) {
+            stack = self.getInventory().getStack(i);
+            if (stack.isOf(ModItems.KNOWLEDGE_BOOK)) {
+                knowledge.learn(stack);
+            }
+        }
         this.sorti_knowledge = knowledge;
-    }
+        this.sorti_knowledgeCacher = cacher;
+        // TODO: Trinkets compat
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeCustom(NbtCompound nbt, CallbackInfo ci) {
-        if (this.sorti_knowledge != null)
-            nbt.put(EnchantKnowledge.PLAYER_KEY, this.sorti_knowledge.write(new NbtCompound()));
-    }
-
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustom(NbtCompound nbt, CallbackInfo ci) {
-        this.sorti_knowledge = EnchantKnowledge.read(nbt, (PlayerEntity) (Object) this);
+        return this.sorti_knowledge;
     }
 }

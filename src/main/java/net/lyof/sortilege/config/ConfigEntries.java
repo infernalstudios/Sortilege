@@ -21,7 +21,7 @@ public class ConfigEntries {
         catalystOnly = new ConfigEntry<>("enchantments.enchant_table.catalyst.override_default", false).get();
 
         knowledgeEnabled = new ConfigEntry<>("enchantments.enchant_table.knowledge.enable", true).get();
-        knowledgeTooltip = new ConfigEntry<>("enchantments.enchant_table.knowledge.show_in_tooltip", true).get();
+        knowledgeTooltip = knowledgeEnabled && new ConfigEntry<>("enchantments.enchant_table.knowledge.show_in_tooltip", true).get();
 
         allowInventoryEnchanting = new ConfigEntry<>("enchantments.allow_inventory_enchanting", false).get();
         miningMasterIntegration = new ConfigEntry<>("enchantments.mining_master_integration", true).get();

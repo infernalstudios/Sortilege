@@ -1,7 +1,6 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
-import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,5 @@
 package net.lyof.sortilege.recipe.grinding;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
 import net.minecraft.item.ItemStack;

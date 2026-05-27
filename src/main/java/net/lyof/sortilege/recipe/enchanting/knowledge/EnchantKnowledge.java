@@ -1,23 +1,16 @@
 package net.lyof.sortilege.recipe.enchanting.knowledge;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
-import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EnchantKnowledge {
@@ -58,14 +51,6 @@ public class EnchantKnowledge {
 
     public int getKnownLevel(Enchantment enchant) {
         return this.known.getOrDefault(enchant, 0);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder("EnchantKnowledge{known=");
-        for (Map.Entry<Enchantment, Integer> entry : this.known.entrySet())
-            builder.append(Registries.ENCHANTMENT.getId(entry.getKey()).toString()).append(": ").append(entry.getValue()).append(", ");
-        return builder.append("}").toString();
     }
 
     public static final String KNOWLEDGE_KEY = "sorti_EnchantKnowledge";

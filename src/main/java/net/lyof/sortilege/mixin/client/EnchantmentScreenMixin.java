@@ -3,7 +3,6 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.util.inject.EnchantInfoHolder;
 import net.minecraft.client.gui.DrawContext;

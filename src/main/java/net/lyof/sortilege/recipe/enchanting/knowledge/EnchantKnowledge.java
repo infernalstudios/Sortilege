@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class EnchantKnowledge {
     protected final Map<Enchantment, Integer> known;
@@ -20,7 +21,7 @@ public class EnchantKnowledge {
         this.known = new HashMap<>();
     }
 
-    public Iterable<Map.Entry<Enchantment, Integer>> getEntries() {
+    public Set<Map.Entry<Enchantment, Integer>> getEntries() {
         return this.known.entrySet();
     }
 

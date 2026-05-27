@@ -40,7 +40,7 @@ public class KnowledgeBookItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if (!world.isClient())
+        if (!world.isClient() && !getKnowledge(stack).getEntries().isEmpty())
             user.openHandledScreen(new KnowledgeBookScreenFactory(stack));
         return TypedActionResult.success(stack, world.isClient());
     }

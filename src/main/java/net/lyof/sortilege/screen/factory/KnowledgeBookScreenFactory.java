@@ -6,6 +6,7 @@ import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,7 +22,7 @@ public class KnowledgeBookScreenFactory implements ExtendedScreenHandlerFactory 
 
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        Sortilege.log("Making buf");
+        buf.writeItemStack(this.stack);
     }
 
     @Override
@@ -31,6 +32,6 @@ public class KnowledgeBookScreenFactory implements ExtendedScreenHandlerFactory 
 
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inventory, PlayerEntity player) {
-        return new KnowledgeBookScreenHandler(syncId, inventory);
+        return new KnowledgeBookScreenHandler(syncId, inventory, ItemStack.EMPTY);
     }
 }

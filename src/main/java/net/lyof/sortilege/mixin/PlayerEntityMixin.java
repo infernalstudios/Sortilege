@@ -114,7 +114,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
 
     @Override
     public EnchantKnowledge sorti_getKnowledge(ItemStack cacher) {
-        if (this.sorti_knowledgeCacher == cacher)
+        if (cacher != null && this.sorti_knowledgeCacher == cacher)
             return this.sorti_knowledge;
 
         EnchantKnowledge knowledge = new EnchantKnowledge();

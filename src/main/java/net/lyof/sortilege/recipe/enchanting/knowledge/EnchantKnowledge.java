@@ -38,11 +38,9 @@ public class EnchantKnowledge {
     public void learn(Enchantment enchant, int level) {
         if (enchant == null || level <= 0) return;
 
-        boolean flag = true;
         int current = this.getKnownLevel(enchant);
         if (current == 0) this.known.put(enchant, level);
         else if (level > current) this.known.replace(enchant, level);
-        else flag = false;
     }
 
     public boolean isKnown(Enchantment enchant) {
@@ -71,5 +69,12 @@ public class EnchantKnowledge {
             self.learn(Registries.ENCHANTMENT.get(new Identifier(enchant)), nbt.getInt(enchant));
 
         return self;
+    }
+
+    @Override
+    public String toString() {
+        return "EnchantKnowledge{" +
+                known.entrySet().stream().map(entry -> entry.getKey().getTranslationKey() + " " + entry.getValue()).toList() +
+                '}';
     }
 }

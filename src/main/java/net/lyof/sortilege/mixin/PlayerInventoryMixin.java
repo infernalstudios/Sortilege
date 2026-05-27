@@ -24,7 +24,6 @@ import java.util.Map;
 @Mixin(value = PlayerInventory.class, priority = 1001)
 public abstract class PlayerInventoryMixin {
     @Shadow @Final public DefaultedList<ItemStack> main;
-
     @Shadow public abstract ItemStack getMainHandStack();
 
     @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))

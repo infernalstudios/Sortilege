@@ -4,12 +4,17 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.inject.EnchantInfoHolder;
+import net.minecraft.block.ChiseledBookshelfBlock;
+import net.minecraft.block.EnchantingTableBlock;
+import net.minecraft.block.entity.ChiseledBookshelfBlockEntity;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,6 +27,7 @@ import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -56,6 +62,7 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         }
     };
     @Unique private final int[] sorti_catalyzed = new int[3];
+    @Unique private EnchantKnowledge sorti_knowledge = null;
     @Unique private PlayerEntity sorti_player = null;
 
     @Override
@@ -76,28 +83,53 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
     @Inject(method = "<init>(ILnet/minecraft/entity/player/PlayerInventory;Lnet/minecraft/screen/ScreenHandlerContext;)V",
             at = @At(value = "TAIL"))
-    public void addCatalystSlot(int syncId, PlayerInventory inventory, ScreenHandlerContext context, CallbackInfo ci) {
+    public void setupLogics(int syncId, PlayerInventory inventory, ScreenHandlerContext context, CallbackInfo ci) {
         this.sorti_player = inventory.player;
 
-        if (EnchantingCatalyst.isDisabled())
-            return;
+        if (!EnchantingCatalyst.isDisabled()) {
+            this.addSlot(new Slot(this.sorti_catalyst, 0, 25, 20) {
+                @Override
+                public boolean canInsert(ItemStack stack) {
+                    return EnchantingCatalyst.isCatalyst(stack);
+                }
 
-        this.addSlot(new Slot(this.sorti_catalyst, 0, 25, 20){
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return EnchantingCatalyst.isCatalyst(stack);
-            }
+                @Override
+                public boolean isEnabled() {
+                    ItemStack stack = EnchantmentScreenHandlerMixin.this.inventory.getStack(0);
+                    return !stack.isEmpty() && stack.isEnchantable();
+                }
+            });
 
-            @Override
-            public boolean isEnabled() {
-                ItemStack stack = EnchantmentScreenHandlerMixin.this.inventory.getStack(0);
-                return !stack.isEmpty() && stack.isEnchantable();
-            }
-        });
+            this.addProperty(Property.create(this.sorti_catalyzed, 0));
+            this.addProperty(Property.create(this.sorti_catalyzed, 1));
+            this.addProperty(Property.create(this.sorti_catalyzed, 2));
+        }
+    }
 
-        this.addProperty(Property.create(this.sorti_catalyzed, 0));
-        this.addProperty(Property.create(this.sorti_catalyzed, 1));
-        this.addProperty(Property.create(this.sorti_catalyzed, 2));
+    @Inject(method = "onContentChanged", at = @At("HEAD"))
+    public void updateLogics(Inventory inventory, CallbackInfo ci) {
+        if (ConfigEntries.knowledgeEnabled) {
+            this.sorti_knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge(null);
+
+            this.context.run((world, pos) -> {
+                for (BlockPos p : EnchantingTableBlock.POWER_PROVIDER_OFFSETS) {
+                    if (!(world.getBlockEntity(pos.add(p)) instanceof ChiseledBookshelfBlockEntity bookshelf)) continue;
+
+                    ItemStack stack;
+                    for (int i = 0; i < ChiseledBookshelfBlockEntity.MAX_BOOKS; i++) {
+                        stack = bookshelf.getStack(i);
+                        if (stack.isOf(ModItems.KNOWLEDGE_BOOK)) this.sorti_knowledge.learn(stack);
+                    }
+                }
+            });
+        }
+
+        ItemStack stack = this.inventory.getStack(0);
+        if (stack.isEmpty() || !stack.isEnchantable()) {
+            this.sorti_catalyzed[0] = 0;
+            this.sorti_catalyzed[1] = 0;
+            this.sorti_catalyzed[2] = 0;
+        }
     }
 
     @Inject(method = "onClosed", at = @At("HEAD"))
@@ -121,14 +153,14 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
         List<EnchantmentLevelEntry> result = new ArrayList<>(original);
 
         // Knowledge logic
-        if (ConfigEntries.knowledgeEnabled && this.sorti_player != null) {
-            EnchantKnowledge knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge(stack);
+        if (ConfigEntries.knowledgeEnabled) {
+            Sortilege.log(this.sorti_knowledge);
 
-            result.removeIf(entry -> !knowledge.isKnown(entry.enchantment));
+            result.removeIf(entry -> !this.sorti_knowledge.isKnown(entry.enchantment));
             List<EnchantmentLevelEntry> list = new ArrayList<>();
             for (EnchantmentLevelEntry entry : result)
                 list.add(new EnchantmentLevelEntry(entry.enchantment,
-                        Math.min(entry.level, knowledge.getKnownLevel(entry.enchantment))));
+                        Math.min(entry.level, this.sorti_knowledge.getKnownLevel(entry.enchantment))));
             result = list;
         }
 
@@ -207,16 +239,6 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
             slot.onTakeItem(player, slot.getStack());
             cir.setReturnValue(ItemStack.EMPTY);
-        }
-    }
-
-    @Inject(method = "onContentChanged", at = @At("HEAD"))
-    public void updateCatalystOverlay(Inventory inventory, CallbackInfo ci) {
-        ItemStack stack = this.inventory.getStack(0);
-        if (stack.isEmpty() || !stack.isEnchantable()) {
-            this.sorti_catalyzed[0] = 0;
-            this.sorti_catalyzed[1] = 0;
-            this.sorti_catalyzed[2] = 0;
         }
     }
 }

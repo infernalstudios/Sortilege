@@ -122,7 +122,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         for (int i = 0; i < l; i++)
             context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
-        context.drawItem(this.bookCache, this.xoffset + 132, 35);
+        context.drawItem(this.bookCache, this.xoffset + 132, 32);
 
         //context.drawI
     }

@@ -13,6 +13,9 @@ public class ModItemGroups {
             entries.addAfter(Items.EXPERIENCE_BOTTLE, ModItems.LIMITITE);
             if (ConfigEntries.knowledgeEnabled) entries.addAfter(Items.ENCHANTED_BOOK, ModItems.KNOWLEDGE_BOOK);
         });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            if (ConfigEntries.knowledgeEnabled) entries.add(ModItems.KNOWLEDGE_BOOK);
+        });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             if (ConfigEntries.lapisShieldEnabled) entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);
             for (Item staff : ModItems.STAFFS)

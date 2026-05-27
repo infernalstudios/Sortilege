@@ -18,6 +18,7 @@ import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
+import net.lyof.sortilege.screen.ModScreenHandlers;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
@@ -48,6 +49,7 @@ public class Sortilege implements ModInitializer {
 
 		ModEnchants.register();
 		ModParticles.register();
+		ModScreenHandlers.register();
 
 		ModLootModifiers.register();
 		ModRecipeTypes.register();

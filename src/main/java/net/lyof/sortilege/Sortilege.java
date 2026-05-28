@@ -55,6 +55,7 @@ public class Sortilege implements ModInitializer {
 		ModRecipeTypes.register();
 
 		registerEvents();
+		registerPackets();
 	}
 
 	private static void registerEvents() {
@@ -72,6 +73,10 @@ public class Sortilege implements ModInitializer {
 
 			packets.forEach(p -> ServerPlayNetworking.send(player, ModPackets.INITIALIZE, p));
 		});
+	}
+
+	private static void registerPackets() {
+		ServerPlayNetworking.registerGlobalReceiver(ModPackets.SET_KNOWLEDGE_AUTHORS, ModPackets.Server::setKnowledgeAuthors);
 	}
 
 

@@ -1,10 +1,13 @@
 package net.lyof.sortilege.screen.custom;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.widget.AuthorsListWidget;
+import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
@@ -15,6 +18,7 @@ import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -64,6 +68,18 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     }
 
     @Override
+    public void close() {
+        List<String> authors = this.authorsList.validate();
+        KnowledgeBookItem.setAuthors(this.handler.stack, authors);
+
+        PacketByteBuf buf = PacketByteBufs.create();
+        buf.writeItemStack(this.handler.stack);
+        ClientPlayNetworking.send(ModPackets.SET_KNOWLEDGE_AUTHORS, buf);
+
+        super.close();
+    }
+
+    @Override
     protected void handledScreenTick() {
         super.handledScreenTick();
         this.authorsList.tick();
@@ -96,7 +112,11 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         } if (keyCode == 257 && this.pageIndex == 0) {  // Enter
             List<String> authors = this.authorsList.validate();
             KnowledgeBookItem.setAuthors(this.handler.stack, authors);
-            Sortilege.log(authors);
+
+            PacketByteBuf buf = PacketByteBufs.create();
+            buf.writeItemStack(this.handler.stack);
+            ClientPlayNetworking.send(ModPackets.SET_KNOWLEDGE_AUTHORS, buf);
+            return true;
         }
 
         if (this.authorsList.isActive())

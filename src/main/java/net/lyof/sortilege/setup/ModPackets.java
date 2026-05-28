@@ -4,18 +4,25 @@ import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
 
 public class ModPackets {
     public static final Identifier INITIALIZE = Sortilege.makeID("initalize");
@@ -26,6 +33,8 @@ public class ModPackets {
 
     public static final Identifier WISP_PARTICLE_DISPLAY = Sortilege.makeID("wisp_particle_display");
     public static final Identifier LAPIS_SHIELD_COOLDOWN = Sortilege.makeID("lapis_shield_cooldown");
+
+    public static final Identifier SET_KNOWLEDGE_AUTHORS = Sortilege.makeID("set_knowledge_authors");
 
 
     public static class Client {
@@ -74,6 +83,16 @@ public class ModPackets {
                     LapisShieldItem.removeCooldown(stack);
                 else
                     LapisShieldItem.addCooldown(stack, cooldown);
+            });
+        }
+    }
+
+    public static class Server {
+        public static void setKnowledgeAuthors(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender) {
+            List<String> authors = KnowledgeBookItem.getAuthors(buf.readItemStack());
+            server.execute(() -> {
+                if (handler.player.currentScreenHandler instanceof KnowledgeBookScreenHandler screen)
+                    KnowledgeBookItem.setAuthors(screen.stack, authors);
             });
         }
     }

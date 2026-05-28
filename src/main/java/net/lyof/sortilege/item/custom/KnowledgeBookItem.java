@@ -1,13 +1,16 @@
 package net.lyof.sortilege.item.custom;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
 import net.lyof.sortilege.util.ItemHelper;
+import net.minecraft.block.ChiseledBookshelfBlock;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -39,6 +42,10 @@ public class KnowledgeBookItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
+        if (!isAuthor(stack, user)/* && !FabricLoader.getInstance().isDevelopmentEnvironment()*/) {
+            user.sendMessage(Text.translatable("item.sortilege.knowledge_book.invalid").formatted(Formatting.YELLOW), true);
+            return TypedActionResult.success(stack);
+        }
         if (!world.isClient())
             user.openHandledScreen(new KnowledgeBookScreenFactory(stack));
         return TypedActionResult.success(stack, world.isClient());
@@ -53,6 +60,9 @@ public class KnowledgeBookItem extends Item {
             list.add(Text.translatable("item.sortilege.knowledge_book.desc1").formatted(Formatting.YELLOW));
         } else
             list.add(ItemHelper.getShiftTooltip());
+
+        if (!getAuthors(stack).isEmpty())
+            list.add(Text.translatable("book.byAuthor", getAuthors(stack).get(0)).formatted(Formatting.GRAY));
     }
 
     @Override
@@ -98,5 +108,9 @@ public class KnowledgeBookItem extends Item {
         NbtList list = new NbtList();
         for (String author : authors) list.add(NbtString.of(author));
         self.getOrCreateNbt().put(EnchantKnowledge.AUTHORS_KEY, list);
+    }
+
+    public static boolean isAuthor(ItemStack self, PlayerEntity player) {
+        return getAuthors(self).contains(player.getEntityName()) || getAuthors(self).isEmpty();
     }
 }

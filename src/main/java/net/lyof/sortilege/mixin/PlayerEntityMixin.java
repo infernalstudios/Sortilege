@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
@@ -123,9 +124,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
         ItemStack stack;
         for (int i = 0; i < self.getInventory().size(); i++) {
             stack = self.getInventory().getStack(i);
-            if (stack.isOf(ModItems.KNOWLEDGE_BOOK)) {
+            if (stack.isOf(ModItems.KNOWLEDGE_BOOK) && KnowledgeBookItem.isAuthor(stack, self))
                 knowledge.learn(stack);
-            }
         }
         this.sorti_knowledge = knowledge;
         this.sorti_knowledgeCacher = cacher;

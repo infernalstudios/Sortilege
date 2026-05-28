@@ -97,6 +97,7 @@
   "item.sortilege.knowledge_book": "Knowledge Book",
   "item.sortilege.knowledge_book.desc0": "Grind with loot items to learn their enchantments.",
   "item.sortilege.knowledge_book.desc1": "Hold in your inventory while enchanting to access.",
+  "item.sortilege.knowledge_book.invalid": "This book does not recognize you as its author.",
 
   "advancement.sortilege.get_wooden_staff": "You are a Wizard, {playerName}",
   "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",

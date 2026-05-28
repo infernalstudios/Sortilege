@@ -7,6 +7,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
@@ -117,7 +118,8 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
                     ItemStack stack;
                     for (int i = 0; i < ChiseledBookshelfBlockEntity.MAX_BOOKS; i++) {
                         stack = bookshelf.getStack(i);
-                        if (stack.isOf(ModItems.KNOWLEDGE_BOOK)) this.sorti_knowledge.learn(stack);
+                        if (stack.isOf(ModItems.KNOWLEDGE_BOOK) && KnowledgeBookItem.isAuthor(stack, sorti_player))
+                            this.sorti_knowledge.learn(stack);
                     }
                 }
             });
@@ -153,8 +155,6 @@ public abstract class EnchantmentScreenHandlerMixin extends ScreenHandler implem
 
         // Knowledge logic
         if (ConfigEntries.knowledgeEnabled) {
-            Sortilege.log(this.sorti_knowledge);
-
             result.removeIf(entry -> !this.sorti_knowledge.isKnown(entry.enchantment));
             List<EnchantmentLevelEntry> list = new ArrayList<>();
             for (EnchantmentLevelEntry entry : result)

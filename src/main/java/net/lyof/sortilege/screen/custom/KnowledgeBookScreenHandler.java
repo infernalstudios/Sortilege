@@ -1,5 +1,6 @@
 package net.lyof.sortilege.screen.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.screen.ModScreenHandlers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

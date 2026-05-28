@@ -30,6 +30,6 @@ public class KnowledgeBookScreenFactory implements ExtendedScreenHandlerFactory 
 
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inventory, PlayerEntity player) {
-        return new KnowledgeBookScreenHandler(syncId, inventory, ItemStack.EMPTY);
+        return new KnowledgeBookScreenHandler(syncId, inventory, this.stack);
     }
 }

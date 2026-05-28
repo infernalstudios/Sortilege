@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,22 +32,19 @@ public class AuthorsListWidget extends ScrollableWidget {
         this.widgets.clear();
 
         for (String author : authors) {
-            TextFieldWidget widget = new TextFieldWidget(this.textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
-                @Override
-                public int getY() {
-                    return super.getY() - (int) AuthorsListWidget.this.getScrollY();
-                }
-            };
-            widget.setFocusUnlocked(true);
-            widget.setEditableColor(-1);
-            widget.setUneditableColor(-1);
-            widget.setText(author);
+            this.widgets.add(makeTextField(author, y));
 
-            this.widgets.add(widget);
             y += BUTTON_SIZE;
         }
 
-        TextFieldWidget widget = new TextFieldWidget(textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
+        TextFieldWidget widget = makeTextField("", y);
+        widget.setFocused(true);
+
+        this.widgets.add(widget);
+    }
+
+    private @NotNull TextFieldWidget makeTextField(String author, int y) {
+        TextFieldWidget widget = new TextFieldWidget(this.textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
             @Override
             public int getY() {
                 return super.getY() - (int) AuthorsListWidget.this.getScrollY();
@@ -54,11 +52,11 @@ public class AuthorsListWidget extends ScrollableWidget {
         };
         widget.setFocusUnlocked(true);
         widget.setEditableColor(-1);
-        widget.setUneditableColor(-1);
-        widget.setText("");
-        widget.setFocused(true);
-
-        this.widgets.add(widget);
+        //widget.setUneditableColor(-1);
+        widget.setText(author);
+        if (y == this.getY() + 1 || author.equals(MinecraftClient.getInstance().player.getEntityName()))
+            widget.setEditable(false);
+        return widget;
     }
 
     @Override
@@ -120,7 +118,7 @@ public class AuthorsListWidget extends ScrollableWidget {
         this.setFocused(false);
         for (TextFieldWidget widget : this.widgets) {
             widget.setFocused(false);
-            if (widget.isMouseOver(mouseX, mouseY)) {
+            if (widget != this.widgets.get(0) && widget.isMouseOver(mouseX, mouseY)) {
                 widget.setFocused(true);
                 return widget.mouseClicked(mouseX, mouseY, button);
             }
@@ -136,7 +134,7 @@ public class AuthorsListWidget extends ScrollableWidget {
             Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
             if (w.isPresent()) {
                 int i = this.widgets.indexOf(w.get()) - 1;
-                if (i >= 0) {
+                if (i > 0) {
                     this.widgets.get(i).setFocused(true);
                     this.widgets.get(i + 1).setFocused(false);
                 }

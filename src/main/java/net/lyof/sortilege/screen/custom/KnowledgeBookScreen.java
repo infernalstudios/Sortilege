@@ -90,10 +90,10 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == 256) {
+        if (keyCode == 256) {  // Escape
             this.client.player.closeHandledScreen();
             return true;
-        } if (keyCode == 257 && this.pageIndex == 0) {
+        } if (keyCode == 257 && this.pageIndex == 0) {  // Enter
             List<String> authors = this.authorsList.validate();
             KnowledgeBookItem.setAuthors(this.handler.stack, authors);
             Sortilege.log(authors);

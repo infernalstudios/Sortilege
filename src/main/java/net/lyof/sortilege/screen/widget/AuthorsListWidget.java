@@ -131,7 +131,6 @@ public class AuthorsListWidget extends ScrollableWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        Sortilege.log(keyCode);
         boolean r = super.keyPressed(keyCode, scanCode, modifiers);
         if (keyCode == 265) {  // Up
             Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();

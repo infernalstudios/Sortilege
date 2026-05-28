@@ -107,6 +107,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     }
 
     public void drawPage(DrawContext context, int mouseX, int mouseY, float delta) {
+        // Build page cache if it changed
         if (this.pageIndex != this.previousPageIndex) {
             EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.handler.stack);
             Map.Entry<Enchantment, Integer> current = (Map.Entry<Enchantment, Integer>) knowledge.getEntries().toArray()[this.pageIndex];
@@ -128,10 +129,12 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         for (int i = 0; i < l; i++)
             context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
+        // Book display
         context.drawItem(this.bookCache, this.xoffset + 132, 32);
         if (this.isPointWithinBounds(this.xoffset + 132, 32, 16, 16, mouseX, mouseY))
             this.setFocused(this.bookCache);
 
+        // Compatible items list
         float scale = 0.75f;
 
         context.getMatrices().push();
@@ -177,6 +180,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
 
         context.getMatrices().pop();
 
+        // Me, forgetting to call super? Never
         for (Drawable drawable : ((ScreenAccessor) this).getDrawables())
             drawable.render(context, mouseX, mouseY, delta);
 

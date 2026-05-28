@@ -1,13 +1,10 @@
 package net.lyof.sortilege.item.custom;
 
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class KnowledgeBookItem extends Item {
     private static ItemStack knowledgeCacher = null;
@@ -84,6 +80,8 @@ public class KnowledgeBookItem extends Item {
     }
 
     public static void setKnowledge(ItemStack self, EnchantKnowledge knowledge) {
+        if (self == knowledgeCacher) knowledgeCacher = null;
+
         self.getOrCreateNbt().put(EnchantKnowledge.KNOWLEDGE_KEY, knowledge.write(new NbtCompound()));
     }
 
@@ -95,6 +93,8 @@ public class KnowledgeBookItem extends Item {
     }
 
     public static void setAuthors(ItemStack self, List<String> authors) {
+        if (self == knowledgeCacher) knowledgeCacher = null;
+
         NbtList list = new NbtList();
         for (String author : authors) list.add(NbtString.of(author));
         self.getOrCreateNbt().put(EnchantKnowledge.AUTHORS_KEY, list);

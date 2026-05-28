@@ -1,6 +1,7 @@
 package net.lyof.sortilege.screen.widget;
 
 import net.lyof.sortilege.Sortilege;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
@@ -10,19 +11,27 @@ import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AuthorsListWidget extends ScrollableWidget {
     public static final int BUTTON_SIZE = 12;
 
+    private final TextRenderer textRenderer;
     private final List<TextFieldWidget> widgets;
 
     public AuthorsListWidget(int x, int y, int width, int height, TextRenderer textRenderer, List<String> authors) {
         super(x, y, width, height, Text.empty());
-
-        y += 1;
+        this.textRenderer = textRenderer;
         this.widgets = new ArrayList<>();
+        this.build(authors);
+    }
+
+    public void build(List<String> authors) {
+        int y = this.getY() + 1;
+        this.widgets.clear();
+
         for (String author : authors) {
-            TextFieldWidget widget = new TextFieldWidget(textRenderer, x + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
+            TextFieldWidget widget = new TextFieldWidget(this.textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
                 @Override
                 public int getY() {
                     return super.getY() - (int) AuthorsListWidget.this.getScrollY();
@@ -32,12 +41,12 @@ public class AuthorsListWidget extends ScrollableWidget {
             widget.setEditableColor(-1);
             widget.setUneditableColor(-1);
             widget.setText(author);
-            
+
             this.widgets.add(widget);
             y += BUTTON_SIZE;
         }
 
-        TextFieldWidget widget = new TextFieldWidget(textRenderer, x + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
+        TextFieldWidget widget = new TextFieldWidget(textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
             @Override
             public int getY() {
                 return super.getY() - (int) AuthorsListWidget.this.getScrollY();
@@ -47,6 +56,7 @@ public class AuthorsListWidget extends ScrollableWidget {
         widget.setEditableColor(-1);
         widget.setUneditableColor(-1);
         widget.setText("");
+        widget.setFocused(true);
 
         this.widgets.add(widget);
     }
@@ -68,7 +78,7 @@ public class AuthorsListWidget extends ScrollableWidget {
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
-            this.drawBox(drawContext);
+            //this.drawBox(drawContext);
             drawContext.enableScissor(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1);
             this.renderContents(drawContext, mouseX, mouseY, partialTick);
             drawContext.disableScissor();
@@ -100,8 +110,14 @@ public class AuthorsListWidget extends ScrollableWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!super.mouseClicked(mouseX, mouseY, button)) return false;
+        boolean r = super.mouseClicked(mouseX, mouseY, button);
+        if (!r) return false;
+        if (!this.isWithinBounds(mouseX, mouseY)) {
+            this.setFocused(true);
+            return true;
+        }
 
+        this.setFocused(false);
         for (TextFieldWidget widget : this.widgets) {
             widget.setFocused(false);
             if (widget.isMouseOver(mouseX, mouseY)) {
@@ -115,14 +131,38 @@ public class AuthorsListWidget extends ScrollableWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers))
-            return true;
+        Sortilege.log(keyCode);
+        boolean r = super.keyPressed(keyCode, scanCode, modifiers);
+        if (keyCode == 265) {  // Up
+            Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
+            if (w.isPresent()) {
+                int i = this.widgets.indexOf(w.get()) - 1;
+                if (i >= 0) {
+                    this.widgets.get(i).setFocused(true);
+                    this.widgets.get(i + 1).setFocused(false);
+                }
+                return true;
+            }
+            return r;
+        }
+        if (keyCode == 264) {  // Down
+            Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
+            if (w.isPresent()) {
+                int i = this.widgets.indexOf(w.get()) + 1;
+                if (i < this.widgets.size()) {
+                    this.widgets.get(i).setFocused(true);
+                    this.widgets.get(i - 1).setFocused(false);
+                }
+                return true;
+            }
+            return r;
+        }
 
         for (TextFieldWidget widget : this.widgets) {
             if (widget.keyPressed(keyCode, scanCode, modifiers))
                 return true;
         }
-        return false;
+        return r;
     }
 
     @Override
@@ -138,10 +178,17 @@ public class AuthorsListWidget extends ScrollableWidget {
     }
 
     public List<String> validate() {
+        List<String> authors = new ArrayList<>();
+
         for (TextFieldWidget widget : this.widgets) {
-            Sortilege.log(widget.getText());
+            if (!widget.getText().isEmpty())
+                authors.add(widget.getText());
         }
-        // TODO yeet empty fields and add a new blank one if needed
-        return List.of();
+        String user = MinecraftClient.getInstance().player.getEntityName();
+        if (!authors.contains(user))
+            authors.add(user);
+
+        this.build(authors);
+        return authors;
     }
 }

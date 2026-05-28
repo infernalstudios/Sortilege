@@ -8,16 +8,13 @@ import net.lyof.sortilege.screen.widget.AuthorsListWidget;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.PageTurnWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -62,7 +59,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
                 button -> this.goToPreviousPage(), true));
         this.updatePageButtons();
 
-        this.authorsList = new AuthorsListWidget(this.x + this.xoffset + 36, this.y + 37, 114, 110,
+        this.authorsList = new AuthorsListWidget(this.x + this.xoffset + 36, this.y + 37, 104, 110,
                 this.textRenderer, KnowledgeBookItem.getAuthors(this.handler.stack));
     }
 
@@ -96,16 +93,14 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         if (keyCode == 256) {
             this.client.player.closeHandledScreen();
             return true;
+        } if (keyCode == 257 && this.pageIndex == 0) {
+            List<String> authors = this.authorsList.validate();
+            KnowledgeBookItem.setAuthors(this.handler.stack, authors);
+            Sortilege.log(authors);
         }
 
-        if (this.authorsList.isActive()) {
-            if (keyCode == 257) {
-                List<String> authors = this.authorsList.validate();
-                Sortilege.log(authors);
-            }
-
+        if (this.authorsList.isActive())
             return this.authorsList.keyPressed(keyCode, scanCode, modifiers);
-        }
 
         if (super.keyPressed(keyCode, scanCode, modifiers))
             return true;
@@ -126,9 +121,22 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.authorsList.isMouseOver(mouseX, mouseY))
-            return this.authorsList.mouseClicked(mouseX, mouseY, button);
-        return super.mouseClicked(mouseX, mouseY, button);
+        return this.authorsList.mouseClicked(mouseX, mouseY, button) || super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return this.authorsList.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return this.authorsList.mouseDragged(mouseX, mouseY, button, deltaX, deltaY) || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        return this.authorsList.mouseScrolled(mouseX, mouseY, amount) || super.mouseScrolled(mouseX, mouseY, amount);
     }
 
     @Override

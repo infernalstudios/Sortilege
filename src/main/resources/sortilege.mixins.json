@@ -46,7 +46,6 @@
     "defaultRequire": 1
   },
   "client": [
-    "accessor.HandledScreenAccessor",
     "accessor.ScreenAccessor",
     "client.AdvancementDisplayMixin",
     "client.AnvilScreenMixin",

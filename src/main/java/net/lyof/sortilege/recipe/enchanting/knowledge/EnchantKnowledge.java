@@ -53,6 +53,7 @@ public class EnchantKnowledge {
     }
 
     public static final String KNOWLEDGE_KEY = "sorti_EnchantKnowledge";
+    public static final String AUTHORS_KEY = "sorti_Authors";
     public static final String LEARNABLE_KEY = "sorti_IsLearnable";
 
     public NbtCompound write(NbtCompound nbt) {

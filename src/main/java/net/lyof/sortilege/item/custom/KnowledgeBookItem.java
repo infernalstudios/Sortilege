@@ -1,5 +1,6 @@
 package net.lyof.sortilege.item.custom;
 
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
 import net.lyof.sortilege.util.ItemHelper;
@@ -11,6 +12,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -18,12 +22,14 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class KnowledgeBookItem extends Item {
     private static ItemStack knowledgeCacher = null;
     private static EnchantKnowledge knowledge = null;
+    private static List<String> authors = null;
 
     public KnowledgeBookItem(Settings settings) {
         super(settings);
@@ -37,7 +43,7 @@ public class KnowledgeBookItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if (!world.isClient() && !getKnowledge(stack).getEntries().isEmpty())
+        if (!world.isClient())
             user.openHandledScreen(new KnowledgeBookScreenFactory(stack));
         return TypedActionResult.success(stack, world.isClient());
     }
@@ -53,25 +59,44 @@ public class KnowledgeBookItem extends Item {
             list.add(ItemHelper.getShiftTooltip());
     }
 
-    public static void learn(ItemStack self, ItemStack stack) {
-        EnchantKnowledge knowledge = getKnowledge(self);
+    @Override
+    public void onCraft(ItemStack stack, World world, PlayerEntity player) {
+        super.onCraft(stack, world, player);
+        setAuthors(stack, List.of(player.getEntityName()));
+    }
 
-        for (Map.Entry<Enchantment, Integer> entry : stack.getItem() instanceof KnowledgeBookItem
-                ? getKnowledge(stack).getEntries() : EnchantmentHelper.get(stack).entrySet())
-            knowledge.learn(entry.getKey(), entry.getValue());
+    private static void buildCache(ItemStack self) {
+        knowledgeCacher = self;
 
-        setKnowledge(self, knowledge);
+        knowledge = EnchantKnowledge.read(self.getOrCreateNbt());
+        authors = new ArrayList<>();
+        if (!self.getOrCreateNbt().contains(EnchantKnowledge.AUTHORS_KEY, NbtElement.LIST_TYPE))
+            return;
+        for (NbtElement elt : self.getNbt().getList(EnchantKnowledge.AUTHORS_KEY, NbtElement.STRING_TYPE))
+            authors.add(elt.asString());
     }
 
     public static EnchantKnowledge getKnowledge(ItemStack self) {
         if (self == knowledgeCacher) return knowledge;
+        buildCache(self);
 
-        knowledge = EnchantKnowledge.read(self.getOrCreateNbt());
-        knowledgeCacher = self;
         return knowledge;
     }
 
     public static void setKnowledge(ItemStack self, EnchantKnowledge knowledge) {
         self.getOrCreateNbt().put(EnchantKnowledge.KNOWLEDGE_KEY, knowledge.write(new NbtCompound()));
+    }
+
+    public static List<String> getAuthors(ItemStack self) {
+        if (self == knowledgeCacher) return authors;
+        buildCache(self);
+
+        return authors;
+    }
+
+    public static void setAuthors(ItemStack self, List<String> authors) {
+        NbtList list = new NbtList();
+        for (String author : authors) list.add(NbtString.of(author));
+        self.getOrCreateNbt().put(EnchantKnowledge.AUTHORS_KEY, list);
     }
 }

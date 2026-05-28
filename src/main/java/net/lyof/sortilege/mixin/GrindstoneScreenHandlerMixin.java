@@ -22,6 +22,8 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
 
@@ -48,8 +50,8 @@ public abstract class GrindstoneScreenHandlerMixin extends ScreenHandler {
         return slot.inventory == this.input ? original.call(instance, new GrindingSlot(slot)) : original.call(instance, slot);
     }
 
-    @WrapMethod(method = "updateResult")
-    private void updateLearningResult(Operation<Void> original) {
+    @Inject(method = "updateResult", at = @At("HEAD"), cancellable = true)
+    private void updateLearningResult(CallbackInfo ci) {
         if (ConfigEntries.knowledgeEnabled) {
             ItemStack[] stacks = new ItemStack[2];
             stacks[0] = this.input.getStack(0);
@@ -57,9 +59,13 @@ public abstract class GrindstoneScreenHandlerMixin extends ScreenHandler {
 
             if (stacks[0].isOf(ModItems.KNOWLEDGE_BOOK) && stacks[1].isOf(ModItems.KNOWLEDGE_BOOK)) {
                 ItemStack result = stacks[0].copy();
-                KnowledgeBookItem.learn(result, stacks[1]);
+                EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(result);
+                for (Map.Entry<Enchantment, Integer> entry : KnowledgeBookItem.getKnowledge(stacks[1]).getEntries())
+                    knowledge.learn(entry.getKey(), entry.getValue());
+                KnowledgeBookItem.setKnowledge(result, knowledge);
                 this.result.setStack(0, result);
                 this.sendContentUpdates();
+                ci.cancel();
                 return;
             }
 
@@ -84,11 +90,9 @@ public abstract class GrindstoneScreenHandlerMixin extends ScreenHandler {
                     KnowledgeBookItem.setKnowledge(result, knowledge);
                     this.result.setStack(0, result);
                     this.sendContentUpdates();
-                    return;
+                    ci.cancel();
                 }
             }
         }
-
-        original.call();
     }
 }

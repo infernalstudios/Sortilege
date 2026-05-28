@@ -4,16 +4,20 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.screen.widget.AuthorsListWidget;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.screen.ingame.AnvilScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.PageTurnWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -31,6 +35,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     private final int pageCount;
     private PageTurnWidget nextPageButton;
     private PageTurnWidget previousPageButton;
+    private AuthorsListWidget authorsList;
 
     private int previousPageIndex;
     private List<OrderedText> pageCache;
@@ -56,6 +61,15 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         this.previousPageButton = this.addDrawableChild(new PageTurnWidget(this.xoffset + 43 + this.x, this.y + 159, false,
                 button -> this.goToPreviousPage(), true));
         this.updatePageButtons();
+
+        this.authorsList = new AuthorsListWidget(this.x + this.xoffset + 36, this.y + 37, 114, 110,
+                this.textRenderer, KnowledgeBookItem.getAuthors(this.handler.stack));
+    }
+
+    @Override
+    protected void handledScreenTick() {
+        super.handledScreenTick();
+        this.authorsList.tick();
     }
 
     protected void goToPreviousPage() {
@@ -66,22 +80,36 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     }
 
     protected void goToNextPage() {
-        if (this.pageIndex < this.pageCount - 1)
+        if (this.pageIndex < this.pageCount)
             ++this.pageIndex;
 
         this.updatePageButtons();
     }
 
     private void updatePageButtons() {
-        this.nextPageButton.visible = this.pageIndex < this.pageCount - 1;
+        this.nextPageButton.visible = this.pageIndex < this.pageCount;
         this.previousPageButton.visible = this.pageIndex > 0;
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+        if (keyCode == 256) {
+            this.client.player.closeHandledScreen();
             return true;
-        } else {
+        }
+
+        if (this.authorsList.isActive()) {
+            if (keyCode == 257) {
+                List<String> authors = this.authorsList.validate();
+                Sortilege.log(authors);
+            }
+
+            return this.authorsList.keyPressed(keyCode, scanCode, modifiers);
+        }
+
+        if (super.keyPressed(keyCode, scanCode, modifiers))
+            return true;
+        else {
             return switch (keyCode) {
                 case 266 -> {
                     this.previousPageButton.onPress();
@@ -96,6 +124,20 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         }
     }
 
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.authorsList.isMouseOver(mouseX, mouseY))
+            return this.authorsList.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if (this.authorsList.isActive())
+            return this.authorsList.charTyped(chr, modifiers);
+        return super.charTyped(chr, modifiers);
+    }
+
     public void setFocused(ItemStack stack) {
         this.handler.inventory.setStack(0, stack);
         this.focusedSlot = this.handler.getSlot(0);
@@ -106,11 +148,15 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         context.drawTexture(BOOK_TEXTURE, this.xoffset, 2, 0, 0, 192, 192);
     }
 
+    public void drawAuthorsPage(DrawContext context, int mouseX, int mouseY, float delta) {
+        this.authorsList.render(context, mouseX, mouseY, delta);
+    }
+
     public void drawPage(DrawContext context, int mouseX, int mouseY, float delta) {
         // Build page cache if it changed
         if (this.pageIndex != this.previousPageIndex) {
             EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.handler.stack);
-            Map.Entry<Enchantment, Integer> current = (Map.Entry<Enchantment, Integer>) knowledge.getEntries().toArray()[this.pageIndex];
+            Map.Entry<Enchantment, Integer> current = (Map.Entry<Enchantment, Integer>) knowledge.getEntries().toArray()[this.pageIndex - 1];
 
             MutableText content = Text.empty()
                     .append(((MutableText) current.getKey().getName(current.getValue())).formatted(Formatting.BLACK));
@@ -134,7 +180,6 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         if (this.isPointWithinBounds(this.xoffset + 132, 32, 16, 16, mouseX, mouseY))
             this.setFocused(this.bookCache);
 
-        // Compatible items list
         float scale = 0.75f;
 
         context.getMatrices().push();
@@ -151,8 +196,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
             if (i > 114/scale/16 - 1) {
                 j++;
                 i = 0;
-            }
-            if (42 + l*9 + j*16*scale > 130 && i > 114/scale/16 - 4) {
+            } if (42 + l*9 + j*16*scale > 130 && i > 114/scale/16 - 4) {
                 context.drawTexture(BOOK_TEXTURE, (int) ((this.xoffset + 36)/scale) + i*16, (int) ((42 + l*9)/scale) + j*16,
                         0, 192, 48, 16);
                 break;
@@ -170,15 +214,18 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         this.drawBackground(context, delta, mouseX, mouseY);
 
         // Page X of X
-        Text pageIndexText = Text.translatable("book.pageIndicator", this.pageIndex + 1, Math.max(this.pageCount, 1));
+        Text pageIndexText = Text.translatable("book.pageIndicator", this.pageIndex + 1, Math.max(this.pageCount + 1, 1));
         int k = this.textRenderer.getWidth(pageIndexText);
         context.drawText(this.textRenderer, pageIndexText, this.xoffset - k + 192 - 44, 18, 0, false);
 
         this.focusedSlot = null;
+        this.authorsList.setVisible(this.pageIndex == 0);
 
-        this.drawPage(context, mouseX, mouseY, delta);
+        if (this.pageIndex != 0) this.drawPage(context, mouseX, mouseY, delta);
 
         context.getMatrices().pop();
+
+        if (this.pageIndex == 0) this.drawAuthorsPage(context, mouseX, mouseY, delta);
 
         // Me, forgetting to call super? Never
         for (Drawable drawable : ((ScreenAccessor) this).getDrawables())

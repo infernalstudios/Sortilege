@@ -12,7 +12,6 @@ import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.inject.EnchantInfoHolder;
-import net.minecraft.block.ChiseledBookshelfBlock;
 import net.minecraft.block.EnchantingTableBlock;
 import net.minecraft.block.entity.ChiseledBookshelfBlockEntity;
 import net.minecraft.enchantment.Enchantment;

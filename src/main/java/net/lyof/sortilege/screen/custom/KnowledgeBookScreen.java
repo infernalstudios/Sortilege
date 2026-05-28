@@ -1,11 +1,10 @@
 package net.lyof.sortilege.screen.custom;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
-import net.minecraft.client.font.TextRenderer;
+import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -23,7 +22,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandler> {
     public static final Identifier BOOK_TEXTURE = Sortilege.makeID("textures/gui/knowledge_book.png");
@@ -37,12 +35,13 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     private int previousPageIndex;
     private List<OrderedText> pageCache;
     private ItemStack bookCache;
+    private Enchantment enchantCache;
 
     public KnowledgeBookScreen(KnowledgeBookScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
         this.backgroundHeight = 192;
         this.pageIndex = 0;
-        this.pageCount = KnowledgeBookItem.getKnowledge(handler.getStack()).getEntries().size();
+        this.pageCount = KnowledgeBookItem.getKnowledge(handler.stack).getEntries().size();
 
         this.previousPageIndex = -1;
     }
@@ -97,6 +96,11 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         }
     }
 
+    public void setFocused(ItemStack stack) {
+        this.handler.inventory.setStack(0, stack);
+        this.focusedSlot = this.handler.getSlot(0);
+    }
+
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         context.drawTexture(BOOK_TEXTURE, this.xoffset, 2, 0, 0, 192, 192);
@@ -104,16 +108,18 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
 
     public void drawPage(DrawContext context, int mouseX, int mouseY, float delta) {
         if (this.pageIndex != this.previousPageIndex) {
-            EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.handler.getStack());
+            EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.handler.stack);
             Map.Entry<Enchantment, Integer> current = (Map.Entry<Enchantment, Integer>) knowledge.getEntries().toArray()[this.pageIndex];
 
             MutableText content = Text.empty()
                     .append(((MutableText) current.getKey().getName(current.getValue())).formatted(Formatting.BLACK));
-            content.append("\n")
-                    .append(Text.translatableWithFallback(current.getKey().getTranslationKey() + ".desc", "").formatted(Formatting.GRAY));
+            MutableText desc = Text.translatableWithFallback(current.getKey().getTranslationKey() + ".desc", "");
+            content.append("\n").append(desc.formatted(Formatting.GRAY));
+            if (!desc.getString().isEmpty()) content.append("\n");
 
             this.pageCache = this.textRenderer.wrapLines(content, 114);
             this.bookCache = EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(current.getKey(), current.getValue()));
+            this.enchantCache = current.getKey();
             this.previousPageIndex = this.pageIndex;
         }
 
@@ -123,8 +129,34 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
             context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
         context.drawItem(this.bookCache, this.xoffset + 132, 32);
+        if (this.isPointWithinBounds(this.xoffset + 132, 32, 16, 16, mouseX, mouseY))
+            this.setFocused(this.bookCache);
 
-        //context.drawI
+        float scale = 0.75f;
+
+        context.getMatrices().push();
+        context.getMatrices().scale(scale, scale, 1);
+
+        int i = 0; int j = 0;
+        for (ItemStack stack : ItemHelper.getCompatibleStacks(this.enchantCache)) {
+            context.drawItem(stack, (int) ((this.xoffset + 36)/scale) + i*16, (int) ((42 + l*9)/scale) + j*16);
+            if (this.isPointWithinBounds((int) (this.xoffset + 36 + i*16*scale), (int) (42 + l*9 + j*16*scale),
+                    (int) (16*scale), (int) (16*scale), mouseX, mouseY))
+                this.setFocused(stack);
+
+            i++;
+            if (i > 114/scale/16 - 1) {
+                j++;
+                i = 0;
+            }
+            if (j > (6 - l)/scale && i > 114/scale/16 - 4) {
+                context.drawTexture(BOOK_TEXTURE, (int) ((this.xoffset + 36)/scale) + i*16, (int) ((42 + l*9)/scale) + j*16,
+                        0, 192, 48, 16);
+                break;
+            }
+        }
+
+        context.getMatrices().pop();
     }
 
     @Override
@@ -139,7 +171,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         int k = this.textRenderer.getWidth(pageIndexText);
         context.drawText(this.textRenderer, pageIndexText, this.xoffset - k + 192 - 44, 18, 0, false);
 
-        //context.drawText(this.textRenderer, this.title, this.titleX, this.titleY, 4210752, false);
+        this.focusedSlot = null;
 
         this.drawPage(context, mouseX, mouseY, delta);
 
@@ -147,5 +179,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
 
         for (Drawable drawable : ((ScreenAccessor) this).getDrawables())
             drawable.render(context, mouseX, mouseY, delta);
+
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 }

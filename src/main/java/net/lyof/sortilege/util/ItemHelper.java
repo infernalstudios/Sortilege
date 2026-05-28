@@ -15,10 +15,39 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ItemHelper {
+    private static final Map<Enchantment, List<ItemStack>> ENCHANT_TARGETS = new HashMap<>();
+
+    public static void clear() {
+        ENCHLIMIT_CACHE.clear();
+        ENCHANT_TARGETS.clear();
+    }
+
+    public static void load() {
+        Thread enchantCaching = new Thread(() -> {
+            for (Enchantment enchant : Registries.ENCHANTMENT) {
+                List<ItemStack> stacks = new ArrayList<>();
+                for (Item item : Registries.ITEM) {
+                    ItemStack stack = item.getDefaultStack();
+                    if (enchant.isAcceptableItem(stack)) stacks.add(stack);
+                }
+                ENCHANT_TARGETS.put(enchant, stacks);
+            }
+        });
+        enchantCaching.start();
+    }
+
+
+    public static List<ItemStack> getCompatibleStacks(Enchantment enchant) {
+        return ENCHANT_TARGETS.getOrDefault(enchant, List.of());
+    }
+
+
     public static int getEnchantLevel(@Nullable Enchantment enchant, ItemStack item) {
         if (enchant == null) return 0;
         return EnchantmentHelper.getLevel(enchant, item);
@@ -30,7 +59,7 @@ public class ItemHelper {
 
 
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
-    public static final Map<Item, Integer> ENCHLIMIT_CACHE = new HashMap<>();
+    private static final Map<Item, Integer> ENCHLIMIT_CACHE = new HashMap<>();
 
     public static int getUsedEnchantSlots(ItemStack stack) {
         int l = 0;

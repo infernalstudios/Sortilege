@@ -5,7 +5,6 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
-import net.minecraft.screen.ScreenHandlerType;
 
 public class ModScreenHandlers {
     public static void register() {}

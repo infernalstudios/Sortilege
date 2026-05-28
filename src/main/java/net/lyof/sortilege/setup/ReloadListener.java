@@ -41,6 +41,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                     new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
         }
 
+        ItemHelper.load();
         PotionHelper.load();
 
         for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
@@ -71,7 +72,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
     public void preload(ResourceManager manager) {
         ModConfig.register();
 
-        ItemHelper.ENCHLIMIT_CACHE.clear();
+        ItemHelper.clear();
         RecipeLock.clear();
         PotionHelper.clear();
         BetterBrewingRegistry.clear();
@@ -106,8 +107,6 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
     }
 
     public void reloadClient() {
-        ItemHelper.ENCHLIMIT_CACHE.clear();
-
         RecipeLock.clear();
         for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
             RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
@@ -116,6 +115,9 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
 
         EnchantingCatalyst.clear();
         CustomPotionData.clear();
+
+        ItemHelper.clear();
+        ItemHelper.load();
 
         PotionHelper.clear();
         PotionHelper.load();

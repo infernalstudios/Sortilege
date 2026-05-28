@@ -24,21 +24,24 @@ public class PotionHelper {
     }
 
     public static void load() {
-        for (Potion potion : Registries.POTION) {
-            if (potion.getEffects().size() == 1 &&
-                    !potion.hasInstantEffect() &&
-                    potion.getEffects().get(0).getAmplifier() == 0 &&
-                    !ConfigEntries.antidoteBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString())) {
+        Thread potionMapping = new Thread(() -> {
+            for (Potion potion : Registries.POTION) {
+                if (potion.getEffects().size() == 1 &&
+                        !potion.hasInstantEffect() &&
+                        potion.getEffects().get(0).getAmplifier() == 0 &&
+                        !ConfigEntries.antidoteBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString())) {
 
-                StatusEffect effect = potion.getEffects().get(0).getEffectType();
-                int duration = potion.getEffects().get(0).getDuration();
+                    StatusEffect effect = potion.getEffects().get(0).getEffectType();
+                    int duration = potion.getEffects().get(0).getDuration();
 
-                if (!POTIONS.containsKey(effect))
-                    POTIONS.put(effect, potion);
-                else if (POTIONS.get(effect).getEffects().get(0).getDuration() > duration)
-                    POTIONS.replace(effect, potion);
+                    if (!POTIONS.containsKey(effect))
+                        POTIONS.put(effect, potion);
+                    else if (POTIONS.get(effect).getEffects().get(0).getDuration() > duration)
+                        POTIONS.replace(effect, potion);
+                }
             }
-        }
+        });
+        potionMapping.start();
 
         for (Potion potion : POTIONS.values()) {
             if (!ConfigEntries.swampHutBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString()))

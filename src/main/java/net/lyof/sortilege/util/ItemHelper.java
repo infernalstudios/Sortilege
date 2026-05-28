@@ -47,6 +47,10 @@ public class ItemHelper {
         return ENCHANT_TARGETS.getOrDefault(enchant, List.of());
     }
 
+    public static int getEnchantCount() {
+        return ENCHANT_TARGETS.size();
+    }
+
 
     public static int getEnchantLevel(@Nullable Enchantment enchant, ItemStack item) {
         if (enchant == null) return 0;

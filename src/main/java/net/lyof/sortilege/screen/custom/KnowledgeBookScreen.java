@@ -204,7 +204,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
             context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
         // Book display
-        context.drawItem(this.bookCache, this.xoffset + 132, 32);
+        context.drawItem(this.bookCache, this.xoffset + 36, 18);
         if (this.isPointWithinBounds(this.xoffset + 132, 32, 16, 16, mouseX, mouseY))
             this.setFocused(this.bookCache);
 

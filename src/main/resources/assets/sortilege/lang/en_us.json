@@ -81,7 +81,7 @@
   "enchantment.sortilege.soulbound": "Soulbound",
   "enchantment.sortilege.soulbound.desc": "Stays after death.",
   "enchantment.sortilege.storytelling_curse": "Curse of Storytelling",
-  "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost.",
+  "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost. Ever.",
 
   "item.sortilege.witch_hat": "Witch Hat",
 
@@ -98,6 +98,7 @@
   "item.sortilege.knowledge_book.desc0": "Grind with loot items to learn their enchantments.",
   "item.sortilege.knowledge_book.desc1": "Hold in your inventory while enchanting to access.",
   "item.sortilege.knowledge_book.invalid": "This book does not recognize you as its author.",
+  "item.sortilege.knowledge_book.completion": "Learnt: %s/%s",
 
   "advancement.sortilege.get_wooden_staff": "You are a Wizard, {playerName}",
   "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",

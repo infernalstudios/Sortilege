@@ -3,6 +3,7 @@ package net.lyof.sortilege.item;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
+import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.Items;
@@ -11,10 +12,10 @@ public class ModItemGroups {
     public static void register() {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.addAfter(Items.EXPERIENCE_BOTTLE, ModItems.LIMITITE);
-            if (ConfigEntries.knowledgeEnabled) entries.addAfter(Items.ENCHANTED_BOOK, ModItems.KNOWLEDGE_BOOK);
+            KnowledgeBookItem.fillItemGroup(entries, Items.ENCHANTED_BOOK);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
-            if (ConfigEntries.knowledgeEnabled) entries.addAfter(Items.WRITABLE_BOOK, ModItems.KNOWLEDGE_BOOK);
+            KnowledgeBookItem.fillItemGroup(entries, Items.WRITABLE_BOOK);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {
             if (ConfigEntries.lapisShieldEnabled) entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);

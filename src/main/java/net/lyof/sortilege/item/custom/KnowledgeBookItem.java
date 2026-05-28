@@ -51,10 +51,6 @@ public class KnowledgeBookItem extends Item {
             list.add(Text.translatable("item.sortilege.knowledge_book.desc1").formatted(Formatting.YELLOW));
         } else
             list.add(ItemHelper.getShiftTooltip());
-
-        for (Map.Entry<Enchantment, Integer> entry : getKnowledge(stack).getEntries()) {
-            list.add(Text.of(entry.getKey().getTranslationKey() + " " + entry.getValue()));
-        }
     }
 
     public static void learn(ItemStack self, ItemStack stack) {

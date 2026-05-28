@@ -152,7 +152,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
                 j++;
                 i = 0;
             }
-            if (j > (6 - l)/scale && i > 114/scale/16 - 4) {
+            if (42 + l*9 + j*16*scale > 130 && i > 114/scale/16 - 4) {
                 context.drawTexture(BOOK_TEXTURE, (int) ((this.xoffset + 36)/scale) + i*16, (int) ((42 + l*9)/scale) + j*16,
                         0, 192, 48, 16);
                 break;

@@ -1,6 +1,7 @@
 package net.lyof.sortilege.screen.widget;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.mixin.accessor.TextFieldWidgetAccessor;
 import net.lyof.sortilege.screen.PlainDrawContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -57,8 +59,8 @@ public class AuthorsListWidget extends ScrollableWidget {
         };
         widget.setFocusUnlocked(true);
         widget.setDrawsBackground(false);
-        widget.setEditableColor(0);
-        //widget.setUneditableColor(-1);
+        widget.setEditableColor(Formatting.DARK_GRAY.getColorValue());
+        widget.setUneditableColor(Formatting.GRAY.getColorValue());
         widget.setText(author);
         if (y == this.getY() + 1 || author.equals(MinecraftClient.getInstance().player.getEntityName()))
             widget.setEditable(false);
@@ -116,8 +118,7 @@ public class AuthorsListWidget extends ScrollableWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean r = super.mouseClicked(mouseX, mouseY, button);
-        if (!r) return false;
-        if (!this.isWithinBounds(mouseX, mouseY)) {
+        if (r && !this.isWithinBounds(mouseX, mouseY)) {
             this.setFocused(true);
             return true;
         }
@@ -125,13 +126,13 @@ public class AuthorsListWidget extends ScrollableWidget {
         this.setFocused(false);
         for (TextFieldWidget widget : this.widgets) {
             widget.setFocused(false);
-            if (widget != this.widgets.get(0) && widget.isMouseOver(mouseX, mouseY)) {
+            if (((TextFieldWidgetAccessor) widget).isEditable() && widget.isMouseOver(mouseX, mouseY)) {
                 widget.setFocused(true);
-                return widget.mouseClicked(mouseX, mouseY, button);
+                r = widget.mouseClicked(mouseX, mouseY, button);
             }
         }
 
-        return true;
+        return r;
     }
 
     @Override
@@ -141,10 +142,13 @@ public class AuthorsListWidget extends ScrollableWidget {
             Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
             if (w.isPresent()) {
                 int i = this.widgets.indexOf(w.get()) - 1;
-                if (i > 0) {
-                    this.widgets.get(i).setFocused(true);
-                    this.widgets.get(i + 1).setFocused(false);
-                }
+                while (i > 0 && !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                    i--;
+                while (i < 0 || !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                    i++;
+
+                w.get().setFocused(false);
+                this.widgets.get(i).setFocused(true);
                 return true;
             }
             return r;
@@ -153,10 +157,13 @@ public class AuthorsListWidget extends ScrollableWidget {
             Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
             if (w.isPresent()) {
                 int i = this.widgets.indexOf(w.get()) + 1;
-                if (i < this.widgets.size()) {
-                    this.widgets.get(i).setFocused(true);
-                    this.widgets.get(i - 1).setFocused(false);
-                }
+                while (i < this.widgets.size() && !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                    i++;
+                while (i >= this.widgets.size() || !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                    i--;
+
+                w.get().setFocused(false);
+                this.widgets.get(i).setFocused(true);
                 return true;
             }
             return r;

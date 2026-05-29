@@ -64,7 +64,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
                 button -> this.goToPreviousPage(), true));
         this.updatePageButtons();
 
-        this.authorsList = new AuthorsListWidget(this.x + this.xoffset + 36, this.y + 37, 104, 110,
+        this.authorsList = new AuthorsListWidget(this.x + this.xoffset + 36, this.y + 57, 104, 90,
                 this.textRenderer, KnowledgeBookItem.getAuthors(this.handler.stack));
     }
 
@@ -178,6 +178,16 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     }
 
     public void drawAuthorsPage(DrawContext context, int mouseX, int mouseY, float delta) {
+        float scale = 1.4f;
+
+        context.getMatrices().push();
+        context.getMatrices().scale(scale, scale, 1);
+
+        context.drawText(this.textRenderer, Text.translatable("item.sortilege.knowledge_book.authors").formatted(Formatting.BOLD),
+                (int) ((this.x + this.xoffset + 36)/scale) + 1, (int) ((this.y + 40)/scale), 0xCCB998, false);
+
+        context.getMatrices().pop();
+
         this.authorsList.render(context, mouseX, mouseY, delta);
     }
 
@@ -205,19 +215,20 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
             context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
         // Book display
-        context.drawItem(this.bookCache, this.xoffset + 36, 17);
-        if (this.isPointWithinBounds(this.xoffset + 36, 17, 16, 16, mouseX, mouseY))
+        context.drawTexture(BOOK_TEXTURE, this.xoffset + 36, 18, 48, 192, 20, 20);
+        context.drawItem(this.bookCache, this.xoffset + 38, 20);
+        if (this.isPointWithinBounds(this.xoffset + 38, 20, 16, 16, mouseX, mouseY))
             this.setFocused(this.bookCache);
 
-        float scale = 0.75f;
+        float scale = 0.8f;
 
         context.getMatrices().push();
         context.getMatrices().scale(scale, scale, 1);
 
         int i = 0; int j = 0;
         for (ItemStack stack : ItemHelper.getCompatibleStacks(this.enchantCache)) {
-            context.drawItem(stack, (int) ((this.xoffset + 36)/scale) + i*16, (int) ((42 + l*9)/scale) + j*16);
-            if (this.isPointWithinBounds((int) (this.xoffset + 36 + i*16*scale), (int) (42 + l*9 + j*16*scale),
+            context.drawItem(stack, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
+            if (this.isPointWithinBounds((int) (this.xoffset + 41 + i*16*scale), (int) (40 + l*9 + j*16*scale),
                     (int) (16*scale), (int) (16*scale), mouseX, mouseY))
                 this.setFocused(stack);
 
@@ -226,7 +237,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
                 j++;
                 i = 0;
             } if (42 + l*9 + j*16*scale > 130 && i > 114/scale/16 - 4) {
-                context.drawTexture(BOOK_TEXTURE, (int) ((this.xoffset + 36)/scale) + i*16, (int) ((42 + l*9)/scale) + j*16,
+                context.drawTexture(BOOK_TEXTURE, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16,
                         0, 192, 48, 16);
                 break;
             }

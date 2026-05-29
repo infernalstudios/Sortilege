@@ -65,7 +65,7 @@ public class KnowledgeBookItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        if (!isAuthor(stack, user)/* && !FabricLoader.getInstance().isDevelopmentEnvironment()*/) {
+        if (!isAuthor(stack, user)) {
             user.sendMessage(Text.translatable("item.sortilege.knowledge_book.invalid").formatted(Formatting.YELLOW), true);
             return TypedActionResult.success(stack);
         }
@@ -85,7 +85,7 @@ public class KnowledgeBookItem extends Item {
             list.add(ItemHelper.getShiftTooltip());
 
         if (!getAuthors(stack).isEmpty())
-            list.add(Text.translatable("book.byAuthor", getAuthors(stack).get(0)).formatted(Formatting.GRAY));
+            list.add(Text.translatable("book.byAuthor", String.join(", ", getAuthors(stack))).formatted(Formatting.GRAY));
         list.add(Text.translatable("item.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
                 ItemHelper.getEnchantCount()).formatted(Formatting.GRAY));
     }

@@ -11,6 +11,7 @@ import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.util.ItemHelper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.enchantment.Enchantment;
@@ -204,8 +205,8 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
             context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
         // Book display
-        context.drawItem(this.bookCache, this.xoffset + 36, 18);
-        if (this.isPointWithinBounds(this.xoffset + 132, 32, 16, 16, mouseX, mouseY))
+        context.drawItem(this.bookCache, this.xoffset + 36, 17);
+        if (this.isPointWithinBounds(this.xoffset + 36, 17, 16, 16, mouseX, mouseY))
             this.setFocused(this.bookCache);
 
         float scale = 0.75f;

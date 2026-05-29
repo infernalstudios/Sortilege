@@ -1,17 +1,22 @@
 package net.lyof.sortilege.screen.widget;
 
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.screen.PlainDrawContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ScrollableWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AuthorsListWidget extends ScrollableWidget {
@@ -51,7 +56,8 @@ public class AuthorsListWidget extends ScrollableWidget {
             }
         };
         widget.setFocusUnlocked(true);
-        widget.setEditableColor(-1);
+        widget.setDrawsBackground(false);
+        widget.setEditableColor(0);
         //widget.setUneditableColor(-1);
         widget.setText(author);
         if (y == this.getY() + 1 || author.equals(MinecraftClient.getInstance().player.getEntityName()))
@@ -86,6 +92,7 @@ public class AuthorsListWidget extends ScrollableWidget {
 
     @Override
     protected void renderContents(DrawContext drawContext, int mouseX, int mouseY, float partialTicks) {
+        drawContext = new PlainDrawContext(drawContext);
         for (TextFieldWidget widget : this.widgets)
             widget.render(drawContext, mouseX, mouseY, partialTicks);
     }
@@ -181,9 +188,9 @@ public class AuthorsListWidget extends ScrollableWidget {
             if (!widget.getText().isEmpty())
                 authors.add(widget.getText());
         }
-        String user = MinecraftClient.getInstance().player.getEntityName();
+        /*String user = MinecraftClient.getInstance().player.getEntityName();
         if (!authors.contains(user))
-            authors.add(user);
+            authors.add(user);*/
 
         this.build(authors);
         return authors;

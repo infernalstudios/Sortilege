@@ -136,6 +136,6 @@ public class KnowledgeBookItem extends Item {
     }
 
     public static boolean isAuthor(ItemStack self, PlayerEntity player) {
-        return getAuthors(self).contains(player.getEntityName()) || getAuthors(self).isEmpty();
+        return player.isCreative() || getAuthors(self).contains(player.getEntityName()) || getAuthors(self).isEmpty();
     }
 }

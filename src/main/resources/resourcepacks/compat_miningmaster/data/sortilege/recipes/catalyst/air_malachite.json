@@ -1,0 +1,10 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:air_malachite",
+  "enchantments": [
+    "minecraft:feather_falling",
+    "minecraft:respiration",
+    "miningmaster:floatation",
+    "miningmaster:knight_jump"
+  ]
+}

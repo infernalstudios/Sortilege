@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class EnchantmentHelperMixin {
     @Inject(method = "set", at = @At("HEAD"), cancellable = true)
     private static void setEnchantments(Map<Enchantment, Integer> enchants, ItemStack itemstack, CallbackInfo ci) {
-        int limit = ItemHelper.getTotalEnchantSlots(itemstack);
+        int limit = EnchantHelper.getTotalEnchantSlots(itemstack);
         int a = 0;
         if (limit >= 0) {
             NbtList listtag = new NbtList();

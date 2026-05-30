@@ -10,7 +10,7 @@ import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
@@ -105,7 +105,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements EnchantL
 
     @WrapMethod(method = "dropItem(Lnet/minecraft/item/ItemStack;ZZ)Lnet/minecraft/entity/ItemEntity;")
     private ItemEntity preventStorytoldDrop(ItemStack stack, boolean throwRandomly, boolean retainOwnership, Operation<ItemEntity> original) {
-        if (!throwRandomly && ItemHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
+        if (!throwRandomly && EnchantHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
             return null;
         return original.call(stack, throwRandomly, retainOwnership);
     }

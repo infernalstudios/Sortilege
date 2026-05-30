@@ -8,10 +8,9 @@ import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.widget.AuthorsListWidget;
 import net.lyof.sortilege.setup.ModPackets;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.ingame.BookEditScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.PageTurnWidget;
 import net.minecraft.enchantment.Enchantment;
@@ -226,7 +225,7 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         context.getMatrices().scale(scale, scale, 1);
 
         int i = 0; int j = 0;
-        for (ItemStack stack : ItemHelper.getCompatibleStacks(this.enchantCache)) {
+        for (ItemStack stack : EnchantHelper.getCompatibleStacks(this.enchantCache)) {
             context.drawItem(stack, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
             if (this.isPointWithinBounds((int) (this.xoffset + 41 + i*16*scale), (int) (40 + l*9 + j*16*scale),
                     (int) (16*scale), (int) (16*scale), mouseX, mouseY))

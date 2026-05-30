@@ -7,7 +7,7 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
@@ -61,7 +61,7 @@ public abstract class ItemStackMixin {
                     list.add(text);
                 }
             } else
-                list.add(ItemHelper.getShiftTooltip());
+                list.add(EnchantHelper.getShiftTooltip());
         }
     }
 
@@ -71,10 +71,10 @@ public abstract class ItemStackMixin {
         ItemStack self = (ItemStack) (Object) this;
 
         if (self.getItem().getEnchantability() > 0 && !self.isOf(Items.ENCHANTED_BOOK)) {
-            int a = ItemHelper.getUsedEnchantSlots(self);
-            int m = ItemHelper.getTotalEnchantSlots(self);
+            int a = EnchantHelper.getUsedEnchantSlots(self);
+            int m = EnchantHelper.getTotalEnchantSlots(self);
 
-            if ((a > 0 || ItemHelper.getExtraEnchantSlots(self) > 0 || ConfigEntries.alwaysShowEnchantLimit) && m > 0) {
+            if ((a > 0 || EnchantHelper.getExtraEnchantSlots(self) > 0 || ConfigEntries.alwaysShowEnchantLimit) && m > 0) {
 
                 MutableText txt = Text.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
                         a + "/" + m + " " + Text.translatable("sortilege.enchantments").getString());
@@ -96,7 +96,7 @@ public abstract class ItemStackMixin {
             action.accept(e);
 
             if (ConfigEntries.knowledgeTooltip && sorti_player instanceof EnchantLearner learner && sorti_stack != null
-                    && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, ItemHelper.getEnchantLevel(e, sorti_stack))) {
+                    && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, EnchantHelper.getEnchantLevel(e, sorti_stack))) {
 
                 Text text = Text.empty().append(tooltip.get(tooltip.size() - 1))
                         .append(Text.translatable("item.sortilege.learnable.desc").formatted(Formatting.LIGHT_PURPLE));

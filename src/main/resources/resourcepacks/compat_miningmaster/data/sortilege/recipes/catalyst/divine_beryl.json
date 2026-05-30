@@ -1,0 +1,9 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:divine_beryl",
+  "enchantments": [
+    "minecraft:smite",
+    "minecraft:channeling",
+    "minecraft:piercing"
+  ]
+}

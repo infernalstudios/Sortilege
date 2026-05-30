@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(EnchantWithLevelsLootFunction.class)
 public class EnchantWithLevelsLootFunctionMixin {
     @Inject(method = "process", at = @At("HEAD"))
-    private static void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
+    private void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
         if (ConfigEntries.knowledgeEnabled)
             stack.getOrCreateNbt().putBoolean(EnchantKnowledge.LEARNABLE_KEY, true);
     }

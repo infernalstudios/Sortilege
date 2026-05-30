@@ -1,0 +1,10 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:power_pyrite",
+  "enchantments": [
+    "minecraft:sharpness",
+    "minecraft:power",
+    "minecraft:impaling",
+    "miningmaster:stonebreaker"
+  ]
+}

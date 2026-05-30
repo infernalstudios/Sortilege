@@ -1,0 +1,9 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:kinetic_opal",
+  "enchantments": [
+    "minecraft:blast_protection",
+    "minecraft:knockback",
+    "minecraft:punch"
+  ]
+}

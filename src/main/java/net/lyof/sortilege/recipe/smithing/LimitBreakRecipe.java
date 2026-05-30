@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -31,7 +31,7 @@ public class LimitBreakRecipe implements SmithingRecipe {
     @Override
     public ItemStack craft(Inventory inventory, DynamicRegistryManager registryManager) {
         ItemStack stack = inventory.getStack(1).copyWithCount(1);
-        ItemHelper.addExtraEnchantSlot(stack);
+        EnchantHelper.addExtraEnchantSlot(stack);
         return stack;
     }
 
@@ -52,8 +52,8 @@ public class LimitBreakRecipe implements SmithingRecipe {
 
     @Override
     public boolean testBase(ItemStack stack) {
-        return stack.getItem().getEnchantability() > 0 && ItemHelper.getBaseEnchantSlots(stack) != 0
-                && ItemHelper.getExtraEnchantSlots(stack) < ConfigEntries.maxLimitBreak;
+        return stack.getItem().getEnchantability() > 0 && EnchantHelper.getBaseEnchantSlots(stack) != 0
+                && EnchantHelper.getExtraEnchantSlots(stack) < ConfigEntries.maxLimitBreak;
     }
 
     @Override

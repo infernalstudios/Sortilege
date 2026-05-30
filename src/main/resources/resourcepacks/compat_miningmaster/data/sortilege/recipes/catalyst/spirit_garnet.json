@@ -1,0 +1,10 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:spirit_garnet",
+  "enchantments": [
+    "minecraft:thorns",
+    "minecraft:loyalty",
+    "minecraft:multishot",
+    "miningmaster:leeching"
+  ]
+}

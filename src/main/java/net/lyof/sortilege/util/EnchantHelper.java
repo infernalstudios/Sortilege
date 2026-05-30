@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ItemHelper {
+public class EnchantHelper {
     private static final Map<Enchantment, List<ItemStack>> ENCHANT_TARGETS = new HashMap<>();
 
     public static void clear() {

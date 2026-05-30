@@ -7,7 +7,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerInventory;
@@ -39,7 +39,7 @@ public abstract class PlayerInventoryMixin {
         if (i < PlayerInventory.getHotbarSize() && ConfigEntries.keepEquipped)
             return true;
 
-        if (ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
+        if (EnchantHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
             if (ConfigEntries.consumeSoulbound && ModEnchants.SOULBOUND != null) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.get(stack);
                 enchants.remove(ModEnchants.SOULBOUND);
@@ -53,7 +53,7 @@ public abstract class PlayerInventoryMixin {
 
     @WrapMethod(method = "dropSelectedItem")
     private ItemStack preventStorytoldDrop(boolean entireStack, Operation<ItemStack> original) {
-        if (ItemHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, this.getMainHandStack()))
+        if (EnchantHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, this.getMainHandStack()))
             return ItemStack.EMPTY;
         return original.call(entireStack);
     }

@@ -1,0 +1,8 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:spider_kunzite",
+  "enchantments": [
+    "minecraft:bane_of_arthropods",
+    "minecraft:silk_touch"
+  ]
+}

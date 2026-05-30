@@ -1,0 +1,9 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:dive_aquamarine",
+  "enchantments": [
+    "minecraft:aqua_affinity",
+    "minecraft:riptide",
+    "miningmaster:grace"
+  ]
+}

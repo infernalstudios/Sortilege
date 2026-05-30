@@ -653,7 +653,7 @@ public class ModConfig {
                         "beam_color": [
                           [0, 0.4, 0.1]
                         ]
-                        // will have blitz 4 applied
+                        // will have blessing 4 applied
                       }
                     },
                     {

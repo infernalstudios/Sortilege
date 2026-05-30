@@ -1,0 +1,7 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:heart_rhodonite",
+  "enchantments": [
+    "miningmaster:heartfelt"
+  ]
+}

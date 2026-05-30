@@ -9,7 +9,7 @@ import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -45,8 +45,8 @@ public abstract class ItemStackMixin {
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
         ItemStack self = (ItemStack) (Object) this;
 
-        int a = ItemHelper.getUsedEnchantSlots(self);
-        int limit = ItemHelper.getTotalEnchantSlots(self);
+        int a = EnchantHelper.getUsedEnchantSlots(self);
+        int limit = EnchantHelper.getTotalEnchantSlots(self);
         if (limit >= 0) {
             if (!this.getOrCreateNbt().contains("Enchantments", 9))
                 this.getOrCreateNbt().put("Enchantments", new NbtList());
@@ -63,7 +63,7 @@ public abstract class ItemStackMixin {
     @ModifyReturnValue(method = "isIn", at = @At("RETURN"))
     private boolean isInKinetic(boolean original, TagKey<Item> tag) {
         if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof StaffItem)
-            return original && ItemHelper.hasEnchant(ModEnchants.BONK, (ItemStack) (Object) this);
+            return original && EnchantHelper.hasEnchant(ModEnchants.BONK, (ItemStack) (Object) this);
         return original;
     }
 

@@ -15,7 +15,7 @@ import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
 import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.block.cauldron.CauldronBehavior;
@@ -90,24 +90,24 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
 
     public int getXPCost(ItemStack itemstack) {
-        return Math.max(this.xp_cost + ItemHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
-                - ItemHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack), 0);
+        return Math.max(this.xp_cost + EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, itemstack)
+                - EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, itemstack), 0);
     }
 
     public float getAttackDamage(ItemStack stack) {
-        return this.damage + ItemHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
+        return this.damage + EnchantHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
     }
 
     public int getAttackRange(ItemStack stack) {
-        return this.range + ItemHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
+        return this.range + EnchantHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
     }
 
     public int getPierce(ItemStack stack) {
-        return this.pierce + ItemHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
+        return this.pierce + EnchantHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
     }
 
     private int getCooldown(ItemStack stack, PlayerEntity player) {
-        float multiplier = 1 - ItemHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
+        float multiplier = 1 - EnchantHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
 
         if (stack.isIn(ModTags.Items.XP_BOOSTED))
             multiplier -= player.experienceLevel / 200f;
@@ -189,7 +189,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (slot == EquipmentSlot.MAINHAND && this.pierce > 0) {
             ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
 
-            if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
+            if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
                 builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID,
                         "Weapon modifier", this.getAttackDamage(stack)-1, EntityAttributeModifier.Operation.ADDITION));
                 builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID,
@@ -369,7 +369,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     @Override
     public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        if (ItemHelper.hasEnchant(ModEnchants.BONK, stack)) {
+        if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
             this.triggerAttack(target, attacker, stack, this.getElements(stack), MathHelper.getLookVector(attacker), true,
                     this.getAttackDamage(stack), new ArrayList<>());
         }
@@ -382,7 +382,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (targetsHit.contains(target.getUuidAsString())) return;
 
         World world = attacker.getWorld();
-        float kinesis = ItemHelper.getEnchantLevel(ModEnchants.PUSH, stack) - ItemHelper.getEnchantLevel(ModEnchants.PULL, stack);
+        float kinesis = EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
         float d = this.modifyDamageDealt(damage, stack, target, elements);
 
         if (d > 0)
@@ -409,7 +409,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             target.setVelocity(direction.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
 
         for (ElementalStaffEnchantment element : elements) {
-            int elementLevel = ItemHelper.getEnchantLevel(element, stack);
+            int elementLevel = EnchantHelper.getEnchantLevel(element, stack);
 
             element.triggerAttack(target, elementLevel);
             if (element == ModEnchants.BLAST && elementLevel > 1 && propagate) {
@@ -443,9 +443,9 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     public float modifyDamageDealt(float damage, ItemStack stack, LivingEntity target, Set<ElementalStaffEnchantment> elements) {
         if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
             if (target.getType().isIn(ModTags.Entities.UNDEAD))
-                damage *= 1 + ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
+                damage *= 1 + EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
             else if (!ConfigEntries.altBlessing || !(target instanceof Monster))
-                damage *= ItemHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
+                damage *= EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
         }
 
         // Undergarden compat

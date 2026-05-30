@@ -1,0 +1,10 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:haste_peridot",
+  "enchantments": [
+    "minecraft:efficiency",
+    "minecraft:lure",
+    "minecraft:quick_charge",
+    "miningmaster:runner"
+  ]
+}

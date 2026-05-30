@@ -7,6 +7,8 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +46,15 @@ public class ConfiguredData {
         INSTANCES.add(new ConfiguredData(target, enabled, provider));
     }
 
+    protected static void registerMiningMaster(String gem, Enchantment enchant) {
+        register(Identifier.of("miningmaster", "recipes/smithing/" + gem + "_smithing.json"),
+                () -> enchant != null && ConfigEntries.miningMasterIntegration,
+                json -> Common.changeMiningMasterGem(json, Registries.ENCHANTMENT.getId(enchant).toString()));
+        register(Identifier.of("sortilege", "recipes/catalyst/" + gem + ".json"),
+                () -> enchant != null && ConfigEntries.miningMasterIntegration,
+                json -> Common.changeMiningMasterGem(json, Registries.ENCHANTMENT.getId(enchant).toString()));
+    }
+
 
     public static void register() {
         register(Sortilege.makeID("tags/items/staffs.json"), () -> true, Common::generateStaffTag);
@@ -51,27 +62,14 @@ public class ConfiguredData {
                 () -> ConfigEntries.witchHatEnabled, Common::changeVoluntaryExileParent);
 
         if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
-            register(Identifier.of("miningmaster", "recipes/smithing/power_pyrite_smithing.json"),
-                    () -> ModEnchants.POTENCY != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:potency"));
-            register(Identifier.of("miningmaster", "recipes/smithing/kinetic_opal_smithing.json"),
-                    () -> ModEnchants.PUSH != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:push"));
-            register(Identifier.of("miningmaster", "recipes/smithing/ice_sapphire_smithing.json"),
-                    () -> ModEnchants.BLIZZARD != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:blizzard"));
-            register(Identifier.of("miningmaster", "recipes/smithing/fire_ruby_smithing.json"),
-                    () -> ModEnchants.BRAZIER != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:brazier"));
-            register(Identifier.of("miningmaster", "recipes/smithing/air_malachite_smithing.json"),
-                    () -> ModEnchants.STABILITY != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:stability"));
-            register(Identifier.of("miningmaster", "recipes/smithing/spirit_garnet_smithing.json"),
-                    () -> ModEnchants.WISDOM != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:wisdom"));
-            register(Identifier.of("miningmaster", "recipes/smithing/haste_peridot_smithing.json"),
-                    () -> ModEnchants.FOCUS != null && ConfigEntries.miningMasterIntegration,
-                    json -> Common.changeMiningMasterGem(json, "sortilege:focus"));
+            registerMiningMaster("power_pyrite", ModEnchants.POTENCY);
+            registerMiningMaster("kinetic_opal", ModEnchants.BLAST);
+            registerMiningMaster("ice_sapphire", ModEnchants.BLIZZARD);
+            registerMiningMaster("fire_ruby", ModEnchants.BRAZIER);
+            registerMiningMaster("air_malachite", ModEnchants.BLITZ);
+            registerMiningMaster("spirit_garnet", ModEnchants.WISDOM);
+            registerMiningMaster("haste_peridot", ModEnchants.FOCUS);
+            registerMiningMaster("divine_beryl", ModEnchants.BLESSING);
         }
     }
 

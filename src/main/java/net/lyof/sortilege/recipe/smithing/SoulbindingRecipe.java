@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -52,7 +52,7 @@ public class SoulbindingRecipe implements SmithingRecipe {
 
     @Override
     public boolean testBase(ItemStack stack) {
-        return ModEnchants.SOULBOUND != null && !ItemHelper.hasEnchant(ModEnchants.SOULBOUND, stack)
+        return ModEnchants.SOULBOUND != null && !EnchantHelper.hasEnchant(ModEnchants.SOULBOUND, stack)
                 && ModEnchants.SOULBOUND.isAcceptableItem(stack);
     }
 

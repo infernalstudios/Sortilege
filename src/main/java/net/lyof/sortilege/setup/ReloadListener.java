@@ -15,7 +15,7 @@ import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceFinder;
@@ -41,7 +41,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                     new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
         }
 
-        ItemHelper.load();
+        EnchantHelper.load();
         PotionHelper.load();
 
         for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
@@ -72,7 +72,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
     public void preload(ResourceManager manager) {
         ModConfig.register();
 
-        ItemHelper.clear();
+        EnchantHelper.clear();
         RecipeLock.clear();
         PotionHelper.clear();
         BetterBrewingRegistry.clear();
@@ -116,8 +116,8 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         EnchantingCatalyst.clear();
         CustomPotionData.clear();
 
-        ItemHelper.clear();
-        ItemHelper.load();
+        EnchantHelper.clear();
+        EnchantHelper.load();
 
         PotionHelper.clear();
         PotionHelper.load();

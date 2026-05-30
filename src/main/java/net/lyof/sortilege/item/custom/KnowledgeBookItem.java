@@ -1,29 +1,21 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
-import net.lyof.sortilege.util.ItemHelper;
-import net.lyof.sortilege.util.PotionHelper;
-import net.minecraft.block.ChiseledBookshelfBlock;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.WrittenBookItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtString;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.registry.Registries;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -82,12 +74,12 @@ public class KnowledgeBookItem extends Item {
             list.add(Text.translatable("item.sortilege.knowledge_book.desc0").formatted(Formatting.YELLOW));
             list.add(Text.translatable("item.sortilege.knowledge_book.desc1").formatted(Formatting.YELLOW));
         } else
-            list.add(ItemHelper.getShiftTooltip());
+            list.add(EnchantHelper.getShiftTooltip());
 
         if (!getAuthors(stack).isEmpty())
             list.add(Text.translatable("book.byAuthor", String.join(", ", getAuthors(stack))).formatted(Formatting.GRAY));
         list.add(Text.translatable("item.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
-                ItemHelper.getEnchantCount()).formatted(Formatting.GRAY));
+                EnchantHelper.getEnchantCount()).formatted(Formatting.GRAY));
     }
 
     @Override

@@ -5,9 +5,12 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
 import net.lyof.sortilege.block.ModBlocks;
+import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
@@ -24,6 +27,7 @@ import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +58,25 @@ public class Sortilege implements ModInitializer {
 		ModLootModifiers.register();
 		ModRecipeTypes.register();
 
-		registerEvents();
 		registerPackets();
+		registerModules();
+		registerEvents();
+	}
+
+	private static void registerPackets() {
+		ServerPlayNetworking.registerGlobalReceiver(ModPackets.SET_KNOWLEDGE_AUTHORS, ModPackets.Server::setKnowledgeAuthors);
+	}
+
+	private static void registerModules() {
+		if (FabricLoader.getInstance().isModLoaded("miningmaster") && ConfigEntries.miningMasterIntegration)
+			registerPack("compat_miningmaster", "Mining Master Compat", false);
+	}
+
+	private static void registerPack(String id, String name, boolean force) {
+		Sortilege.log("Enabling module : " + name, 0);
+		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(container ->
+				ResourceManagerHelper.registerBuiltinResourcePack(makeID(id), container, Text.literal(name),
+						force ? ResourcePackActivationType.ALWAYS_ENABLED : ResourcePackActivationType.DEFAULT_ENABLED));
 	}
 
 	private static void registerEvents() {
@@ -73,10 +94,6 @@ public class Sortilege implements ModInitializer {
 
 			packets.forEach(p -> ServerPlayNetworking.send(player, ModPackets.INITIALIZE, p));
 		});
-	}
-
-	private static void registerPackets() {
-		ServerPlayNetworking.registerGlobalReceiver(ModPackets.SET_KNOWLEDGE_AUTHORS, ModPackets.Server::setKnowledgeAuthors);
 	}
 
 

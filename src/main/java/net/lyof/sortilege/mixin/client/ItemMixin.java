@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.util.ItemHelper;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,8 +23,8 @@ import java.util.Map;
 public class ItemMixin {
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
     public void preventUselessEnchants(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        int a = ItemHelper.getUsedEnchantSlots(stack);
-        int m = ItemHelper.getTotalEnchantSlots(stack);
+        int a = EnchantHelper.getUsedEnchantSlots(stack);
+        int m = EnchantHelper.getTotalEnchantSlots(stack);
 
         if (m >= 0 && a >= m) cir.setReturnValue(false);
     }

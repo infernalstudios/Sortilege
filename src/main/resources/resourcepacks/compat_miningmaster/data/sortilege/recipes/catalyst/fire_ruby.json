@@ -1,0 +1,10 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:fire_ruby",
+  "enchantments": [
+    "minecraft:fire_aspect",
+    "minecraft:flame",
+    "minecraft:fire_protection",
+    "miningmaster:smelting"
+  ]
+}

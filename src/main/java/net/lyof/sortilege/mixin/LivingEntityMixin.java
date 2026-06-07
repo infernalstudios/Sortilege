@@ -15,23 +15,24 @@ import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.XPHelper;
 import net.lyof.sortilege.util.inject.BountyHolder;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -49,12 +50,12 @@ import java.util.Map;
 public abstract class LivingEntityMixin extends Entity implements PotionShenanigans, BountyHolder {
     @Unique private static final String BOUNTY_KEY = "sorti_StolenXP";
 
-    @Unique private final Map<StatusEffect, Integer> effectImmunities = new HashMap<>();
+    @Unique private final Map<MobEffect, Integer> effectImmunities = new HashMap<>();
     @Unique private int stolenxp = 0;
 
     @Override
-    public void sorti_setImmunity(StatusEffect effect, int time) {
-        int timeOff = this.age + time;
+    public void sorti_setImmunity(MobEffect effect, int time) {
+        int timeOff = this.tickCount + time;
         if (this.effectImmunities.containsKey(effect)) {
             if (this.effectImmunities.get(effect) < timeOff)
                 this.effectImmunities.replace(effect, timeOff);
@@ -73,125 +74,124 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
         return this.stolenxp;
     }
 
-    @Shadow @Nullable protected PlayerEntity attackingPlayer;
-    @Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
-    @Shadow public abstract Iterable<ItemStack> getArmorItems();
-    @Shadow public abstract boolean damage(DamageSource source, float amount);
-    @Shadow public abstract ItemStack getOffHandStack();
-    @Shadow public abstract Random getRandom();
+    @Shadow public abstract boolean hurt(DamageSource source, float amount);
+    @Shadow public abstract RandomSource getRandom();
+    @Shadow @Nullable protected Player lastHurtByPlayer;
+    @Shadow public abstract ItemStack getOffhandItem();
+    @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot slot);
 
-    public LivingEntityMixin(EntityType<?> type, World world) {
+    public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
 
-    @Inject(method = "writeCustomDataToNbt", at = @At("TAIL"))
-    private void writeCustom(NbtCompound nbt, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void writeCustom(CompoundTag nbt, CallbackInfo ci) {
         nbt.putInt(BOUNTY_KEY, this.sorti_getExperience());
     }
 
-    @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    private void readCustom(NbtCompound nbt, CallbackInfo ci) {
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readCustom(CompoundTag nbt, CallbackInfo ci) {
         this.sorti_setExperience(nbt.getInt(BOUNTY_KEY));
     }
 
-    @ModifyArg(method = "dropXp", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ExperienceOrbEntity;spawn(Lnet/minecraft/server/world/ServerWorld;Lnet/minecraft/util/math/Vec3d;I)V"))
+    @ModifyArg(method = "dropExperience", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ExperienceOrb;award(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/phys/Vec3;I)V"))
     public int xpDropBonus(int amount) {
-        if (ConfigEntries.witchHatEnabled && this.attackingPlayer != null && this.attackingPlayer.getEquippedStack(EquipmentSlot.HEAD).isOf(ModItems.WITCH_HAT))
+        if (ConfigEntries.witchHatEnabled && this.lastHurtByPlayer != null && this.lastHurtByPlayer.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.WITCH_HAT))
             amount += ConfigEntries.witchHatBonus;
-        if (this.getType().isIn(ModTags.Entities.UNEXPERIENCED))
+        if (this.getType().is(ModTags.Entities.UNEXPERIENCED))
             amount = 0;
 
         return amount;
     }
 
-    @Inject(method = "dropLoot", at = @At("HEAD"))
+    @Inject(method = "dropFromLootTable", at = @At("HEAD"))
     public void witchHatDrop(DamageSource damageSource, boolean causedByPlayer, CallbackInfo ci) {
         if (causedByPlayer && this.getType() == EntityType.WITCH) {
-            World world = this.getWorld();
-            if (world.isClient()) return;
+            Level world = this.level();
+            if (world.isClientSide()) return;
 
             if (!ConfigEntries.witchHatEnabled || Math.random() > ConfigEntries.witchHatDropChance) return;
 
-            ItemStack hat = ModItems.WITCH_HAT.getDefaultStack();
-            hat.setDamage((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);
-            world.spawnEntity(new ItemEntity(world, this.getX(), this.getY(), this.getZ(), hat));
+            ItemStack hat = ModItems.WITCH_HAT.getDefaultInstance();
+            hat.setDamageValue((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);
+            world.addFreshEntity(new ItemEntity(world, this.getX(), this.getY(), this.getZ(), hat));
         }
     }
 
-    @Inject(method = "drop", at = @At("HEAD"))
+    @Inject(method = "dropAllDeathLoot", at = @At("HEAD"))
     public void giveKillXP(DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
         PotionCooldownManager.clear(self);
 
-        if (self instanceof PlayerEntity player && this.getWorld() instanceof ServerWorld world) {
+        if (self instanceof Player player && this.level() instanceof ServerLevel world) {
             int stealxp = (int) Math.round(XPHelper.getTotalXP(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);
-            Entity source = damageSource.getAttacker();
+            Entity source = damageSource.getEntity();
 
-            if (source instanceof PlayerEntity playerattacker)
-                playerattacker.addExperience(stealxp);
+            if (source instanceof Player playerattacker)
+                playerattacker.giveExperiencePoints(stealxp);
             else if (source instanceof LivingEntity attacker) {
                 ((BountyHolder) attacker).sorti_setExperience(stealxp);
-                if (ConfigEntries.glowingKiller) attacker.setGlowing(true);
+                if (ConfigEntries.glowingKiller) attacker.setGlowingTag(true);
             }
-            else ExperienceOrbEntity.spawn(world, this.getPos(), stealxp);
+            else ExperienceOrb.award(world, this.position(), stealxp);
         }
 
-        if (this.getWorld() instanceof ServerWorld world)
-            ExperienceOrbEntity.spawn(world, this.getPos(), this.sorti_getExperience());
+        if (this.level() instanceof ServerLevel world)
+            ExperienceOrb.award(world, this.position(), this.sorti_getExperience());
 
-        if (self instanceof Monster && Math.random() < ConfigEntries.bountyChance
-                && (ConfigEntries.bountyWhitelist == self.getType().isIn(ModTags.Entities.BOUNTIES))
-                && damageSource.getAttacker() instanceof PlayerEntity player) {
+        if (self instanceof Enemy && Math.random() < ConfigEntries.bountyChance
+                && (ConfigEntries.bountyWhitelist == self.getType().is(ModTags.Entities.BOUNTIES))
+                && damageSource.getEntity() instanceof Player player) {
 
-            if (player.getWorld() instanceof ServerWorld world)
-                ExperienceOrbEntity.spawn(world, this.getPos(), ConfigEntries.bountyValue);
+            if (player.level() instanceof ServerLevel world)
+                ExperienceOrb.award(world, this.position(), ConfigEntries.bountyValue);
 
-            ModParticles.spawnWisps(player.getWorld(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
+            ModParticles.spawnWisps(player.level(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
                     16, new float[]{0.5f, 1f, 0.2f});
         }
     }
 
-    @Inject(method = "dropInventory", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "dropEquipment", at = @At("HEAD"), cancellable = true)
     public void cancelCuriosDrop(CallbackInfo ci) {
-        if (ConfigEntries.keepEquipped && ((LivingEntity) (Object) this) instanceof PlayerEntity) ci.cancel();
+        if (ConfigEntries.keepEquipped && ((LivingEntity) (Object) this) instanceof Player) ci.cancel();
     }
 
-    @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (ConfigEntries.betterFeatherFalling > 0 && source.isIn(DamageTypeTags.IS_FALL) &&
-                EnchantmentHelper.getLevel(Enchantments.FEATHER_FALLING, this.getEquippedStack(EquipmentSlot.FEET)) >=
-                        ConfigEntries.betterFeatherFalling)
+        if (ConfigEntries.betterFeatherFalling > 0 && source.is(DamageTypeTags.IS_FALL) &&
+                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FALL_PROTECTION,
+                        this.getItemBySlot(EquipmentSlot.FEET)) >= ConfigEntries.betterFeatherFalling)
             cir.setReturnValue(false);
 
-        if (ConfigEntries.betterFireProt > 0 && source.isIn(DamageTypeTags.IS_FIRE) &&
-                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.FEET)) >=
-                        ConfigEntries.betterFireProt &&
-                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.LEGS)) >=
-                        ConfigEntries.betterFireProt &&
-                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.CHEST)) >=
-                        ConfigEntries.betterFireProt &&
-                EnchantmentHelper.getLevel(Enchantments.FIRE_PROTECTION, this.getEquippedStack(EquipmentSlot.HEAD)) >=
-                        ConfigEntries.betterFireProt)
+        if (ConfigEntries.betterFireProt > 0 && source.is(DamageTypeTags.IS_FIRE) &&
+                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                        this.getItemBySlot(EquipmentSlot.FEET)) >= ConfigEntries.betterFireProt &&
+                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                        this.getItemBySlot(EquipmentSlot.LEGS)) >= ConfigEntries.betterFireProt &&
+                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                        this.getItemBySlot(EquipmentSlot.CHEST)) >= ConfigEntries.betterFireProt &&
+                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                        this.getItemBySlot(EquipmentSlot.HEAD)) >= ConfigEntries.betterFireProt)
             cir.setReturnValue(false);
 
         if (ModEnchants.MAGIC_PROTECTION != null && ConfigEntries.betterMagicProt && Math.random() <=
-                0.05 * EnchantmentHelper.getEquipmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
+                0.05 * EnchantmentHelper.getEnchantmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);
     }
 
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
-        ItemStack stack = this.getOffHandStack();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
+        ItemStack stack = this.getOffhandItem();
+        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
         if (!LapisShieldItem.isOnCooldown(stack))
             cir.setReturnValue(true);
     }
 
-    @WrapOperation(method = "blockedByShield", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/math/Vec3d;dotProduct(Lnet/minecraft/util/math/Vec3d;)D"))
-    public double blockedByLapisShield(Vec3d a, Vec3d b, Operation<Double> original) {
+    @WrapOperation(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;dot(Lnet/minecraft/world/phys/Vec3;)D"))
+    public double blockedByLapisShield(Vec3 a, Vec3 b, Operation<Double> original) {
         double v = original.call(a, b);
-        if (!ConfigEntries.lapisShieldEnabled || !this.getOffHandStack().isOf(ModItems.LAPIS_SHIELD)) return v;
+        if (!ConfigEntries.lapisShieldEnabled || !this.getOffhandItem().is(ModItems.LAPIS_SHIELD)) return v;
 
         if (v <= -0.5 * Math.cos(90 * Math.PI / 360d))
             return -1;
@@ -200,41 +200,41 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickLapisShield(CallbackInfo ci) {
-        ItemStack stack = this.getOffHandStack();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack)
-                || this.getWorld().isClient()) return;
+        ItemStack stack = this.getOffhandItem();
+        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack)
+                || this.level().isClientSide()) return;
 
-        if (LapisShieldItem.getCooldownEnd(stack) <= this.age
-                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.age) {
+        if (LapisShieldItem.getCooldownEnd(stack) <= this.tickCount
+                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.tickCount) {
             LapisShieldItem.removeCooldown(stack);
             LapisShieldItem.sendCooldownUpdate((LivingEntity) (Object) this, 0);
         }
     }
 
-    @Inject(method = "damageShield", at = @At("HEAD"))
+    @Inject(method = "hurtCurrentlyUsedShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
-        ItemStack stack = this.getOffHandStack();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.isOf(ModItems.LAPIS_SHIELD)) return;
+        ItemStack stack = this.getOffhandItem();
+        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
         LivingEntity self = (LivingEntity) (Object) this;
         LapisShieldItem.onSuccessfulUse(stack, self, amount);
     }
 
-    @WrapMethod(method = "canHaveStatusEffect")
-    public boolean applyEffectImmunity(StatusEffectInstance effect, Operation<Boolean> original) {
-        if (this.effectImmunities.containsKey(effect.getEffectType())) {
-            if (this.effectImmunities.get(effect.getEffectType()) >= this.age) {
+    @WrapMethod(method = "canBeAffected")
+    public boolean applyEffectImmunity(MobEffectInstance effect, Operation<Boolean> original) {
+        if (this.effectImmunities.containsKey(effect.getEffect())) {
+            if (this.effectImmunities.get(effect.getEffect()) >= this.tickCount) {
                 return false;
             }
             else
-                this.effectImmunities.remove(effect.getEffectType());
+                this.effectImmunities.remove(effect.getEffect());
         }
         return original.call(effect);
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
-    private static DefaultAttributeContainer.Builder addGlobalAttributes(DefaultAttributeContainer.Builder original) {
-        for (EntityAttribute attribute : ModAttributes.GLOBALS)
+    private static AttributeSupplier.Builder addGlobalAttributes(AttributeSupplier.Builder original) {
+        for (Attribute attribute : ModAttributes.GLOBALS)
             original.add(attribute);
         return original;
     }

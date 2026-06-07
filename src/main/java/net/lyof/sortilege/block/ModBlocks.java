@@ -3,12 +3,12 @@ package net.lyof.sortilege.block;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.block.custom.PotionCauldronBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 
 public class ModBlocks {
     public static void register() {
@@ -21,8 +21,8 @@ public class ModBlocks {
 
     private static Block register(String name, Block block, boolean withItem) {
         if (withItem)
-            Registry.register(Registries.ITEM, Sortilege.makeID(name), new BlockItem(block, new Item.Settings()));
-        return Registry.register(Registries.BLOCK, Sortilege.makeID(name), block);
+            Registry.register(BuiltInRegistries.ITEM, Sortilege.makeID(name), new BlockItem(block, new Item.Properties()));
+        return Registry.register(BuiltInRegistries.BLOCK, Sortilege.makeID(name), block);
     }
 
 

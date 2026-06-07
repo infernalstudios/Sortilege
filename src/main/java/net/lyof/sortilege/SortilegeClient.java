@@ -18,8 +18,8 @@ import net.lyof.sortilege.screen.ModScreenHandlers;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreen;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.item.ItemProperties;
 
 public class SortilegeClient implements ClientModInitializer {
     @Override
@@ -32,13 +32,13 @@ public class SortilegeClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(ModParticles.WISP_PIXEL, WispParticle.Factory::new);
 
-        HandledScreens.register(ModScreenHandlers.KNOWLEDGE_BOOK, KnowledgeBookScreen::new);
+        MenuScreens.register(ModScreenHandlers.KNOWLEDGE_BOOK, KnowledgeBookScreen::new);
 
         if (ConfigEntries.witchHatEnabled) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
 
         if (ConfigEntries.lapisShieldEnabled)
-            ModelPredicateProviderRegistry.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) -> {
-                stack.getOrCreateNbt();
+            ItemProperties.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) -> {
+                stack.getOrCreateTag();
                 return LapisShieldItem.isOnCooldown(stack) ? 1f : 0f;
             });
     }

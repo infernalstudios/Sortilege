@@ -6,19 +6,19 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModPackets;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 public class ModParticles {
-    public static void spawnWisps(World world, double x, double y, double z, int amount, float[] color) {
-        if (!world.isClient()) {
-            PacketByteBuf buf = PacketByteBufs.create();
+    public static void spawnWisps(Level world, double x, double y, double z, int amount, float[] color) {
+        if (!world.isClientSide()) {
+            FriendlyByteBuf buf = PacketByteBufs.create();
 
             buf.writeDouble(x);
             buf.writeDouble(y);
@@ -28,7 +28,7 @@ public class ModParticles {
             buf.writeFloat(Math.max(0, color[2]));
             buf.writeInt(amount);
 
-            for (ServerPlayerEntity player : PlayerLookup.tracking((ServerWorld) world, new BlockPos((int) x, (int) y, (int) z))) {
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, new BlockPos((int) x, (int) y, (int) z))) {
                 ServerPlayNetworking.send(player, ModPackets.WISP_PARTICLE_DISPLAY, buf);
             }
         }
@@ -37,6 +37,6 @@ public class ModParticles {
 
     public static void register() {}
 
-    public static final DefaultParticleType WISP_PIXEL = Registry.register(Registries.PARTICLE_TYPE, Sortilege.makeID("wisp_pixel"),
+    public static final SimpleParticleType WISP_PIXEL = Registry.register(BuiltInRegistries.PARTICLE_TYPE, Sortilege.makeID("wisp_pixel"),
             FabricParticleTypes.simple());
 }

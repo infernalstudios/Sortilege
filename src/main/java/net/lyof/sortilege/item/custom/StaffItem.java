@@ -2,6 +2,8 @@ package net.lyof.sortilege.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -18,34 +20,35 @@ import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.XPHelper;
-import net.minecraft.block.cauldron.CauldronBehavior;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.Tameable;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.Monster;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.StackReference;
-import net.minecraft.item.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.server.command.CommandOutput;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
-import net.minecraft.util.*;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.commands.CommandSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.FastColor;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickAction;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +57,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem {
+public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRenderItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
 
     public @Nullable ModConfig.StaffInfo rawInfos;
@@ -65,7 +68,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     public int charge;
     public int xp_cost;
 
-    public @Nullable Hand handSave;
+    public @Nullable InteractionHand handSave;
 
 
     public StaffItem(ModConfig.StaffInfo stats, FabricItemSettings settings) {
@@ -74,9 +77,9 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         this.rawInfos = stats;
     }
 
-    public StaffItem(ToolMaterial tier, int damage, int targets, int range, int dura, int cooldown, int charge, int xp_cost,
+    public StaffItem(Tier tier, int damage, int targets, int range, int dura, int cooldown, int charge, int xp_cost,
                      FabricItemSettings settings) {
-        super(tier, settings.maxDamage(dura));
+        super(tier, settings.durability(dura));
 
         this.damage = damage;
         this.pierce = targets;
@@ -85,7 +88,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         this.charge = charge;
         this.xp_cost = xp_cost;
 
-        CauldronBehavior.WATER_CAULDRON_BEHAVIOR.put(this, CauldronBehavior.CLEAN_DYEABLE_ITEM);
+        CauldronInteraction.WATER.put(this, CauldronInteraction.DYED_ITEM);
     }
 
 
@@ -106,10 +109,10 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         return this.pierce + EnchantHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
     }
 
-    private int getCooldown(ItemStack stack, PlayerEntity player) {
+    private int getCooldown(ItemStack stack, Player player) {
         float multiplier = 1 - EnchantHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
 
-        if (stack.isIn(ModTags.Items.XP_BOOSTED))
+        if (stack.is(ModTags.Items.XP_BOOSTED))
             multiplier -= player.experienceLevel / 200f;
 
         multiplier = Math.max(multiplier, 0);
@@ -120,11 +123,11 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         List<float[]> result = new ArrayList<>();
 
         int rgb = this.getColor(stack);
-        float[] color = new float[]{ColorHelper.Argb.getRed(rgb) / 255f,
-                ColorHelper.Argb.getGreen(rgb) / 255f,
-                ColorHelper.Argb.getBlue(rgb) / 255f};
+        float[] color = new float[]{FastColor.ARGB32.red(rgb) / 255f,
+                FastColor.ARGB32.green(rgb) / 255f,
+                FastColor.ARGB32.blue(rgb) / 255f};
 
-        if (rgb == DyeableItem.DEFAULT_COLOR) {
+        if (rgb == DyeableLeatherItem.DEFAULT_LEATHER_COLOR) {
             if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
                 return this.rawInfos.colors;
 
@@ -132,7 +135,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 result.addAll(element.colors);
             if (result.isEmpty())
                 result.add(COLOR_NONE);
-            if (stack.hasEnchantments())
+            if (stack.isEnchanted())
                 result.add(new float[]{0.7f, 0f, 1f});
         }
         else {
@@ -148,7 +151,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
     public Set<ElementalStaffEnchantment> getElements(ItemStack stack) {
         Set<ElementalStaffEnchantment> elements = new HashSet<>();
-        for (Enchantment enchant : EnchantmentHelper.get(stack).keySet()) {
+        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet()) {
             if (enchant instanceof ElementalStaffEnchantment element)
                 elements.add(element);
         }
@@ -158,12 +161,12 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     private static final String OVERCHARGE_NBT = Sortilege.MOD_ID +  "Overcharge";
 
     public int getOvercharge(ItemStack stack) {
-        if (!stack.hasNbt()) return 0;
-        return stack.getOrCreateNbt().getInt(OVERCHARGE_NBT);
+        if (!stack.hasTag()) return 0;
+        return stack.getOrCreateTag().getInt(OVERCHARGE_NBT);
     }
 
     public void setOvercharge(ItemStack stack, int value) {
-        stack.getOrCreateNbt().putInt(OVERCHARGE_NBT, Math.min(value, this.getMaxOvercharge(stack)));
+        stack.getOrCreateTag().putInt(OVERCHARGE_NBT, Math.min(value, this.getMaxOvercharge(stack)));
     }
 
     public int getMaxOvercharge(ItemStack stack) {
@@ -172,62 +175,62 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
 
     @Override
-    public boolean canRepair(ItemStack staff, ItemStack stack) {
+    public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
         if (this.rawInfos != null)
             return this.rawInfos.repair.get().test(stack);
-        return super.canRepair(staff, stack);
+        return super.isValidRepairItem(staff, stack);
     }
 
     @Override
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         if (this.rawInfos != null) return this.rawInfos.enchantability;
-        return super.getEnchantability();
+        return super.getEnchantmentValue();
     }
 
     @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND && this.pierce > 0) {
-            ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
             if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
-                builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID,
-                        "Weapon modifier", this.getAttackDamage(stack)-1, EntityAttributeModifier.Operation.ADDITION));
-                builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID,
-                        "Weapon modifier", -3, EntityAttributeModifier.Operation.ADDITION));
+                builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID,
+                        "Weapon modifier", this.getAttackDamage(stack)-1, AttributeModifier.Operation.ADDITION));
+                builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID,
+                        "Weapon modifier", -3, AttributeModifier.Operation.ADDITION));
             }
 
-            builder.put(ModAttributes.STAFF_DAMAGE, new EntityAttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(),
-                    "Weapon modifier", this.getAttackDamage(stack), EntityAttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STAFF_PIERCE, new EntityAttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(),
-                    "Weapon modifier", this.getPierce(stack), EntityAttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STAFF_RANGE, new EntityAttributeModifier(ModAttributes.STAFF_RANGE.getUUID(),
-                    "Weapon modifier", this.getAttackRange(stack), EntityAttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(),
+                    "Weapon modifier", this.getAttackDamage(stack), AttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_PIERCE, new AttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(),
+                    "Weapon modifier", this.getPierce(stack), AttributeModifier.Operation.ADDITION));
+            builder.put(ModAttributes.STAFF_RANGE, new AttributeModifier(ModAttributes.STAFF_RANGE.getUUID(),
+                    "Weapon modifier", this.getAttackRange(stack), AttributeModifier.Operation.ADDITION));
 
             return builder.build();
         }
-        return super.getAttributeModifiers(slot);
+        return super.getDefaultAttributeModifiers(slot);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext flag) {
-        super.appendTooltip(stack, world, tooltip, flag);
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
 
         // Undergarden compat
-        if (stack.isIn(ModTags.Items.FROSTSTEEL_ITEMS))
-            tooltip.add(Text.translatable("tooltip.froststeel_sword").formatted(Formatting.AQUA));
-        if (stack.isIn(ModTags.Items.UTHERIUM_ITEMS))
-            tooltip.add(Text.translatable("tooltip.utheric_sword").formatted(Formatting.RED));
-        if (stack.isIn(ModTags.Items.FORGOTTEN_ITEMS))
-            tooltip.add(Text.translatable("tooltip.forgotten_sword").formatted(Formatting.GREEN));
+        if (stack.is(ModTags.Items.FROSTSTEEL_ITEMS))
+            tooltip.add(Component.translatable("tooltip.froststeel_sword").withStyle(ChatFormatting.AQUA));
+        if (stack.is(ModTags.Items.UTHERIUM_ITEMS))
+            tooltip.add(Component.translatable("tooltip.utheric_sword").withStyle(ChatFormatting.RED));
+        if (stack.is(ModTags.Items.FORGOTTEN_ITEMS))
+            tooltip.add(Component.translatable("tooltip.forgotten_sword").withStyle(ChatFormatting.GREEN));
 
-        if (world != null && world.isClient())
-            tooltip.add(Text.translatable("sortilege.staff.cooldown", this.getCooldown(stack, MinecraftClient.getInstance().player) / 20f)
-                    .formatted(Formatting.GRAY));
+        if (world != null && world.isClientSide())
+            tooltip.add(Component.translatable("sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f)
+                    .withStyle(ChatFormatting.GRAY));
         if (this.getXPCost(stack) > 0) {
-            tooltip.add(Text.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
-                    .formatted(Formatting.GREEN));
-            tooltip.add(Text.empty());
+            tooltip.add(Component.translatable("sortilege.staff.experience_cost", this.getXPCost(stack))
+                    .withStyle(ChatFormatting.GREEN));
+            tooltip.add(Component.empty());
         }
     }
 
@@ -241,12 +244,12 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
 
 
     @Override
-    public boolean onClicked(ItemStack stack, ItemStack other, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference) {
-        if (clickType != ClickType.RIGHT) return false;
+    public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack other, Slot slot, ClickAction clickType, Player player, SlotAccess cursorStackReference) {
+        if (clickType != ClickAction.SECONDARY) return false;
 
-        String id = Registries.ITEM.getId(other.getItem()).toString();
+        String id = BuiltInRegistries.ITEM.getKey(other.getItem()).toString();
         if (ConfigEntries.overchargeIngredients.containsKey(id) && this.getOvercharge(stack) < this.getMaxOvercharge(stack)) {
-            other.decrement(1);
+            other.shrink(1);
             this.setOvercharge(stack, this.getOvercharge(stack) + ConfigEntries.overchargeIngredients.get(id).intValue());
 
             return true;
@@ -255,22 +258,22 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     }
 
     @Override
-    public @NotNull TypedActionResult<ItemStack> use(@NotNull World world, PlayerEntity player, @NotNull Hand hand) {
-        ItemStack staff = player.getStackInHand(hand);
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level world, Player player, @NotNull InteractionHand hand) {
+        ItemStack staff = player.getItemInHand(hand);
         if (!player.isCreative() && !XPHelper.hasXP(player, this.getXPCost(staff)) && this.getOvercharge(staff) <= 0)
             return super.use(world, player, hand);
-        if (player.getStackInHand(hand == Hand.MAIN_HAND ? Hand.OFF_HAND : Hand.MAIN_HAND).getItem() instanceof ShieldItem
-                && player.isSneaking())
+        if (player.getItemInHand(hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND).getItem() instanceof ShieldItem
+                && player.isShiftKeyDown())
             return super.use(world, player, hand);
 
         this.handSave = hand;
-        player.setCurrentHand(hand);
+        player.startUsingItem(hand);
         return super.use(world, player, hand);
     }
 
     @Override
-    public ItemStack finishUsing(ItemStack staff, World world, LivingEntity entity) {
-        if (!(entity instanceof PlayerEntity player))
+    public ItemStack finishUsingItem(ItemStack staff, Level world, LivingEntity entity) {
+        if (!(entity instanceof Player player))
             return staff;
 
         Set<ElementalStaffEnchantment> elements = this.getElements(staff);
@@ -284,23 +287,23 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {
             if (!XPHelper.hasXP(player, cost))
                 return staff;
-            player.addExperience(-cost);
+            player.giveExperiencePoints(-cost);
         }
 
         if (this.handSave != null)
-            player.swingHand(this.handSave, true);
+            player.swing(this.handSave, true);
 
-        world.playSound(player, player.getBlockPos(), SoundEvents.BLOCK_AMETHYST_BLOCK_HIT, SoundCategory.PLAYERS, 1, 1);
-        player.getItemCooldownManager().set(staff.getItem(), this.getCooldown(staff, player));
+        world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
+        player.getCooldowns().addCooldown(staff.getItem(), this.getCooldown(staff, player));
 
         if (this.getOvercharge(staff) <= 0 || !ConfigEntries.overchargePreventsDurability)
-            staff.damage(1, player, e -> e.sendToolBreakStatus(this.handSave));
+            staff.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.handSave));
         if (this.getOvercharge(staff) > 0)
             this.setOvercharge(staff, this.getOvercharge(staff) - 1);
 
 
         // Getting the look vector to shoot the ray along
-        Vec3d look = MathHelper.getLookVector(player);
+        Vec3 look = MathHelper.getLookVector(player);
 
         // Initialising variables to be used in the loop
         List<String> targetsHit = new ArrayList<>();
@@ -312,9 +315,9 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
         BlockPos pos;
 
 
-        if (world instanceof ServerWorld server && !(this.rawInfos == null)) {
-            server.getServer().getCommandManager().executeWithPrefix(
-                    player.getCommandSource().withOutput(CommandOutput.DUMMY),
+        if (world instanceof ServerLevel server && !(this.rawInfos == null)) {
+            server.getServer().getCommands().performPrefixedCommand(
+                    player.createCommandSourceStack().withSource(CommandSource.NULL),
                     this.rawInfos.on_shoot);
         }
 
@@ -333,10 +336,10 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
                 continue;
 
             pos = new BlockPos((int) Math.round(x-0.5), (int) Math.round(y-0.5), (int) Math.round(z-0.5));
-            Vec3d vec = new Vec3d(x, y, z).subtract(pos.getX(), pos.getY(), pos.getZ());
-            List<Entity> entities = player.getWorld().getOtherEntities(player, new Box(pos).expand(0.1));
+            Vec3 vec = new Vec3(x, y, z).subtract(pos.getX(), pos.getY(), pos.getZ());
+            List<Entity> entities = player.level().getEntities(player, new AABB(pos).inflate(0.1));
 
-            if (world.getBlockState(pos).getCollisionShape(world, pos).getBoundingBoxes()
+            if (world.getBlockState(pos).getCollisionShape(world, pos).toAabbs()
                     .stream().anyMatch(box -> box.contains(vec))) {
                 if (ConfigEntries.staffsPierceBlocks)
                     targetsLeft--;
@@ -350,7 +353,7 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             while (!entities.isEmpty() && entities.size() > index && targetsLeft > 0) {
 
                 if (entities.get(index) instanceof LivingEntity target
-                        && !targetsHit.contains(target.getUuidAsString()) && StaffItem.canHit(player, target)) {
+                        && !targetsHit.contains(target.getStringUUID()) && StaffItem.canHit(player, target)) {
 
                     this.triggerAttack(target, player, staff, elements, look, true, damage, targetsHit);
 
@@ -368,45 +371,45 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     }
 
     @Override
-    public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
             this.triggerAttack(target, attacker, stack, this.getElements(stack), MathHelper.getLookVector(attacker), true,
                     this.getAttackDamage(stack), new ArrayList<>());
         }
-        return super.postHit(stack, target, attacker);
+        return super.hurtEnemy(stack, target, attacker);
     }
 
     public void triggerAttack(LivingEntity target, LivingEntity attacker, ItemStack stack, Set<ElementalStaffEnchantment> elements,
-                              Vec3d direction, boolean propagate, float damage, List<String> targetsHit) {
+                              Vec3 direction, boolean propagate, float damage, List<String> targetsHit) {
 
-        if (targetsHit.contains(target.getUuidAsString())) return;
+        if (targetsHit.contains(target.getStringUUID())) return;
 
-        World world = attacker.getWorld();
+        Level world = attacker.level();
         float kinesis = EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
         float d = this.modifyDamageDealt(damage, stack, target, elements);
 
         if (d > 0)
-            target.damage(attacker.getDamageSources().indirectMagic(attacker, attacker), d);
+            target.hurt(attacker.damageSources().indirectMagic(attacker, attacker), d);
         else if (d < 0) {
             target.heal(-d);
-            ModParticles.spawnWisps(world, target.getX(), target.getY() + target.getStandingEyeHeight() / 2, target.getZ(),
+            ModParticles.spawnWisps(world, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(),
                     10, new float[]{1, 0.5f, 0.5f});
         }
 
-        targetsHit.add(target.getUuidAsString());
+        targetsHit.add(target.getStringUUID());
 
-        if (world instanceof ServerWorld server && this.rawInfos != null) {
-            server.getServer().getCommandManager().executeWithPrefix(
-                    attacker.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
+        if (world instanceof ServerLevel server && this.rawInfos != null) {
+            server.getServer().getCommands().performPrefixedCommand(
+                    attacker.createCommandSourceStack().withMaximumPermission(4).withSource(CommandSource.NULL),
                     this.rawInfos.on_hit_self);
 
-            server.getServer().getCommandManager().executeWithPrefix(
-                    target.getCommandSource().withMaxLevel(4).withOutput(CommandOutput.DUMMY),
+            server.getServer().getCommands().performPrefixedCommand(
+                    target.createCommandSourceStack().withMaximumPermission(4).withSource(CommandSource.NULL),
                     this.rawInfos.on_hit_target);
         }
 
         if (kinesis != 0)
-            target.setVelocity(direction.add(0, 0.07, 0).normalize().multiply(kinesis * 0.55));
+            target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));
 
         for (ElementalStaffEnchantment element : elements) {
             int elementLevel = EnchantHelper.getEnchantLevel(element, stack);
@@ -414,22 +417,22 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
             element.triggerAttack(target, elementLevel);
             if (element == ModEnchants.BLAST && elementLevel > 1 && propagate) {
                 this.triggerBlastAttack(attacker, stack, elements, direction, damage,
-                        target.getX(), target.getY() + target.getStandingEyeHeight() / 2, target.getZ(),
+                        target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(),
                         2, targetsHit);
             }
         }
     }
 
-    public void triggerBlastAttack(LivingEntity attacker, ItemStack stack, Set<ElementalStaffEnchantment> elements, Vec3d direction, float damage,
+    public void triggerBlastAttack(LivingEntity attacker, ItemStack stack, Set<ElementalStaffEnchantment> elements, Vec3 direction, float damage,
                                    double x, double y, double z, double radius, List<String> targetsHit) {
 
-        if (attacker.getWorld().isClient())
-            attacker.getWorld().createExplosion(attacker, x, y, z, 1, World.ExplosionSourceType.NONE);
+        if (attacker.level().isClientSide())
+            attacker.level().explode(attacker, x, y, z, 1, Level.ExplosionInteraction.NONE);
 
-        Vec3d pos = new Vec3d(x, y, z);
-        Vec3d offset = new Vec3d(radius, radius, radius);
+        Vec3 pos = new Vec3(x, y, z);
+        Vec3 offset = new Vec3(radius, radius, radius);
 
-        for (Entity entity : attacker.getWorld().getOtherEntities(attacker, new Box(pos.subtract(offset), pos.add(offset)))) {
+        for (Entity entity : attacker.level().getEntities(attacker, new AABB(pos.subtract(offset), pos.add(offset)))) {
             if (entity instanceof LivingEntity target && StaffItem.canHit(attacker, target)) {
                 this.triggerAttack(target, attacker, stack, elements, direction, false, damage, targetsHit);
             }
@@ -437,49 +440,49 @@ public class StaffItem extends ToolItem implements DyeableItem, AddedRenderItem 
     }
 
     public static boolean canHit(LivingEntity shooter, LivingEntity target) {
-        return !(target instanceof Tameable tameable && tameable.getOwner() == shooter) && !target.getPassengerList().contains(shooter);
+        return !(target instanceof OwnableEntity tameable && tameable.getOwner() == shooter) && !target.getPassengers().contains(shooter);
     }
 
     public float modifyDamageDealt(float damage, ItemStack stack, LivingEntity target, Set<ElementalStaffEnchantment> elements) {
         if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
-            if (target.getType().isIn(ModTags.Entities.UNDEAD))
+            if (target.getType().is(ModTags.Entities.UNDEAD))
                 damage *= 1 + EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
-            else if (!ConfigEntries.altBlessing || !(target instanceof Monster))
+            else if (!ConfigEntries.altBlessing || !(target instanceof Enemy))
                 damage *= EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
         }
 
         // Undergarden compat
-        if (target.getType().isIn(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.isIn(ModTags.Items.FORGOTTEN_ITEMS))
+        if (target.getType().is(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.is(ModTags.Items.FORGOTTEN_ITEMS))
             damage *= 1.5f;
-        if (target.getType().isIn(ModTags.Entities.ROTSPAWN) && stack.isIn(ModTags.Items.UTHERIUM_ITEMS))
+        if (target.getType().is(ModTags.Entities.ROTSPAWN) && stack.is(ModTags.Items.UTHERIUM_ITEMS))
             damage *= 1.5f;
 
         return damage;
     }
 
     @Override
-    public int getMaxUseTime(ItemStack stack) {
+    public int getUseDuration(ItemStack stack) {
         return this.charge;
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BOW;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BOW;
     }
 
 
-    private static final Identifier COLOR_OVERLAY = Sortilege.makeID("textures/models/staff/glint.png");
+    private static final ResourceLocation COLOR_OVERLAY = Sortilege.makeID("textures/models/staff/glint.png");
 
     @Override
     public boolean shouldRender(ItemStack stack) {
-        return this.hasColor(stack) && !stack.isIn(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
+        return this.hasCustomColor(stack) && !stack.is(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
     }
 
     @Override
-    public void render(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+    public void render(ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         matrices.scale(1.005f, 1.005f, 1.005f);
         matrices.translate(0, 0.995, 0.4975);
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(180));
+        matrices.mulPose(Axis.XP.rotationDegrees(180));
 
         MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light, COLOR_OVERLAY, this.getColor(stack));
     }

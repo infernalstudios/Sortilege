@@ -4,13 +4,13 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.PotionHelper;
-import net.minecraft.client.render.item.ItemModels;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedModelManager;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.ItemModelShaper;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,28 +19,28 @@ import org.spongepowered.asm.mixin.Unique;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(ItemModels.class)
+@Mixin(ItemModelShaper.class)
 public class ItemModelsMixin {
     @Unique private static final Map<String, BakedModel> MODEL_CACHE = new HashMap<>();
-    @Unique private static final Map<String, ModelIdentifier> ID_CACHE = new HashMap<>();
+    @Unique private static final Map<String, ModelResourceLocation> ID_CACHE = new HashMap<>();
 
-    @Shadow @Final private BakedModelManager modelManager;
+    @Shadow @Final private ModelManager modelManager;
 
-    @WrapMethod(method = "getModel(Lnet/minecraft/item/ItemStack;)Lnet/minecraft/client/render/model/BakedModel;")
+    @WrapMethod(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
         if (!ConfigEntries.potionTextures) return original.call(stack);
         if (!PotionHelper.isPotionItem(stack)) return original.call(stack);
-        if (!stack.hasNbt()) return original.call(stack);
+        if (!stack.hasTag()) return original.call(stack);
         
-        Identifier id = new Identifier(stack.getNbt().getString("Potion"));
+        ResourceLocation id = new ResourceLocation(stack.getTag().getString("Potion"));
         String key = PotionHelper.getPotionItemType(stack);
         if (MODEL_CACHE.containsKey(key)) return MODEL_CACHE.get(key);
 
         String base = "";
-        if (stack.isOf(Items.SPLASH_POTION)) base = "splash/";
-        else if (stack.isOf(Items.LINGERING_POTION)) base = "lingering/";
+        if (stack.is(Items.SPLASH_POTION)) base = "splash/";
+        else if (stack.is(Items.LINGERING_POTION)) base = "lingering/";
 
-        BakedModel model = this.modelManager.getModel(getId(id.getNamespace(),
+        BakedModel model = this.modelManager.getModel(sorti_getId(id.getNamespace(),
                 "potions/" + base + id.getPath()));
 
         if (model == this.modelManager.getMissingModel()) {
@@ -50,7 +50,7 @@ public class ItemModelsMixin {
             else if (id.getPath().startsWith("long_") || id.getPath().endsWith("_long"))
                 type = "long_";
 
-            model = this.modelManager.getModel(getId("minecraft",
+            model = this.modelManager.getModel(sorti_getId("minecraft",
                     type + base.replace("/", "_") + "potion"));
         }
 
@@ -61,11 +61,11 @@ public class ItemModelsMixin {
         return model;
     }
 
-    @Unique private static ModelIdentifier getId(String namespace, String path) {
+    @Unique private static ModelResourceLocation sorti_getId(String namespace, String path) {
         String key = namespace + ":" + path;
         if (ID_CACHE.containsKey(key)) return ID_CACHE.get(key);
 
-        ID_CACHE.put(key, new ModelIdentifier(Identifier.of(namespace, path), "inventory"));
+        ID_CACHE.put(key, new ModelResourceLocation(ResourceLocation.tryBuild(namespace, path), "inventory"));
         return ID_CACHE.get(key);
     }
 }

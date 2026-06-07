@@ -2,9 +2,9 @@ package net.lyof.sortilege.mixin.client;
 
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
-import net.minecraft.client.gui.screen.DeathScreen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.DeathScreen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -13,19 +13,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DeathScreen.class)
 public class DeathScreenMixin {
-    @Shadow private Text scoreText;
+
+    @Shadow private Component deathScore;
 
     @Inject(method = "init", at = @At("TAIL"))
     public void replaceDeathScore(CallbackInfo ci) {
         if (ConfigEntries.showDeathCoordinates) {
             DeathScreen self = (DeathScreen) (Object) this;
-            this.scoreText = Text.translatable("sortilege.death_screen.position")
-                    .append(Text.literal(" " + ((ScreenAccessor) self).getClient().player.getBlockPos().toShortString())
-                            .formatted(Formatting.YELLOW));
+            this.deathScore = Component.translatable("sortilege.death_screen.position")
+                    .append(Component.literal(" " + ((ScreenAccessor) self).getMinecraft().player.blockPosition().toShortString())
+                            .withStyle(ChatFormatting.YELLOW));
 
-            ((ScreenAccessor) self).getClient().player.sendMessage(Text.translatable("sortilege.death_screen.position")
-                    .append(Text.literal(" " + ((ScreenAccessor) self).getClient().player.getBlockPos().toShortString())
-                            .formatted(Formatting.YELLOW)), false);
+            ((ScreenAccessor) self).getMinecraft().player.displayClientMessage(Component.translatable("sortilege.death_screen.position")
+                    .append(Component.literal(" " + ((ScreenAccessor) self).getMinecraft().player.blockPosition().toShortString())
+                            .withStyle(ChatFormatting.YELLOW)), false);
         }
     }
 }

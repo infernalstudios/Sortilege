@@ -3,42 +3,46 @@ package net.lyof.sortilege.block.custom;
 import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModTags;
-import net.minecraft.block.*;
-import net.minecraft.block.cauldron.CauldronBehavior;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ColorHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEntityProvider {
+public class PotionCauldronBlock extends LayeredCauldronBlock implements EntityBlock {
     public static class Behavior {
-        public static final Map<Item, CauldronBehavior> INSTANCE = new HashMap<>() {
+        public static final Map<Item, CauldronInteraction> INSTANCE = new HashMap<>() {
             @Override
-            public CauldronBehavior get(Object key) {
-                if (!this.containsKey(key)) return (state, world, pos, player, hand, stack) -> ActionResult.PASS;
+            public CauldronInteraction get(Object key) {
+                if (!this.containsKey(key)) return (state, world, pos, player, hand, stack) -> InteractionResult.PASS;
                 return super.get(key);
             }
         };
@@ -46,90 +50,90 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
         public static void register() {
             INSTANCE.put(Items.GLASS_BOTTLE, (state, world, pos, player, hand, stack) -> {
                 if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron) {
-                    stack.decrement(1);
-                    player.giveItemStack(PotionUtil.setPotion(Items.POTION.getDefaultStack(), cauldron.potion));
+                    stack.shrink(1);
+                    player.addItem(PotionUtils.setPotion(Items.POTION.getDefaultInstance(), cauldron.potion));
 
-                    player.incrementStat(Stats.USE_CAULDRON);
-                    player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-                    world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    world.emitGameEvent(null, GameEvent.FLUID_PICKUP, pos);
+                    player.awardStat(Stats.USE_CAULDRON);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                    world.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    world.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
                 }
 
-                LeveledCauldronBlock.decrementFluidLevel(state, world, pos);
-                return ActionResult.success(world.isClient());
+                LayeredCauldronBlock.lowerFillLevel(state, world, pos);
+                return InteractionResult.sidedSuccess(world.isClientSide());
             });
         }
     }
 
 
-    public static int getBlockColor(BlockState state, BlockRenderView world, BlockPos pos, int tintIndex) {
+    public static int getBlockColor(BlockState state, BlockAndTintGetter world, BlockPos pos, int tintIndex) {
         if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron && tintIndex == 0)
             return (int) cauldron.getRenderData();
         return 16253176;
     }
 
     public static boolean isLit(BlockState state) {
-        return state.getProperties().contains(CampfireBlock.LIT) ? state.get(CampfireBlock.LIT) : true;
+        return state.getProperties().contains(CampfireBlock.LIT) ? state.getValue(CampfireBlock.LIT) : true;
     }
 
 
-    public PotionCauldronBlock(Settings settings) {
-        super(settings.ticksRandomly(), precipitation -> true, Behavior.INSTANCE);
+    public PotionCauldronBlock(Properties settings) {
+        super(settings.randomTicks(), precipitation -> true, Behavior.INSTANCE);
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PotionCauldronBlockEntity(pos, state);
     }
 
     @Override
-    public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data) {
-        super.onSyncedBlockEvent(state, world, pos, type, data);
+    public boolean triggerEvent(BlockState state, Level world, BlockPos pos, int type, int data) {
+        super.triggerEvent(state, world, pos, type, data);
         BlockEntity entity = world.getBlockEntity(pos);
-        return entity != null && entity.onSyncedBlockEvent(type, data);
+        return entity != null && entity.triggerEvent(type, data);
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         super.randomTick(state, world, pos, random);
 
-        if (random.nextFloat() < 0.5 && state.get(LEVEL) != 3 && world.getBlockState(pos.down()).isIn(ModTags.Blocks.REFILLS_CAULDRONS)
-                && isLit(world.getBlockState(pos.down()))) {
+        if (random.nextFloat() < 0.5 && state.getValue(LEVEL) != 3 && world.getBlockState(pos.below()).is(ModTags.Blocks.REFILLS_CAULDRONS)
+                && isLit(world.getBlockState(pos.below()))) {
             BlockState blockState = state.cycle(LEVEL);
-            world.setBlockState(pos, blockState);
+            world.setBlockAndUpdate(pos, blockState);
         }
     }
 
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        super.animateTick(state, world, pos, random);
 
-        if (world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES) && isLit(world.getBlockState(pos.down())))
-            world.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getFluidHeight(state) + 0.1,
+        if (world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES) && isLit(world.getBlockState(pos.below())))
+            world.addParticle(ParticleTypes.BUBBLE_POP, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getContentHeight(state) + 0.1,
                     pos.getZ() + this.getRandomOffset(random), 0, 0, 0);
 
         if (random.nextFloat() < 0.3) {
             int rgb = getBlockColor(state, world, pos, 0);
-            float[] color = new float[]{ColorHelper.Argb.getRed(rgb) / 255f,
-                    ColorHelper.Argb.getGreen(rgb) / 255f,
-                    ColorHelper.Argb.getBlue(rgb) / 255f};
-            world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getFluidHeight(state) + 0.1,
+            float[] color = new float[]{FastColor.ARGB32.red(rgb) / 255f,
+                    FastColor.ARGB32.green(rgb) / 255f,
+                    FastColor.ARGB32.blue(rgb) / 255f};
+            world.addParticle(ParticleTypes.ENTITY_EFFECT, pos.getX() + this.getRandomOffset(random), pos.getY() + this.getContentHeight(state) + 0.1,
                     pos.getZ() + this.getRandomOffset(random), color[0], color[1], color[2]);
         }
     }
 
-    private float getRandomOffset(Random random) {
+    private float getRandomOffset(RandomSource random) {
         return random.nextFloat()*0.8f + 0.2f;
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (!(world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)) return;
 
         if (entity instanceof LivingEntity living) {
-            for (StatusEffectInstance effect : cauldron.potion.getEffects()) {
-                living.addStatusEffect(new StatusEffectInstance(effect.getEffectType(),
-                        effect.getEffectType().isInstant() ? 1 : 100));
+            for (MobEffectInstance effect : cauldron.potion.getEffects()) {
+                living.addEffect(new MobEffectInstance(effect.getEffect(),
+                        effect.getEffect().isInstantenous() ? 1 : 100));
             }
         }
 
@@ -149,21 +153,21 @@ public class PotionCauldronBlock extends LeveledCauldronBlock implements BlockEn
 
                 item.getStack().decrement(state.get(LEVEL));
             }*/
-            if (item.getStack().isIn(ModTags.Items.REFILLS_CAULDRONS) && !this.isFull(state) && ConfigEntries.cauldronBlazeRefill) {
-                world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
+            if (item.getItem().is(ModTags.Items.REFILLS_CAULDRONS) && !this.isFull(state) && ConfigEntries.cauldronBlazeRefill) {
+                world.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
+                world.gameEvent(null, GameEvent.FLUID_PLACE, pos);
 
-                world.setBlockState(pos, state.cycle(LEVEL));
-                world.markDirty(pos);
-                world.updateListeners(pos, state, state, 0);
+                world.setBlockAndUpdate(pos, state.cycle(LEVEL));
+                world.blockEntityChanged(pos);
+                world.sendBlockUpdated(pos, state, state, 0);
 
-                item.getStack().decrement(1);
+                item.getItem().shrink(1);
             }
         }
     }
 
     @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return Blocks.CAULDRON.getPickStack(world, pos, state);
+    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state) {
+        return Blocks.CAULDRON.getCloneItemStack(world, pos, state);
     }
 }

@@ -1,14 +1,14 @@
 package net.lyof.sortilege.recipe.enchanting.knowledge;
 
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,13 +26,13 @@ public class EnchantKnowledge {
     }
 
     public boolean isLearnable(ItemStack stack, Enchantment enchant, int value) {
-        if (stack.isOf(Items.ENCHANTED_BOOK) || !stack.hasNbt() || !stack.getNbt().getBoolean(LEARNABLE_KEY)) return false;
+        if (stack.is(Items.ENCHANTED_BOOK) || !stack.hasTag() || !stack.getTag().getBoolean(LEARNABLE_KEY)) return false;
         return this.getKnownLevel(enchant) < value;
     }
 
     public void learn(ItemStack stack) {
         for (Map.Entry<Enchantment, Integer> entry : stack.getItem() instanceof KnowledgeBookItem ?
-                KnowledgeBookItem.getKnowledge(stack).getEntries() : EnchantmentHelper.get(stack).entrySet())
+                KnowledgeBookItem.getKnowledge(stack).getEntries() : EnchantmentHelper.getEnchantments(stack).entrySet())
             this.learn(entry.getKey(), entry.getValue());
     }
 
@@ -56,19 +56,19 @@ public class EnchantKnowledge {
     public static final String AUTHORS_KEY = "sorti_Authors";
     public static final String LEARNABLE_KEY = "sorti_IsLearnable";
 
-    public NbtCompound write(NbtCompound nbt) {
+    public CompoundTag write(CompoundTag nbt) {
         for (Map.Entry<Enchantment, Integer> entry : this.known.entrySet())
-            nbt.putInt(Registries.ENCHANTMENT.getId(entry.getKey()).toString(), entry.getValue());
+            nbt.putInt(BuiltInRegistries.ENCHANTMENT.getKey(entry.getKey()).toString(), entry.getValue());
         return nbt;
     }
 
-    public static EnchantKnowledge read(NbtCompound nbt) {
+    public static EnchantKnowledge read(CompoundTag nbt) {
         EnchantKnowledge self = new EnchantKnowledge();
-        if (!nbt.contains(KNOWLEDGE_KEY, NbtElement.COMPOUND_TYPE)) return self;
+        if (!nbt.contains(KNOWLEDGE_KEY, Tag.TAG_COMPOUND)) return self;
 
         nbt = nbt.getCompound(KNOWLEDGE_KEY);
-        for (String enchant : nbt.getKeys())
-            self.learn(Registries.ENCHANTMENT.get(new Identifier(enchant)), nbt.getInt(enchant));
+        for (String enchant : nbt.getAllKeys())
+            self.learn(BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(enchant)), nbt.getInt(enchant));
 
         return self;
     }
@@ -76,7 +76,7 @@ public class EnchantKnowledge {
     @Override
     public String toString() {
         return "EnchantKnowledge{" +
-                known.entrySet().stream().map(entry -> entry.getKey().getTranslationKey() + " " + entry.getValue()).toList() +
+                known.entrySet().stream().map(entry -> entry.getKey().getDescriptionId() + " " + entry.getValue()).toList() +
                 '}';
     }
 }

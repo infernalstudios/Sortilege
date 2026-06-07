@@ -3,13 +3,13 @@ package net.lyof.sortilege.item.custom;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -20,16 +20,16 @@ public class LimititeItem extends Item {
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return ConfigEntries.isLimititeFoil;
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext context) {
-        super.appendTooltip(stack, level, list, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag context) {
+        super.appendHoverText(stack, level, list, context);
 
         if (Screen.hasShiftDown())
-            list.add(Text.translatable("item.sortilege.limitite.desc").formatted(Formatting.YELLOW));
+            list.add(Component.translatable("item.sortilege.limitite.desc").withStyle(ChatFormatting.YELLOW));
         else
             list.add(EnchantHelper.getShiftTooltip());
     }

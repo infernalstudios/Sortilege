@@ -5,14 +5,14 @@ import com.mojang.datafixers.util.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.util.MathHelper;
-import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterial;
-import net.minecraft.item.ToolMaterials;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class ModConfig {
 
 
     public static class StaffInfo {
-        public ToolMaterial tier;
+        public Tier tier;
         public int enchantability;
         public int damage;
         public int pierce;
@@ -75,27 +75,27 @@ public class ModConfig {
         public StaffInfo(String tier, int enchant, int dmg, int pierce, int range, int dura, String repair,  int cooldown, int charge_time,
                          int xp_cost, List<List<Double>> colors, boolean fire_res, String dependency, String on_shoot, String on_hit_self, String on_hit_target) {
             try {
-                this.tier = ToolMaterials.valueOf(tier);
+                this.tier = Tiers.valueOf(tier);
             }
             catch (IllegalArgumentException e) {
-                this.tier = ToolMaterials.WOOD;
+                this.tier = Tiers.WOOD;
             }
             this.enchantability = enchant == -1 ?
-                this.tier.getEnchantability() : enchant;
+                this.tier.getEnchantmentValue() : enchant;
             this.damage = dmg;
             this.pierce = pierce;
             this.range = range;
             this.durability = (dura == -1) ?
-                this.tier.getDurability() : dura;
+                this.tier.getUses() : dura;
             if (repair.isEmpty())
                 this.repair = () -> this.tier.getRepairIngredient();
             else if (repair.startsWith("#")) {
-                TagKey<Item> tag = TagKey.of(RegistryKeys.ITEM, new Identifier(repair.substring(1)));
-                this.repair = () -> Ingredient.fromTag(tag);
+                TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(repair.substring(1)));
+                this.repair = () -> Ingredient.of(tag);
             }
             else {
-                Identifier id = new Identifier(repair);
-                this.repair = () -> Ingredient.ofItems(Registries.ITEM.get(id));
+                ResourceLocation id = new ResourceLocation(repair);
+                this.repair = () -> Ingredient.of(BuiltInRegistries.ITEM.get(id));
             }
             this.cooldown = Math.max(cooldown, 0);
             this.charge_time = Math.max(charge_time, 1);
@@ -124,7 +124,7 @@ public class ModConfig {
                     ", pierce=" + pierce +
                     ", range=" + range +
                     ", durability=" + durability +
-                    ", repair=" + Arrays.toString(repair.get().getMatchingStacks()) +
+                    ", repair=" + Arrays.toString(repair.get().getItems()) +
                     ", cooldown=" + cooldown +
                     ", charge_time=" + charge_time +
                     ", xp_cost=" + xp_cost +

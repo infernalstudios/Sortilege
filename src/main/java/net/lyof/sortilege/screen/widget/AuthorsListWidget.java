@@ -1,34 +1,29 @@
 package net.lyof.sortilege.screen.widget;
 
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.mixin.accessor.TextFieldWidgetAccessor;
+import net.lyof.sortilege.mixin.accessor.EditBoxAccessor;
 import net.lyof.sortilege.screen.PlainDrawContext;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.widget.ScrollableWidget;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractScrollWidget;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-public class AuthorsListWidget extends ScrollableWidget {
+public class AuthorsListWidget extends AbstractScrollWidget {
     public static final int BUTTON_SIZE = 12;
 
-    private final TextRenderer textRenderer;
-    private final List<TextFieldWidget> widgets;
+    private final Font textRenderer;
+    private final List<EditBox> widgets;
 
-    public AuthorsListWidget(int x, int y, int width, int height, TextRenderer textRenderer, List<String> authors) {
-        super(x, y, width, height, Text.empty());
+    public AuthorsListWidget(int x, int y, int width, int height, Font textRenderer, List<String> authors) {
+        super(x, y, width, height, Component.empty());
         this.textRenderer = textRenderer;
         this.widgets = new ArrayList<>();
         this.build(authors);
@@ -44,89 +39,89 @@ public class AuthorsListWidget extends ScrollableWidget {
             y += BUTTON_SIZE;
         }
 
-        TextFieldWidget widget = makeTextField("", y);
+        EditBox widget = makeTextField("", y);
         widget.setFocused(true);
 
         this.widgets.add(widget);
     }
 
-    private @NotNull TextFieldWidget makeTextField(String author, int y) {
-        TextFieldWidget widget = new TextFieldWidget(this.textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Text.empty()) {
+    private @NotNull EditBox makeTextField(String author, int y) {
+        EditBox widget = new EditBox(this.textRenderer, this.getX() + 1, y, width - 2, BUTTON_SIZE, Component.empty()) {
             @Override
             public int getY() {
-                return super.getY() - (int) AuthorsListWidget.this.getScrollY();
+                return super.getY() - (int) AuthorsListWidget.this.scrollAmount();
             }
         };
-        widget.setFocusUnlocked(true);
-        widget.setDrawsBackground(false);
-        widget.setEditableColor(Formatting.DARK_GRAY.getColorValue());
-        widget.setUneditableColor(Formatting.GRAY.getColorValue());
-        widget.setText(author);
-        if (y == this.getY() + 1 || author.equals(MinecraftClient.getInstance().player.getEntityName()))
+        widget.setCanLoseFocus(true);
+        widget.setBordered(false);
+        widget.setTextColor(ChatFormatting.DARK_GRAY.getColor());
+        widget.setTextColorUneditable(ChatFormatting.GRAY.getColor());
+        widget.setValue(author);
+        if (y == this.getY() + 1 || author.equals(Minecraft.getInstance().player.getScoreboardName()))
             widget.setEditable(false);
         return widget;
     }
 
     @Override
-    protected double getDeltaYPerScroll() {
+    protected double scrollRate() {
         return 9;
     }
 
     @Override
-    protected void appendClickableNarrations(NarrationMessageBuilder builder) {}
+    protected void updateWidgetNarration(NarrationElementOutput builder) {}
 
 
     @Override
-    protected int getContentsHeight() {
+    protected int getInnerHeight() {
         return this.widgets.size() * BUTTON_SIZE;
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics drawContext, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             //this.drawBox(drawContext);
             drawContext.enableScissor(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1);
             this.renderContents(drawContext, mouseX, mouseY, partialTick);
             drawContext.disableScissor();
-            this.renderOverlay(drawContext);
+            this.renderDecorations(drawContext);
         }
     }
 
     @Override
-    protected void renderContents(DrawContext drawContext, int mouseX, int mouseY, float partialTicks) {
+    protected void renderContents(GuiGraphics drawContext, int mouseX, int mouseY, float partialTicks) {
         drawContext = new PlainDrawContext(drawContext);
-        for (TextFieldWidget widget : this.widgets)
+        for (EditBox widget : this.widgets)
             widget.render(drawContext, mouseX, mouseY, partialTicks);
     }
 
     public void tick() {
-        for (TextFieldWidget widget : this.widgets)
+        for (EditBox widget : this.widgets)
             widget.tick();
     }
 
     public boolean isActive() {
-        for (TextFieldWidget widget : this.widgets)
-            if (widget.isActive()) return true;
+        for (EditBox widget : this.widgets)
+            if (widget.canConsumeInput()) return true;
         return false;
     }
 
     public void setVisible(boolean visible) {
-        for (TextFieldWidget widget : this.widgets)
+        for (EditBox widget : this.widgets)
             widget.setVisible(visible);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean r = super.mouseClicked(mouseX, mouseY, button);
-        if (r && !this.isWithinBounds(mouseX, mouseY)) {
+        if (r && !this.withinContentAreaPoint(mouseX, mouseY)) {
             this.setFocused(true);
             return true;
         }
 
         this.setFocused(false);
-        for (TextFieldWidget widget : this.widgets) {
+        for (EditBox widget : this.widgets) {
             widget.setFocused(false);
-            if (((TextFieldWidgetAccessor) widget).isEditable() && widget.isMouseOver(mouseX, mouseY)) {
+            if (((EditBoxAccessor) widget).isEditable() && widget.isMouseOver(mouseX, mouseY)) {
                 widget.setFocused(true);
                 r = widget.mouseClicked(mouseX, mouseY, button);
             }
@@ -139,12 +134,12 @@ public class AuthorsListWidget extends ScrollableWidget {
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         boolean r = super.keyPressed(keyCode, scanCode, modifiers);
         if (keyCode == 265) {  // Up
-            Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
+            Optional<EditBox> w = this.widgets.stream().filter(EditBox::canConsumeInput).findFirst();
             if (w.isPresent()) {
                 int i = this.widgets.indexOf(w.get()) - 1;
-                while (i > 0 && !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                while (i > 0 && !((EditBoxAccessor) this.widgets.get(i)).isEditable())
                     i--;
-                while (i < 0 || !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                while (i < 0 || !((EditBoxAccessor) this.widgets.get(i)).isEditable())
                     i++;
 
                 w.get().setFocused(false);
@@ -154,12 +149,12 @@ public class AuthorsListWidget extends ScrollableWidget {
             return r;
         }
         if (keyCode == 264) {  // Down
-            Optional<TextFieldWidget> w = this.widgets.stream().filter(TextFieldWidget::isActive).findFirst();
+            Optional<EditBox> w = this.widgets.stream().filter(EditBox::canConsumeInput).findFirst();
             if (w.isPresent()) {
                 int i = this.widgets.indexOf(w.get()) + 1;
-                while (i < this.widgets.size() && !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                while (i < this.widgets.size() && !((EditBoxAccessor) this.widgets.get(i)).isEditable())
                     i++;
-                while (i >= this.widgets.size() || !((TextFieldWidgetAccessor) this.widgets.get(i)).isEditable())
+                while (i >= this.widgets.size() || !((EditBoxAccessor) this.widgets.get(i)).isEditable())
                     i--;
 
                 w.get().setFocused(false);
@@ -169,7 +164,7 @@ public class AuthorsListWidget extends ScrollableWidget {
             return r;
         }
 
-        for (TextFieldWidget widget : this.widgets) {
+        for (EditBox widget : this.widgets) {
             if (widget.keyPressed(keyCode, scanCode, modifiers))
                 return true;
         }
@@ -181,7 +176,7 @@ public class AuthorsListWidget extends ScrollableWidget {
         if (super.charTyped(chr, modifiers))
             return true;
 
-        for (TextFieldWidget widget : this.widgets) {
+        for (EditBox widget : this.widgets) {
             if (widget.charTyped(chr, modifiers))
                 return true;
         }
@@ -191,9 +186,9 @@ public class AuthorsListWidget extends ScrollableWidget {
     public List<String> validate() {
         List<String> authors = new ArrayList<>();
 
-        for (TextFieldWidget widget : this.widgets) {
-            if (!widget.getText().isEmpty())
-                authors.add(widget.getText());
+        for (EditBox widget : this.widgets) {
+            if (!widget.getValue().isEmpty())
+                authors.add(widget.getValue());
         }
         /*String user = MinecraftClient.getInstance().player.getEntityName();
         if (!authors.contains(user))

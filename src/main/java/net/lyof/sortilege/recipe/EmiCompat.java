@@ -18,9 +18,9 @@ import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.lyof.sortilege.setup.ModTags;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
 import java.util.Map;
@@ -50,10 +50,10 @@ public class EmiCompat implements EmiPlugin {
         for (Map.Entry<Item, List<Enchantment>> entry : EnchantingCatalyst.CATALYSTS.entrySet())
             registry.addRecipe(new CatalystEmiRecipe(entry.getKey(), entry.getValue()));
 
-        for (BrewingRecipe recipe : registry.getRecipeManager().listAllOfType(ModRecipeTypes.BREWING))
+        for (BrewingRecipe recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.BREWING))
             registry.addRecipe(new BetterBrewingEmiRecipe(recipe));
 
-        for (CauldronBrewingRecipe recipe : registry.getRecipeManager().listAllOfType(ModRecipeTypes.CAULDRON_BREWING))
+        for (CauldronBrewingRecipe recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CAULDRON_BREWING))
             registry.addRecipe(new CauldronBrewingEmiRecipe(recipe));
     }
 }

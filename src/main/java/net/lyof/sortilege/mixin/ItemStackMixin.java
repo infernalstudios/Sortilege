@@ -11,21 +11,21 @@ import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ThrowablePotionItem;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ThrowablePotionItem;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -36,51 +36,50 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    @Shadow public abstract NbtCompound getOrCreateNbt();
-    @Shadow public abstract boolean isIn(TagKey<Item> tag);
-
+    @Shadow public abstract CompoundTag getOrCreateTag();
+    @Shadow public abstract boolean is(TagKey<Item> tag);
     @Shadow public abstract Item getItem();
 
-    @Inject(method = "addEnchantment", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "enchant", at = @At("HEAD"), cancellable = true)
     public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
         ItemStack self = (ItemStack) (Object) this;
 
         int a = EnchantHelper.getUsedEnchantSlots(self);
         int limit = EnchantHelper.getTotalEnchantSlots(self);
         if (limit >= 0) {
-            if (!this.getOrCreateNbt().contains("Enchantments", 9))
-                this.getOrCreateNbt().put("Enchantments", new NbtList());
+            if (!this.getOrCreateTag().contains("Enchantments", 9))
+                this.getOrCreateTag().put("Enchantments", new ListTag());
 
-            if (a < limit || (ConfigEntries.cursesAddSlots && enchantment.isCursed())) {
-                NbtList listtag = this.getOrCreateNbt().getList("Enchantments", 10);
-                listtag.add(EnchantmentHelper.createNbt(EnchantmentHelper.getEnchantmentId(enchantment), (byte) level));
+            if (a < limit || (ConfigEntries.cursesAddSlots && enchantment.isCurse())) {
+                ListTag listtag = this.getOrCreateTag().getList("Enchantments", 10);
+                listtag.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), (byte) level));
             }
 
             ci.cancel();
         }
     }
 
-    @ModifyReturnValue(method = "isIn", at = @At("RETURN"))
+    @ModifyReturnValue(method = "is(Lnet/minecraft/tags/TagKey;)Z", at = @At("RETURN"))
     private boolean isInKinetic(boolean original, TagKey<Item> tag) {
         if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof StaffItem)
             return original && EnchantHelper.hasEnchant(ModEnchants.BONK, (ItemStack) (Object) this);
         return original;
     }
 
-    @Inject(method = "isDamageable", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "isDamageableItem", at = @At("HEAD"), cancellable = true)
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
-        if (this.isIn(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (ConfigEntries.betterUnbreaking > 0 && EnchantmentHelper.getLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ConfigEntries.betterUnbreaking)
+        if (this.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
+        if (ConfigEntries.betterUnbreaking > 0 && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ConfigEntries.betterUnbreaking)
             cir.setReturnValue(false);
     }
 
-    @WrapMethod(method = "getMaxCount")
+    @WrapMethod(method = "getMaxStackSize")
     public int stackablePotions(Operation<Integer> original) {
         ItemStack self = (ItemStack) (Object) this;
         if (!PotionHelper.isPotionItem(self)) return original.call();
 
         int stackSize = ConfigEntries.potionStackSize;
-        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(self));
+        CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(self));
         if (data != null) stackSize = data.stackSize;
 
         return stackSize;
@@ -90,29 +89,29 @@ public abstract class ItemStackMixin {
     @Unique
     private void setPotionCooldown(ItemStack self, LivingEntity user) {
         int cooldown = ConfigEntries.potionCooldown;
-        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(self));
+        CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(self));
         if (data != null) cooldown = data.cooldown;
 
         PotionCooldownManager.set(self, user, cooldown);
     }
 
-    @Inject(method = "finishUsing", at = @At("HEAD"))
-    public void putOnCooldown(World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
+    @Inject(method = "finishUsingItem", at = @At("HEAD"))
+    public void putOnCooldown(Level world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         ItemStack self = (ItemStack) (Object) this;
-        if (!PotionHelper.isPotionItem(self) || PotionUtil.getPotion(self).getEffects().isEmpty()) return;
+        if (!PotionHelper.isPotionItem(self) || PotionUtils.getPotion(self).getEffects().isEmpty()) return;
 
         this.setPotionCooldown(self, user);
     }
 
     @WrapMethod(method = "use")
-    public TypedActionResult<ItemStack> handleUse(World world, PlayerEntity user, Hand hand,
-                                                  Operation<TypedActionResult<ItemStack>> original) {
+    public InteractionResultHolder<ItemStack> handleUse(Level world, Player user, InteractionHand hand,
+                                                  Operation<InteractionResultHolder<ItemStack>> original) {
         ItemStack self = (ItemStack) (Object) this;
 
         if (!PotionHelper.isPotionItem(self)) return original.call(world, user, hand);
-        if (PotionCooldownManager.getProgress(self, user, 0) > 0) return TypedActionResult.fail(self);
+        if (PotionCooldownManager.getProgress(self, user, 0) > 0) return InteractionResultHolder.fail(self);
 
-        if (self.getItem() instanceof ThrowablePotionItem && !PotionUtil.getPotion(self).getEffects().isEmpty())
+        if (self.getItem() instanceof ThrowablePotionItem && !PotionUtils.getPotion(self).getEffects().isEmpty())
             this.setPotionCooldown(self, user);
 
         return original.call(world, user, hand);

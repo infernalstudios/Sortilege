@@ -1,15 +1,15 @@
 package net.lyof.sortilege.item.custom.armor;
 
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public enum ModArmorMaterials implements ArmorMaterial {
-    WITCH("witch_hat", 94, new int[]{1, 2, 3, 1}, 24, SoundEvents.ENTITY_WITCH_CELEBRATE,
-            0.0F, 0.0F, Ingredient.ofItems(Items.PHANTOM_MEMBRANE));
+    WITCH("witch_hat", 94, new int[]{1, 2, 3, 1}, 24, SoundEvents.WITCH_CELEBRATE,
+            0.0F, 0.0F, Ingredient.of(Items.PHANTOM_MEMBRANE));
 
     private static final int[] BASE_DURABILITY = new int[]{1, 1, 1, 1};
     private final String name;
@@ -32,15 +32,15 @@ public enum ModArmorMaterials implements ArmorMaterial {
         this.repairIngredient = repairIngredient;
     }
 
-    public int getDurability(ArmorItem.Type type) {
+    public int getDurabilityForType(ArmorItem.Type type) {
         return BASE_DURABILITY[type.ordinal()] * this.durabilityMultiplier;
     }
 
-    public int getProtection(ArmorItem.Type type) {
+    public int getDefenseForType(ArmorItem.Type type) {
         return this.protectionAmounts[type.ordinal()];
     }
 
-    public int getEnchantability() {
+    public int getEnchantmentValue() {
         return this.enchantability;
     }
 

@@ -7,9 +7,9 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -20,11 +20,11 @@ import java.util.function.Supplier;
 public class ConfiguredData {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public final Identifier target;
+    public final ResourceLocation target;
     public Function<JsonElement, String> provider;
     public final Supplier<Boolean> enabled;
 
-    public ConfiguredData(Identifier target, Supplier<Boolean> enabled, Function<JsonElement, String> provider) {
+    public ConfiguredData(ResourceLocation target, Supplier<Boolean> enabled, Function<JsonElement, String> provider) {
         this.target = target;
         this.provider = provider;
         this.enabled = enabled;
@@ -38,27 +38,27 @@ public class ConfiguredData {
 
     public static List<ConfiguredData> INSTANCES = new LinkedList<>();
 
-    public static @Nullable ConfiguredData get(Identifier id) {
+    public static @Nullable ConfiguredData get(ResourceLocation id) {
         return INSTANCES.stream().filter(data -> data.target.equals(id)).findAny().orElse(null);
     }
 
-    protected static void register(Identifier target, Supplier<Boolean> enabled, Function<JsonElement, String> provider) {
+    protected static void register(ResourceLocation target, Supplier<Boolean> enabled, Function<JsonElement, String> provider) {
         INSTANCES.add(new ConfiguredData(target, enabled, provider));
     }
 
     protected static void registerMiningMaster(String gem, Enchantment enchant) {
-        register(Identifier.of("miningmaster", "recipes/smithing/" + gem + "_smithing.json"),
+        register(ResourceLocation.tryBuild("miningmaster", "recipes/smithing/" + gem + "_smithing.json"),
                 () -> enchant != null && ConfigEntries.miningMasterIntegration,
-                json -> Common.changeMiningMasterGem(json, Registries.ENCHANTMENT.getId(enchant).toString()));
-        register(Identifier.of("sortilege", "recipes/catalyst/" + gem + ".json"),
+                json -> Common.changeMiningMasterGem(json, BuiltInRegistries.ENCHANTMENT.getKey(enchant).toString()));
+        register(ResourceLocation.tryBuild("sortilege", "recipes/catalyst/" + gem + ".json"),
                 () -> enchant != null && ConfigEntries.miningMasterIntegration,
-                json -> Common.changeMiningMasterGem(json, Registries.ENCHANTMENT.getId(enchant).toString()));
+                json -> Common.changeMiningMasterGem(json, BuiltInRegistries.ENCHANTMENT.getKey(enchant).toString()));
     }
 
 
     public static void register() {
         register(Sortilege.makeID("tags/items/staffs.json"), () -> true, Common::generateStaffTag);
-        register(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
+        register(ResourceLocation.tryBuild("minecraft", "advancements/adventure/voluntary_exile.json"),
                 () -> ConfigEntries.witchHatEnabled, Common::changeVoluntaryExileParent);
 
         if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
@@ -81,11 +81,11 @@ public class ConfiguredData {
 
         register(Sortilege.makeID("lang/en_us.json"), () -> true, Client::generateTranslations);
 
-        register(Identifier.of("enchdesc", "lang/en_us.json"),
+        register(ResourceLocation.tryBuild("enchdesc", "lang/en_us.json"),
                 () -> FabricLoader.getInstance().isModLoaded("enchdesc"),
                 Client::changeEnchantmentDescriptions);
 
-        register(Identifier.of("quark", "attribute_tooltips.json"),
+        register(ResourceLocation.tryBuild("quark", "attribute_tooltips.json"),
                 () -> FabricLoader.getInstance().isModLoaded("quark"),
                 Client::changeQuarkAttributeDisplay);
     }

@@ -1,8 +1,8 @@
 package net.lyof.sortilege.item.custom.potion;
 
-import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.world.effect.MobEffect;
 
 public interface PotionShenanigans {
-    void sorti_setImmunity(StatusEffect effect, int time);
+    void sorti_setImmunity(MobEffect effect, int time);
     void sorti_resetPotionCache();
 }

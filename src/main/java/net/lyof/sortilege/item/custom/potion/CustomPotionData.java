@@ -5,18 +5,18 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.mixin.accessor.RegistryEntryReferenceAccessor;
+import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModPackets;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.potion.Potion;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryOwner;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderOwner;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -25,14 +25,14 @@ import java.util.List;
 import java.util.Map;
 
 public class CustomPotionData {
-    public Identifier potion;
-    public List<StatusEffectInstance> effects;
+    public ResourceLocation potion;
+    public List<MobEffectInstance> effects;
     public int drinkingTime;
     public int cooldown;
     public int stackSize;
     public boolean create;
 
-    public CustomPotionData(Identifier potion, List<StatusEffectInstance> effects, int drinkingTime, int cooldown,
+    public CustomPotionData(ResourceLocation potion, List<MobEffectInstance> effects, int drinkingTime, int cooldown,
                             int stackSize, boolean create) {
         this.potion = potion;
         this.effects = effects;
@@ -41,14 +41,14 @@ public class CustomPotionData {
         this.stackSize = stackSize;
         this.create = create;
 
-        if (this.create && !Registries.POTION.containsId(potion))
+        if (this.create && !BuiltInRegistries.POTION.containsKey(potion))
             REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
     }
 
 
     public static void read(JsonObject json) {
         if (json.has("potion")) {
-            INSTANCES.add(new CustomPotionData(new Identifier(json.get("potion").getAsString()),
+            INSTANCES.add(new CustomPotionData(new ResourceLocation(json.get("potion").getAsString()),
                     json.has("effects") && json.get("effects").isJsonArray() ?
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
@@ -61,54 +61,54 @@ public class CustomPotionData {
         }
     }
 
-    public static List<StatusEffectInstance> readEffectList(JsonArray json) {
-        List<StatusEffectInstance> effects = new ArrayList<>();
+    public static List<MobEffectInstance> readEffectList(JsonArray json) {
+        List<MobEffectInstance> effects = new ArrayList<>();
         for (JsonElement e : json) {
             if (!e.isJsonObject()) continue;
             JsonObject o = e.getAsJsonObject();
             if (!o.has("effect") || !o.has("duration") || !o.has("amplifier")) continue;
 
-            StatusEffect effect = Registries.STATUS_EFFECT.get(new Identifier(o.get("effect").getAsString()));
+            MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(o.get("effect").getAsString()));
             if (effect == null) continue;
             int duration = o.get("duration").getAsInt();
             int amplifier = o.get("amplifier").getAsInt();
 
-            effects.add(new StatusEffectInstance(effect, duration, amplifier));
+            effects.add(new MobEffectInstance(effect, duration, amplifier));
         }
         return effects;
     }
 
-    public static void read(PacketByteBuf packet) {
-        Identifier potion = packet.readIdentifier();
+    public static void read(FriendlyByteBuf packet) {
+        ResourceLocation potion = packet.readResourceLocation();
         int stackSize = packet.readInt();
         int drinkingTime = packet.readInt();
         int cooldown = packet.readInt();
         boolean create = packet.readBoolean();
 
         int size = packet.readInt();
-        List<StatusEffectInstance> effects;
+        List<MobEffectInstance> effects;
         if (size == -1)
             effects = null;
         else {
             effects = new ArrayList<>();
             for (int j = 0; j < size; j++) {
-                StatusEffect effect = Registries.STATUS_EFFECT.get(packet.readIdentifier());
+                MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(packet.readResourceLocation());
                 int duration = packet.readInt();
                 int amplifier = packet.readInt();
 
-                effects.add(new StatusEffectInstance(effect, duration, amplifier));
+                effects.add(new MobEffectInstance(effect, duration, amplifier));
             }
         }
 
         INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, create));
     }
 
-    public static void write(List<PacketByteBuf> packets) {
+    public static void write(List<FriendlyByteBuf> packets) {
         for (CustomPotionData data : INSTANCES) {
-            PacketByteBuf packet = PacketByteBufs.create();
+            FriendlyByteBuf packet = PacketByteBufs.create();
             packet.writeInt(ModPackets.INIT_POTION);
 
-            packet.writeIdentifier(data.potion);
+            packet.writeResourceLocation(data.potion);
             packet.writeInt(data.stackSize);
             packet.writeInt(data.drinkingTime);
             packet.writeInt(data.cooldown);
@@ -118,8 +118,8 @@ public class CustomPotionData {
                 packet.writeInt(-1);
             else {
                 packet.writeInt(data.effects.size());
-                for (StatusEffectInstance effect : data.effects) {
-                    packet.writeIdentifier(Registries.STATUS_EFFECT.getId(effect.getEffectType()));
+                for (MobEffectInstance effect : data.effects) {
+                    packet.writeResourceLocation(BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect()));
                     packet.writeInt(effect.getDuration());
                     packet.writeInt(effect.getAmplifier());
                 }
@@ -138,7 +138,7 @@ public class CustomPotionData {
         if (!ConfigEntries.potionData) return null;
 
         if (CACHE.containsKey(potion)) return CACHE.get(potion);
-        CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(Registries.POTION.getId(potion)))
+        CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(BuiltInRegistries.POTION.getKey(potion)))
                 .findFirst().orElse(null);
         CACHE.put(potion, result);
         return result;
@@ -148,7 +148,7 @@ public class CustomPotionData {
         INSTANCES.clear();
         CACHE.clear();
 
-        for (Potion potion : Registries.POTION)
+        for (Potion potion : BuiltInRegistries.POTION)
             ((PotionShenanigans) potion).sorti_resetPotionCache();
 
         REGISTRY.clear();
@@ -159,25 +159,25 @@ public class CustomPotionData {
     }
 
 
-    private static final Map<Identifier, Potion> REGISTRY = new HashMap<>();
-    public static final List<Identifier> MODELS = new ArrayList<>();
+    private static final Map<ResourceLocation, Potion> REGISTRY = new HashMap<>();
+    public static final List<ResourceLocation> MODELS = new ArrayList<>();
 
-    public static Potion get(Identifier id) {
+    public static Potion get(ResourceLocation id) {
         return REGISTRY.get(id);
     }
 
-    public static Identifier getId(Potion potion) {
-        for (Map.Entry<Identifier, Potion> entry : REGISTRY.entrySet())
+    public static ResourceLocation getId(Potion potion) {
+        for (Map.Entry<ResourceLocation, Potion> entry : REGISTRY.entrySet())
             if (entry.getValue() == potion) return entry.getKey();
         return null;
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<RegistryEntry.Reference<T>> getRegistry(RegistryEntryOwner<T> owner) {
+    public static <T> List<Holder.Reference<T>> getRegistry(HolderOwner<T> owner) {
         return REGISTRY.entrySet().stream().map(entry -> {
-            RegistryEntry.Reference<T> ref = RegistryEntry.Reference.standAlone(owner,
-                    (RegistryKey<T>) RegistryKey.of(RegistryKeys.POTION, entry.getKey()));
-            ((RegistryEntryReferenceAccessor<T>) ref).setValue((T) entry.getValue());
+            Holder.Reference<T> ref = Holder.Reference.createStandAlone(owner,
+                    (ResourceKey<T>) ResourceKey.create(Registries.POTION, entry.getKey()));
+            ((HolderReferenceAccessor<T>) ref).setValue((T) entry.getValue());
             return ref;
         }).toList();
     }

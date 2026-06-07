@@ -6,19 +6,19 @@ import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.LeveledCauldronBlock;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,30 +28,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Optional;
 
-@Mixin(LeveledCauldronBlock.class)
+@Mixin(LayeredCauldronBlock.class)
 public abstract class LeveledCauldronBlockMixin {
-    @Shadow @Final public static IntProperty LEVEL;
+    @Shadow @Final public static IntegerProperty LEVEL;
 
-    @Inject(method = "onEntityCollision", at = @At("HEAD"), cancellable = true)
-    public void brewItemEntity(BlockState state, World world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (ConfigEntries.cauldronBrewingEnabled &&  entity instanceof ItemEntity item && world.getBlockState(pos.down()).isIn(BlockTags.CAMPFIRES)
-                && PotionCauldronBlock.isLit(world.getBlockState(pos.down())) && state.isOf(Blocks.WATER_CAULDRON)) {
+    @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
+    public void brewItemEntity(BlockState state, Level world, BlockPos pos, Entity entity, CallbackInfo ci) {
+        if (ConfigEntries.cauldronBrewingEnabled &&  entity instanceof ItemEntity item && world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES)
+                && PotionCauldronBlock.isLit(world.getBlockState(pos.below())) && state.is(Blocks.WATER_CAULDRON)) {
 
-            Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getFirstMatch(ModRecipeTypes.CAULDRON_BREWING,
-                    new SimpleInventory(item.getStack()), world);
+            Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getRecipeFor(ModRecipeTypes.CAULDRON_BREWING,
+                    new SimpleContainer(item.getItem()), world);
 
-            if (optional.isPresent() && item.getStack().getCount() >= state.get(LEVEL)) {
-                world.setBlockState(pos, ModBlocks.POTION_CAULDRON.getDefaultState().with(LEVEL, state.get(LEVEL)));
+            if (optional.isPresent() && item.getItem().getCount() >= state.getValue(LEVEL)) {
+                world.setBlockAndUpdate(pos, ModBlocks.POTION_CAULDRON.defaultBlockState().setValue(LEVEL, state.getValue(LEVEL)));
                 if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)
                     cauldron.potion = optional.get().output;
 
-                world.playSound(null, pos, SoundEvents.BLOCK_BREWING_STAND_BREW, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
+                world.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
+                world.gameEvent(null, GameEvent.FLUID_PLACE, pos);
 
-                world.markDirty(pos);
-                world.updateListeners(pos, state, state, 0);
+                world.blockEntityChanged(pos);
+                world.sendBlockUpdated(pos, state, state, 0);
 
-                item.getStack().decrement(state.get(LEVEL));
+                item.getItem().shrink(state.getValue(LEVEL));
                 ci.cancel();
             }
         }

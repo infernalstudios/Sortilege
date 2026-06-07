@@ -1,34 +1,34 @@
 package net.lyof.sortilege.particle.amo;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.particle.ParticleTextureSheet;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.texture.TextureManager;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureManager;
 
 public class ParticleShaders {
-    public static ShaderProgram PARTICLE_ADDITIVE_MULTIPLY;
+    public static ShaderInstance PARTICLE_ADDITIVE_MULTIPLY;
 
-    public static void register(ShaderProgram s) {
+    public static void register(ShaderInstance s) {
         PARTICLE_ADDITIVE_MULTIPLY = s;
     }
 
-    public static ParticleTextureSheet PARTICLE_SHEET_ADDITIVE_MULTIPLY = new ParticleTextureSheet() {
+    public static ParticleRenderType PARTICLE_SHEET_ADDITIVE_MULTIPLY = new ParticleRenderType() {
         @Override
         public void begin(BufferBuilder builder, TextureManager textureManager) {
             RenderSystem.depthMask(false);
             RenderSystem.enableBlend();
-            RenderSystem.setShaderTexture(0, SpriteAtlasTexture.PARTICLE_ATLAS_TEXTURE);
-            builder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR_LIGHT);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
 
         @Override
-        public void draw(Tessellator tessellator) {
-            tessellator.draw();
+        public void end(Tesselator tessellator) {
+            tessellator.end();
             RenderSystem.depthMask(true);
             RenderSystem.disableBlend();
         }

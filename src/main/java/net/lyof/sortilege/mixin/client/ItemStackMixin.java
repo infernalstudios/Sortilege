@@ -8,18 +8,14 @@ import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,29 +31,29 @@ import java.util.function.Consumer;
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
     @Shadow public abstract Item getItem();
-    @Shadow public abstract boolean isIn(TagKey<Item> tag);
+    @Shadow public abstract boolean is(TagKey<Item> tag);
 
-    @Unique private static PlayerEntity sorti_player;
+    @Unique private static Player sorti_player;
     @Unique private static ItemStack sorti_stack;
 
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;appendTooltip(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Ljava/util/List;Lnet/minecraft/client/item/TooltipContext;)V"))
-    public void showCatalyst(@Nullable PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir,
-                             @Local List<Text> list) {
+    @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"))
+    public void showCatalyst(@Nullable Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir,
+                             @Local List<Component> list) {
         ItemStack self = (ItemStack) (Object) this;
 
         if (ConfigEntries.catalystTooltip && EnchantingCatalyst.isCatalyst(self) && !(self.getItem() instanceof EnchantedBookItem)) {
             if (Screen.hasShiftDown()) {
                 if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
-                    list.add(Text.empty());
+                    list.add(Component.empty());
 
-                list.add(Text.translatable("item.sortilege.catalyst.desc").formatted(Formatting.DARK_PURPLE));
+                list.add(Component.translatable("item.sortilege.catalyst.desc").withStyle(ChatFormatting.DARK_PURPLE));
 
                 for (Enchantment e : EnchantingCatalyst.getEnchantments(self).keySet()) {
-                    MutableText text = Text.translatable(e.getTranslationKey());
-                    if (e.isCursed())
-                        text.formatted(Formatting.RED);
+                    MutableComponent text = Component.translatable(e.getDescriptionId());
+                    if (e.isCurse())
+                        text.withStyle(ChatFormatting.RED);
                     else
-                        text.formatted(Formatting.GRAY);
+                        text.withStyle(ChatFormatting.GRAY);
                     list.add(text);
                 }
             } else
@@ -65,23 +61,23 @@ public abstract class ItemStackMixin {
         }
     }
 
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendEnchantments(Ljava/util/List;Lnet/minecraft/nbt/NbtList;)V"))
-    private void showEnchantLimit(@Nullable PlayerEntity player, TooltipContext context, CallbackInfoReturnable<List<Text>> cir,
-                                 @Local List<Text> list) {
+    @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;appendEnchantmentNames(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"))
+    private void showEnchantLimit(@Nullable Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir,
+                                 @Local List<Component> list) {
         ItemStack self = (ItemStack) (Object) this;
 
-        if (self.getItem().getEnchantability() > 0 && !self.isOf(Items.ENCHANTED_BOOK)) {
+        if (self.getItem().getEnchantmentValue() > 0 && !self.is(Items.ENCHANTED_BOOK)) {
             int a = EnchantHelper.getUsedEnchantSlots(self);
             int m = EnchantHelper.getTotalEnchantSlots(self);
 
             if ((a > 0 || EnchantHelper.getExtraEnchantSlots(self) > 0 || ConfigEntries.alwaysShowEnchantLimit) && m > 0) {
 
-                MutableText txt = Text.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
-                        a + "/" + m + " " + Text.translatable("sortilege.enchantments").getString());
+                MutableComponent txt = Component.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
+                        a + "/" + m + " " + Component.translatable("sortilege.enchantments").getString());
 
                 if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
-                    list.add(Text.empty());
-                list.add(txt.formatted(a >= m ? Formatting.RED : Formatting.WHITE));
+                    list.add(Component.empty());
+                list.add(txt.withStyle(a >= m ? ChatFormatting.RED : ChatFormatting.WHITE));
             }
         }
 
@@ -89,26 +85,26 @@ public abstract class ItemStackMixin {
         sorti_stack = self;
     }
 
-    @WrapOperation(method = "appendEnchantments", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"))
+    @WrapOperation(method = "appendEnchantmentNames", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"))
     private static void showLearnable(Optional<Enchantment> instance, Consumer<? super Enchantment> action, Operation<Void> original,
-                                      List<Text> tooltip) {
+                                      List<Component> tooltip) {
         original.call(instance, (Consumer<? super Enchantment>) e -> {
             action.accept(e);
 
             if (ConfigEntries.knowledgeTooltip && sorti_player instanceof EnchantLearner learner && sorti_stack != null
                     && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, EnchantHelper.getEnchantLevel(e, sorti_stack))) {
 
-                Text text = Text.empty().append(tooltip.get(tooltip.size() - 1))
-                        .append(Text.translatable("item.sortilege.learnable.desc").formatted(Formatting.LIGHT_PURPLE));
+                Component text = Component.empty().append(tooltip.get(tooltip.size() - 1))
+                        .append(Component.translatable("item.sortilege.learnable.desc").withStyle(ChatFormatting.LIGHT_PURPLE));
                 tooltip.set(tooltip.size() - 1, text);
             }
         });
     }
 
-    @WrapOperation(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/MutableText;formatted(Lnet/minecraft/util/Formatting;)Lnet/minecraft/text/MutableText;", ordinal = 0))
-    private MutableText changeRarityFormatting(MutableText instance, Formatting formatting, Operation<MutableText> original) {
-        if (this.isIn(ModTags.Items.FORGOTTEN_ITEMS))
-            return instance.formatted(Formatting.GREEN);
+    @WrapOperation(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/MutableComponent;withStyle(Lnet/minecraft/ChatFormatting;)Lnet/minecraft/network/chat/MutableComponent;", ordinal = 0))
+    private MutableComponent changeRarityFormatting(MutableComponent instance, ChatFormatting formatting, Operation<MutableComponent> original) {
+        if (this.is(ModTags.Items.FORGOTTEN_ITEMS))
+            return instance.withStyle(ChatFormatting.GREEN);
         return original.call(instance, formatting);
     }
 }

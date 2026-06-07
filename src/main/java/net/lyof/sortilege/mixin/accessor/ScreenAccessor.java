@@ -1,8 +1,8 @@
 package net.lyof.sortilege.mixin.accessor;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -10,6 +10,6 @@ import java.util.List;
 
 @Mixin(Screen.class)
 public interface ScreenAccessor {
-    @Accessor MinecraftClient getClient();
-    @Accessor List<Drawable> getDrawables();
+    @Accessor Minecraft getMinecraft();
+    @Accessor List<Renderable> getRenderables();
 }

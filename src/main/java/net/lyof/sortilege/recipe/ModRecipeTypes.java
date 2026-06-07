@@ -7,18 +7,18 @@ import net.lyof.sortilege.recipe.brewing.custom.A2PBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.P2ABrewingRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 
 public class ModRecipeTypes {
     public static void register() {}
 
-    private static <T extends Inventory, R extends Recipe<T>> RecipeType<R> register(String name) {
-        return Registry.register(Registries.RECIPE_TYPE, Sortilege.makeID(name), new RecipeType<>() {
+    private static <T extends Container, R extends Recipe<T>> RecipeType<R> register(String name) {
+        return Registry.register(BuiltInRegistries.RECIPE_TYPE, Sortilege.makeID(name), new RecipeType<>() {
             @Override
             public String toString() {
                 return Sortilege.MOD_ID + ':' + name;
@@ -27,7 +27,7 @@ public class ModRecipeTypes {
     }
 
     private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S register(String name, S serializer) {
-        return Registry.register(Registries.RECIPE_SERIALIZER, Sortilege.makeID(name), serializer);
+        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Sortilege.makeID(name), serializer);
     }
 
 

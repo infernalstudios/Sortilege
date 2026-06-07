@@ -4,14 +4,14 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,33 +21,33 @@ import java.util.List;
 
 @Mixin(PotionItem.class)
 public class PotionItemMixin {
-    @WrapMethod(method = "getMaxUseTime")
+    @WrapMethod(method = "getUseDuration")
     public int getConfiguredUseTime(ItemStack stack, Operation<Integer> original) {
-        if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return original.call(stack);
+        if (PotionUtils.getPotion(stack).getEffects().isEmpty()) return original.call(stack);
 
-        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));
+        CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(stack));
         if (data != null) return data.drinkingTime;
         return ConfigEntries.potionDrinkingTime <= 0 ? original.call(stack) : ConfigEntries.potionDrinkingTime;
     }
 
-    @Inject(method = "appendTooltip", at = @At("HEAD"))
-    public void appendDrinkingTime(ItemStack stack, World world, List<Text> tooltip, TooltipContext context, CallbackInfo ci) {
-        if (PotionUtil.getPotion(stack).getEffects().isEmpty()) return;
+    @Inject(method = "appendHoverText", at = @At("HEAD"))
+    public void appendDrinkingTime(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context, CallbackInfo ci) {
+        if (PotionUtils.getPotion(stack).getEffects().isEmpty()) return;
         if (!ConfigEntries.potionTooltip) return;
 
         int drinkingTime = ConfigEntries.potionDrinkingTime;
         int cooldown = ConfigEntries.potionCooldown;
-        CustomPotionData data = CustomPotionData.get(PotionUtil.getPotion(stack));
+        CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(stack));
         if (data != null) {
             drinkingTime = data.drinkingTime;
             cooldown = data.cooldown;
         }
 
-        if (stack.isOf(Items.POTION))
-            tooltip.add(Text.translatable("sortilege.potion.drinking_time", drinkingTime / 20f)
-                    .formatted(Formatting.GRAY));
+        if (stack.is(Items.POTION))
+            tooltip.add(Component.translatable("sortilege.potion.drinking_time", drinkingTime / 20f)
+                    .withStyle(ChatFormatting.GRAY));
         if (cooldown > 0)
-            tooltip.add(Text.translatable("sortilege.staff.cooldown", cooldown / 20f)
-                .formatted(Formatting.GRAY));
+            tooltip.add(Component.translatable("sortilege.staff.cooldown", cooldown / 20f)
+                .withStyle(ChatFormatting.GRAY));
     }
 }

@@ -2,62 +2,62 @@ package net.lyof.sortilege.particle.custom;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
-public class WispParticle extends SpriteBillboardParticle {
-    public WispParticle(ClientWorld clientWorld, double x, double y, double z) {
+public class WispParticle extends TextureSheetParticle {
+    public WispParticle(ClientLevel clientWorld, double x, double y, double z) {
         super(clientWorld, x, y, z);
     }
 
-    public WispParticle(ClientWorld clientWorld, double x, double y, double z, SpriteProvider sprite, float r, float g, float b) {
+    public WispParticle(ClientLevel clientWorld, double x, double y, double z, SpriteSet sprite, float r, float g, float b) {
         super(clientWorld, x, y, z);
 
-        this.setSprite(sprite);
+        this.pickSprite(sprite);
 
         r = Math.max(0, Math.min(1, r));
         g = Math.max(0, Math.min(1, g));
         b = Math.max(0, Math.min(1, b));
         this.setColor(r, g, b);
-        this.gravityStrength = 0;
-        this.velocityMultiplier = 0f;
-        this.maxAge = 10;
+        this.gravity = 0;
+        this.friction = 0f;
+        this.lifetime = 10;
 
-        this.velocityX = 0;
-        this.velocityY = 0;
-        this.velocityZ = 0;
+        this.xd = 0;
+        this.yd = 0;
+        this.zd = 0;
     }
 
     @Override
     public void tick() {
-        float ratio = (float) (this.maxAge - this.age) / this.maxAge;
+        float ratio = (float) (this.lifetime - this.age) / this.lifetime;
         this.setAlpha(ratio);
         super.tick();
     }
 
     @Override
-    public ParticleTextureSheet getType() {
-        return ParticleTextureSheet.PARTICLE_SHEET_LIT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
     @Override
-    protected int getBrightness(float tint) {
+    protected int getLightColor(float tint) {
         return 15728880;
     }
 
     @Environment(EnvType.CLIENT)
-    public static class Factory implements ParticleFactory<DefaultParticleType> {
-        private final SpriteProvider sprites;
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
+        private final SpriteSet sprites;
 
-        public Factory(SpriteProvider spriteProvider) {
+        public Factory(SpriteSet spriteProvider) {
             this.sprites = spriteProvider;
         }
 
         @Nullable
         @Override
-        public Particle createParticle(DefaultParticleType parameters, ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+        public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
             return new WispParticle(world, x, y, z, this.sprites, (float) velocityX, (float) velocityY, (float) velocityZ);
         }
     }

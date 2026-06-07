@@ -1,13 +1,13 @@
 package net.lyof.sortilege.item.custom.rendering;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.resource.Resource;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -22,11 +22,11 @@ public class MockItemRenderer {
     public static final float DEFAULT_THICKNESS = 0.065f;
     public static final int MAX_LIGHT = 15728880;
 
-    public static void renderItem(MatrixStack matrixStack, VertexConsumerProvider bufferSource, int light, Identifier texture) {
+    public static void renderItem(PoseStack matrixStack, MultiBufferSource bufferSource, int light, ResourceLocation texture) {
         renderTintedItem(matrixStack, bufferSource, light, texture, 0xFFFFFF);
     }
 
-    public static void renderTintedItem(MatrixStack matrixStack, VertexConsumerProvider bufferSource, int light, Identifier texture, int tint) {
+    public static void renderTintedItem(PoseStack matrixStack, MultiBufferSource bufferSource, int light, ResourceLocation texture, int tint) {
         int red = (tint >> 16) & 0xFF;
         int green = (tint >> 8) & 0xFF;
         int blue = tint & 0xFF;
@@ -34,34 +34,34 @@ public class MockItemRenderer {
         renderTintedItem(matrixStack, bufferSource, light, texture, red, green, blue);
     }
 
-    public static void renderTintedItem(MatrixStack matrixStack, VertexConsumerProvider bufferSource, int light, Identifier texture, int red, int green, int blue) {
+    public static void renderTintedItem(PoseStack matrixStack, MultiBufferSource bufferSource, int light, ResourceLocation texture, int red, int green, int blue) {
         Boolean[][] pixelData = loadPixelData(texture, 16);
 
         renderItem(pixelData, matrixStack, bufferSource, light, texture, DEFAULT_THICKNESS, red, green, blue);
     }
 
-    public static void renderItem(Boolean[][] pixelData, MatrixStack matrixStack, VertexConsumerProvider bufferSource,
-                                  int light, Identifier texture, float thickness, int red, int green, int blue) {
+    public static void renderItem(Boolean[][] pixelData, PoseStack matrixStack, MultiBufferSource bufferSource,
+                                  int light, ResourceLocation texture, float thickness, int red, int green, int blue) {
 
-        VertexConsumer buffer = bufferSource.getBuffer(RenderLayer.getEntityCutout(texture));
+        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(texture));
         if (light < 0) {
             light = MAX_LIGHT;
             thickness = 0;
         }
 
-        matrixStack.push();
+        matrixStack.pushPose();
 
         float halfZ = thickness * 0.5f;
 
         int width = pixelData.length;
         int height = (width > 0) ? pixelData[0].length : 0;
 
-        Matrix4f pose = matrixStack.peek().getPositionMatrix();
-        Matrix3f normal = matrixStack.peek().getNormalMatrix();
+        Matrix4f pose = matrixStack.last().pose();
+        Matrix3f normal = matrixStack.last().normal();
 
         renderItem(pixelData, buffer, pose, normal, halfZ, light, width, height, red, green, blue);
 
-        matrixStack.pop();
+        matrixStack.popPose();
     }
 
 
@@ -200,43 +200,43 @@ public class MockItemRenderer {
 
         buffer.vertex(pose, x0, y0, z0)
                 .color(r, g, b, 255)
-                .texture(uv0[0], uv0[1])
-                .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
+                .uv(uv0[0], uv0[1])
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
                 .normal(normalMatrix, nx, ny, nz)
-                .next();
+                .endVertex();
         buffer.vertex(pose, x1, y1, z1)
                 .color(r, g, b, 255)
-                .texture(uv1[0], uv1[1])
-                .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
+                .uv(uv1[0], uv1[1])
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
                 .normal(normalMatrix, nx, ny, nz)
-                .next();
+                .endVertex();
         buffer.vertex(pose, x2, y2, z2)
                 .color(r, g, b, 255)
-                .texture(uv2[0], uv2[1])
-                .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
+                .uv(uv2[0], uv2[1])
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
                 .normal(normalMatrix, nx, ny, nz)
-                .next();
+                .endVertex();
         buffer.vertex(pose, x3, y3, z3)
                 .color(r, g, b, 255)
-                .texture(uv3[0], uv3[1])
-                .overlay(OverlayTexture.DEFAULT_UV)
-                .light(light)
+                .uv(uv3[0], uv3[1])
+                .overlayCoords(OverlayTexture.NO_OVERLAY)
+                .uv2(light)
                 .normal(normalMatrix, nx, ny, nz)
-                .next();
+                .endVertex();
     }
 
 
-    private static Map<Identifier, Boolean[][]> CACHE = new HashMap<>();
+    private static Map<ResourceLocation, Boolean[][]> CACHE = new HashMap<>();
 
-    public static Boolean[][] loadPixelData(Identifier texture, int alphaThreshold) {
+    public static Boolean[][] loadPixelData(ResourceLocation texture, int alphaThreshold) {
         if (CACHE.containsKey(texture)) return CACHE.get(texture);
 
-        Resource resource = MinecraftClient.getInstance().getResourceManager().getResource(texture).orElseThrow();
+        Resource resource = Minecraft.getInstance().getResourceManager().getResource(texture).orElseThrow();
 
-        try (InputStream input = resource.getInputStream()) {
+        try (InputStream input = resource.open()) {
             BufferedImage image = ImageIO.read(input);
             int width  = image.getWidth();
             int height = image.getHeight();

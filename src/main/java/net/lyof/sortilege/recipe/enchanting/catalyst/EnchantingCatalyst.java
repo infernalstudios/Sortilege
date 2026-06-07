@@ -4,14 +4,14 @@ import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModPackets;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import java.util.*;
 
@@ -38,7 +38,7 @@ public class EnchantingCatalyst {
 
     public static Map<Enchantment, Integer> getEnchantments(ItemStack catalyst) {
         if (catalyst.getItem() instanceof EnchantedBookItem && ConfigEntries.bookCatalysts)
-            return EnchantmentHelper.get(catalyst);
+            return EnchantmentHelper.getEnchantments(catalyst);
 
         Map<Enchantment, Integer> result = new HashMap<>();
         for (Enchantment enchant : CATALYSTS.getOrDefault(catalyst.getItem(), List.of()))
@@ -53,35 +53,35 @@ public class EnchantingCatalyst {
 
     public static void read(JsonObject json) {
         if (json.has("item") && json.has("enchantments") && json.get("enchantments").isJsonArray()) {
-            Item item = Registries.ITEM.get(new Identifier(json.get("item").getAsString()));
+            Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("item").getAsString()));
             List<Enchantment> enchants = json.get("enchantments").getAsJsonArray().asList().stream()
-                    .map(id -> Registries.ENCHANTMENT.get(new Identifier(id.getAsString()))).filter(Objects::nonNull).toList();
+                    .map(id -> BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(id.getAsString()))).filter(Objects::nonNull).toList();
 
             register(item, enchants);
         }
     }
 
-    public static void read(PacketByteBuf packet) {
-        Item key = Registries.ITEM.get(packet.readIdentifier());
+    public static void read(FriendlyByteBuf packet) {
+        Item key = BuiltInRegistries.ITEM.get(packet.readResourceLocation());
         int enchants = packet.readInt();
 
         List<Enchantment> value = new ArrayList<>();
         for (int j = 0; j < enchants; j++)
-            value.add(Registries.ENCHANTMENT.get(packet.readIdentifier()));
+            value.add(BuiltInRegistries.ENCHANTMENT.get(packet.readResourceLocation()));
 
         CATALYSTS.putIfAbsent(key, value);
     }
 
-    public static void write(List<PacketByteBuf> packets) {
+    public static void write(List<FriendlyByteBuf> packets) {
         for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
-            PacketByteBuf packet = PacketByteBufs.create();
+            FriendlyByteBuf packet = PacketByteBufs.create();
             packet.writeInt(ModPackets.INIT_CATALYST);
 
-            packet.writeIdentifier(Registries.ITEM.getId(entry.getKey()));
+            packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(entry.getKey()));
             packet.writeInt(entry.getValue().size());
 
             for (Enchantment enchant : entry.getValue())
-                packet.writeIdentifier(Registries.ENCHANTMENT.getId(enchant));
+                packet.writeResourceLocation(BuiltInRegistries.ENCHANTMENT.getKey(enchant));
 
             packets.add(packet);
         }

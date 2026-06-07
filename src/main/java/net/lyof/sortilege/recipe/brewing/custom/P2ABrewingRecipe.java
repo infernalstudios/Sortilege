@@ -6,15 +6,15 @@ import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.util.PotionHelper;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.potion.Potions;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,55 +22,55 @@ import java.util.List;
 import java.util.Random;
 
 public class P2ABrewingRecipe extends BrewingRecipe {
-    public P2ABrewingRecipe(Identifier id) {
+    public P2ABrewingRecipe(ResourceLocation id) {
         super(id);
     }
 
     @Override
     public boolean isInput(ItemStack stack) {
-        return PotionHelper.isPotionItem(stack) && !PotionUtil.getPotionEffects(stack).isEmpty();
+        return PotionHelper.isPotionItem(stack) && !PotionUtils.getMobEffects(stack).isEmpty();
     }
 
     @Override
     public boolean isIngredient(ItemStack stack) {
-        return stack.isOf(Items.GLOW_INK_SAC);
+        return stack.is(Items.GLOW_INK_SAC);
     }
 
     @Override
     public ItemStack craft(ItemStack input, ItemStack ingredient) {
-        List<StatusEffectInstance> effects = new ArrayList<>(PotionUtil.getPotionEffects(input));
+        List<MobEffectInstance> effects = new ArrayList<>(PotionUtils.getMobEffects(input));
         Collections.shuffle(effects);
 
         Potion potion = Potions.EMPTY;
         while (potion == Potions.EMPTY && !effects.isEmpty()) {
-            if (!effects.get(0).getEffectType().isInstant())
-                potion = PotionHelper.getDefaultPotion(effects.get(0).getEffectType());
+            if (!effects.get(0).getEffect().isInstantenous())
+                potion = PotionHelper.getDefaultPotion(effects.get(0).getEffect());
             if (potion == Potions.EMPTY) effects.remove(0);
         }
 
         if (potion == Potions.EMPTY) return input;
-        return PotionUtil.setPotion(ModItems.ANTIDOTE.getDefaultStack(), potion);
+        return PotionUtils.setPotion(ModItems.ANTIDOTE.getDefaultInstance(), potion);
     }
 
     @Override
     public ItemStack getIngredient() {
-        return Items.GLOW_INK_SAC.getDefaultStack();
+        return Items.GLOW_INK_SAC.getDefaultInstance();
     }
 
     @Override
     public ItemStack getInput() {
-        return Items.POTION.getDefaultStack();
+        return Items.POTION.getDefaultInstance();
     }
 
     @Override
     public ItemStack getInput(Random random) {
         int i = random.nextInt(PotionHelper.POTIONS.size());
-        return PotionUtil.setPotion(Items.POTION.getDefaultStack(), (Potion) PotionHelper.POTIONS.values().toArray()[i]);
+        return PotionUtils.setPotion(Items.POTION.getDefaultInstance(), (Potion) PotionHelper.POTIONS.values().toArray()[i]);
     }
 
     @Override
     public ItemStack getOutput() {
-        return ModItems.ANTIDOTE.getDefaultStack();
+        return ModItems.ANTIDOTE.getDefaultInstance();
     }
 
 
@@ -80,16 +80,17 @@ public class P2ABrewingRecipe extends BrewingRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<P2ABrewingRecipe> {
-        public P2ABrewingRecipe read(Identifier id, JsonObject json) {
+        public P2ABrewingRecipe fromJson(ResourceLocation id, JsonObject json) {
             P2ABrewingRecipe recipe = new P2ABrewingRecipe(id);
             BetterBrewingRegistry.register(recipe);
             return recipe;
         }
 
-        public P2ABrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
+        public P2ABrewingRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packetByteBuf) {
             return new P2ABrewingRecipe(identifier);
         }
 
-        public void write(PacketByteBuf packetByteBuf, P2ABrewingRecipe recipe) {}
+        @Override
+        public void toNetwork(FriendlyByteBuf packetByteBuf, P2ABrewingRecipe recipe) {}
     }
 }

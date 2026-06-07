@@ -1,12 +1,12 @@
 package net.lyof.sortilege.util;
 
 import net.fabricmc.fabric.api.entity.FakePlayer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 
 public class XPHelper {
-    public static boolean hasXP(PlayerEntity player, int amount) {
-        float count = player.getNextLevelExperience() * player.experienceProgress;
+    public static boolean hasXP(Player player, int amount) {
+        float count = player.getXpNeededForNextLevel() * player.experienceProgress;
         int i = 0;
         while (count < amount) {
             if (player.experienceLevel <= 0) {
@@ -16,23 +16,23 @@ public class XPHelper {
 
             i++;
             player.experienceLevel -= 1;
-            count += player.getNextLevelExperience();
+            count += player.getXpNeededForNextLevel();
         }
         player.experienceLevel += i;
         return true;
     }
 
-    public static int getTotalXP(PlayerEntity player, ServerWorld server) {
+    public static int getTotalXP(Player player, ServerLevel server) {
         return getTotalXP(player.experienceLevel, player.experienceProgress, server);
     }
 
-    public static int getTotalXP(int level, float progress, ServerWorld server) {
-        PlayerEntity dummy = FakePlayer.get(server);
+    public static int getTotalXP(int level, float progress, ServerLevel server) {
+        Player dummy = FakePlayer.get(server);
         int total = 0;
 
         for (int i = 0; i <= level; i++) {
             dummy.experienceLevel = i;
-            total += dummy.getNextLevelExperience() * (i == level ? progress : 1);
+            total += dummy.getXpNeededForNextLevel() * (i == level ? progress : 1);
         }
 
         return total;

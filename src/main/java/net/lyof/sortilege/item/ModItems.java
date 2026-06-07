@@ -8,11 +8,11 @@ import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.item.custom.*;
 import net.lyof.sortilege.item.custom.armor.ModArmorMaterials;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ModItems {
     }
 
     public static Item register(boolean config, String name, Item item) {
-        return config ? Registry.register(Registries.ITEM, Sortilege.makeID(name), item) : Items.AIR;
+        return config ? Registry.register(BuiltInRegistries.ITEM, Sortilege.makeID(name), item) : Items.AIR;
     }
 
 
@@ -43,8 +43,8 @@ public class ModItems {
             new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings()));
 
     public static final Item LAPIS_SHIELD = register(ConfigEntries.lapisShieldEnabled, "lapis_shield",
-            new LapisShieldItem(new FabricItemSettings().maxDamage(ConfigEntries.lapisShieldDurability)));
+            new LapisShieldItem(new FabricItemSettings().durability(ConfigEntries.lapisShieldDurability)));
 
     public static final Item KNOWLEDGE_BOOK = register(ConfigEntries.knowledgeEnabled, "knowledge_book",
-            new KnowledgeBookItem(new FabricItemSettings().maxCount(1)));
+            new KnowledgeBookItem(new FabricItemSettings().stacksTo(1)));
 }

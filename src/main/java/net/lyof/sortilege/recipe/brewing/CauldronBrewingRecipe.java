@@ -2,55 +2,55 @@ package net.lyof.sortilege.recipe.brewing;
 
 import com.google.gson.JsonObject;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
-public class CauldronBrewingRecipe implements Recipe<SimpleInventory> {
+public class CauldronBrewingRecipe implements Recipe<SimpleContainer> {
     public final Ingredient input;
     public final Potion output;
-    public final Identifier id;
+    public final ResourceLocation id;
 
-    public CauldronBrewingRecipe(Ingredient input, Potion output, Identifier id) {
+    public CauldronBrewingRecipe(Ingredient input, Potion output, ResourceLocation id) {
         this.input = input;
         this.output = output;
         this.id  = id;
     }
 
     @Override
-    public boolean matches(SimpleInventory inventory, World world) {
-        return this.input.test(inventory.getStack(0));
+    public boolean matches(SimpleContainer inventory, Level world) {
+        return this.input.test(inventory.getItem(0));
     }
 
     @Override
-    public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
-        return this.getOutput(registryManager);
+    public ItemStack assemble(SimpleContainer inventory, RegistryAccess registryManager) {
+        return this.getResultItem(registryManager);
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
-        return PotionUtil.setPotion(Items.POTION.getDefaultStack(), this.output);
+    public ItemStack getResultItem(RegistryAccess registryManager) {
+        return PotionUtils.setPotion(Items.POTION.getDefaultInstance(), this.output);
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
@@ -65,21 +65,23 @@ public class CauldronBrewingRecipe implements Recipe<SimpleInventory> {
     }
 
     public static class Serializer implements RecipeSerializer<CauldronBrewingRecipe> {
-        public CauldronBrewingRecipe read(Identifier id, JsonObject json) {
+        public CauldronBrewingRecipe fromJson(ResourceLocation id, JsonObject json) {
             return new CauldronBrewingRecipe(Ingredient.fromJson(json.get("input")),
-                    Registries.POTION.get(new Identifier(JsonHelper.getString(json, "output"))),
+                    BuiltInRegistries.POTION.get(new ResourceLocation(GsonHelper.getAsString(json, "output"))),
                     id);
         }
 
-        public CauldronBrewingRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            Ingredient input = Ingredient.fromPacket(packetByteBuf);
-            Potion output = Registries.POTION.get(packetByteBuf.readIdentifier());
+        @Override
+        public CauldronBrewingRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packetByteBuf) {
+            Ingredient input = Ingredient.fromNetwork(packetByteBuf);
+            Potion output = BuiltInRegistries.POTION.get(packetByteBuf.readResourceLocation());
             return new CauldronBrewingRecipe(input, output, identifier);
         }
 
-        public void write(PacketByteBuf packetByteBuf, CauldronBrewingRecipe recipe) {
-            recipe.input.write(packetByteBuf);
-            packetByteBuf.writeIdentifier(Registries.POTION.getId(recipe.output));
+        @Override
+        public void toNetwork(FriendlyByteBuf packetByteBuf, CauldronBrewingRecipe recipe) {
+            recipe.input.toNetwork(packetByteBuf);
+            packetByteBuf.writeResourceLocation(BuiltInRegistries.POTION.getKey(recipe.output));
         }
     }
 }

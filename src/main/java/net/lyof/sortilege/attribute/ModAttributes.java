@@ -1,22 +1,22 @@
 package net.lyof.sortilege.attribute;
 
 import net.lyof.sortilege.Sortilege;
-import net.minecraft.entity.attribute.EntityAttribute;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class ModAttributes {
-    public static final List<EntityAttribute> GLOBALS = new ArrayList<>();
+    public static final List<Attribute> GLOBALS = new ArrayList<>();
 
     public static void register() {}
 
     public static UuidAttribute register(String name, boolean global, UuidAttribute attribute) {
         if (global) GLOBALS.add(attribute);
-        return (UuidAttribute) Registry.register(Registries.ATTRIBUTE, Sortilege.makeID(name), attribute.setTracked(true));
+        return (UuidAttribute) Registry.register(BuiltInRegistries.ATTRIBUTE, Sortilege.makeID(name), attribute.setSyncable(true));
     }
 
 

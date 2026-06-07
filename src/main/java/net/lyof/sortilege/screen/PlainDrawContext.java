@@ -1,31 +1,29 @@
 package net.lyof.sortilege.screen;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Nullable;
 
-public class PlainDrawContext extends DrawContext {
-    public PlainDrawContext(DrawContext parent) {
-        super(MinecraftClient.getInstance(), parent.getVertexConsumers());
+public class PlainDrawContext extends GuiGraphics {
+    public PlainDrawContext(GuiGraphics parent) {
+        super(Minecraft.getInstance(), parent.bufferSource());
     }
 
     @Override
-    public int drawTextWithShadow(TextRenderer textRenderer, @Nullable String text, int x, int y, int color) {
-        return super.drawText(textRenderer, text, x, y, color, false);
+    public int drawString(Font textRenderer, @Nullable String text, int x, int y, int color) {
+        return super.drawString(textRenderer, text, x, y, color, false);
     }
 
     @Override
-    public int drawTextWithShadow(TextRenderer textRenderer, Text text, int x, int y, int color) {
-        return super.drawText(textRenderer, text, x, y, color, false);
+    public int drawString(Font textRenderer, Component text, int x, int y, int color) {
+        return super.drawString(textRenderer, text, x, y, color, false);
     }
 
     @Override
-    public int drawTextWithShadow(TextRenderer textRenderer, OrderedText text, int x, int y, int color) {
-        return super.drawText(textRenderer, text, x, y, color, false);
+    public int drawString(Font textRenderer, FormattedCharSequence text, int x, int y, int color) {
+        return super.drawString(textRenderer, text, x, y, color, false);
     }
 }

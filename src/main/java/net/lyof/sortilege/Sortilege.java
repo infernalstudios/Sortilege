@@ -25,10 +25,10 @@ import net.lyof.sortilege.screen.ModScreenHandlers;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,16 +75,16 @@ public class Sortilege implements ModInitializer {
 	private static void registerPack(String id, String name, boolean force) {
 		Sortilege.log("Enabling module : " + name, 0);
 		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(container ->
-				ResourceManagerHelper.registerBuiltinResourcePack(makeID(id), container, Text.literal(name),
+				ResourceManagerHelper.registerBuiltinResourcePack(makeID(id), container, Component.literal(name),
 						force ? ResourcePackActivationType.ALWAYS_ENABLED : ResourcePackActivationType.DEFAULT_ENABLED));
 	}
 
 	private static void registerEvents() {
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
+		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-			List<PacketByteBuf> packets = new ArrayList<>();
+			List<FriendlyByteBuf> packets = new ArrayList<>();
 
-			PacketByteBuf packet = PacketByteBufs.create();
+			FriendlyByteBuf packet = PacketByteBufs.create();
 			packet.writeInt(0);
 			packets.add(packet);
 
@@ -97,8 +97,8 @@ public class Sortilege implements ModInitializer {
 	}
 
 
-	public static Identifier makeID(String name) {
-		return Identifier.of(MOD_ID, name);
+	public static ResourceLocation makeID(String name) {
+		return ResourceLocation.tryBuild(MOD_ID, name);
 	}
 
 	@Deprecated

@@ -1,7 +1,7 @@
 package net.lyof.sortilege.enchant.staff;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -26,7 +26,7 @@ public class ElementalStaffEnchantment extends StaffEnchantment {
     }
 
     @Override
-    protected boolean canAccept(Enchantment candidate) {
-        return !(candidate instanceof ElementalStaffEnchantment) && super.canAccept(candidate);
+    protected boolean checkCompatibility(Enchantment candidate) {
+        return !(candidate instanceof ElementalStaffEnchantment) && super.checkCompatibility(candidate);
     }
 }

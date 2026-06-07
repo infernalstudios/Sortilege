@@ -4,26 +4,26 @@ import com.google.gson.JsonObject;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.brewing.custom.ItemBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.potion.Potion;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 import java.util.stream.Stream;
 
-public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
-    private final Identifier id;
+public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
+    private final ResourceLocation id;
 
-    public BrewingRecipe(Identifier id) {
+    public BrewingRecipe(ResourceLocation id) {
         this.id = id;
     }
 
@@ -48,23 +48,23 @@ public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
 
     // Vanilla handling
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
     }
 
     @Override
-    public boolean matches(SimpleInventory inventory, World world) {
+    public boolean matches(SimpleContainer inventory, Level world) {
         // 0, 1, 2: Input/Output - 3: Ingredient
-        return this.isIngredient(inventory.getStack(3)) && Stream.of(0, 1, 2).anyMatch(i ->
-                this.isInput(inventory.getStack(i)));
+        return this.isIngredient(inventory.getItem(3)) && Stream.of(0, 1, 2).anyMatch(i ->
+                this.isInput(inventory.getItem(i)));
     }
 
     @Override
-    public ItemStack craft(SimpleInventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack assemble(SimpleContainer inventory, RegistryAccess registryManager) {
         ItemStack input, ingredient;
         for (int i = 0; i < 3; i++) {
-            input = inventory.getStack(i);
-            ingredient = inventory.getStack(3);
+            input = inventory.getItem(i);
+            ingredient = inventory.getItem(3);
             if (this.isInput(input) && this.isIngredient(ingredient))
                 return this.craft(input, ingredient);
         }
@@ -72,12 +72,12 @@ public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
     }
 
     @Override
-    public ItemStack getOutput(DynamicRegistryManager registryManager) {
+    public ItemStack getResultItem(RegistryAccess registryManager) {
         return this.getOutput();
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
@@ -88,15 +88,15 @@ public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
 
 
     public static class Serializer implements RecipeSerializer<BrewingRecipe> {
-        public BrewingRecipe read(Identifier id, JsonObject json) {
+        public BrewingRecipe fromJson(ResourceLocation id, JsonObject json) {
             if (!json.has("input") || !json.has("ingredient") || !json.has("output"))
                 return null;
             if (json.get("input").isJsonObject() && json.get("input").getAsJsonObject().has("potion")) {
-                Potion in = Registries.POTION.get(new Identifier(json.get("input")
+                Potion in = BuiltInRegistries.POTION.get(new ResourceLocation(json.get("input")
                         .getAsJsonObject().get("potion").getAsString()));
-                Item add = Registries.ITEM.get(new Identifier(json.get("ingredient")
+                Item add = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("ingredient")
                         .getAsJsonObject().get("item").getAsString()));
-                Potion out = Registries.POTION.get(new Identifier(json.get("output")
+                Potion out = BuiltInRegistries.POTION.get(new ResourceLocation(json.get("output")
                         .getAsJsonObject().get("potion").getAsString()));
 
                 BrewingRecipe recipe = new PotionBrewingRecipe(in, add, out, id);
@@ -104,11 +104,11 @@ public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
                 return recipe;
             }
 
-            Item in = Registries.ITEM.get(new Identifier(json.get("input")
+            Item in = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("input")
                     .getAsJsonObject().get("item").getAsString()));
-            Item add = Registries.ITEM.get(new Identifier(json.get("ingredient")
+            Item add = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("ingredient")
                     .getAsJsonObject().get("item").getAsString()));
-            Item out = Registries.ITEM.get(new Identifier(json.get("output")
+            Item out = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("output")
                     .getAsJsonObject().get("item").getAsString()));
 
             BrewingRecipe recipe = new ItemBrewingRecipe(in, add, out, id);
@@ -116,36 +116,37 @@ public abstract class BrewingRecipe implements Recipe<SimpleInventory> {
             return recipe;
         }
 
-        public BrewingRecipe read(Identifier identifier, PacketByteBuf packet) {
+        public BrewingRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packet) {
             int type = packet.readInt();
             switch (type) {
                 case 0:
-                    Item ini = Registries.ITEM.get(packet.readIdentifier());
-                    Item addi = Registries.ITEM.get(packet.readIdentifier());
-                    Item outi = Registries.ITEM.get(packet.readIdentifier());
+                    Item ini = BuiltInRegistries.ITEM.get(packet.readResourceLocation());
+                    Item addi = BuiltInRegistries.ITEM.get(packet.readResourceLocation());
+                    Item outi = BuiltInRegistries.ITEM.get(packet.readResourceLocation());
                     return new ItemBrewingRecipe(ini, addi, outi, identifier);
                 case 1:
-                    Potion inp = Registries.POTION.get(packet.readIdentifier());
-                    Item addp = Registries.ITEM.get(packet.readIdentifier());
-                    Potion outp = Registries.POTION.get(packet.readIdentifier());
+                    Potion inp = BuiltInRegistries.POTION.get(packet.readResourceLocation());
+                    Item addp = BuiltInRegistries.ITEM.get(packet.readResourceLocation());
+                    Potion outp = BuiltInRegistries.POTION.get(packet.readResourceLocation());
                     return new PotionBrewingRecipe(inp, addp, outp, identifier);
                 default:
                     return null;
             }
         }
 
-        public void write(PacketByteBuf packet, BrewingRecipe recipe) {
+        @Override
+        public void toNetwork(FriendlyByteBuf packet, BrewingRecipe recipe) {
             if (recipe instanceof ItemBrewingRecipe itemRecipe) {
                 packet.writeInt(0);
-                packet.writeIdentifier(Registries.ITEM.getId(itemRecipe.input));
-                packet.writeIdentifier(Registries.ITEM.getId(itemRecipe.ingredient));
-                packet.writeIdentifier(Registries.ITEM.getId(itemRecipe.output));
+                packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(itemRecipe.input));
+                packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(itemRecipe.ingredient));
+                packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(itemRecipe.output));
             }
             else if (recipe instanceof PotionBrewingRecipe potionRecipe) {
                 packet.writeInt(1);
-                packet.writeIdentifier(Registries.POTION.getId(potionRecipe.input));
-                packet.writeIdentifier(Registries.ITEM.getId(potionRecipe.ingredient));
-                packet.writeIdentifier(Registries.POTION.getId(potionRecipe.output));
+                packet.writeResourceLocation(BuiltInRegistries.POTION.getKey(potionRecipe.input));
+                packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(potionRecipe.ingredient));
+                packet.writeResourceLocation(BuiltInRegistries.POTION.getKey(potionRecipe.output));
             }
         }
     }

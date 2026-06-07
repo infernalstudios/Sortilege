@@ -4,10 +4,10 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
-import net.lyof.sortilege.mixin.accessor.StatusEffectInstanceAccessor;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.potion.Potion;
+import net.lyof.sortilege.mixin.accessor.MobEffectInstanceAccessor;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,10 +16,10 @@ import java.util.List;
 
 @Mixin(Potion.class)
 public class PotionMixin implements PotionShenanigans {
-    @Unique private List<StatusEffectInstance> customEffects = null;
+    @Unique private List<MobEffectInstance> customEffects = null;
     @Unique private boolean lengthened = false;
 
-    @Override public void sorti_setImmunity(StatusEffect effect, int time) {}
+    @Override public void sorti_setImmunity(MobEffect effect, int time) {}
 
     @Override
     public void sorti_resetPotionCache() {
@@ -27,7 +27,7 @@ public class PotionMixin implements PotionShenanigans {
     }
 
     @ModifyReturnValue(method = "getEffects", at = @At("RETURN"))
-    public List<StatusEffectInstance> lengthenEffects(List<StatusEffectInstance> original) {
+    public List<MobEffectInstance> lengthenEffects(List<MobEffectInstance> original) {
         if (this.customEffects == null) {
             if (!CustomPotionData.isEmpty()) {
                 CustomPotionData data = CustomPotionData.get((Potion) (Object) this);
@@ -39,8 +39,8 @@ public class PotionMixin implements PotionShenanigans {
         }
 
         if (!this.lengthened) {
-            for (StatusEffectInstance effect : original) {
-                ((StatusEffectInstanceAccessor) effect).setDuration(
+            for (MobEffectInstance effect : original) {
+                ((MobEffectInstanceAccessor) effect).setDuration(
                         (int) Math.round(effect.getDuration() * ConfigEntries.potionDurationMultiplier));
             }
             this.lengthened = true;

@@ -1,12 +1,12 @@
 package net.lyof.sortilege.item.custom.rendering;
 
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.world.item.ItemStack;
 
 public interface AddedRenderItem {
     float PX_UNIT = 1/16f;
 
     boolean shouldRender(ItemStack stack);
-    void render(ItemStack stack, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light);
+    void render(ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, int light);
 }

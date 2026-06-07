@@ -9,13 +9,13 @@ import net.lyof.sortilege.enchant.staff.CurseStaffEnchantment;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.enchant.staff.StaffEnchantment;
 import net.lyof.sortilege.enchant.weapon.ArcaneEnchantment;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ModEnchants {
     
     public static Enchantment register(String name, Enchantment enchant) {
         if (!isEnabled(name)) return null;
-        return Registry.register(Registries.ENCHANTMENT, Sortilege.makeID(name), enchant);
+        return Registry.register(BuiltInRegistries.ENCHANTMENT, Sortilege.makeID(name), enchant);
     }
 
     private static boolean isEnabled(String name) {
@@ -41,18 +41,18 @@ public class ModEnchants {
             new StaffEnchantment(Enchantment.Rarity.COMMON, 3));
     public static final Enchantment WISDOM = register("wisdom",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 3,
-                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.focus")));
+                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.focus")));
 
     public static final Enchantment PUSH = register("push",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.pull")));
+                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.pull")));
     public static final Enchantment PULL = register("pull",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.push")));
+                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.push")));
 
     public static final Enchantment FOCUS = register("focus",
             new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 5,
-                    null, candidate -> !candidate.getTranslationKey().equals("enchantment.sortilege.wisdom")));
+                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.wisdom")));
 
 
     public static final Enchantment BRAZIER = register("brazier",
@@ -60,17 +60,17 @@ public class ModEnchants {
                     List.of(new float[]{1f, 0.7f, 0f},
                             new float[]{1f, 1f, 0f},
                             new float[]{1f, 0.85f, 0f}),
-                    (target, level) -> target.setOnFireFor(level * 4)));
+                    (target, level) -> target.setSecondsOnFire(level * 4)));
     public static final Enchantment BLIZZARD = register("blizzard",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
                     List.of(new float[]{0.7f, 0.7f, 1f},
                             new float[]{0.8f, 0.9f, 1f}),
                     (target, level) -> {
                 if (target.isOnFire()) {
-                    target.extinguish();
-                    target.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 40, level));
+                    target.clearFire();
+                    target.addEffect(new MobEffectInstance(MobEffects.WITHER, 40, level));
                 }
-                target.setFrozenTicks(target.getFrozenTicks() + 160*level);
+                target.setTicksFrozen(target.getTicksFrozen() + 160*level);
             }));
     public static final Enchantment BLAST = register("blast",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
@@ -84,9 +84,9 @@ public class ModEnchants {
                             new float[]{1f, 1f, 0.5f},
                             new float[]{1f, 1f, 0.75f}),
                     (target, level) -> {
-                target.setVelocity(0, -1, 0);
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 40 * level, 0));
-                target.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOWNESS, 40 * level, 1));
+                target.setDeltaMovement(0, -1, 0);
+                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40 * level, 0));
+                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40 * level, 1));
             }));
     public static final Enchantment BLESSING = register("blessing",
             new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
@@ -111,5 +111,5 @@ public class ModEnchants {
     public static final Enchantment SOULBOUND = register("soulbound",
             new SoulboundEnchantment());
     public static final Enchantment STORYTELLING_CURSE = register("storytelling_curse",
-            new StorytellingEnchantment(Enchantment.Rarity.RARE, EnchantmentTarget.VANISHABLE, EquipmentSlot.values()));
+            new StorytellingEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values()));
 }

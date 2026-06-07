@@ -9,43 +9,43 @@ import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.widget.AuthorsListWidget;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.PageTurnWidget;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentLevelEntry;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Renderable;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
 import java.util.List;
 import java.util.Map;
 
-public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandler> {
-    public static final Identifier BOOK_TEXTURE = Sortilege.makeID("textures/gui/knowledge_book.png");
+public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookScreenHandler> {
+    public static final ResourceLocation BOOK_TEXTURE = Sortilege.makeID("textures/gui/knowledge_book.png");
 
     private int xoffset;
     private int pageIndex;
     private final int pageCount;
-    private PageTurnWidget nextPageButton;
-    private PageTurnWidget previousPageButton;
+    private PageButton nextPageButton;
+    private PageButton previousPageButton;
     private AuthorsListWidget authorsList;
 
     private int previousPageIndex;
-    private List<OrderedText> pageCache;
+    private List<FormattedCharSequence> pageCache;
     private ItemStack bookCache;
     private Enchantment enchantCache;
 
-    public KnowledgeBookScreen(KnowledgeBookScreenHandler handler, PlayerInventory inventory, Text title) {
+    public KnowledgeBookScreen(KnowledgeBookScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
-        this.backgroundHeight = 192;
+        this.imageHeight = 192;
         this.pageIndex = 0;
         this.pageCount = KnowledgeBookItem.getKnowledge(handler.stack).getEntries().size();
 
@@ -56,32 +56,32 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     protected void init() {
         super.init();
 
-        this.xoffset = (this.width - 192) / 2 - this.x;
-        this.nextPageButton = this.addDrawableChild(new PageTurnWidget(this.xoffset + 116 + this.x, this.y + 159, true,
+        this.xoffset = (this.width - 192) / 2 - this.leftPos;
+        this.nextPageButton = this.addRenderableWidget(new PageButton(this.xoffset + 116 + this.leftPos, this.topPos + 159, true,
                 button -> this.goToNextPage(), true));
-        this.previousPageButton = this.addDrawableChild(new PageTurnWidget(this.xoffset + 43 + this.x, this.y + 159, false,
+        this.previousPageButton = this.addRenderableWidget(new PageButton(this.xoffset + 43 + this.leftPos, this.topPos + 159, false,
                 button -> this.goToPreviousPage(), true));
         this.updatePageButtons();
 
-        this.authorsList = new AuthorsListWidget(this.x + this.xoffset + 36, this.y + 57, 104, 90,
-                this.textRenderer, KnowledgeBookItem.getAuthors(this.handler.stack));
+        this.authorsList = new AuthorsListWidget(this.leftPos + this.xoffset + 36, this.topPos + 57, 104, 90,
+                this.font, KnowledgeBookItem.getAuthors(this.menu.stack));
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         List<String> authors = this.authorsList.validate();
-        KnowledgeBookItem.setAuthors(this.handler.stack, authors);
+        KnowledgeBookItem.setAuthors(this.menu.stack, authors);
 
-        PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeItemStack(this.handler.stack);
+        FriendlyByteBuf buf = PacketByteBufs.create();
+        buf.writeItem(this.menu.stack);
         ClientPlayNetworking.send(ModPackets.SET_KNOWLEDGE_AUTHORS, buf);
 
-        super.close();
+        super.onClose();
     }
 
     @Override
-    protected void handledScreenTick() {
-        super.handledScreenTick();
+    protected void containerTick() {
+        super.containerTick();
         this.authorsList.tick();
     }
 
@@ -107,14 +107,14 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256) {  // Escape
-            this.client.player.closeHandledScreen();
+            this.minecraft.player.closeContainer();
             return true;
         } if (keyCode == 257 && this.pageIndex == 0) {  // Enter
             List<String> authors = this.authorsList.validate();
-            KnowledgeBookItem.setAuthors(this.handler.stack, authors);
+            KnowledgeBookItem.setAuthors(this.menu.stack, authors);
 
-            PacketByteBuf buf = PacketByteBufs.create();
-            buf.writeItemStack(this.handler.stack);
+            FriendlyByteBuf buf = PacketByteBufs.create();
+            buf.writeItem(this.menu.stack);
             ClientPlayNetworking.send(ModPackets.SET_KNOWLEDGE_AUTHORS, buf);
             return true;
         }
@@ -167,43 +167,43 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
     }
 
     public void setFocused(ItemStack stack) {
-        this.handler.inventory.setStack(0, stack);
-        this.focusedSlot = this.handler.getSlot(0);
+        this.menu.inventory.setItem(0, stack);
+        this.hoveredSlot = this.menu.getSlot(0);
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        context.drawTexture(BOOK_TEXTURE, this.xoffset, 2, 0, 0, 192, 192);
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+        context.blit(BOOK_TEXTURE, this.xoffset, 2, 0, 0, 192, 192);
     }
 
-    public void drawAuthorsPage(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void drawAuthorsPage(GuiGraphics context, int mouseX, int mouseY, float delta) {
         float scale = 1.4f;
 
-        context.getMatrices().push();
-        context.getMatrices().scale(scale, scale, 1);
+        context.pose().pushPose();
+        context.pose().scale(scale, scale, 1);
 
-        context.drawText(this.textRenderer, Text.translatable("item.sortilege.knowledge_book.authors").formatted(Formatting.BOLD),
-                (int) ((this.x + this.xoffset + 36)/scale) + 1, (int) ((this.y + 40)/scale), 0xCCB998, false);
+        context.drawString(this.font, Component.translatable("item.sortilege.knowledge_book.authors").withStyle(ChatFormatting.BOLD),
+                (int) ((this.leftPos + this.xoffset + 36)/scale) + 1, (int) ((this.topPos + 40)/scale), 0xCCB998, false);
 
-        context.getMatrices().pop();
+        context.pose().popPose();
 
         this.authorsList.render(context, mouseX, mouseY, delta);
     }
 
-    public void drawPage(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void drawPage(GuiGraphics context, int mouseX, int mouseY, float delta) {
         // Build page cache if it changed
         if (this.pageIndex != this.previousPageIndex) {
-            EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.handler.stack);
+            EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.menu.stack);
             Map.Entry<Enchantment, Integer> current = (Map.Entry<Enchantment, Integer>) knowledge.getEntries().toArray()[this.pageIndex - 1];
 
-            MutableText content = Text.empty()
-                    .append(((MutableText) current.getKey().getName(current.getValue())).formatted(Formatting.BLACK));
-            MutableText desc = Text.translatableWithFallback(current.getKey().getTranslationKey() + ".desc", "");
-            content.append("\n").append(desc.formatted(Formatting.GRAY));
+            MutableComponent content = Component.empty()
+                    .append(((MutableComponent) current.getKey().getFullname(current.getValue())).withStyle(ChatFormatting.BLACK));
+            MutableComponent desc = Component.translatableWithFallback(current.getKey().getDescriptionId() + ".desc", "");
+            content.append("\n").append(desc.withStyle(ChatFormatting.GRAY));
             if (!desc.getString().isEmpty()) content.append("\n");
 
-            this.pageCache = this.textRenderer.wrapLines(content, 114);
-            this.bookCache = EnchantedBookItem.forEnchantment(new EnchantmentLevelEntry(current.getKey(), current.getValue()));
+            this.pageCache = this.font.split(content, 114);
+            this.bookCache = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(current.getKey(), current.getValue()));
             this.enchantCache = current.getKey();
             this.previousPageIndex = this.pageIndex;
         }
@@ -211,23 +211,23 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
         int l = Math.min(128 / 9, this.pageCache.size());
 
         for (int i = 0; i < l; i++)
-            context.drawText(this.textRenderer, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
+            context.drawString(this.font, this.pageCache.get(i), this.xoffset + 36, 42 + i * 9, 0, false);
 
         // Book display
-        context.drawTexture(BOOK_TEXTURE, this.xoffset + 36, 18, 48, 192, 20, 20);
-        context.drawItem(this.bookCache, this.xoffset + 38, 20);
-        if (this.isPointWithinBounds(this.xoffset + 38, 20, 16, 16, mouseX, mouseY))
+        context.blit(BOOK_TEXTURE, this.xoffset + 36, 18, 48, 192, 20, 20);
+        context.renderItem(this.bookCache, this.xoffset + 38, 20);
+        if (this.isHovering(this.xoffset + 38, 20, 16, 16, mouseX, mouseY))
             this.setFocused(this.bookCache);
 
         float scale = 0.8f;
 
-        context.getMatrices().push();
-        context.getMatrices().scale(scale, scale, 1);
+        context.pose().pushPose();
+        context.pose().scale(scale, scale, 1);
 
         int i = 0; int j = 0;
         for (ItemStack stack : EnchantHelper.getCompatibleStacks(this.enchantCache)) {
-            context.drawItem(stack, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
-            if (this.isPointWithinBounds((int) (this.xoffset + 41 + i*16*scale), (int) (40 + l*9 + j*16*scale),
+            context.renderItem(stack, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
+            if (this.isHovering((int) (this.xoffset + 41 + i*16*scale), (int) (40 + l*9 + j*16*scale),
                     (int) (16*scale), (int) (16*scale), mouseX, mouseY))
                 this.setFocused(stack);
 
@@ -236,40 +236,40 @@ public class KnowledgeBookScreen extends HandledScreen<KnowledgeBookScreenHandle
                 j++;
                 i = 0;
             } if (42 + l*9 + j*16*scale > 130 && i > 114/scale/16 - 4) {
-                context.drawTexture(BOOK_TEXTURE, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16,
+                context.blit(BOOK_TEXTURE, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16,
                         0, 192, 48, 16);
                 break;
             }
         }
 
-        context.getMatrices().pop();
+        context.pose().popPose();
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.getMatrices().push();
-        context.getMatrices().translate(this.x, this.y, 0);
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
+        context.pose().pushPose();
+        context.pose().translate(this.leftPos, this.topPos, 0);
 
-        this.drawBackground(context, delta, mouseX, mouseY);
+        this.renderBg(context, delta, mouseX, mouseY);
 
         // Page X of X
-        Text pageIndexText = Text.translatable("book.pageIndicator", this.pageIndex + 1, Math.max(this.pageCount + 1, 1));
-        int k = this.textRenderer.getWidth(pageIndexText);
-        context.drawText(this.textRenderer, pageIndexText, this.xoffset - k + 192 - 44, 18, 0, false);
+        Component pageIndexText = Component.translatable("book.pageIndicator", this.pageIndex + 1, Math.max(this.pageCount + 1, 1));
+        int k = this.font.width(pageIndexText);
+        context.drawString(this.font, pageIndexText, this.xoffset - k + 192 - 44, 18, 0, false);
 
-        this.focusedSlot = null;
+        this.hoveredSlot = null;
         this.authorsList.setVisible(this.pageIndex == 0);
 
         if (this.pageIndex != 0) this.drawPage(context, mouseX, mouseY, delta);
 
-        context.getMatrices().pop();
+        context.pose().popPose();
 
         if (this.pageIndex == 0) this.drawAuthorsPage(context, mouseX, mouseY, delta);
 
         // Me, forgetting to call super? Never
-        for (Drawable drawable : ((ScreenAccessor) this).getDrawables())
+        for (Renderable drawable : ((ScreenAccessor) this).getRenderables())
             drawable.render(context, mouseX, mouseY, delta);
 
-        this.drawMouseoverTooltip(context, mouseX, mouseY);
+        this.renderTooltip(context, mouseX, mouseY);
     }
 }

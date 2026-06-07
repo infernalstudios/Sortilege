@@ -6,9 +6,9 @@ import dev.emi.emi.api.widget.ButtonWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,9 +21,9 @@ import java.util.List;
 
 @Mixin(value = EmiCraftingRecipe.class, remap = false)
 public abstract class EmiCraftingRecipeMixin {
-    @Unique private static final Identifier LOCK_BUTTON = Sortilege.makeID("textures/gui/emi/lock_button.png");
+    @Unique private static final ResourceLocation LOCK_BUTTON = Sortilege.makeID("textures/gui/emi/lock_button.png");
 
-    @Shadow @Final protected Identifier id;
+    @Shadow @Final protected ResourceLocation id;
     @Shadow public abstract int getDisplayHeight();
 
     @Inject(method = "addWidgets", at = @At("TAIL"))
@@ -36,11 +36,11 @@ public abstract class EmiCraftingRecipeMixin {
         widgets.add(new ButtonWidget(0, this.getDisplayHeight() - 12, 12, 12,
                 0, 0, LOCK_BUTTON, () -> true, (x, y, index) -> {}) {
             @Override
-            public List<TooltipComponent> getTooltip(int mouseX, int mouseY) {
-                return List.of(TooltipComponent.of(lock.getFailMessage().asOrderedText()));
+            public List<ClientTooltipComponent> getTooltip(int mouseX, int mouseY) {
+                return List.of(ClientTooltipComponent.create(lock.getFailMessage().getVisualOrderText()));
             }
         });
-        widgets.addText(Text.translatable("sortilege.crafting.emi.locked_recipe"), 15, this.getDisplayHeight() - 9,
+        widgets.addText(Component.translatable("sortilege.crafting.emi.locked_recipe"), 15, this.getDisplayHeight() - 9,
                 0, false);
     }
 

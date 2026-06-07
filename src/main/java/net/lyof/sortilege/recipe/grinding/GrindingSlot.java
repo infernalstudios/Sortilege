@@ -2,18 +2,18 @@ package net.lyof.sortilege.recipe.grinding;
 
 import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class GrindingSlot extends Slot {
     private final Slot parent;
 
     public GrindingSlot(Slot parent) {
-        super(parent.inventory, parent.getIndex(), parent.x, parent.y);
+        super(parent.container, parent.getContainerSlot(), parent.x, parent.y);
         this.parent = parent;
     }
 
-    public boolean canInsert(ItemStack stack) {
-        return this.parent.canInsert(stack) || (ConfigEntries.knowledgeEnabled && stack.isOf(ModItems.KNOWLEDGE_BOOK));
+    public boolean mayPlace(ItemStack stack) {
+        return this.parent.mayPlace(stack) || (ConfigEntries.knowledgeEnabled && stack.is(ModItems.KNOWLEDGE_BOOK));
     }
 }

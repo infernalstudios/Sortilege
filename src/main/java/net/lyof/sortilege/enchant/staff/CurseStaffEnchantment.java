@@ -6,12 +6,12 @@ public class CurseStaffEnchantment extends StaffEnchantment {
     }
 
     @Override
-    public boolean isCursed() {
+    public boolean isCurse() {
         return true;
     }
 
     @Override
-    public boolean isTreasure() {
+    public boolean isTreasureOnly() {
         return true;
     }
 }

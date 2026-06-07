@@ -6,22 +6,22 @@ import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
 import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtString;
-import net.minecraft.registry.Registries;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -36,67 +36,67 @@ public class KnowledgeBookItem extends Item {
         if (!ConfigEntries.knowledgeEnabled) return;
 
         EnchantKnowledge knowledge = new EnchantKnowledge();
-        for (Enchantment enchant : Registries.ENCHANTMENT)
+        for (Enchantment enchant : BuiltInRegistries.ENCHANTMENT)
             knowledge.learn(enchant, enchant.getMaxLevel());
 
-        ItemStack full = ModItems.KNOWLEDGE_BOOK.getDefaultStack();
+        ItemStack full = ModItems.KNOWLEDGE_BOOK.getDefaultInstance();
         setKnowledge(full, knowledge);
         entries.addAfter(previous, full);
         entries.addAfter(previous, ModItems.KNOWLEDGE_BOOK);
     }
 
-    public KnowledgeBookItem(Settings settings) {
+    public KnowledgeBookItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
+    public boolean isFoil(ItemStack stack) {
         return true;
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack stack = user.getStackInHand(hand);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack stack = user.getItemInHand(hand);
         if (!isAuthor(stack, user)) {
-            user.sendMessage(Text.translatable("item.sortilege.knowledge_book.invalid").formatted(Formatting.YELLOW), true);
-            return TypedActionResult.success(stack);
+            user.displayClientMessage(Component.translatable("item.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
+            return InteractionResultHolder.success(stack);
         }
-        if (!world.isClient())
-            user.openHandledScreen(new KnowledgeBookScreenFactory(stack));
-        return TypedActionResult.success(stack, world.isClient());
+        if (!world.isClientSide())
+            user.openMenu(new KnowledgeBookScreenFactory(stack));
+        return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World level, List<Text> list, TooltipContext context) {
-        super.appendTooltip(stack, level, list, context);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag context) {
+        super.appendHoverText(stack, level, list, context);
 
         if (Screen.hasShiftDown()) {
-            list.add(Text.translatable("item.sortilege.knowledge_book.desc0").formatted(Formatting.YELLOW));
-            list.add(Text.translatable("item.sortilege.knowledge_book.desc1").formatted(Formatting.YELLOW));
+            list.add(Component.translatable("item.sortilege.knowledge_book.desc0").withStyle(ChatFormatting.YELLOW));
+            list.add(Component.translatable("item.sortilege.knowledge_book.desc1").withStyle(ChatFormatting.YELLOW));
         } else
             list.add(EnchantHelper.getShiftTooltip());
 
         if (!getAuthors(stack).isEmpty())
-            list.add(Text.translatable("book.byAuthor", String.join(", ", getAuthors(stack))).formatted(Formatting.GRAY));
-        list.add(Text.translatable("item.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
-                EnchantHelper.getEnchantCount()).formatted(Formatting.GRAY));
+            list.add(Component.translatable("book.byAuthor", String.join(", ", getAuthors(stack))).withStyle(ChatFormatting.GRAY));
+        list.add(Component.translatable("item.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
+                EnchantHelper.getEnchantCount()).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public void onCraft(ItemStack stack, World world, PlayerEntity player) {
-        super.onCraft(stack, world, player);
-        setAuthors(stack, List.of(player.getEntityName()));
+    public void onCraftedBy(ItemStack stack, Level world, Player player) {
+        super.onCraftedBy(stack, world, player);
+        setAuthors(stack, List.of(player.getScoreboardName()));
     }
 
     private static void buildCache(ItemStack self) {
         knowledgeCacher = self;
 
-        knowledge = EnchantKnowledge.read(self.getOrCreateNbt());
+        knowledge = EnchantKnowledge.read(self.getOrCreateTag());
         authors = new ArrayList<>();
-        if (!self.getOrCreateNbt().contains(EnchantKnowledge.AUTHORS_KEY, NbtElement.LIST_TYPE))
+        if (!self.getOrCreateTag().contains(EnchantKnowledge.AUTHORS_KEY, Tag.TAG_LIST))
             return;
-        for (NbtElement elt : self.getNbt().getList(EnchantKnowledge.AUTHORS_KEY, NbtElement.STRING_TYPE))
-            authors.add(elt.asString());
+        for (Tag elt : self.getTag().getList(EnchantKnowledge.AUTHORS_KEY, Tag.TAG_STRING))
+            authors.add(elt.getAsString());
     }
 
     public static EnchantKnowledge getKnowledge(ItemStack self) {
@@ -109,7 +109,7 @@ public class KnowledgeBookItem extends Item {
     public static void setKnowledge(ItemStack self, EnchantKnowledge knowledge) {
         if (self == knowledgeCacher) knowledgeCacher = null;
 
-        self.getOrCreateNbt().put(EnchantKnowledge.KNOWLEDGE_KEY, knowledge.write(new NbtCompound()));
+        self.getOrCreateTag().put(EnchantKnowledge.KNOWLEDGE_KEY, knowledge.write(new CompoundTag()));
     }
 
     public static List<String> getAuthors(ItemStack self) {
@@ -122,12 +122,12 @@ public class KnowledgeBookItem extends Item {
     public static void setAuthors(ItemStack self, List<String> authors) {
         if (self == knowledgeCacher) knowledgeCacher = null;
 
-        NbtList list = new NbtList();
-        for (String author : authors) list.add(NbtString.of(author));
-        self.getOrCreateNbt().put(EnchantKnowledge.AUTHORS_KEY, list);
+        ListTag list = new ListTag();
+        for (String author : authors) list.add(StringTag.valueOf(author));
+        self.getOrCreateTag().put(EnchantKnowledge.AUTHORS_KEY, list);
     }
 
-    public static boolean isAuthor(ItemStack self, PlayerEntity player) {
-        return player.isCreative() || getAuthors(self).contains(player.getEntityName()) || getAuthors(self).isEmpty();
+    public static boolean isAuthor(ItemStack self, Player player) {
+        return player.isCreative() || getAuthors(self).contains(player.getScoreboardName()) || getAuthors(self).isEmpty();
     }
 }

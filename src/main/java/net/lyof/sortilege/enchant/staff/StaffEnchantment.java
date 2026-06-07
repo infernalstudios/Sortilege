@@ -3,17 +3,17 @@ package net.lyof.sortilege.enchant.staff;
 import com.chocohead.mm.api.ClassTinkerers;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.StaffItem;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class StaffEnchantment extends Enchantment {
-    private static final EnchantmentTarget STAFF = ClassTinkerers.getEnum(EnchantmentTarget.class, "Sortilege$STAFF");
+    private static final EnchantmentCategory STAFF = ClassTinkerers.getEnum(EnchantmentCategory.class, "Sortilege$STAFF");
     private static final EquipmentSlot[] SLOTS = new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
     private final int maxLevel;
@@ -33,8 +33,8 @@ public class StaffEnchantment extends Enchantment {
     }
 
     @Override
-    protected boolean canAccept(Enchantment candidate) {
-        return (this.condition == null || this.condition.test(candidate)) && super.canAccept(candidate);
+    protected boolean checkCompatibility(Enchantment candidate) {
+        return (this.condition == null || this.condition.test(candidate)) && super.checkCompatibility(candidate);
     }
 
     public void triggerAttack(LivingEntity target, int level) {
@@ -48,13 +48,13 @@ public class StaffEnchantment extends Enchantment {
     }
 
     @Override
-    public boolean isAcceptableItem(ItemStack stack) {
-        return super.isAcceptableItem(stack) && (this != ModEnchants.WISDOM
+    public boolean canEnchant(ItemStack stack) {
+        return super.canEnchant(stack) && (this != ModEnchants.WISDOM
                 || (stack.getItem() instanceof StaffItem staff && staff.getXPCost(stack) > 0));
     }
 
     @Override
-    public int getMaxPower(int level) {
-        return super.getMaxPower(level) * 5;
+    public int getMaxCost(int level) {
+        return super.getMaxCost(level) * 5;
     }
 }

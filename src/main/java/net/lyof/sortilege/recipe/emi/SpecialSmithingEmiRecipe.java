@@ -8,12 +8,12 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.util.MathHelper;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.SmithingRecipe;
-import net.minecraft.registry.Registries;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SmithingRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +42,8 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
         this.inputs.clear();
         this.outputs.clear();
 
-        for (Item item : Registries.ITEM) {
-            if (this.recipe.testBase(item.getDefaultStack())) this.bases.add(item);
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (this.recipe.isBaseIngredient(item.getDefaultInstance())) this.bases.add(item);
         }
         this.inputs.addAll(this.bases.stream().map(EmiStack::of).toList());
         this.inputs.add(this.additions);
@@ -73,8 +73,8 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
         int i = random.nextInt(this.bases.size());
         EmiStack input = this.inputs.get(i).getEmiStacks().get(0);
 
-        return List.of(input, EmiStack.of(this.recipe.craft(new SimpleInventory(
-                Items.LAPIS_LAZULI.getDefaultStack(), input.getItemStack(), this.additions.getEmiStacks().get(0).getItemStack()),
-                MinecraftClient.getInstance().world.getRegistryManager())));
+        return List.of(input, EmiStack.of(this.recipe.assemble(new SimpleContainer(
+                Items.LAPIS_LAZULI.getDefaultInstance(), input.getItemStack(), this.additions.getEmiStacks().get(0).getItemStack()),
+                Minecraft.getInstance().level.registryAccess())));
     }
 }

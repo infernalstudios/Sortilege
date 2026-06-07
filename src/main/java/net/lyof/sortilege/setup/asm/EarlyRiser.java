@@ -10,7 +10,7 @@ public class EarlyRiser implements Runnable {
         MappingResolver remapper = FabricLoader.getInstance().getMappingResolver();
         String target = remapper.mapClassName("intermediary", "net.minecraft.class_1886");
         ClassTinkerers.enumBuilder(target)
-                .addEnumSubclass("Sortilege$STAFF", "net.lyof.sortilege.setup.asm.StaffEnchantmentTarget")
+                .addEnumSubclass("Sortilege$STAFF", "net.lyof.sortilege.setup.asm.StaffEnchantmentCategory")
                 .build();
     }
 }

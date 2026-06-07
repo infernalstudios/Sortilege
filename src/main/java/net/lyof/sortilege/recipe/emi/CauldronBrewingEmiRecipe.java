@@ -7,9 +7,9 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.recipe.EmiCompat;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
-import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtil;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
 
 public class CauldronBrewingEmiRecipe extends BasicEmiRecipe {
     private final EmiIngredient input;
@@ -18,7 +18,7 @@ public class CauldronBrewingEmiRecipe extends BasicEmiRecipe {
     public CauldronBrewingEmiRecipe(CauldronBrewingRecipe recipe) {
         super(EmiCompat.CAULDRON_CATEGORY, recipe.getId(), 90, 18);
         this.input = EmiIngredient.of(recipe.input);
-        this.output = EmiStack.of(PotionUtil.setPotion(Items.POTION.getDefaultStack(), recipe.output));
+        this.output = EmiStack.of(PotionUtils.setPotion(Items.POTION.getDefaultInstance(), recipe.output));
 
         this.inputs.add(this.input);
         this.outputs.add(this.output);

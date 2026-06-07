@@ -1,17 +1,17 @@
 package net.lyof.sortilege.enchant.weapon;
 
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentTarget;
-import net.minecraft.enchantment.FireAspectEnchantment;
-import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.FireAspectEnchantment;
 
 public class ArcaneEnchantment extends Enchantment {
     public ArcaneEnchantment(Rarity pRarity) {
-        super(pRarity, EnchantmentTarget.WEAPON, EquipmentSlot.values());
+        super(pRarity, EnchantmentCategory.WEAPON, EquipmentSlot.values());
     }
 
     @Override
-    protected boolean canAccept(Enchantment other) {
+    protected boolean checkCompatibility(Enchantment other) {
         return !(other instanceof FireAspectEnchantment);
     }
 }

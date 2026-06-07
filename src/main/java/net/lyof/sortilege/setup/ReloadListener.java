@@ -17,11 +17,11 @@ import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceFinder;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.Map;
 
@@ -29,12 +29,12 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
     public static final ReloadListener INSTANCE = new ReloadListener();
 
     @Override
-    public Identifier getFabricId() {
+    public ResourceLocation getFabricId() {
         return Sortilege.makeID("reload_listener");
     }
 
     @Override
-    public void reload(ResourceManager manager) {
+    public void onResourceManagerReload(ResourceManager manager) {
         // Recipe locks
         for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
             RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
@@ -44,13 +44,13 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         EnchantHelper.load();
         PotionHelper.load();
 
-        for (Map.Entry<Identifier, Resource> entry : manager.findResources("recipes",
+        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources("recipes",
                 path -> path.toString().endsWith(".json")).entrySet()) {
 
             try {
                 Resource resource = entry.getValue();
 
-                String content = new String(resource.getInputStream().readAllBytes());
+                String content = new String(resource.open().readAllBytes());
                 JsonElement json = new Gson().fromJson(content, JsonElement.class);
 
                 if (json == null || !json.isJsonObject()) continue;
@@ -81,19 +81,19 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         EnchantingCatalyst.clear();
 
         if (ConfigEntries.potionTextures && manager instanceof FabricLifecycledResourceManager fabricManager &&
-                fabricManager.fabric_getResourceType() == ResourceType.CLIENT_RESOURCES) {
+                fabricManager.fabric_getResourceType() == PackType.CLIENT_RESOURCES) {
             CustomPotionData.MODELS.clear();
-            for (Identifier model : ResourceFinder.json("models/item/potions").findResources(manager).keySet())
-                CustomPotionData.MODELS.add(ResourceFinder.json("models/item").toResourceId(model));
+            for (ResourceLocation model : FileToIdConverter.json("models/item/potions").listMatchingResources(manager).keySet())
+                CustomPotionData.MODELS.add(FileToIdConverter.json("models/item").fileToId(model));
         }
 
-        for (Map.Entry<Identifier, Resource> entry : manager.findResources("potions",
+        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources("potions",
                 path -> path.toString().endsWith(".json")).entrySet()) {
 
             try {
                 Resource resource = entry.getValue();
 
-                String content = new String(resource.getInputStream().readAllBytes());
+                String content = new String(resource.open().readAllBytes());
                 JsonElement json = new Gson().fromJson(content, JsonElement.class);
 
                 if (json == null || !json.isJsonObject()) continue;

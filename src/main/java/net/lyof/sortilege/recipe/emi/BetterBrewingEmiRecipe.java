@@ -6,10 +6,10 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.util.MathHelper;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.item.Items;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 
 import java.util.List;
 import java.util.Random;
@@ -17,7 +17,7 @@ import java.util.Random;
 public class BetterBrewingEmiRecipe extends BasicEmiRecipe {
     protected final BrewingRecipe recipe;
     protected final int uniq;
-    private static final Identifier BACKGROUND = Identifier.of("minecraft", "textures/gui/container/brewing_stand.png");
+    private static final ResourceLocation BACKGROUND = ResourceLocation.tryBuild("minecraft", "textures/gui/container/brewing_stand.png");
     private static final EmiStack BLAZE_POWDER = EmiStack.of(Items.BLAZE_POWDER);
 
     public BetterBrewingEmiRecipe(BrewingRecipe recipe) {
@@ -33,7 +33,7 @@ public class BetterBrewingEmiRecipe extends BasicEmiRecipe {
     public void addWidgets(WidgetHolder widgets) {
         widgets.addTexture(BACKGROUND, 0, 0, 103, 61, 16, 14);
         widgets.addAnimatedTexture(BACKGROUND, 81, 2, 9, 28, 176, 0, 20000, false, false, false)
-                .tooltip((mx, my) -> List.of(TooltipComponent.of(Text.translatable("emi.cooking.time", 20).asOrderedText())));
+                .tooltip((mx, my) -> List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", 20).getVisualOrderText())));
         widgets.addAnimatedTexture(BACKGROUND, 47, 0, 12, 29, 185, 0, 700, false, true, false);
         widgets.addTexture(BACKGROUND, 44, 30, 18, 4, 176, 29);
         widgets.addSlot(BLAZE_POWDER, 0, 2).drawBack(false);

@@ -1,13 +1,13 @@
 package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.config.ConfigEntries;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class PotionHelper {
-    public static final Map<StatusEffect, Potion> POTIONS = new HashMap<>();
+    public static final Map<MobEffect, Potion> POTIONS = new HashMap<>();
     public static final List<Potion> GEN_ALLOWED_POTIONS = new ArrayList<>();
 
     public static void clear() {
@@ -25,13 +25,13 @@ public class PotionHelper {
 
     public static void load() {
         Thread potionMapping = new Thread(() -> {
-            for (Potion potion : Registries.POTION) {
+            for (Potion potion : BuiltInRegistries.POTION) {
                 if (potion.getEffects().size() == 1 &&
-                        !potion.hasInstantEffect() &&
+                        !potion.hasInstantEffects() &&
                         potion.getEffects().get(0).getAmplifier() == 0 &&
-                        !ConfigEntries.antidoteBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString())) {
+                        !ConfigEntries.antidoteBlacklist.contains(BuiltInRegistries.MOB_EFFECT.getResourceKey(potion.getEffects().get(0).getEffect()).toString())) {
 
-                    StatusEffect effect = potion.getEffects().get(0).getEffectType();
+                    MobEffect effect = potion.getEffects().get(0).getEffect();
                     int duration = potion.getEffects().get(0).getDuration();
 
                     if (!POTIONS.containsKey(effect))
@@ -44,17 +44,17 @@ public class PotionHelper {
         potionMapping.start();
 
         for (Potion potion : POTIONS.values()) {
-            if (!ConfigEntries.swampHutBlacklist.contains(Registries.STATUS_EFFECT.getKey(potion.getEffects().get(0).getEffectType()).toString()))
+            if (!ConfigEntries.swampHutBlacklist.contains(BuiltInRegistries.MOB_EFFECT.getResourceKey(potion.getEffects().get(0).getEffect()).toString()))
                 GEN_ALLOWED_POTIONS.add(potion);
         }
     }
 
-    public static Potion getDefaultPotion(StatusEffect effect) {
+    public static Potion getDefaultPotion(MobEffect effect) {
         return POTIONS.getOrDefault(effect, Potions.EMPTY);
     }
 
     public static Potion getDefaultPotion(Potion potion) {
-        return !potion.getEffects().isEmpty() ? getDefaultPotion(potion.getEffects().get(0).getEffectType()) : Potions.EMPTY;
+        return !potion.getEffects().isEmpty() ? getDefaultPotion(potion.getEffects().get(0).getEffect()) : Potions.EMPTY;
     }
 
     public static Potion getRandomPotion() {
@@ -62,17 +62,17 @@ public class PotionHelper {
     }
 
     public static String getPotionItemType(ItemStack stack) {
-        if (!stack.hasNbt()) return "";
-        Identifier id = new Identifier(stack.getNbt().getString("Potion"));
+        if (!stack.hasTag()) return "";
+        ResourceLocation id = new ResourceLocation(stack.getTag().getString("Potion"));
 
         String base = "";
-        if (stack.isOf(Items.SPLASH_POTION)) base = "/splash";
-        else if (stack.isOf(Items.LINGERING_POTION)) base = "/lingering";
+        if (stack.is(Items.SPLASH_POTION)) base = "/splash";
+        else if (stack.is(Items.LINGERING_POTION)) base = "/lingering";
 
         return id + base;
     }
 
     public static boolean isPotionItem(ItemStack stack) {
-        return stack.isOf(Items.POTION) || stack.isOf(Items.SPLASH_POTION) || stack.isOf(Items.LINGERING_POTION);
+        return stack.is(Items.POTION) || stack.is(Items.SPLASH_POTION) || stack.is(Items.LINGERING_POTION);
     }
 }

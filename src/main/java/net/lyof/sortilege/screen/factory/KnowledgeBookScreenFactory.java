@@ -2,13 +2,13 @@ package net.lyof.sortilege.screen.factory;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 public class KnowledgeBookScreenFactory implements ExtendedScreenHandlerFactory {
@@ -19,17 +19,17 @@ public class KnowledgeBookScreenFactory implements ExtendedScreenHandlerFactory 
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-        buf.writeItemStack(this.stack);
+    public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buf) {
+        buf.writeItem(this.stack);
     }
 
     @Override
-    public Text getDisplayName() {
-        return this.stack.getName();
+    public Component getDisplayName() {
+        return this.stack.getHoverName();
     }
 
     @Override
-    public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inventory, PlayerEntity player) {
+    public @Nullable AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
         return new KnowledgeBookScreenHandler(syncId, inventory, this.stack);
     }
 }

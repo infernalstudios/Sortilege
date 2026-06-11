@@ -24,6 +24,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.CommandSource;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -315,9 +316,9 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
         BlockPos pos;
 
 
-        if (world instanceof ServerLevel server && !(this.rawInfos == null)) {
+        if (world instanceof ServerLevel server && this.rawInfos != null) {
             server.getServer().getCommands().performPrefixedCommand(
-                    player.createCommandSourceStack().withSource(CommandSource.NULL),
+                    player.createCommandSourceStack().withMaximumPermission(Commands.LEVEL_OWNERS),
                     this.rawInfos.on_shoot);
         }
 
@@ -400,11 +401,11 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
 
         if (world instanceof ServerLevel server && this.rawInfos != null) {
             server.getServer().getCommands().performPrefixedCommand(
-                    attacker.createCommandSourceStack().withMaximumPermission(4).withSource(CommandSource.NULL),
+                    attacker.createCommandSourceStack().withMaximumPermission(4),
                     this.rawInfos.on_hit_self);
 
             server.getServer().getCommands().performPrefixedCommand(
-                    target.createCommandSourceStack().withMaximumPermission(4).withSource(CommandSource.NULL),
+                    target.createCommandSourceStack().withMaximumPermission(4),
                     this.rawInfos.on_hit_target);
         }
 

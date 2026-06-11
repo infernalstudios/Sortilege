@@ -54,6 +54,8 @@ dependencies {
 	modLocalRuntime "maven.modrinth:emi-plus-backport:tbcT7hXz"
 	modLocalRuntime "net.fabricmc:fabric-language-kotlin:1.13.9+kotlin.2.3.10"
 	modLocalRuntime "maven.modrinth:forge-config-api-port:v8.0.3-1.20.1-Fabric"
+
+	//modImplementation "maven.modrinth:sollib:fabric-1.20.1-1.0"
 }
 
 processResources {

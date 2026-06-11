@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(ItemModelShaper.class)
-public class ItemModelsMixin {
+public class ItemModelShaperMixin {
     @Unique private static final Map<String, BakedModel> MODEL_CACHE = new HashMap<>();
     @Unique private static final Map<String, ModelResourceLocation> ID_CACHE = new HashMap<>();
 

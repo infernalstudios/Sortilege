@@ -14,7 +14,7 @@ public class ModTags {
         public static final TagKey<EntityType<?>> UNEXPERIENCED = create("unexperienced");
 
         private static TagKey<EntityType<?>> create(String name) {
-            return TagKey.create(Registries.ENTITY_TYPE, Sortilege.makeID(name));
+            return TagKey.create(Registries.ENTITY_TYPE, Sortilege.MOD.makeID(name));
         }
 
         public static final TagKey<EntityType<?>> UNDEAD = TagKey.create(Registries.ENTITY_TYPE,
@@ -38,7 +38,7 @@ public class ModTags {
         public static final TagKey<Item> REFILLS_CAULDRONS = create("refills_cauldrons");
 
         private static TagKey<Item> create(String name) {
-            return TagKey.create(Registries.ITEM, Sortilege.makeID(name));
+            return TagKey.create(Registries.ITEM, Sortilege.MOD.makeID(name));
         }
 
         public static final TagKey<Item> XP_BOOSTED = TagKey.create(Registries.ITEM, new ResourceLocation("phantasm", "has_xp_boost"));
@@ -58,7 +58,7 @@ public class ModTags {
         public static final TagKey<Block> REFILLS_CAULDRONS = create("refills_cauldrons");
 
         private static TagKey<Block> create(String name) {
-            return TagKey.create(Registries.BLOCK, Sortilege.makeID(name));
+            return TagKey.create(Registries.BLOCK, Sortilege.MOD.makeID(name));
         }
     }
 }

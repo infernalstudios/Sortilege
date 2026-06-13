@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookScreenHandler> {
-    public static final ResourceLocation BOOK_TEXTURE = Sortilege.makeID("textures/gui/knowledge_book.png");
+    public static final ResourceLocation BOOK_TEXTURE = Sortilege.MOD.makeID("textures/gui/knowledge_book.png");
 
     private int xoffset;
     private int pageIndex;

@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.attribute.ModAttributes;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
@@ -96,8 +96,8 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @ModifyArg(method = "dropExperience", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ExperienceOrb;award(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/phys/Vec3;I)V"))
     public int xpDropBonus(int amount) {
-        if (ConfigEntries.witchHatEnabled && this.lastHurtByPlayer != null && this.lastHurtByPlayer.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.WITCH_HAT))
-            amount += ConfigEntries.witchHatBonus;
+        if (ModConfig.witchHatEnabled.get() && this.lastHurtByPlayer != null && this.lastHurtByPlayer.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.WITCH_HAT))
+            amount += ModConfig.witchHatBonus.get();
         if (this.getType().is(ModTags.Entities.UNEXPERIENCED))
             amount = 0;
 
@@ -110,7 +110,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
             Level world = this.level();
             if (world.isClientSide()) return;
 
-            if (!ConfigEntries.witchHatEnabled || Math.random() > ConfigEntries.witchHatDropChance) return;
+            if (!ModConfig.witchHatEnabled.get() || Math.random() > ModConfig.witchHatDropChance.get()) return;
 
             ItemStack hat = ModItems.WITCH_HAT.getDefaultInstance();
             hat.setDamageValue((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);
@@ -124,14 +124,14 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
         PotionCooldownManager.clear(self);
 
         if (self instanceof Player player && this.level() instanceof ServerLevel world) {
-            int stealxp = (int) Math.round(XPHelper.getTotalXP(player.experienceLevel, player.experienceProgress, world) * ConfigEntries.attackerXPRatio);
+            int stealxp = (int) Math.round(XPHelper.getTotalXP(player.experienceLevel, player.experienceProgress, world) * ModConfig.attackerXPRatio.get());
             Entity source = damageSource.getEntity();
 
             if (source instanceof Player playerattacker)
                 playerattacker.giveExperiencePoints(stealxp);
             else if (source instanceof LivingEntity attacker) {
                 ((BountyHolder) attacker).sorti_setExperience(stealxp);
-                if (ConfigEntries.glowingKiller) attacker.setGlowingTag(true);
+                if (ModConfig.glowingKiller.get()) attacker.setGlowingTag(true);
             }
             else ExperienceOrb.award(world, this.position(), stealxp);
         }
@@ -139,12 +139,12 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
         if (this.level() instanceof ServerLevel world)
             ExperienceOrb.award(world, this.position(), this.sorti_getExperience());
 
-        if (self instanceof Enemy && Math.random() < ConfigEntries.bountyChance
-                && (ConfigEntries.bountyWhitelist == self.getType().is(ModTags.Entities.BOUNTIES))
+        if (self instanceof Enemy && Math.random() < ModConfig.bountyChance.get()
+                && (ModConfig.bountyWhitelist.get() == self.getType().is(ModTags.Entities.BOUNTIES))
                 && damageSource.getEntity() instanceof Player player) {
 
             if (player.level() instanceof ServerLevel world)
-                ExperienceOrb.award(world, this.position(), ConfigEntries.bountyValue);
+                ExperienceOrb.award(world, this.position(), ModConfig.bountyValue.get());
 
             ModParticles.spawnWisps(player.level(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
                     16, new float[]{0.5f, 1f, 0.2f});
@@ -153,28 +153,28 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @Inject(method = "dropEquipment", at = @At("HEAD"), cancellable = true)
     public void cancelCuriosDrop(CallbackInfo ci) {
-        if (ConfigEntries.keepEquipped && ((LivingEntity) (Object) this) instanceof Player) ci.cancel();
+        if (ModConfig.keepEquipped.get() && ((LivingEntity) (Object) this) instanceof Player) ci.cancel();
     }
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (ConfigEntries.betterFeatherFalling > 0 && source.is(DamageTypeTags.IS_FALL) &&
+        if (ModConfig.betterFeatherFalling.get() > 0 && source.is(DamageTypeTags.IS_FALL) &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FALL_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.FEET)) >= ConfigEntries.betterFeatherFalling)
+                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.betterFeatherFalling.get())
             cir.setReturnValue(false);
 
-        if (ConfigEntries.betterFireProt > 0 && source.is(DamageTypeTags.IS_FIRE) &&
+        if (ModConfig.betterFireProt.get() > 0 && source.is(DamageTypeTags.IS_FIRE) &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.FEET)) >= ConfigEntries.betterFireProt &&
+                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.betterFireProt.get() &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.LEGS)) >= ConfigEntries.betterFireProt &&
+                        this.getItemBySlot(EquipmentSlot.LEGS)) >= ModConfig.betterFireProt.get() &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.CHEST)) >= ConfigEntries.betterFireProt &&
+                        this.getItemBySlot(EquipmentSlot.CHEST)) >= ModConfig.betterFireProt.get() &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.HEAD)) >= ConfigEntries.betterFireProt)
+                        this.getItemBySlot(EquipmentSlot.HEAD)) >= ModConfig.betterFireProt.get())
             cir.setReturnValue(false);
 
-        if (ModEnchants.MAGIC_PROTECTION != null && ConfigEntries.betterMagicProt && Math.random() <=
+        if (ModEnchants.MAGIC_PROTECTION != null && ModConfig.betterMagicProt.get() && Math.random() <=
                 0.05 * EnchantmentHelper.getEnchantmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);
     }
@@ -182,7 +182,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getOffhandItem();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
         if (!LapisShieldItem.isOnCooldown(stack))
             cir.setReturnValue(true);
@@ -191,7 +191,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @WrapOperation(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;dot(Lnet/minecraft/world/phys/Vec3;)D"))
     public double blockedByLapisShield(Vec3 a, Vec3 b, Operation<Double> original) {
         double v = original.call(a, b);
-        if (!ConfigEntries.lapisShieldEnabled || !this.getOffhandItem().is(ModItems.LAPIS_SHIELD)) return v;
+        if (!ModConfig.lapisShieldEnabled.get() || !this.getOffhandItem().is(ModItems.LAPIS_SHIELD)) return v;
 
         if (v <= -0.5 * Math.cos(90 * Math.PI / 360d))
             return -1;
@@ -201,11 +201,11 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickLapisShield(CallbackInfo ci) {
         ItemStack stack = this.getOffhandItem();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack)
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack)
                 || this.level().isClientSide()) return;
 
         if (LapisShieldItem.getCooldownEnd(stack) <= this.tickCount
-                || LapisShieldItem.getCooldownEnd(stack) - ConfigEntries.lapisShieldCooldown - 1 > this.tickCount) {
+                || LapisShieldItem.getCooldownEnd(stack) - ModConfig.lapisShieldCooldown.get() - 1 > this.tickCount) {
             LapisShieldItem.removeCooldown(stack);
             LapisShieldItem.sendCooldownUpdate((LivingEntity) (Object) this, 0);
         }
@@ -214,7 +214,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "hurtCurrentlyUsedShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
         ItemStack stack = this.getOffhandItem();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
         LivingEntity self = (LivingEntity) (Object) this;
         LapisShieldItem.onSuccessfulUse(stack, self, amount);

@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModTags;
@@ -41,7 +41,7 @@ public abstract class ItemStackMixin {
                              @Local List<Component> list) {
         ItemStack self = (ItemStack) (Object) this;
 
-        if (ConfigEntries.catalystTooltip && EnchantingCatalyst.isCatalyst(self) && !(self.getItem() instanceof EnchantedBookItem)) {
+        if (ModConfig.catalystTooltip.get() && EnchantingCatalyst.isCatalyst(self) && !(self.getItem() instanceof EnchantedBookItem)) {
             if (Screen.hasShiftDown()) {
                 if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
                     list.add(Component.empty());
@@ -70,7 +70,7 @@ public abstract class ItemStackMixin {
             int a = EnchantHelper.getUsedEnchantSlots(self);
             int m = EnchantHelper.getTotalEnchantSlots(self);
 
-            if ((a > 0 || EnchantHelper.getExtraEnchantSlots(self) > 0 || ConfigEntries.alwaysShowEnchantLimit) && m > 0) {
+            if ((a > 0 || EnchantHelper.getExtraEnchantSlots(self) > 0 || ModConfig.alwaysShowEnchantLimit.get()) && m > 0) {
 
                 MutableComponent txt = Component.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
                         a + "/" + m + " " + Component.translatable("sortilege.enchantments").getString());
@@ -91,7 +91,7 @@ public abstract class ItemStackMixin {
         original.call(instance, (Consumer<? super Enchantment>) e -> {
             action.accept(e);
 
-            if (ConfigEntries.knowledgeTooltip && sorti_player instanceof EnchantLearner learner && sorti_stack != null
+            if (ModConfig.knowledgeTooltip.get() && sorti_player instanceof EnchantLearner learner && sorti_stack != null
                     && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, EnchantHelper.getEnchantLevel(e, sorti_stack))) {
 
                 Component text = Component.empty().append(tooltip.get(tooltip.size() - 1))

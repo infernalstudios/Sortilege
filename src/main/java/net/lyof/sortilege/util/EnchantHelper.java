@@ -1,7 +1,7 @@
 package net.lyof.sortilege.util;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -68,7 +68,7 @@ public class EnchantHelper {
     public static int getUsedEnchantSlots(ItemStack stack) {
         int l = 0;
         for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())
-            if (!enchant.isCurse() || !ConfigEntries.cursesAddSlots) l++;
+            if (!enchant.isCurse() || !ModConfig.cursesAddSlots.get()) l++;
         return l;
     }
 
@@ -86,22 +86,22 @@ public class EnchantHelper {
 
         String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 
-        int default_limit = ConfigEntries.enchantLimiterDefault;
-        boolean sum = ConfigEntries.enchantLimiterMode.equals("relative");
+        int default_limit = ModConfig.enchantLimiterDefault.get();
+        boolean sum = ModConfig.enchantLimiterMode.get().equals("relative");
 
-        if (ConfigEntries.enchantLimiterOverrides.containsKey(id)) {
-            int l = ConfigEntries.enchantLimiterOverrides.get(id).intValue();
+        if (ModConfig.enchantLimiterOverrides.get().containsKey(id)) {
+            int l = ModConfig.enchantLimiterOverrides.get().get(id);
             l = sum ? l + default_limit : l;
             ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), l);
             return l;
         }
 
-        for (String str : ConfigEntries.enchantLimiterOverrides.keySet()) {
+        for (String str : ModConfig.enchantLimiterOverrides.get().keySet()) {
             if (!str.startsWith("#")) continue;
 
             TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(str.substring(1)));
             if (stack.is(tag)) {
-                int l = ConfigEntries.enchantLimiterOverrides.get(str).intValue();
+                int l = ModConfig.enchantLimiterOverrides.get().get(str);
                 l = sum ? l + default_limit : l;
                 ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), l);
                 return l;
@@ -115,7 +115,7 @@ public class EnchantHelper {
     public static int getCurseEnchantSlots(ItemStack stack) {
         int l = 0;
         for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet()) {
-            if (enchant.isCurse() && ConfigEntries.cursesAddSlots) l++;
+            if (enchant.isCurse() && ModConfig.cursesAddSlots.get()) l++;
         }
         return l;
     }
@@ -128,7 +128,7 @@ public class EnchantHelper {
         CompoundTag tag = stack.getOrCreateTag();
         int current = tag.getInt(ENCHLIMIT_NBT);
 
-        if (current < ConfigEntries.maxLimitBreak)
+        if (current < ModConfig.maxLimitBreak.get())
             tag.putInt(ENCHLIMIT_NBT, current + 1);
         stack.setTag(tag);
         return stack;

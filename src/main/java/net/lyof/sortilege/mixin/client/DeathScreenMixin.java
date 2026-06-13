@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin.client;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.DeathScreen;
@@ -18,7 +18,7 @@ public class DeathScreenMixin {
 
     @Inject(method = "init", at = @At("TAIL"))
     public void replaceDeathScore(CallbackInfo ci) {
-        if (ConfigEntries.showDeathCoordinates) {
+        if (ModConfig.showDeathCoordinates.get()) {
             DeathScreen self = (DeathScreen) (Object) this;
             this.deathScore = Component.translatable("sortilege.death_screen.position")
                     .append(Component.literal(" " + ((ScreenAccessor) self).getMinecraft().player.blockPosition().toShortString())

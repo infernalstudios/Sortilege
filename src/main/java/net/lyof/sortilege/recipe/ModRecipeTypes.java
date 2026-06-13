@@ -18,7 +18,7 @@ public class ModRecipeTypes {
     public static void register() {}
 
     private static <T extends Container, R extends Recipe<T>> RecipeType<R> register(String name) {
-        return Registry.register(BuiltInRegistries.RECIPE_TYPE, Sortilege.makeID(name), new RecipeType<>() {
+        return Registry.register(BuiltInRegistries.RECIPE_TYPE, Sortilege.MOD.makeID(name), new RecipeType<>() {
             @Override
             public String toString() {
                 return Sortilege.MOD_ID + ':' + name;
@@ -27,7 +27,7 @@ public class ModRecipeTypes {
     }
 
     private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S register(String name, S serializer) {
-        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Sortilege.makeID(name), serializer);
+        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Sortilege.MOD.makeID(name), serializer);
     }
 
 

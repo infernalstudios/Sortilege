@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -21,9 +21,9 @@ public class LingeringPotionItemMixin {
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     public void appendDrinkingTime(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context, CallbackInfo ci) {
         if (PotionUtils.getPotion(stack).getEffects().isEmpty()) return;
-        if (!ConfigEntries.potionTooltip) return;
+        if (!ModConfig.potionTooltip.get()) return;
 
-        int cooldown = ConfigEntries.potionCooldown;
+        int cooldown = ModConfig.potionCooldown.get();
         CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(stack));
         if (data != null) cooldown = data.cooldown;
 

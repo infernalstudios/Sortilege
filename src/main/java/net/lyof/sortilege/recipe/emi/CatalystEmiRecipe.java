@@ -19,7 +19,7 @@ public class CatalystEmiRecipe extends BasicEmiRecipe {
     protected final List<EmiStack> enchantedBooks;
 
     public CatalystEmiRecipe(Item item, List<Enchantment> enchants) {
-        super(EmiCompat.ENCHANTING_CATEGORY, Sortilege.makeID("/enchanting/catalyst/" + BuiltInRegistries.ITEM.getKey(item).getPath()),
+        super(EmiCompat.ENCHANTING_CATEGORY, Sortilege.MOD.makeID("/enchanting/catalyst/" + BuiltInRegistries.ITEM.getKey(item).getPath()),
                 120, 18);
 
         this.item = EmiStack.of(item);

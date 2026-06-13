@@ -2,7 +2,7 @@ package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.util.PotionHelper;
@@ -34,7 +34,7 @@ public class AntidotePotionItem extends PotionItem {
     }
 
     public static void fillItemGroup(FabricItemGroupEntries entries, Item antidote) {
-        if (!ConfigEntries.antidoteEnabled) return;
+        if (!ModConfig.antidoteEnabled.get()) return;
 
         for (Potion potion : PotionHelper.POTIONS.values())
             entries.accept(PotionUtils.setPotion(antidote.getDefaultInstance(), potion));
@@ -84,8 +84,8 @@ public class AntidotePotionItem extends PotionItem {
                       b = FastColor.ARGB32.blue(color) / 255f;
                 ModParticles.spawnWisps(world, entity.getX(), entity.getEyeY(), entity.getZ(), 16, new float[]{r, g, b});
             }
-            if (ConfigEntries.antidoteImmunityTime > 0)
-                ((PotionShenanigans) entity).sorti_setImmunity(effect, ConfigEntries.antidoteImmunityTime * 20);
+            if (ModConfig.antidoteImmunityTime.get() > 0)
+                ((PotionShenanigans) entity).sorti_setImmunity(effect, ModConfig.antidoteImmunityTime.get() * 20);
         }
 
         if (player != null) {

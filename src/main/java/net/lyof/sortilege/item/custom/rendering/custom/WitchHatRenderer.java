@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class WitchHatRenderer implements ArmorRenderer {
     private static WitchHatModel<?> model = null;
-    private static final ResourceLocation TEXTURE = Sortilege.makeID("textures/models/armor/witch_hat.png");
+    private static final ResourceLocation TEXTURE = Sortilege.MOD.makeID("textures/models/armor/witch_hat.png");
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, ItemStack stack, LivingEntity entity,

@@ -25,7 +25,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
     }
 
     @Unique
-    private static final ResourceLocation CATALYST_TEXTURE = Sortilege.makeID("textures/gui/catalyst_overlay.png");
+    private static final ResourceLocation CATALYST_TEXTURE = Sortilege.MOD.makeID("textures/gui/catalyst_overlay.png");
 
     @Inject(method = "renderBg", at = @At("TAIL"))
     public void drawCatalystEffect(GuiGraphics context, float delta, int mouseX, int mouseY, CallbackInfo ci) {

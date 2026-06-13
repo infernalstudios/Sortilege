@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
@@ -43,30 +43,30 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
 
     @WrapMethod(method = "onEnchantmentPerformed")
     public void applyEnchantmentCosts(ItemStack enchantedItem, int levelcost, Operation<Void> original) {
-        if (levelcost > 0 && ConfigEntries.doIncreasedEnchantCosts && ConfigEntries.increasedEnchantCosts.size() == 3)
-            levelcost = (int) Math.round(ConfigEntries.increasedEnchantCosts.get(levelcost - 1));
+        if (levelcost > 0 && ModConfig.doIncreasedEnchantCosts.get() && ModConfig.increasedEnchantCosts.get().size() == 3)
+            levelcost = ModConfig.increasedEnchantCosts.get().get(levelcost - 1);
 
         original.call(enchantedItem, levelcost);
     }
 
     @Inject(method = "getXpNeededForNextLevel", at = @At("HEAD"), cancellable = true)
     public void linearXpScaling(CallbackInfoReturnable<Integer> cir) {
-        if (ConfigEntries.xpLinearCost > 0)
-            cir.setReturnValue(ConfigEntries.xpLinearCost);
+        if (ModConfig.xpLinearCost.get() > 0)
+            cir.setReturnValue(ModConfig.xpLinearCost.get());
     }
 
     @Inject(method = "giveExperienceLevels", at = @At("TAIL"))
     public void xpCapLevel(int levels, CallbackInfo ci) {
-        if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel > ConfigEntries.xpLevelCap) {
-            this.experienceLevel = ConfigEntries.xpLevelCap;
+        if (ModConfig.xpLevelCap.get() > -1 && this.experienceLevel > ModConfig.xpLevelCap.get()) {
+            this.experienceLevel = ModConfig.xpLevelCap.get();
             this.experienceProgress = 0f;
         }
     }
 
     @Inject(method = "giveExperiencePoints", at = @At("TAIL"))
     public void xpCap(int experience, CallbackInfo ci) {
-        if (ConfigEntries.xpLevelCap > -1 && this.experienceLevel >= ConfigEntries.xpLevelCap) {
-            this.experienceLevel = ConfigEntries.xpLevelCap;
+        if (ModConfig.xpLevelCap.get() > -1 && this.experienceLevel >= ModConfig.xpLevelCap.get()) {
+            this.experienceLevel = ModConfig.xpLevelCap.get();
             this.experienceProgress = 0f;
         }
     }
@@ -80,9 +80,9 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
 
     @Inject(method = "getExperienceReward", at = @At("HEAD"), cancellable = true)
     public void keepXP(CallbackInfoReturnable<Integer> cir) {
-        if (ConfigEntries.doXPKeep && this.level() instanceof ServerLevel world) {
-            int safe_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.selfXPRatio);
-            int drop_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ConfigEntries.dropXPRatio);
+        if (ModConfig.doXPKeep.get() && this.level() instanceof ServerLevel world) {
+            int safe_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ModConfig.selfXPRatio.get());
+            int drop_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ModConfig.dropXPRatio.get());
 
             this.experienceLevel = 0;
             this.experienceProgress = 0f;
@@ -95,7 +95,7 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
     @Inject(method = "hurtCurrentlyUsedShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
         ItemStack stack = this.getOffhandItem();
-        if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
         Player self = (Player) (Object) this;
 

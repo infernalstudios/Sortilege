@@ -37,6 +37,6 @@ public class ModParticles {
 
     public static void register() {}
 
-    public static final SimpleParticleType WISP_PIXEL = Registry.register(BuiltInRegistries.PARTICLE_TYPE, Sortilege.makeID("wisp_pixel"),
+    public static final SimpleParticleType WISP_PIXEL = Registry.register(BuiltInRegistries.PARTICLE_TYPE, Sortilege.MOD.makeID("wisp_pixel"),
             FabricParticleTypes.simple());
 }

@@ -10,6 +10,6 @@ public class ModScreenHandlers {
     public static void register() {}
 
     public static final ExtendedScreenHandlerType<KnowledgeBookScreenHandler> KNOWLEDGE_BOOK =
-            Registry.register(BuiltInRegistries.MENU, Sortilege.makeID("knowledge_book"),
+            Registry.register(BuiltInRegistries.MENU, Sortilege.MOD.makeID("knowledge_book"),
                     new ExtendedScreenHandlerType<>(KnowledgeBookScreenHandler::new));
 }

@@ -9,8 +9,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
-import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
@@ -23,14 +22,11 @@ import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.commands.CommandSource;
-import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
@@ -61,7 +57,7 @@ import java.util.Set;
 public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRenderItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
 
-    public @Nullable ModConfig.StaffInfo rawInfos;
+    //public @Nullable ModConfigS.StaffInfo rawInfos;
     public float damage;
     public int pierce;
     public int range;
@@ -72,11 +68,11 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
     public @Nullable InteractionHand handSave;
 
 
-    public StaffItem(ModConfig.StaffInfo stats, FabricItemSettings settings) {
+    /*public StaffItem(ModConfigS.StaffInfo stats, FabricItemSettings settings) {
         this(stats.tier, stats.damage, stats.pierce, stats.range, stats.durability, stats.cooldown, stats.charge_time, stats.xp_cost,
                 stats.fireRes ? settings.fireproof() : settings);
         this.rawInfos = stats;
-    }
+    }*/
 
     public StaffItem(Tier tier, int damage, int targets, int range, int dura, int cooldown, int charge, int xp_cost,
                      FabricItemSettings settings) {
@@ -129,8 +125,8 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
                 FastColor.ARGB32.blue(rgb) / 255f};
 
         if (rgb == DyeableLeatherItem.DEFAULT_LEATHER_COLOR) {
-            if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
-                return this.rawInfos.colors;
+            /*if (this.rawInfos != null && !this.rawInfos.colors.isEmpty())
+                return this.rawInfos.colors;*/
 
             for (ElementalStaffEnchantment element : elements)
                 result.addAll(element.colors);
@@ -171,21 +167,21 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
     }
 
     public int getMaxOvercharge(ItemStack stack) {
-        return ConfigEntries.maxOvercharge;
+        return 0;
     }
 
 
     @Override
     public boolean isValidRepairItem(ItemStack staff, ItemStack stack) {
-        if (this.rawInfos != null)
+        /*if (this.rawInfos != null)
             return this.rawInfos.repair.get().test(stack);
-        return super.isValidRepairItem(staff, stack);
+        */return super.isValidRepairItem(staff, stack);
     }
 
     @Override
     public int getEnchantmentValue() {
-        if (this.rawInfos != null) return this.rawInfos.enchantability;
-        return super.getEnchantmentValue();
+        /*if (this.rawInfos != null) return this.rawInfos.enchantability;
+        */return super.getEnchantmentValue();
     }
 
     @Override
@@ -236,7 +232,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
     }
 
     public int getOverchargeBarColor(ItemStack stack) {
-        return Integer.decode(ConfigEntries.overchargeColor);
+        return 0;
     }
 
     public int getOverchargeBarStep(ItemStack stack) {
@@ -249,12 +245,12 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
         if (clickType != ClickAction.SECONDARY) return false;
 
         String id = BuiltInRegistries.ITEM.getKey(other.getItem()).toString();
-        if (ConfigEntries.overchargeIngredients.containsKey(id) && this.getOvercharge(stack) < this.getMaxOvercharge(stack)) {
+        /*if (ModConfig.overchargeIngredients.containsKey(id) && this.getOvercharge(stack) < this.getMaxOvercharge(stack)) {
             other.shrink(1);
-            this.setOvercharge(stack, this.getOvercharge(stack) + ConfigEntries.overchargeIngredients.get(id).intValue());
+            this.setOvercharge(stack, this.getOvercharge(stack) + ModConfig.overchargeIngredients.get(id).intValue());
 
             return true;
-        }
+        }*/
         return false;
     }
 
@@ -285,7 +281,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
         int targetsLeft = this.getPierce(staff);
 
 
-        if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0 && ConfigEntries.overchargePreventsExperience)) {
+        if (cost > 0 && !player.isCreative() && !(this.getOvercharge(staff) > 0/* && ModConfig.overchargePreventsExperience*/)) {
             if (!XPHelper.hasXP(player, cost))
                 return staff;
             player.giveExperiencePoints(-cost);
@@ -297,7 +293,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
         world.playSound(player, player.blockPosition(), SoundEvents.AMETHYST_BLOCK_HIT, SoundSource.PLAYERS, 1, 1);
         player.getCooldowns().addCooldown(staff.getItem(), this.getCooldown(staff, player));
 
-        if (this.getOvercharge(staff) <= 0 || !ConfigEntries.overchargePreventsDurability)
+        if (this.getOvercharge(staff) <= 0/* || !ModConfig.overchargePreventsDurability*/)
             staff.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.handSave));
         if (this.getOvercharge(staff) > 0)
             this.setOvercharge(staff, this.getOvercharge(staff) - 1);
@@ -316,11 +312,11 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
         BlockPos pos;
 
 
-        if (world instanceof ServerLevel server && this.rawInfos != null) {
+        /*if (world instanceof ServerLevel server && this.rawInfos != null) {
             server.getServer().getCommands().performPrefixedCommand(
                     player.createCommandSourceStack().withMaximumPermission(Commands.LEVEL_OWNERS),
                     this.rawInfos.on_shoot);
-        }
+        }*/
 
         List<float[]> colors = this.getBeamColors(staff, elements);
 
@@ -342,9 +338,9 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
 
             if (world.getBlockState(pos).getCollisionShape(world, pos).toAabbs()
                     .stream().anyMatch(box -> box.contains(vec))) {
-                if (ConfigEntries.staffsPierceBlocks)
+                /*if (ModConfig.staffsPierceBlocks)
                     targetsLeft--;
-                else
+                else*/
                     break;
             }
             if (targetsLeft <= 0)
@@ -399,7 +395,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
 
         targetsHit.add(target.getStringUUID());
 
-        if (world instanceof ServerLevel server && this.rawInfos != null) {
+        /*if (world instanceof ServerLevel server && this.rawInfos != null) {
             server.getServer().getCommands().performPrefixedCommand(
                     attacker.createCommandSourceStack().withMaximumPermission(4),
                     this.rawInfos.on_hit_self);
@@ -407,7 +403,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
             server.getServer().getCommands().performPrefixedCommand(
                     target.createCommandSourceStack().withMaximumPermission(4),
                     this.rawInfos.on_hit_target);
-        }
+        }*/
 
         if (kinesis != 0)
             target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));
@@ -448,7 +444,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
         if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
             if (target.getType().is(ModTags.Entities.UNDEAD))
                 damage *= 1 + EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
-            else if (!ConfigEntries.altBlessing || !(target instanceof Enemy))
+            else if (!ModConfig.altBlessing.get() || !(target instanceof Enemy))
                 damage *= EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
         }
 
@@ -472,7 +468,7 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
     }
 
 
-    private static final ResourceLocation COLOR_OVERLAY = Sortilege.makeID("textures/models/staff/glint.png");
+    private static final ResourceLocation COLOR_OVERLAY = Sortilege.MOD.makeID("textures/models/staff/glint.png");
 
     @Override
     public boolean shouldRender(ItemStack stack) {

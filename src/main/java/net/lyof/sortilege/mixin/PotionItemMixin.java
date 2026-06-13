@@ -2,7 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -27,16 +27,16 @@ public class PotionItemMixin {
 
         CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(stack));
         if (data != null) return data.drinkingTime;
-        return ConfigEntries.potionDrinkingTime <= 0 ? original.call(stack) : ConfigEntries.potionDrinkingTime;
+        return ModConfig.potionDrinkingTime.get() <= 0 ? original.call(stack) : ModConfig.potionDrinkingTime.get();
     }
 
     @Inject(method = "appendHoverText", at = @At("HEAD"))
     public void appendDrinkingTime(ItemStack stack, Level world, List<Component> tooltip, TooltipFlag context, CallbackInfo ci) {
         if (PotionUtils.getPotion(stack).getEffects().isEmpty()) return;
-        if (!ConfigEntries.potionTooltip) return;
+        if (!ModConfig.potionTooltip.get()) return;
 
-        int drinkingTime = ConfigEntries.potionDrinkingTime;
-        int cooldown = ConfigEntries.potionCooldown;
+        int drinkingTime = ModConfig.potionDrinkingTime.get();
+        int cooldown = ModConfig.potionCooldown.get();
         CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(stack));
         if (data != null) {
             drinkingTime = data.drinkingTime;

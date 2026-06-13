@@ -10,7 +10,7 @@ public class ModBlockEntities {
     public static void register() {}
 
     public static <T extends BlockEntityType<?>> T register(String name, T blockEntityType) {
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Sortilege.makeID(name), blockEntityType);
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, Sortilege.MOD.makeID(name), blockEntityType);
     }
 
     public static final BlockEntityType<PotionCauldronBlockEntity> POTION_CAULDRON = register(

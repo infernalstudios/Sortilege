@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import net.lyof.sortilege.block.ModBlocks;
 import net.lyof.sortilege.block.custom.PotionCauldronBlock;
 import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ public abstract class LeveledCauldronBlockMixin {
 
     @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
     public void brewItemEntity(BlockState state, Level world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (ConfigEntries.cauldronBrewingEnabled &&  entity instanceof ItemEntity item && world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES)
+        if (ModConfig.cauldronBrewingEnabled.get() &&  entity instanceof ItemEntity item && world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES)
                 && PotionCauldronBlock.isLit(world.getBlockState(pos.below())) && state.is(Blocks.WATER_CAULDRON)) {
 
             Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getRecipeFor(ModRecipeTypes.CAULDRON_BREWING,

@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
@@ -29,7 +29,7 @@ public abstract class InventoryMixin {
 
     @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "Ljava/util/List;size()I"))
     public int skipEquipped(List<ItemStack> list, Operation<Integer> original) {
-        if ((list != this.items && ConfigEntries.keepEquipped)) {
+        if ((list != this.items && ModConfig.keepEquipped.get())) {
             return 0;
         }
         return original.call(list);
@@ -37,11 +37,11 @@ public abstract class InventoryMixin {
 
     @WrapOperation(method = "dropAll", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isEmpty()Z"))
     public boolean skipHotbar(ItemStack stack, Operation<Boolean> original, @Local(index = 3) int i) {
-        if (i < Inventory.getSelectionSize() && ConfigEntries.keepEquipped)
+        if (i < Inventory.getSelectionSize() && ModConfig.keepEquipped.get())
             return true;
 
         if (EnchantHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
-            if (ConfigEntries.consumeSoulbound && ModEnchants.SOULBOUND != null) {
+            if (ModConfig.consumeSoulbound.get() && ModEnchants.SOULBOUND != null) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
                 enchants.remove(ModEnchants.SOULBOUND);
             }

@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
@@ -51,7 +51,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu {
 
     @Inject(method = "createResult", at = @At("HEAD"), cancellable = true)
     private void updateLearningResult(CallbackInfo ci) {
-        if (ConfigEntries.knowledgeEnabled) {
+        if (ModConfig.knowledgeEnabled.get()) {
             ItemStack[] stacks = new ItemStack[2];
             stacks[0] = this.repairSlots.getItem(0);
             stacks[1] = this.repairSlots.getItem(1);

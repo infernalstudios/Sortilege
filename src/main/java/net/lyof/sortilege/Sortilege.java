@@ -7,11 +7,13 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.lcc.sollib.api.common.config.SolConfig;
+import net.lcc.sollib.api.common.logger.SolLogger;
+import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
 import net.lyof.sortilege.block.ModBlocks;
-import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.config.ModConfig;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
@@ -27,21 +29,19 @@ import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Sortilege implements ModInitializer {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Sortilege");
-	public static final String MOD_ID = "sortilege";
+	public static final SolModContainer MOD = new SolModContainer("Sortilege", "sortilege");
+	public static final String MOD_ID = MOD.getNamespace();
+
+	public static final SolConfig CONFIG = MOD.createConfig("sortilege", 3, ModConfig::build);
 
 	@Override
 	public void onInitialize() {
-		ModConfig.register();
 		ConfiguredData.register();
 
 		ModBlocks.register();
@@ -68,14 +68,14 @@ public class Sortilege implements ModInitializer {
 	}
 
 	private static void registerModules() {
-		if (FabricLoader.getInstance().isModLoaded("miningmaster") && ConfigEntries.miningMasterIntegration)
+		if (FabricLoader.getInstance().isModLoaded("miningmaster") && ModConfig.miningMasterIntegration.get())
 			registerPack("compat_miningmaster", "Mining Master Compat", false);
 	}
 
 	private static void registerPack(String id, String name, boolean force) {
-		Sortilege.log("Enabling module : " + name, 0);
+		Sortilege.log().info("Enabling module : " + name);
 		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(container ->
-				ResourceManagerHelper.registerBuiltinResourcePack(makeID(id), container, Component.literal(name),
+				ResourceManagerHelper.registerBuiltinResourcePack(MOD.makeID(id), container, Component.literal(name),
 						force ? ResourcePackActivationType.ALWAYS_ENABLED : ResourcePackActivationType.DEFAULT_ENABLED));
 	}
 
@@ -96,25 +96,7 @@ public class Sortilege implements ModInitializer {
 		});
 	}
 
-
-	public static ResourceLocation makeID(String name) {
-		return ResourceLocation.tryBuild(MOD_ID, name);
-	}
-
-	@Deprecated
-	public static <T> T log(T message) {
-		return log(message, 0);
-	}
-
-	public static <T> T log(T message, int level) {
-		if (level == 0)
-        	LOGGER.info("[Sortilege] {}", message);
-		else if (level == 1)
-			LOGGER.warn("[Sortilege] {}", message);
-		else if (level == 2)
-			LOGGER.error("[Sortilege] {}", message);
-		else if (level == 3)
-			LOGGER.debug("[Sortilege] {}", message);
-		return message;
+	public static SolLogger log() {
+		return MOD.getLogger();
 	}
 }

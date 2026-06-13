@@ -7,8 +7,6 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ConfigEntries;
-import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
@@ -30,16 +28,14 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
 
     @Override
     public ResourceLocation getFabricId() {
-        return Sortilege.makeID("reload_listener");
+        return Sortilege.MOD.makeID("reload_listener");
     }
 
     @Override
     public void onResourceManagerReload(ResourceManager manager) {
-        // Recipe locks
-        for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
-            RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
-                    new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
-        }
+        RecipeLock.clear();
+        for (Map.Entry<String, RecipeLock> entry : ModConfig.recipeLocks.get().entrySet())
+            RecipeLock.register(entry.getKey(), entry.getValue());
 
         EnchantHelper.load();
         PotionHelper.load();
@@ -60,7 +56,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                     EnchantingCatalyst.read(jsono);
 
             } catch (Throwable e) {
-                Sortilege.log("Could not read data file " + entry.getKey(), 2);
+                //Sortilege.log("Could not read data file " + entry.getKey(), 2);
             }
         }
 
@@ -70,8 +66,6 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
 
     @Override
     public void preload(ResourceManager manager) {
-        ModConfig.register();
-
         EnchantHelper.clear();
         RecipeLock.clear();
         PotionHelper.clear();
@@ -80,7 +74,7 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
         PotionCooldownManager.clear();
         EnchantingCatalyst.clear();
 
-        if (ConfigEntries.potionTextures && manager instanceof FabricLifecycledResourceManager fabricManager &&
+        if (ModConfig.potionTextures.get() && manager instanceof FabricLifecycledResourceManager fabricManager &&
                 fabricManager.fabric_getResourceType() == PackType.CLIENT_RESOURCES) {
             CustomPotionData.MODELS.clear();
             for (ResourceLocation model : FileToIdConverter.json("models/item/potions").listMatchingResources(manager).keySet())
@@ -101,17 +95,15 @@ public class ReloadListener implements SimpleSynchronousResourceReloadListener, 
                 CustomPotionData.read(json.getAsJsonObject());
             }
             catch (Throwable e) {
-                Sortilege.log("Could not read data file " + entry.getKey(), 2);
+                //Sortilege.log("Could not read data file " + entry.getKey(), 2);
             }
         }
     }
 
     public void reloadClient() {
         RecipeLock.clear();
-        for (Map.Entry<String, Object> entry : ConfigEntries.xpRequirements.entrySet()) {
-            RecipeLock.register(entry.getKey(), entry.getValue() instanceof Double d ?
-                    new RecipeLock.LevelLock(d.intValue()) : new RecipeLock.AdvancementLock(String.valueOf(entry.getValue())));
-        }
+        for (Map.Entry<String, RecipeLock> entry : ModConfig.recipeLocks.get().entrySet())
+            RecipeLock.register(entry.getKey(), entry.getValue());
 
         EnchantingCatalyst.clear();
         CustomPotionData.clear();

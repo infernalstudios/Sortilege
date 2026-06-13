@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixin.client;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.block.model.BlockModel;
@@ -26,12 +27,12 @@ public abstract class ModelBakeryMixin {
     public void loadPotionTextures(BlockColors blockColors, ProfilerFiller profiler, Map<ResourceLocation, BlockModel> jsonUnbakedModels,
                                    Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, CallbackInfo ci) {
 
-        if (!ConfigEntries.potionTextures) return;
+        if (!ModConfig.potionTextures.get()) return;
 
         for (ResourceLocation id : CustomPotionData.MODELS)
             this.loadTopLevel(new ModelResourceLocation(id, "inventory"));
 
         for (String name : List.of("long_lingering", "long", "long_splash", "strong_lingering", "strong", "strong_splash"))
-            this.loadTopLevel(new ModelResourceLocation(ResourceLocation.tryBuild("minecraft", name + "_potion"), "inventory"));
+            this.loadTopLevel(new ModelResourceLocation(Identifier.of("minecraft", name + "_potion"), "inventory"));
     }
 }

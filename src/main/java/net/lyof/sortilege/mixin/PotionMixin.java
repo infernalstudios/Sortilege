@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionShenanigans;
 import net.lyof.sortilege.mixin.accessor.MobEffectInstanceAccessor;
@@ -41,7 +41,7 @@ public class PotionMixin implements PotionShenanigans {
         if (!this.lengthened) {
             for (MobEffectInstance effect : original) {
                 ((MobEffectInstanceAccessor) effect).setDuration(
-                        (int) Math.round(effect.getDuration() * ConfigEntries.potionDurationMultiplier));
+                        (int) Math.round(effect.getDuration() * ModConfig.potionDurationMultiplier.get()));
             }
             this.lengthened = true;
         }

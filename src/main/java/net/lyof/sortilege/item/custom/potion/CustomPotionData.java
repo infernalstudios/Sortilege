@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.core.Holder;
@@ -52,11 +52,11 @@ public class CustomPotionData {
                     json.has("effects") && json.get("effects").isJsonArray() ?
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
-                            json.get("drinking_time").getAsInt() : ConfigEntries.potionDrinkingTime,
+                            json.get("drinking_time").getAsInt() : ModConfig.potionDrinkingTime.get(),
                     json.has("cooldown") ?
-                            json.get("cooldown").getAsInt() : ConfigEntries.potionCooldown,
+                            json.get("cooldown").getAsInt() : ModConfig.potionCooldown.get(),
                     json.has("stack_size") ?
-                            json.get("stack_size").getAsInt() : ConfigEntries.potionStackSize,
+                            json.get("stack_size").getAsInt() : ModConfig.potionStackSize.get(),
                     json.has("create") && json.get("create").getAsBoolean()));
         }
     }
@@ -135,7 +135,7 @@ public class CustomPotionData {
 
     @Nullable
     public static CustomPotionData get(Potion potion) {
-        if (!ConfigEntries.potionData) return null;
+        if (!ModConfig.potionData.get()) return null;
 
         if (CACHE.containsKey(potion)) return CACHE.get(potion);
         CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(BuiltInRegistries.POTION.getKey(potion)))

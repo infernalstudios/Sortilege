@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
 import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
@@ -49,7 +49,7 @@ public class LapisShieldItem extends Item implements Equipable, AddedRenderItem 
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         super.appendHoverText(stack, world, tooltip, context);
         tooltip.add(Component.translatable("item.modifiers.offhand").withStyle(ChatFormatting.GRAY));
-        tooltip.add(Component.translatable("item.sortilege.lapis_shield.desc", ConfigEntries.lapisShieldCooldown / 20f)
+        tooltip.add(Component.translatable("item.sortilege.lapis_shield.desc", ModConfig.lapisShieldCooldown.get() / 20f)
                 .withStyle(ChatFormatting.GRAY));
     }
 
@@ -64,7 +64,7 @@ public class LapisShieldItem extends Item implements Equipable, AddedRenderItem 
     }
 
     public static int getCooldownEnd(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(COOLDOWN_NBT) + ConfigEntries.lapisShieldCooldown;
+        return stack.getOrCreateTag().getInt(COOLDOWN_NBT) + ModConfig.lapisShieldCooldown.get();
     }
 
     public static boolean isOnCooldown(ItemStack stack) {
@@ -76,7 +76,7 @@ public class LapisShieldItem extends Item implements Equipable, AddedRenderItem 
         sendCooldownUpdate(entity, entity.tickCount);
 
         if (entity instanceof Player player)
-            player.getCooldowns().addCooldown(ModItems.LAPIS_SHIELD, ConfigEntries.lapisShieldCooldown);
+            player.getCooldowns().addCooldown(ModItems.LAPIS_SHIELD, ModConfig.lapisShieldCooldown.get());
 
         ModParticles.spawnWisps(entity.level(), entity.getX(), entity.getY() + entity.getEyeHeight(entity.getPose()) / 2, entity.getZ(),
                 16, new float[]{0.3f, 0.3f, 1f});
@@ -102,7 +102,7 @@ public class LapisShieldItem extends Item implements Equipable, AddedRenderItem 
     }
 
 
-    private static final ResourceLocation SHIELD_GLOW_LAYER = Sortilege.makeID("textures/models/lapis_shield_glow_layer.png");
+    private static final ResourceLocation SHIELD_GLOW_LAYER = Sortilege.MOD.makeID("textures/models/lapis_shield_glow_layer.png");
 
     @Override
     public boolean shouldRender(ItemStack stack) {

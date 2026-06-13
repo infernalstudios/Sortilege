@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -19,7 +19,7 @@ public class DamageEnchantmentMixin {
 
     @Inject(method = "doPostAttack", at = @At("HEAD"))
     public void betterBaneOfArthropods(LivingEntity user, Entity target, int level, CallbackInfo ci) {
-        if (this.type == 2 && ConfigEntries.betterBane && target instanceof LivingEntity living)
+        if (this.type == 2 && ModConfig.betterBane.get() && target instanceof LivingEntity living)
             living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 15 + 15 * level, 1));
     }
 }

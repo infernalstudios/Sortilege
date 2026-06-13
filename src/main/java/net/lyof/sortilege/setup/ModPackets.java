@@ -2,7 +2,6 @@ package net.lyof.sortilege.setup;
 
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
@@ -25,16 +24,16 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 
 public class ModPackets {
-    public static final ResourceLocation INITIALIZE = Sortilege.makeID("initalize");
+    public static final ResourceLocation INITIALIZE = Sortilege.MOD.makeID("initalize");
     public static final int INIT_RELOAD = 0;
     public static final int INIT_CATALYST = 1;
     public static final int INIT_POTION = 2;
     public static final int INIT_LOCK = 3;
 
-    public static final ResourceLocation WISP_PARTICLE_DISPLAY = Sortilege.makeID("wisp_particle_display");
-    public static final ResourceLocation LAPIS_SHIELD_COOLDOWN = Sortilege.makeID("lapis_shield_cooldown");
+    public static final ResourceLocation WISP_PARTICLE_DISPLAY = Sortilege.MOD.makeID("wisp_particle_display");
+    public static final ResourceLocation LAPIS_SHIELD_COOLDOWN = Sortilege.MOD.makeID("lapis_shield_cooldown");
 
-    public static final ResourceLocation SET_KNOWLEDGE_AUTHORS = Sortilege.makeID("set_knowledge_authors");
+    public static final ResourceLocation SET_KNOWLEDGE_AUTHORS = Sortilege.MOD.makeID("set_knowledge_authors");
 
 
     public static class Client {
@@ -73,11 +72,11 @@ public class ModPackets {
             client.execute(() -> {
                 Entity e = handler.getLevel().getEntity(id);
                 if (!(e instanceof LivingEntity entity)) {
-                    Sortilege.log("Something went wrong while receiving a packet", 2);
+                    //Sortilege.log("Something went wrong while receiving a packet", 2);
                     return;
                 }
                 ItemStack stack = entity.getOffhandItem();
-                if (!ConfigEntries.lapisShieldEnabled || !stack.is(ModItems.LAPIS_SHIELD)) return;
+                if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
                 if (cooldown == 0)
                     LapisShieldItem.removeCooldown(stack);

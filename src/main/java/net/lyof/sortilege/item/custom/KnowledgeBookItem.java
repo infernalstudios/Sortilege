@@ -1,7 +1,7 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
@@ -33,7 +33,7 @@ public class KnowledgeBookItem extends Item {
     private static List<String> authors = null;
 
     public static void fillItemGroup(FabricItemGroupEntries entries, Item previous) {
-        if (!ConfigEntries.knowledgeEnabled) return;
+        if (!ModConfig.knowledgeEnabled.get()) return;
 
         EnchantKnowledge knowledge = new EnchantKnowledge();
         for (Enchantment enchant : BuiltInRegistries.ENCHANTMENT)

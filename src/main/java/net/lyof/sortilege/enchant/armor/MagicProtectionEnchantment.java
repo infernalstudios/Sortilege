@@ -1,6 +1,6 @@
 package net.lyof.sortilege.enchant.armor;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -24,7 +24,7 @@ public class MagicProtectionEnchantment extends Enchantment {
     protected boolean checkCompatibility(Enchantment other) {
         return (!(other instanceof ProtectionEnchantment prot)
                 || prot.type == ProtectionEnchantment.Type.FALL
-                || ConfigEntries.magicProtCompatibility)
+                || ModConfig.magicProtCompatibility.get())
                 && super.checkCompatibility(other);
     }
 

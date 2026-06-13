@@ -1,7 +1,6 @@
 package net.lyof.sortilege.block.custom;
 
 import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
-import net.lyof.sortilege.config.ConfigEntries;
 import net.lyof.sortilege.setup.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
@@ -153,7 +152,7 @@ public class PotionCauldronBlock extends LayeredCauldronBlock implements EntityB
 
                 item.getStack().decrement(state.get(LEVEL));
             }*/
-            if (item.getItem().is(ModTags.Items.REFILLS_CAULDRONS) && !this.isFull(state) && ConfigEntries.cauldronBlazeRefill) {
+            if (item.getItem().is(ModTags.Items.REFILLS_CAULDRONS) && !this.isFull(state)) {
                 world.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
                 world.gameEvent(null, GameEvent.FLUID_PLACE, pos);
 

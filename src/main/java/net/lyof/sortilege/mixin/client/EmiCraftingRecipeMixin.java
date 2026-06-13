@@ -21,7 +21,7 @@ import java.util.List;
 
 @Mixin(value = EmiCraftingRecipe.class, remap = false)
 public abstract class EmiCraftingRecipeMixin {
-    @Unique private static final ResourceLocation LOCK_BUTTON = Sortilege.makeID("textures/gui/emi/lock_button.png");
+    @Unique private static final ResourceLocation LOCK_BUTTON = Sortilege.MOD.makeID("textures/gui/emi/lock_button.png");
 
     @Shadow @Final protected ResourceLocation id;
     @Shadow public abstract int getDisplayHeight();

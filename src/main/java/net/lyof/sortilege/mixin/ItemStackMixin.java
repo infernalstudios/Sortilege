@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.StaffItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
@@ -50,7 +50,7 @@ public abstract class ItemStackMixin {
             if (!this.getOrCreateTag().contains("Enchantments", 9))
                 this.getOrCreateTag().put("Enchantments", new ListTag());
 
-            if (a < limit || (ConfigEntries.cursesAddSlots && enchantment.isCurse())) {
+            if (a < limit || (ModConfig.cursesAddSlots.get() && enchantment.isCurse())) {
                 ListTag listtag = this.getOrCreateTag().getList("Enchantments", 10);
                 listtag.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), (byte) level));
             }
@@ -69,7 +69,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "isDamageableItem", at = @At("HEAD"), cancellable = true)
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
         if (this.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (ConfigEntries.betterUnbreaking > 0 && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ConfigEntries.betterUnbreaking)
+        if (ModConfig.betterUnbreaking.get() > 0 && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ModConfig.betterUnbreaking.get())
             cir.setReturnValue(false);
     }
 
@@ -78,7 +78,7 @@ public abstract class ItemStackMixin {
         ItemStack self = (ItemStack) (Object) this;
         if (!PotionHelper.isPotionItem(self)) return original.call();
 
-        int stackSize = ConfigEntries.potionStackSize;
+        int stackSize = ModConfig.potionStackSize.get();
         CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(self));
         if (data != null) stackSize = data.stackSize;
 
@@ -87,8 +87,8 @@ public abstract class ItemStackMixin {
 
 
     @Unique
-    private void setPotionCooldown(ItemStack self, LivingEntity user) {
-        int cooldown = ConfigEntries.potionCooldown;
+    private void sorti_setPotionCooldown(ItemStack self, LivingEntity user) {
+        int cooldown = ModConfig.potionCooldown.get();
         CustomPotionData data = CustomPotionData.get(PotionUtils.getPotion(self));
         if (data != null) cooldown = data.cooldown;
 
@@ -100,7 +100,7 @@ public abstract class ItemStackMixin {
         ItemStack self = (ItemStack) (Object) this;
         if (!PotionHelper.isPotionItem(self) || PotionUtils.getPotion(self).getEffects().isEmpty()) return;
 
-        this.setPotionCooldown(self, user);
+        this.sorti_setPotionCooldown(self, user);
     }
 
     @WrapMethod(method = "use")
@@ -112,7 +112,7 @@ public abstract class ItemStackMixin {
         if (PotionCooldownManager.getProgress(self, user, 0) > 0) return InteractionResultHolder.fail(self);
 
         if (self.getItem() instanceof ThrowablePotionItem && !PotionUtils.getPotion(self).getEffects().isEmpty())
-            this.setPotionCooldown(self, user);
+            this.sorti_setPotionCooldown(self, user);
 
         return original.call(world, user, hand);
     }

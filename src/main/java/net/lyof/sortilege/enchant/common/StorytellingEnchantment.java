@@ -1,6 +1,6 @@
 package net.lyof.sortilege.enchant.common;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -26,7 +26,7 @@ public class StorytellingEnchantment extends Enchantment {
     @Override
     public Component getFullname(int level) {
         MutableComponent text = (MutableComponent) super.getFullname(level);
-        if (ConfigEntries.altStorytelling) text = text.withStyle(ChatFormatting.DARK_AQUA);
+        if (ModConfig.altStorytelling.get()) text = text.withStyle(ChatFormatting.DARK_AQUA);
         return text;
     }
 }

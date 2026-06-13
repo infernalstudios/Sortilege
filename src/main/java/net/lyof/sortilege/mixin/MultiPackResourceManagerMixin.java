@@ -3,7 +3,6 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.config.ModConfig;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.lyof.sortilege.setup.datagen.config.ConfiguredDataResourcePack;
@@ -30,7 +29,6 @@ import java.util.function.Predicate;
 public class MultiPackResourceManagerMixin {
     @Unique
     private static Resource readAndApply(Optional<Resource> resource, ConfiguredData data) {
-        Sortilege.log("Applying configured data: " + data.target, 0);
 
         String result = "";
 
@@ -40,7 +38,6 @@ public class MultiPackResourceManagerMixin {
             else
                 result = data.apply(new String(resource.get().open().readAllBytes()));
         } catch (Exception e) {
-            Sortilege.log("Failed to apply configured data due to an error", 2);
             e.printStackTrace();
         }
 
@@ -92,21 +89,20 @@ public class MultiPackResourceManagerMixin {
 
             original.replace(id, readAndApply(original.get(id), data));
         }
-
+/*
         if (startingPath.startsWith("recipes")) {
             List<ResourceLocation> toRemove = original.keySet().stream().filter(id -> {
                 if (!id.toString().startsWith(Sortilege.MOD_ID +  ":recipes/compat/")) return false;
 
-                return ModConfig.STAFFS.stream().anyMatch(p ->
-                        id.equals(Sortilege.makeID("recipes/compat/" + p.getFirst() + ".json"))
+                return ModConfigS.STAFFS.stream().anyMatch(p ->
+                        id.equals(Sortilege.MOD.makeID("recipes/compat/" + p.getFirst() + ".json"))
                             && !FabricLoader.getInstance().isModLoaded(p.getSecond().dependency));
             }).toList();
 
             for (ResourceLocation id : toRemove)
                 original.remove(id);
 
-            Sortilege.log("Neutralized recipes " + toRemove + ", as their corresponding staffs are not loaded.", 0);
-        }
+        }*/
 
         return original;
     }

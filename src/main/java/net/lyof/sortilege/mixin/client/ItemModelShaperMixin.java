@@ -2,7 +2,7 @@ package net.lyof.sortilege.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.client.renderer.ItemModelShaper;
 import net.minecraft.client.resources.model.BakedModel;
@@ -28,7 +28,7 @@ public class ItemModelShaperMixin {
 
     @WrapMethod(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
-        if (!ConfigEntries.potionTextures) return original.call(stack);
+        if (!ModConfig.potionTextures.get()) return original.call(stack);
         if (!PotionHelper.isPotionItem(stack)) return original.call(stack);
         if (!stack.hasTag()) return original.call(stack);
         

@@ -27,13 +27,13 @@ import java.util.Map;
 
 @EmiEntrypoint
 public class EmiCompat implements EmiPlugin {
-    public static final EmiRecipeCategory ENCHANTING_CATEGORY = new EmiRecipeCategory(Sortilege.makeID("enchanting"),
+    public static final EmiRecipeCategory ENCHANTING_CATEGORY = new EmiRecipeCategory(Sortilege.MOD.makeID("enchanting"),
             EmiStack.of(Items.ENCHANTING_TABLE),
-            new EmiTexture(Sortilege.makeID("textures/gui/emi/enchanting.png"), 0, 0, 16, 16));
+            new EmiTexture(Sortilege.MOD.makeID("textures/gui/emi/enchanting.png"), 0, 0, 16, 16));
 
-    public static final EmiRecipeCategory CAULDRON_CATEGORY = new EmiRecipeCategory(Sortilege.makeID("cauldron_brewing"),
+    public static final EmiRecipeCategory CAULDRON_CATEGORY = new EmiRecipeCategory(Sortilege.MOD.makeID("cauldron_brewing"),
             EmiStack.of(Items.CAULDRON),
-            new EmiTexture(Sortilege.makeID("textures/gui/emi/cauldron_brewing.png"), 0, 0, 16, 16));
+            new EmiTexture(Sortilege.MOD.makeID("textures/gui/emi/cauldron_brewing.png"), 0, 0, 16, 16));
 
     @Override
     public void register(EmiRegistry registry) {
@@ -42,9 +42,9 @@ public class EmiCompat implements EmiPlugin {
         registry.addCategory(CAULDRON_CATEGORY);
         registry.addWorkstation(CAULDRON_CATEGORY, EmiStack.of(Items.CAULDRON));
 
-        registry.addRecipe(new SpecialSmithingEmiRecipe(new SoulbindingRecipe(Sortilege.makeID("soulbinding_instance")),
+        registry.addRecipe(new SpecialSmithingEmiRecipe(new SoulbindingRecipe(Sortilege.MOD.makeID("soulbinding_instance")),
                 EmiIngredient.of(ModTags.Items.SOULBINDERS)));
-        registry.addRecipe(new SpecialSmithingEmiRecipe(new LimitBreakRecipe(Sortilege.makeID("limit_break_instance")),
+        registry.addRecipe(new SpecialSmithingEmiRecipe(new LimitBreakRecipe(Sortilege.MOD.makeID("limit_break_instance")),
                 EmiIngredient.of(ModTags.Items.LIMIT_BREAKER)));
 
         for (Map.Entry<Item, List<Enchantment>> entry : EnchantingCatalyst.CATALYSTS.entrySet())

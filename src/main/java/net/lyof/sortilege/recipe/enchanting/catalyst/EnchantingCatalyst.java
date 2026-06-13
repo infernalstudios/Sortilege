@@ -2,7 +2,7 @@ package net.lyof.sortilege.recipe.enchanting.catalyst;
 
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -33,11 +33,11 @@ public class EnchantingCatalyst {
 
 
     public static boolean isDisabled() {
-        return !ConfigEntries.bookCatalysts && CATALYSTS.isEmpty();
+        return !ModConfig.bookCatalysts.get() && CATALYSTS.isEmpty();
     }
 
     public static Map<Enchantment, Integer> getEnchantments(ItemStack catalyst) {
-        if (catalyst.getItem() instanceof EnchantedBookItem && ConfigEntries.bookCatalysts)
+        if (catalyst.getItem() instanceof EnchantedBookItem && ModConfig.bookCatalysts.get())
             return EnchantmentHelper.getEnchantments(catalyst);
 
         Map<Enchantment, Integer> result = new HashMap<>();

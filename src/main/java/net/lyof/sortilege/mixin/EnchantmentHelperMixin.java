@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.util.RandomSource;
@@ -32,13 +32,13 @@ public class EnchantmentHelperMixin {
                 int i = entry.getValue();
 
                 if (enchantment != null) {
-                    if (a < limit || itemstack.is(Items.ENCHANTED_BOOK) || (ConfigEntries.cursesAddSlots && enchantment.isCurse())) {
+                    if (a < limit || itemstack.is(Items.ENCHANTED_BOOK) || (ModConfig.cursesAddSlots.get() && enchantment.isCurse())) {
                         listtag.add(EnchantmentHelper.storeEnchantment(EnchantmentHelper.getEnchantmentId(enchantment), i));
                         if (itemstack.is(Items.ENCHANTED_BOOK)) {
                             EnchantedBookItem.addEnchantment(itemstack, new EnchantmentInstance(enchantment, i));
                         }
 
-                        if (!enchantment.isCurse() || !ConfigEntries.cursesAddSlots) a++;
+                        if (!enchantment.isCurse() || !ModConfig.cursesAddSlots.get()) a++;
                     }
                 }
             }
@@ -54,9 +54,9 @@ public class EnchantmentHelperMixin {
 
     @Inject(method = "getEnchantmentCost", at = @At("HEAD"), cancellable = true)
     private static void betterEnchantingCosts(RandomSource random, int slotIndex, int bookshelfCount, ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (ConfigEntries.doIncreasedEnchantCosts && ConfigEntries.increasedEnchantNeeds.size() == 3) {
+        if (ModConfig.doIncreasedEnchantCosts.get() && ModConfig.increasedEnchantNeeds.get().size() == 3) {
             int bonus = (int) ((slotIndex * 0.5) * bookshelfCount);
-            cir.setReturnValue(ConfigEntries.increasedEnchantNeeds.get(slotIndex).intValue() + bonus);
+            cir.setReturnValue(ModConfig.increasedEnchantNeeds.get().get(slotIndex) + bonus);
         }
     }
 }

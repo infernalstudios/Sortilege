@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
@@ -106,7 +106,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
 
     @Inject(method = "slotsChanged", at = @At("HEAD"))
     public void updateLogics(Container inventory, CallbackInfo ci) {
-        if (ConfigEntries.knowledgeEnabled) {
+        if (ModConfig.knowledgeEnabled.get()) {
             this.sorti_knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge(null);
 
             this.access.execute((world, pos) -> {
@@ -138,7 +138,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
 
     @WrapOperation(method = "getEnchantmentList", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;selectEnchantment(Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/item/ItemStack;IZ)Ljava/util/List;"))
     public List<EnchantmentInstance> overrideDefaultEnchanting(RandomSource random, ItemStack stack, int level, boolean treasureAllowed, Operation<List<EnchantmentInstance>> original) {
-        if (ConfigEntries.catalystOnly)
+        if (ModConfig.catalystOnly.get())
             return new ArrayList<>();
         return original.call(random, stack, level, treasureAllowed);
     }
@@ -152,7 +152,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         List<EnchantmentInstance> result = new ArrayList<>(original);
 
         // Knowledge logic
-        if (ConfigEntries.knowledgeEnabled) {
+        if (ModConfig.knowledgeEnabled.get()) {
             result.removeIf(entry -> !this.sorti_knowledge.isKnown(entry.enchantment));
             List<EnchantmentInstance> list = new ArrayList<>();
             for (EnchantmentInstance entry : result)
@@ -176,7 +176,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
             for (int i = 0; i < BuiltInRegistries.ENCHANTMENT.getId(chosen) % 8; i++) this.random.nextDouble();
 
             // Catalysts don't always apply
-            if (this.random.nextDouble() <= ConfigEntries.catalystChance) {
+            if (this.random.nextDouble() <= ModConfig.catalystChance.get()) {
                 int lvl = chosen.getMaxLevel();
                 // Higher level in costier slots
                 for (int i = 0; i < 3 - slot; i++)

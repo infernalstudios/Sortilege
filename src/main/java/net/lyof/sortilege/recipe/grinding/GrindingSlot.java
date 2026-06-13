@@ -1,6 +1,6 @@
 package net.lyof.sortilege.recipe.grinding;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -14,6 +14,6 @@ public class GrindingSlot extends Slot {
     }
 
     public boolean mayPlace(ItemStack stack) {
-        return this.parent.mayPlace(stack) || (ConfigEntries.knowledgeEnabled && stack.is(ModItems.KNOWLEDGE_BOOK));
+        return this.parent.mayPlace(stack) || (ModConfig.knowledgeEnabled.get() && stack.is(ModItems.KNOWLEDGE_BOOK));
     }
 }

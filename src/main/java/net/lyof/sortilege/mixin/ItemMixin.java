@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -31,7 +31,7 @@ public class ItemMixin {
 
     @Inject(method = "overrideStackedOnOther", at = @At("TAIL"), cancellable = true)
     public void inventoryEnchant(ItemStack stack, Slot slot, ClickAction clickType, Player player, CallbackInfoReturnable<Boolean> cir) {
-        if ((!ConfigEntries.allowInventoryEnchanting && !player.isCreative()) || clickType == ClickAction.PRIMARY) return;
+        if ((!ModConfig.allowInventoryEnchanting.get() && !player.isCreative()) || clickType == ClickAction.PRIMARY) return;
         if (!(stack.getItem() instanceof EnchantedBookItem)) return;
 
         Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);

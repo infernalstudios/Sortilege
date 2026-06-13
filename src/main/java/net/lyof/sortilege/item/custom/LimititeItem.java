@@ -1,7 +1,7 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
@@ -21,7 +21,7 @@ public class LimititeItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return ConfigEntries.isLimititeFoil;
+        return ModConfig.limititehasGlint.get();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package net.lyof.sortilege.recipe.smithing;
 
 import com.google.gson.JsonObject;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
@@ -53,7 +53,7 @@ public class LimitBreakRecipe implements SmithingRecipe {
     @Override
     public boolean isBaseIngredient(ItemStack stack) {
         return stack.getItem().getEnchantmentValue() > 0 && EnchantHelper.getBaseEnchantSlots(stack) != 0
-                && EnchantHelper.getExtraEnchantSlots(stack) < ConfigEntries.maxLimitBreak;
+                && EnchantHelper.getExtraEnchantSlots(stack) < ModConfig.maxLimitBreak.get();
     }
 
     @Override

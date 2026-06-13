@@ -1,6 +1,6 @@
 package net.lyof.sortilege.util;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -29,7 +29,7 @@ public class PotionHelper {
                 if (potion.getEffects().size() == 1 &&
                         !potion.hasInstantEffects() &&
                         potion.getEffects().get(0).getAmplifier() == 0 &&
-                        !ConfigEntries.antidoteBlacklist.contains(BuiltInRegistries.MOB_EFFECT.getResourceKey(potion.getEffects().get(0).getEffect()).toString())) {
+                        !ModConfig.antidoteBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect()))) {
 
                     MobEffect effect = potion.getEffects().get(0).getEffect();
                     int duration = potion.getEffects().get(0).getDuration();
@@ -40,13 +40,13 @@ public class PotionHelper {
                         POTIONS.replace(effect, potion);
                 }
             }
+
+            for (Potion potion : POTIONS.values()) {
+                if (!ModConfig.swampHutBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect())))
+                    GEN_ALLOWED_POTIONS.add(potion);
+            }
         });
         potionMapping.start();
-
-        for (Potion potion : POTIONS.values()) {
-            if (!ConfigEntries.swampHutBlacklist.contains(BuiltInRegistries.MOB_EFFECT.getResourceKey(potion.getEffects().get(0).getEffect()).toString()))
-                GEN_ALLOWED_POTIONS.add(potion);
-        }
     }
 
     public static Potion getDefaultPotion(MobEffect effect) {

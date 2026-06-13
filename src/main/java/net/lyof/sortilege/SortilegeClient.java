@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.lyof.sortilege.block.ModBlocks;
 import net.lyof.sortilege.block.custom.PotionCauldronBlock;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
@@ -34,10 +34,10 @@ public class SortilegeClient implements ClientModInitializer {
 
         MenuScreens.register(ModScreenHandlers.KNOWLEDGE_BOOK, KnowledgeBookScreen::new);
 
-        if (ConfigEntries.witchHatEnabled) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
+        if (ModConfig.witchHatEnabled.get()) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
 
-        if (ConfigEntries.lapisShieldEnabled)
-            ItemProperties.register(ModItems.LAPIS_SHIELD, Sortilege.makeID("cooldown"), (stack, world, entity, seed) -> {
+        if (ModConfig.lapisShieldEnabled.get())
+            ItemProperties.register(ModItems.LAPIS_SHIELD, Sortilege.MOD.makeID("cooldown"), (stack, world, entity, seed) -> {
                 stack.getOrCreateTag();
                 return LapisShieldItem.isOnCooldown(stack) ? 1f : 0f;
             });

@@ -1,6 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class SetEnchantmentsFunctionMixin {
     @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;setEnchantments(Ljava/util/Map;Lnet/minecraft/world/item/ItemStack;)V"))
     private void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
-        if (ConfigEntries.knowledgeEnabled)
+        if (ModConfig.knowledgeEnabled.get())
             stack.getOrCreateTag().putBoolean(EnchantKnowledge.LEARNABLE_KEY, true);
     }
 }

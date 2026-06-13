@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.config.ConfigEntries;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.DataSlot;
@@ -21,12 +21,12 @@ public abstract class AnvilMenuMixin {
     @WrapMethod(method = "createResult")
     public void noAnvilCost(Operation<Void> original) {
         original.call();
-        if (ConfigEntries.noXPAnvil) this.cost.set(0);
+        if (ModConfig.noXPAnvil.get()) this.cost.set(0);
     }
 
     @Inject(method = "mayPickup", at = @At("HEAD"), cancellable = true)
     public void canTakeFix(Player player, boolean present, CallbackInfoReturnable<Boolean> cir) {
-        if (ConfigEntries.noXPAnvil) cir.setReturnValue(true);
+        if (ModConfig.noXPAnvil.get()) cir.setReturnValue(true);
     }
 
     @ModifyExpressionValue(method = "createResult", at = @At(value = "CONSTANT", args = "intValue=40"))

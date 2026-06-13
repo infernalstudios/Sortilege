@@ -16,7 +16,7 @@ public class ModAttributes {
 
     public static UuidAttribute register(String name, boolean global, UuidAttribute attribute) {
         if (global) GLOBALS.add(attribute);
-        return (UuidAttribute) Registry.register(BuiltInRegistries.ATTRIBUTE, Sortilege.makeID(name), attribute.setSyncable(true));
+        return (UuidAttribute) Registry.register(BuiltInRegistries.ATTRIBUTE, Sortilege.MOD.makeID(name), attribute.setSyncable(true));
     }
 
 

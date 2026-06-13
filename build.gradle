@@ -77,6 +77,8 @@ dependencies {
 
 	// Botania
 	modCompileOnly "vazkii.botania:Botania:1.20.1-453-FORGE"
+	// ISS
+	modCompileOnly "curse.maven:irons-spells-n-spellbooks-855414:8237094"
 }
 
 processResources {

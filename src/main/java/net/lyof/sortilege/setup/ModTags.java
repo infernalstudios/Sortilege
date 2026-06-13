@@ -1,5 +1,6 @@
 package net.lyof.sortilege.setup;
 
+import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -18,11 +19,11 @@ public class ModTags {
         }
 
         public static final TagKey<EntityType<?>> UNDEAD = TagKey.create(Registries.ENTITY_TYPE,
-                ResourceLocation.tryBuild("minecraft", "undead"));
+                Identifier.of("minecraft", "undead"));
         public static final TagKey<EntityType<?>> UNDERGARDEN_ENTITIES = TagKey.create(Registries.ENTITY_TYPE,
-                ResourceLocation.tryBuild("undergarden", "undergarden_entities"));
+                Identifier.of("undergarden", "undergarden_entities"));
         public static final TagKey<EntityType<?>> ROTSPAWN = TagKey.create(Registries.ENTITY_TYPE,
-                ResourceLocation.tryBuild("undergarden", "rotspawn"));
+                Identifier.of("undergarden", "rotspawn"));
     }
 
     public static class Items {

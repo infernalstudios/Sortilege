@@ -2,6 +2,7 @@ package net.lyof.sortilege.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.client.renderer.ItemModelShaper;
@@ -65,7 +66,7 @@ public class ItemModelShaperMixin {
         String key = namespace + ":" + path;
         if (ID_CACHE.containsKey(key)) return ID_CACHE.get(key);
 
-        ID_CACHE.put(key, new ModelResourceLocation(ResourceLocation.tryBuild(namespace, path), "inventory"));
+        ID_CACHE.put(key, new ModelResourceLocation(Identifier.of(namespace, path), "inventory"));
         return ID_CACHE.get(key);
     }
 }

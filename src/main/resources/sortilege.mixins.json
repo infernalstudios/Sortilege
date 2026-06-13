@@ -48,7 +48,6 @@
     "accessor.EditBoxAccessor",
     "accessor.ScreenAccessor",
     "client.AnvilScreenMixin",
-    "client.BlockEntityWithoutLevelRendererMixin",
     "client.DeathScreenMixin",
     "client.DisplayInfoMixin",
     "client.EmiCraftingRecipeMixin",
@@ -56,8 +55,6 @@
     "client.GuiGraphicsMixin",
     "client.GuiMixin",
     "client.ItemModelShaperMixin",
-    "client.ItemRenderContextMixin",
-    "client.ItemRendererMixin",
     "client.ItemStackMixin",
     "client.ModelBakeryMixin",
     "client.ParticleRenderTypeMixin"

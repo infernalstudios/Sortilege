@@ -11,7 +11,7 @@ import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
-import net.lyof.sortilege.item.custom.rendering.custom.WitchHatRenderer;
+import net.lyof.sortilege.item.custom.rendering.WitchHatRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.screen.ModScreenHandlers;

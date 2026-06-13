@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.rendering.custom;
+package net.lyof.sortilege.item.custom.rendering;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;

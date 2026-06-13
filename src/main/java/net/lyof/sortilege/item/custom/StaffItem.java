@@ -7,13 +7,15 @@ import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
+import net.lcc.sollib.api.client.render.MockItemRenderer;
+import net.lcc.sollib.api.client.render.item.IAddedBarItem;
+import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
-import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
-import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
@@ -54,7 +56,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRenderItem {
+public class StaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
 
     //public @Nullable ModConfigS.StaffInfo rawInfos;
@@ -229,14 +231,6 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
                     .withStyle(ChatFormatting.GREEN));
             tooltip.add(Component.empty());
         }
-    }
-
-    public int getOverchargeBarColor(ItemStack stack) {
-        return 0;
-    }
-
-    public int getOverchargeBarStep(ItemStack stack) {
-        return Math.round(this.getOvercharge(stack) * 13.0F / (float) this.getMaxOvercharge(stack));
     }
 
 
@@ -471,16 +465,31 @@ public class StaffItem extends TieredItem implements DyeableLeatherItem, AddedRe
     private static final ResourceLocation COLOR_OVERLAY = Sortilege.MOD.makeID("textures/models/staff/glint.png");
 
     @Override
-    public boolean shouldRender(ItemStack stack) {
+    public boolean shouldAddRender(ItemStack stack) {
         return this.hasCustomColor(stack) && !stack.is(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
     }
 
     @Override
-    public void render(ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+    public void render(ItemStack stack, ItemDisplayContext context, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         matrices.scale(1.005f, 1.005f, 1.005f);
         matrices.translate(0, 0.995, 0.4975);
         matrices.mulPose(Axis.XP.rotationDegrees(180));
 
         MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light, COLOR_OVERLAY, this.getColor(stack));
+    }
+
+    @Override
+    public boolean shouldAddBarRender(ItemStack stack) {
+        return this.getOvercharge(stack) > 0;
+    }
+
+    @Override
+    public float getAddedBarFullness(ItemStack stack) {
+        return this.getOvercharge(stack)  / (float) this.getMaxOvercharge(stack);
+    }
+
+    @Override
+    public int getAddedBarColor(ItemStack itemStack) {
+        return 0x0000ff;
     }
 }

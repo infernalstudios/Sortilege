@@ -5,11 +5,11 @@ import com.mojang.math.Axis;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.lcc.sollib.api.client.render.MockItemRenderer;
+import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.rendering.AddedRenderItem;
-import net.lyof.sortilege.item.custom.rendering.MockItemRenderer;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.ChatFormatting;
@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LapisShieldItem extends Item implements Equipable, AddedRenderItem {
+public class LapisShieldItem extends Item implements Equipable, IAddedRenderItem {
     public LapisShieldItem(Properties settings) {
         super(settings);
     }
@@ -105,12 +105,12 @@ public class LapisShieldItem extends Item implements Equipable, AddedRenderItem 
     private static final ResourceLocation SHIELD_GLOW_LAYER = Sortilege.MOD.makeID("textures/models/lapis_shield_glow_layer.png");
 
     @Override
-    public boolean shouldRender(ItemStack stack) {
+    public boolean shouldAddRender(ItemStack stack) {
         return !LapisShieldItem.isOnCooldown(stack);
     }
 
     @Override
-    public void render(ItemStack stack, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
+    public void render(ItemStack stack, ItemDisplayContext itemDisplayContext, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         matrices.scale(1.005f, 1.005f, 1.005f);
         matrices.mulPose(Axis.XP.rotationDegrees(180));
         matrices.translate(-6 * PX_UNIT, -4 * PX_UNIT, -2 * PX_UNIT);

@@ -50,11 +50,11 @@ public class ModRuntime {
 
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), ModRuntime.Client::generateTranslations);
 
-        SolRegistries.Data.RUNTIME.addJson(ResourceLocation.tryBuild("enchdesc", "lang/en_us.json"),
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("enchdesc", "lang/en_us.json"),
                 ModRuntime.Client::changeEnchantmentDescriptions,
                 () -> FabricLoader.getInstance().isModLoaded("enchdesc"));
 
-        SolRegistries.Data.RUNTIME.addJson(ResourceLocation.tryBuild("quark", "attribute_tooltips.json"),
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("quark", "attribute_tooltips.json"),
                 ModRuntime.Client::changeQuarkAttributeDisplay,
                 () -> FabricLoader.getInstance().isModLoaded("quark"));
     }

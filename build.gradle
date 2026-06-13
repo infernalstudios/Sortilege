@@ -45,7 +45,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	// Sol
-	modImplementation "curse.maven:sollib-1573497:8238828"
+	modImplementation "curse.maven:sollib-1573497:8242786"
 
 	// Fabric ASM
 	modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"

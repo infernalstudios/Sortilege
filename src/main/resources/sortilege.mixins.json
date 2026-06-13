@@ -26,7 +26,6 @@
     "LingeringPotionItemMixin",
     "LivingEntityMixin",
     "MappedRegistryMixin",
-    "MultiPackResourceManagerMixin",
     "PlayerAdvancementsMixin",
     "PlayerMixin",
     "PotionBrewingMixin",

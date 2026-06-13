@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.*;
@@ -28,7 +29,7 @@ public class ModItems {
     }
 
     public static Item register(boolean config, String name, Supplier<Item> item) {
-        return config ? Registry.register(BuiltInRegistries.ITEM, Sortilege.MOD.makeID(name), item.get()) : Items.AIR;
+        return config ? Sortilege.MOD.register(ItemHolder.class, name, item).get() : Items.AIR;
     }
 
 

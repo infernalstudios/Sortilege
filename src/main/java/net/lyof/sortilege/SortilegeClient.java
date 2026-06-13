@@ -17,14 +17,14 @@ import net.lyof.sortilege.particle.custom.WispParticle;
 import net.lyof.sortilege.screen.ModScreenHandlers;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreen;
 import net.lyof.sortilege.setup.ModPackets;
-import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
+import net.lyof.sortilege.setup.ModRuntime;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.item.ItemProperties;
 
 public class SortilegeClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
-        ConfiguredData.registerClient();
+        ModRuntime.loadClient();
         registerPackets();
 
         ColorProviderRegistry.ITEM.register(AntidotePotionItem::getItemColor, ModItems.ANTIDOTE);

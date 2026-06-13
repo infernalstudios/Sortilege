@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
+import net.lcc.sollib.api.common.data.reload.IReloadListener;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
@@ -23,16 +24,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.util.Map;
 
-public class ReloadListener implements SimpleSynchronousResourceReloadListener, EarlyReloadListener {
+public class ReloadListener implements IReloadListener {
     public static final ReloadListener INSTANCE = new ReloadListener();
 
     @Override
-    public ResourceLocation getFabricId() {
-        return Sortilege.MOD.makeID("reload_listener");
-    }
-
-    @Override
-    public void onResourceManagerReload(ResourceManager manager) {
+    public void reload(ResourceManager manager) {
         RecipeLock.clear();
         for (Map.Entry<String, RecipeLock> entry : ModConfig.recipeLocks.get().entrySet())
             RecipeLock.register(entry.getKey(), entry.getValue());

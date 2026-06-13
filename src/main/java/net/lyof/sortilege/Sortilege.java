@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.SolModContainer;
@@ -25,8 +26,8 @@ import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.screen.ModScreenHandlers;
 import net.lyof.sortilege.setup.ModPackets;
+import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
-import net.lyof.sortilege.setup.datagen.config.ConfiguredData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
@@ -38,11 +39,10 @@ public class Sortilege implements ModInitializer {
 	public static final SolModContainer MOD = new SolModContainer("Sortilege", "sortilege");
 	public static final String MOD_ID = MOD.getNamespace();
 
-	public static final SolConfig CONFIG = MOD.createConfig("sortilege", 3, ModConfig::build);
-
 	@Override
 	public void onInitialize() {
-		ConfiguredData.register();
+		MOD.createConfig("sortilege", 3, ModConfig::build);
+		ModRuntime.load();
 
 		ModBlocks.register();
 		ModBlockEntities.register();
@@ -80,7 +80,8 @@ public class Sortilege implements ModInitializer {
 	}
 
 	private static void registerEvents() {
-		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(ReloadListener.INSTANCE);
+		SolRegistries.Data.RELOAD.register(ReloadListener.INSTANCE);
+
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
 			List<FriendlyByteBuf> packets = new ArrayList<>();
 

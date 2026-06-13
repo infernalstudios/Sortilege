@@ -29,7 +29,7 @@ public class ItemModelShaperMixin {
 
     @WrapMethod(method = "getItemModel(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/BakedModel;")
     public BakedModel getCustomModel(ItemStack stack, Operation<BakedModel> original) {
-        if (!ModConfig.potionTextures.get()) return original.call(stack);
+        if (!ModConfig.customPotionTextures.get()) return original.call(stack);
         if (!PotionHelper.isPotionItem(stack)) return original.call(stack);
         if (!stack.hasTag()) return original.call(stack);
         

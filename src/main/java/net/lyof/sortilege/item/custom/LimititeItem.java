@@ -21,7 +21,7 @@ public class LimititeItem extends Item {
 
     @Override
     public boolean isFoil(ItemStack stack) {
-        return ModConfig.limititehasGlint.get();
+        return ModConfig.limititeHasGlint.get();
     }
 
     @Override

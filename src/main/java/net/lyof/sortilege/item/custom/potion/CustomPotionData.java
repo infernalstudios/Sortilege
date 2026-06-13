@@ -135,7 +135,7 @@ public class CustomPotionData {
 
     @Nullable
     public static CustomPotionData get(Potion potion) {
-        if (!ModConfig.potionData.get()) return null;
+        if (!ModConfig.customPotionData.get()) return null;
 
         if (CACHE.containsKey(potion)) return CACHE.get(potion);
         CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(BuiltInRegistries.POTION.getKey(potion)))

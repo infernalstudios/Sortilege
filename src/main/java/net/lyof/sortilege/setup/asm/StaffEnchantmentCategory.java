@@ -1,6 +1,6 @@
 package net.lyof.sortilege.setup.asm;
 
-import net.lyof.sortilege.item.custom.StaffItem;
+import net.lyof.sortilege.item.custom.staff.StaffItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import org.spongepowered.asm.mixin.Mixin;

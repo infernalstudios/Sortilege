@@ -49,7 +49,7 @@ public class ModConfig {
                         .addObject("limitite", limitite -> limitite
                                 .comment("Should Limitite have an enchantment glint")
                                 .add("has_glint", true)
-                                .bind(limititehasGlint)
+                                .bind(limititeHasGlint)
                                 .comment("1 in X chance for Limitite to spawn as loot in chests. Set to 0 or lower to disable it")
                                 .add("loot_weight", 24)
                                 .bind(limititeLootWeight)
@@ -64,7 +64,7 @@ public class ModConfig {
                                 .comment("Should Enchanted Books be usable as catalysts to increase the odds of getting their enchantments")
                                 .comment("  If this is set to false and no catalyst is loaded from datapacks, the module will be disabled")
                                 .add("allow_books", true)
-                                .bind(bookCatalysts)
+                                .bind(catalystBooks)
                                 .comment("Chance (0 - 1) for non book catalysts to activate for each option in the enchanting table")
                                 .add("activation_chance", 0.5)
                                 .bind(catalystChance)
@@ -99,19 +99,19 @@ public class ModConfig {
                 .bind(magicProtCompatibility)
                 .comment("Feather Falling at this level completely negates fall damage (should be set to the maximum if enabled, or -1 if disabled)")
                 .add("extended_feather_falling", 4)
-                .bind(betterFeatherFalling)
+                .bind(expandedFeatherFalling)
                 .comment("Unbreaking at this level makes an item completely unbreakable (should be set to the maximum if enabled, or -1 if disabled)")
                 .add("extended_unbreaking", 3)
-                .bind(betterUnbreaking)
+                .bind(expandedUnbreaking)
                 .comment("Should Magic Protection also give a level*5% chance to dodge any attack")
                 .add("extended_magic_protection", true)
-                .bind(betterMagicProt)
+                .bind(expandedMagicProt)
                 .comment("Having a full set Fire Protection at this level will grant fire immunity  (should be set to the maximum if enabled, or -1 if disabled)")
                 .add("extended_fire_protection", 4)
-                .bind(betterFireProt)
+                .bind(expandedFireProt)
                 .comment("Should Bane of Arthropods apply a 0.5*(level + 1) seconds of slowness on hit")
                 .add("extended_bane_of_arthropods", true)
-                .bind(betterBane)
+                .bind(expandedBane)
                 .comment("Should Blessing damage all hostile mobs, and deal extra damage to entities tagged as `minecraft:undead`.")
                 .comment("  If set to false, only the entities in this tag will be damaged")
                 .comment("  Non damaged entities are healed instead")
@@ -184,7 +184,7 @@ public class ModConfig {
                 .addObject("bounties", bounties -> bounties
                         .comment("Should the sortilege:bounties tag act as a whitelist instead of a blacklist. It defines which mobs can drop bounties")
                         .add("tag_is_whitelist", false)
-                        .bind(bountyWhitelist)
+                        .bind(bountyTagWhitelist)
                         .comment("Amount of xp points bounties drop")
                         .add("value", 20)
                         .bind(bountyValue)
@@ -249,11 +249,11 @@ public class ModConfig {
                         .comment("Should potions have the ability to have different textures depending on their content.")
                         .comment("  Setting this to false will disable texture variants for long/strong potions, as well as per potion ones")
                         .add("custom_potion_textures", true)
-                        .bind(potionTextures)
+                        .bind(customPotionTextures)
                         .comment("Should potions' properties be editable by datapack. Keep in mind that to fully disable modifications to potions,")
                         .comment("  You also need to set default_stack_size to 1, duration_multiplier to 1, default_use_time to 0 and default_cooldown to 0")
                         .add("custom_potion_data", true)
-                        .bind(potionData)
+                        .bind(customPotionData)
                         .comment("")
                         .comment("Stack size for potions, for those lacking a custom datapack definition")
                         .add("default_stack_size", 8)
@@ -280,7 +280,7 @@ public class ModConfig {
                         .bind(cauldronBrewingEnabled)
                         .comment("If true, cauldrons generated in Swamp Huts will have a random potion inside")
                         .add("fill_swamp_huts_randomly", true)
-                        .bind(fillSwampHutCauldrons)
+                        .bind(swampHutCauldrons)
                         .comment("A list of effect ids that are not allowed to generate in swamp huts")
                         .addArray("swamp_hut_blacklist", List.of())
                         .bind(swampHutBlacklist)
@@ -308,10 +308,11 @@ public class ModConfig {
     }
 
 
-    public static ConfigEntry<Integer> enchantLimiterDefault = new ConfigEntry<>(3);
-    public static ConfigEntry<Boolean> cursesAddSlots = new ConfigEntry<>(true);
-    public static ConfigEntry<String> enchantLimiterMode = new ConfigEntry<>("relative");
-    public static ConfigEntry<Map<String, Integer>> enchantLimiterOverrides = new ConfigEntry<Map<String, Integer>>(Map.of()).withProcessor(json -> {
+    // Enchanting
+    public static final ConfigEntry<Integer> enchantLimiterDefault = new ConfigEntry<>(3);
+    public static final ConfigEntry<Boolean> cursesAddSlots = new ConfigEntry<>(true);
+    public static final ConfigEntry<String> enchantLimiterMode = new ConfigEntry<>("relative");
+    public static final ConfigEntry<Map<String, Integer>> enchantLimiterOverrides = new ConfigEntry<Map<String, Integer>>(Map.of()).withProcessor(json -> {
         Map<String, Integer> result = new HashMap<>();
         if (json == null || !json.isJsonObject()) return result;
 
@@ -322,33 +323,27 @@ public class ModConfig {
 
         return result;
     });
-    public static ConfigEntry<Boolean> alwaysShowEnchantLimit = new ConfigEntry<>(true);
-
-    public static ConfigEntry<Boolean> limititehasGlint = new ConfigEntry<>(true);
-    public static ConfigEntry<Integer> limititeLootWeight = new ConfigEntry<>(24);
-    public static ConfigEntry<Integer> maxLimitBreak = new ConfigEntry<>(3);
-
-    public static ConfigEntry<Boolean> bookCatalysts = new ConfigEntry<>(true);
-    public static ConfigEntry<Double> catalystChance = new ConfigEntry<>(0.5);
-    public static ConfigEntry<Boolean> catalystTooltip = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> catalystOnly = new ConfigEntry<>(false);
-
-    public static ConfigEntry<Boolean> knowledgeEnabled = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> knowledgeTooltip = new ConfigEntry<>(true);
-
-    public static ConfigEntry<Boolean> allowInventoryEnchanting = new ConfigEntry<>(false);
-    public static ConfigEntry<Boolean> miningMasterIntegration = new ConfigEntry<>(true);
-
-    public static ConfigEntry<Boolean> magicProtCompatibility = new ConfigEntry<>(false);
-    public static ConfigEntry<Integer> betterFeatherFalling = new ConfigEntry<>(4);
-    public static ConfigEntry<Integer> betterUnbreaking = new ConfigEntry<>(3);
-    public static ConfigEntry<Boolean> betterMagicProt = new ConfigEntry<>(true);
-    public static ConfigEntry<Integer> betterFireProt = new ConfigEntry<>(4);
-    public static ConfigEntry<Boolean> betterBane = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> altBlessing = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> altStorytelling = new ConfigEntry<>(false);
-
-    public static ConfigEntry<Set<String>> disabledEnchants = new ConfigEntry<Set<String>>(Set.of()).withProcessor(json -> {
+    public static final ConfigEntry<Boolean> alwaysShowEnchantLimit = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> limititeHasGlint = new ConfigEntry<>(true);
+    public static final ConfigEntry<Integer> limititeLootWeight = new ConfigEntry<>(24);
+    public static final ConfigEntry<Integer> maxLimitBreak = new ConfigEntry<>(3);
+    public static final ConfigEntry<Boolean> catalystBooks = new ConfigEntry<>(true);
+    public static final ConfigEntry<Double> catalystChance = new ConfigEntry<>(0.5);
+    public static final ConfigEntry<Boolean> catalystTooltip = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> catalystOnly = new ConfigEntry<>(false);
+    public static final ConfigEntry<Boolean> knowledgeEnabled = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> knowledgeTooltip = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> allowInventoryEnchanting = new ConfigEntry<>(false);
+    public static final ConfigEntry<Boolean> miningMasterIntegration = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> magicProtCompatibility = new ConfigEntry<>(false);
+    public static final ConfigEntry<Integer> expandedFeatherFalling = new ConfigEntry<>(4);
+    public static final ConfigEntry<Integer> expandedUnbreaking = new ConfigEntry<>(3);
+    public static final ConfigEntry<Boolean> expandedMagicProt = new ConfigEntry<>(true);
+    public static final ConfigEntry<Integer> expandedFireProt = new ConfigEntry<>(4);
+    public static final ConfigEntry<Boolean> expandedBane = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> altBlessing = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> altStorytelling = new ConfigEntry<>(false);
+    public static final ConfigEntry<Set<String>> disabledEnchants = new ConfigEntry<Set<String>>(Set.of()).withProcessor(json -> {
         Set<String> result = new HashSet<>();
         if (json == null || !json.isJsonObject()) return result;
 
@@ -360,12 +355,12 @@ public class ModConfig {
         return result;
     });
 
-    public static ConfigEntry<Boolean> witchHatEnabled = new ConfigEntry<>(true);
-    public static ConfigEntry<Double> witchHatDropChance = new ConfigEntry<>(0.1);
-    public static ConfigEntry<Integer> witchHatBonus = new ConfigEntry<>(3);
-
-    public static ConfigEntry<Boolean> doIncreasedEnchantCosts = new ConfigEntry<>(true);
-    public static ConfigEntry<List<Integer>> increasedEnchantCosts = new ConfigEntry<>(List.of(1, 3, 7)).withProcessor(json -> {
+    // Experience
+    public static final ConfigEntry<Boolean> witchHatEnabled = new ConfigEntry<>(true);
+    public static final ConfigEntry<Double> witchHatDropChance = new ConfigEntry<>(0.1);
+    public static final ConfigEntry<Integer> witchHatBonus = new ConfigEntry<>(3);
+    public static final ConfigEntry<Boolean> doIncreasedEnchantCosts = new ConfigEntry<>(true);
+    public static final ConfigEntry<List<Integer>> increasedEnchantCosts = new ConfigEntry<>(List.of(1, 3, 7)).withProcessor(json -> {
         List<Integer> result = new ArrayList<>();
         if (json == null || !json.isJsonArray()) return result;
 
@@ -375,7 +370,7 @@ public class ModConfig {
 
         return result;
     });
-    public static ConfigEntry<List<Integer>> increasedEnchantNeeds = new ConfigEntry<>(List.of(5, 10, 15)).withProcessor(json -> {
+    public static final ConfigEntry<List<Integer>> increasedEnchantNeeds = new ConfigEntry<>(List.of(5, 10, 15)).withProcessor(json -> {
         List<Integer> result = new ArrayList<>();
         if (json == null || !json.isJsonArray()) return result;
 
@@ -385,15 +380,13 @@ public class ModConfig {
 
         return result;
     });
-    public static ConfigEntry<Boolean> noXPAnvil = new ConfigEntry<>(true);
-    public static ConfigEntry<Integer> xpLevelCap = new ConfigEntry<>(100);
-    public static ConfigEntry<Integer> xpLinearCost = new ConfigEntry<>(50);
-
-    public static ConfigEntry<Boolean> bountyWhitelist = new ConfigEntry<>(false);
-    public static ConfigEntry<Integer> bountyValue = new ConfigEntry<>(20);
-    public static ConfigEntry<Double> bountyChance = new ConfigEntry<>(0.05);
-
-    public static ConfigEntry<Map<String, RecipeLock>> recipeLocks = new ConfigEntry<Map<String, RecipeLock>>(Map.of()).withProcessor(json -> {
+    public static final ConfigEntry<Boolean> noXPAnvil = new ConfigEntry<>(true);
+    public static final ConfigEntry<Integer> xpLevelCap = new ConfigEntry<>(100);
+    public static final ConfigEntry<Integer> xpLinearCost = new ConfigEntry<>(50);
+    public static final ConfigEntry<Boolean> bountyTagWhitelist = new ConfigEntry<>(false);
+    public static final ConfigEntry<Integer> bountyValue = new ConfigEntry<>(20);
+    public static final ConfigEntry<Double> bountyChance = new ConfigEntry<>(0.05);
+    public static final ConfigEntry<Map<String, RecipeLock>> recipeLocks = new ConfigEntry<Map<String, RecipeLock>>(Map.of()).withProcessor(json -> {
         Map<String, RecipeLock> result = new HashMap<>();
         if (json == null || !json.isJsonArray()) return result;
 
@@ -410,19 +403,19 @@ public class ModConfig {
         return result;
     });
 
-    public static ConfigEntry<Boolean> doXPKeep = new ConfigEntry<>(true);
-    public static ConfigEntry<Double> selfXPRatio = new ConfigEntry<>(0.3);
-    public static ConfigEntry<Double> attackerXPRatio = new ConfigEntry<>(0.6);
-    public static ConfigEntry<Double> dropXPRatio = new ConfigEntry<>(0.1);
+    // Death
+    public static final ConfigEntry<Boolean> doXPKeep = new ConfigEntry<>(true);
+    public static final ConfigEntry<Double> selfXPRatio = new ConfigEntry<>(0.3);
+    public static final ConfigEntry<Double> attackerXPRatio = new ConfigEntry<>(0.6);
+    public static final ConfigEntry<Double> dropXPRatio = new ConfigEntry<>(0.1);
+    public static final ConfigEntry<Boolean> keepEquipped = new ConfigEntry<>(false);
+    public static final ConfigEntry<Boolean> consumeSoulbound = new ConfigEntry<>(false);
+    public static final ConfigEntry<Boolean> showDeathCoordinates = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> glowingKiller = new ConfigEntry<>(true);
 
-    public static ConfigEntry<Boolean> keepEquipped = new ConfigEntry<>(false);
-    public static ConfigEntry<Boolean> consumeSoulbound = new ConfigEntry<>(false);
-
-    public static ConfigEntry<Boolean> showDeathCoordinates = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> glowingKiller = new ConfigEntry<>(true);
-
-    public static ConfigEntry<Boolean> antidoteEnabled = new ConfigEntry<>(true);
-    public static ConfigEntry<Set<ResourceLocation>> antidoteBlacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
+    // Brewing
+    public static final ConfigEntry<Boolean> antidoteEnabled = new ConfigEntry<>(true);
+    public static final ConfigEntry<Set<ResourceLocation>> antidoteBlacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
         Set<ResourceLocation> result = new HashSet<>();
         if (json == null || !json.isJsonObject()) return result;
 
@@ -432,21 +425,18 @@ public class ModConfig {
 
         return result;
     });
-    public static ConfigEntry<Integer> antidoteStackSize = new ConfigEntry<>(16);
-    public static ConfigEntry<Integer> antidoteImmunityTime = new ConfigEntry<>(300);
-
-    public static ConfigEntry<Integer> potionStackSize = new ConfigEntry<>(8);
-    public static ConfigEntry<Double> potionDurationMultiplier = new ConfigEntry<>(1.5);
-    public static ConfigEntry<Integer> potionDrinkingTime = new ConfigEntry<>(20);
-    public static ConfigEntry<Integer> potionCooldown = new ConfigEntry<>(200);
-
-    public static ConfigEntry<Boolean> potionTooltip = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> potionTextures = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> potionData = new ConfigEntry<>(true);
-
-    public static ConfigEntry<Boolean> cauldronBrewingEnabled = new ConfigEntry<>(true);
-    public static ConfigEntry<Boolean> fillSwampHutCauldrons = new ConfigEntry<>(true);
-    public static ConfigEntry<Set<ResourceLocation>> swampHutBlacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
+    public static final ConfigEntry<Integer> antidoteStackSize = new ConfigEntry<>(16);
+    public static final ConfigEntry<Integer> antidoteImmunityTime = new ConfigEntry<>(300);
+    public static final ConfigEntry<Integer> potionStackSize = new ConfigEntry<>(8);
+    public static final ConfigEntry<Double> potionDurationMultiplier = new ConfigEntry<>(1.5);
+    public static final ConfigEntry<Integer> potionDrinkingTime = new ConfigEntry<>(20);
+    public static final ConfigEntry<Integer> potionCooldown = new ConfigEntry<>(200);
+    public static final ConfigEntry<Boolean> potionTooltip = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> customPotionTextures = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> customPotionData = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> cauldronBrewingEnabled = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> swampHutCauldrons = new ConfigEntry<>(true);
+    public static final ConfigEntry<Set<ResourceLocation>> swampHutBlacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
         Set<ResourceLocation> result = new HashSet<>();
         if (json == null || !json.isJsonObject()) return result;
 
@@ -457,7 +447,11 @@ public class ModConfig {
         return result;
     });
 
-    public static ConfigEntry<Boolean> lapisShieldEnabled = new ConfigEntry<>(true);
-    public static ConfigEntry<Integer> lapisShieldDurability = new ConfigEntry<>(152);
-    public static ConfigEntry<Integer> lapisShieldCooldown = new ConfigEntry<>(80);
+    // Equipment
+    public static final ConfigEntry<Boolean> lapisShieldEnabled = new ConfigEntry<>(true);
+    public static final ConfigEntry<Integer> lapisShieldDurability = new ConfigEntry<>(152);
+    public static final ConfigEntry<Integer> lapisShieldCooldown = new ConfigEntry<>(80);
+
+    // Staff
+    //public static final ConfigEntry
 }

@@ -3,7 +3,6 @@ package net.lyof.sortilege.setup;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
@@ -70,7 +69,7 @@ public class ReloadListener implements IReloadListener {
         PotionCooldownManager.clear();
         EnchantingCatalyst.clear();
 
-        if (ModConfig.potionTextures.get() && manager instanceof FabricLifecycledResourceManager fabricManager &&
+        if (ModConfig.customPotionTextures.get() && manager instanceof FabricLifecycledResourceManager fabricManager &&
                 fabricManager.fabric_getResourceType() == PackType.CLIENT_RESOURCES) {
             CustomPotionData.MODELS.clear();
             for (ResourceLocation model : FileToIdConverter.json("models/item/potions").listMatchingResources(manager).keySet())

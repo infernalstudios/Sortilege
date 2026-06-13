@@ -30,7 +30,7 @@ public abstract class WorldGenRegionMixin {
 
     @WrapOperation(method = "setBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;onBlockStateChange(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;)V"))
     public void fillWitchCauldron(ServerLevel instance, BlockPos pos, BlockState oldBlock, BlockState newBlock, Operation<Void> original) {
-        if (ModConfig.fillSwampHutCauldrons.get() && newBlock.is(Blocks.CAULDRON) && this.currentlyGenerating != null
+        if (ModConfig.swampHutCauldrons.get() && newBlock.is(Blocks.CAULDRON) && this.currentlyGenerating != null
                 && this.currentlyGenerating.get().equals("ResourceKey[minecraft:worldgen/structure / minecraft:swamp_hut]")
                 && !PotionHelper.GEN_ALLOWED_POTIONS.isEmpty()) {
 

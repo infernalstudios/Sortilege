@@ -27,7 +27,7 @@ public abstract class ModelBakeryMixin {
     public void loadPotionTextures(BlockColors blockColors, ProfilerFiller profiler, Map<ResourceLocation, BlockModel> jsonUnbakedModels,
                                    Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, CallbackInfo ci) {
 
-        if (!ModConfig.potionTextures.get()) return;
+        if (!ModConfig.customPotionTextures.get()) return;
 
         for (ResourceLocation id : CustomPotionData.MODELS)
             this.loadTopLevel(new ModelResourceLocation(id, "inventory"));

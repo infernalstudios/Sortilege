@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom;
+package net.lyof.sortilege.item.custom.staff;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
@@ -7,7 +7,6 @@ import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.fabricmc.fabric.impl.client.indigo.renderer.render.ItemRenderContext;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
@@ -56,13 +55,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class StaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem {
+public abstract class StaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
 
-    //public @Nullable ModConfigS.StaffInfo rawInfos;
-    public float damage;
-    public int pierce;
-    public int range;
+    protected float damage;
+    protected int pierce;
+    protected int range;
     public int cooldown;
     public int charge;
     public int xp_cost;

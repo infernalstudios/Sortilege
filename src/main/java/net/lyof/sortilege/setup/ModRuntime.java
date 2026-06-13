@@ -10,7 +10,6 @@ import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ModRuntime {
@@ -118,7 +117,7 @@ public class ModRuntime {
                 o.addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
             }
 */
-            if (ModConfig.betterMagicProt.get())
+            if (ModConfig.expandedMagicProt.get())
                 json.asMap().replace("enchantment.sortilege.magic_protection.desc",
                         new JsonPrimitive("Reduces damage from magic, and gives a chance to dodge attacks."));
 
@@ -128,19 +127,19 @@ public class ModRuntime {
         public static JsonObject changeEnchantmentDescriptions(JsonObject json) {
             if (json == null) return null;
 
-            if (ModConfig.betterFireProt.get() > 0)
+            if (ModConfig.expandedFireProt.get() > 0)
                 json.asMap().replace("enchantment.minecraft.fire_protection.desc",
                         new JsonPrimitive(json.get("enchantment.minecraft.fire_protection.desc").getAsString()
                                 + " Wearing a full set at max level completely negates them."));
-            if (ModConfig.betterBane.get())
+            if (ModConfig.expandedBane.get())
                 json.asMap().replace("enchantment.minecraft.bane_of_arthropods.desc",
                         new JsonPrimitive(json.get("enchantment.minecraft.bane_of_arthropods.desc").getAsString()
                                 + " Also slows down opponents."));
-            if (ModConfig.betterFeatherFalling.get() > 0)
+            if (ModConfig.expandedFeatherFalling.get() > 0)
                 json.asMap().replace("enchantment.minecraft.feather_falling.desc",
                         new JsonPrimitive(json.get("enchantment.minecraft.feather_falling.desc").getAsString()
                                 + " They are completely negated at max level."));
-            if (ModConfig.betterUnbreaking.get() > 0)
+            if (ModConfig.expandedUnbreaking.get() > 0)
                 json.asMap().replace("enchantment.minecraft.unbreaking.desc",
                         new JsonPrimitive(json.get("enchantment.minecraft.unbreaking.desc").getAsString()
                                 + " Max level makes the item unbreakable"));

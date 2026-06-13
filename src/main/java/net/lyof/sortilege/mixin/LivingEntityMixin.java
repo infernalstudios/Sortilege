@@ -140,7 +140,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
             ExperienceOrb.award(world, this.position(), this.sorti_getExperience());
 
         if (self instanceof Enemy && Math.random() < ModConfig.bountyChance.get()
-                && (ModConfig.bountyWhitelist.get() == self.getType().is(ModTags.Entities.BOUNTIES))
+                && (ModConfig.bountyTagWhitelist.get() == self.getType().is(ModTags.Entities.BOUNTIES))
                 && damageSource.getEntity() instanceof Player player) {
 
             if (player.level() instanceof ServerLevel world)
@@ -158,23 +158,23 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (ModConfig.betterFeatherFalling.get() > 0 && source.is(DamageTypeTags.IS_FALL) &&
+        if (ModConfig.expandedFeatherFalling.get() > 0 && source.is(DamageTypeTags.IS_FALL) &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FALL_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.betterFeatherFalling.get())
+                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.expandedFeatherFalling.get())
             cir.setReturnValue(false);
 
-        if (ModConfig.betterFireProt.get() > 0 && source.is(DamageTypeTags.IS_FIRE) &&
+        if (ModConfig.expandedFireProt.get() > 0 && source.is(DamageTypeTags.IS_FIRE) &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.betterFireProt.get() &&
+                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.expandedFireProt.get() &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.LEGS)) >= ModConfig.betterFireProt.get() &&
+                        this.getItemBySlot(EquipmentSlot.LEGS)) >= ModConfig.expandedFireProt.get() &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.CHEST)) >= ModConfig.betterFireProt.get() &&
+                        this.getItemBySlot(EquipmentSlot.CHEST)) >= ModConfig.expandedFireProt.get() &&
                 EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.HEAD)) >= ModConfig.betterFireProt.get())
+                        this.getItemBySlot(EquipmentSlot.HEAD)) >= ModConfig.expandedFireProt.get())
             cir.setReturnValue(false);
 
-        if (ModEnchants.MAGIC_PROTECTION != null && ModConfig.betterMagicProt.get() && Math.random() <=
+        if (ModEnchants.MAGIC_PROTECTION != null && ModConfig.expandedMagicProt.get() && Math.random() <=
                 0.05 * EnchantmentHelper.getEnchantmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
             cir.setReturnValue(false);
     }

@@ -33,11 +33,11 @@ public class EnchantingCatalyst {
 
 
     public static boolean isDisabled() {
-        return !ModConfig.bookCatalysts.get() && CATALYSTS.isEmpty();
+        return !ModConfig.catalystBooks.get() && CATALYSTS.isEmpty();
     }
 
     public static Map<Enchantment, Integer> getEnchantments(ItemStack catalyst) {
-        if (catalyst.getItem() instanceof EnchantedBookItem && ModConfig.bookCatalysts.get())
+        if (catalyst.getItem() instanceof EnchantedBookItem && ModConfig.catalystBooks.get())
             return EnchantmentHelper.getEnchantments(catalyst);
 
         Map<Enchantment, Integer> result = new HashMap<>();

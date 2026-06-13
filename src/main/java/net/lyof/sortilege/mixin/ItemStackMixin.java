@@ -5,7 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.item.custom.StaffItem;
+import net.lyof.sortilege.item.custom.staff.StaffItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
@@ -69,7 +69,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "isDamageableItem", at = @At("HEAD"), cancellable = true)
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
         if (this.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (ModConfig.betterUnbreaking.get() > 0 && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ModConfig.betterUnbreaking.get())
+        if (ModConfig.expandedUnbreaking.get() > 0 && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ModConfig.expandedUnbreaking.get())
             cir.setReturnValue(false);
     }
 

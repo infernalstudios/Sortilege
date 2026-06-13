@@ -8,26 +8,40 @@ group = project.maven_group
 
 repositories {
 	maven {
-		name 'ParchmentMC'
+		name = 'ParchmentMC'
 		url 'https://maven.parchmentmc.org'
 	}
 
 	maven {
-		name "JitpackASM"
+		name = "JitpackASM"
 		url 'https://jitpack.io'
 	}
 
 	maven {
-		name "TerraformersMC"
+		name = "TerraformersMC"
 		url "https://maven.terraformersmc.com/"
 	}
 
+	// Botania needs these
 	maven {
-		name "Modrinth"
+		name = "BlameJared"
+		url 'https://maven.blamejared.com'
+	}
+	maven {
+		name = "JamiesWhiteShirt"
+		url "https://maven.jamieswhiteshirt.com/libs-release"
+	}
+	maven {
+		name = "Ladysnake Libs"
+		url 'https://maven.ladysnake.org/releases'
+	}
+
+	maven {
+		name = "Modrinth"
 		url "https://api.modrinth.com/maven"
 	}
 	maven {
-		name "Curseforge"
+		name = "Curseforge"
 		url "https://cursemaven.com"
 	}
 }
@@ -54,13 +68,15 @@ dependencies {
 	// EMI
 	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
 	modLocalRuntime "dev.emi:emi-fabric:${emi_version}"
-
 	modLocalRuntime "maven.modrinth:emi-plus-backport:tbcT7hXz"
 	modLocalRuntime "net.fabricmc:fabric-language-kotlin:1.13.9+kotlin.2.3.10"
 	modLocalRuntime "maven.modrinth:forge-config-api-port:v8.0.3-1.20.1-Fabric"
 
 	// ModMenu
 	modLocalRuntime "com.terraformersmc:modmenu:7.2.2"
+
+	// Botania
+	modCompileOnly "vazkii.botania:Botania:1.20.1-453-FORGE"
 }
 
 processResources {

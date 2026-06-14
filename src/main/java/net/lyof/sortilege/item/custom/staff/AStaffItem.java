@@ -1,15 +1,9 @@
 package net.lyof.sortilege.item.custom.staff;
 
-import com.binaris.wizardry.api.content.item.ICastItem;
-import com.binaris.wizardry.api.content.util.CastItemDataHelper;
-import com.binaris.wizardry.api.content.util.CastItemUtils;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import de.cas_ual_ty.spells.SpellsAndShields;
-import de.cas_ual_ty.spells.capability.ManaHolder;
-import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -61,8 +55,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public abstract class StaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem {
+public abstract class AStaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
+    private static final float[] COLOR_ENCHANTED = new float[]{0.7f, 0f, 1f};
 
     protected float damage;
     protected int pierce;
@@ -80,8 +75,8 @@ public abstract class StaffItem extends TieredItem implements DyeableLeatherItem
         this.rawInfos = stats;
     }*/
 
-    public StaffItem(Tier tier, int damage, int targets, int range, int dura, int cooldown, int charge, int xp_cost,
-                     FabricItemSettings settings) {
+    public AStaffItem(Tier tier, int damage, int targets, int range, int dura, int cooldown, int charge, int xp_cost,
+                      FabricItemSettings settings) {
         super(tier, settings.durability(dura));
 
         this.damage = damage;
@@ -139,7 +134,7 @@ public abstract class StaffItem extends TieredItem implements DyeableLeatherItem
             if (result.isEmpty())
                 result.add(COLOR_NONE);
             if (stack.isEnchanted())
-                result.add(new float[]{0.7f, 0f, 1f});
+                result.add(COLOR_ENCHANTED);
         }
         else {
             for (int i = 0 ; i < 5; i++) {
@@ -348,7 +343,7 @@ public abstract class StaffItem extends TieredItem implements DyeableLeatherItem
             while (!entities.isEmpty() && entities.size() > index && targetsLeft > 0) {
 
                 if (entities.get(index) instanceof LivingEntity target
-                        && !targetsHit.contains(target.getStringUUID()) && StaffItem.canHit(player, target)) {
+                        && !targetsHit.contains(target.getStringUUID()) && AStaffItem.canHit(player, target)) {
 
                     this.triggerAttack(target, player, staff, elements, look, true, damage, targetsHit);
 
@@ -428,7 +423,7 @@ public abstract class StaffItem extends TieredItem implements DyeableLeatherItem
         Vec3 offset = new Vec3(radius, radius, radius);
 
         for (Entity entity : attacker.level().getEntities(attacker, new AABB(pos.subtract(offset), pos.add(offset)))) {
-            if (entity instanceof LivingEntity target && StaffItem.canHit(attacker, target)) {
+            if (entity instanceof LivingEntity target && AStaffItem.canHit(attacker, target)) {
                 this.triggerAttack(target, attacker, stack, elements, direction, false, damage, targetsHit);
             }
         }

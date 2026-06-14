@@ -2,7 +2,7 @@ package net.lyof.sortilege.enchant.staff;
 
 import com.chocohead.mm.api.ClassTinkerers;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.item.custom.staff.StaffItem;
+import net.lyof.sortilege.item.custom.staff.AStaffItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +50,7 @@ public class StaffEnchantment extends Enchantment {
     @Override
     public boolean canEnchant(ItemStack stack) {
         return super.canEnchant(stack) && (this != ModEnchants.WISDOM
-                || (stack.getItem() instanceof StaffItem staff && staff.getXPCost(stack) > 0));
+                || (stack.getItem() instanceof AStaffItem staff && staff.getXPCost(stack) > 0));
     }
 
     @Override

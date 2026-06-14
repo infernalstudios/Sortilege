@@ -43,6 +43,7 @@ public class Sortilege implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		MOD.createConfig("sortilege", 3, ModConfig::build);
+		MOD.createConfig("sortilege-staffs", 1, ModConfig::buildStaffs);
 		ModRuntime.load();
 
 		ModBlocks.register();

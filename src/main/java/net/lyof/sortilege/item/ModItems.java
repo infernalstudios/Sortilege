@@ -1,8 +1,10 @@
 package net.lyof.sortilege.item;
 
+import com.google.gson.JsonElement;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.custom.staff.StaffEntry;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.custom.*;
 import net.lyof.sortilege.item.custom.armor.ModArmorMaterials;
@@ -19,7 +21,12 @@ import java.util.function.Supplier;
 public class ModItems {
     public static List<Item> STAFFS = new ArrayList<>();
 
-    public static void register() {/*
+    public static void register() {
+        Sortilege.log().warn("STAFF", ModConfig.staffs.get());
+        for (JsonElement elm : ModConfig.staffs.get())
+            Sortilege.log().warn("STAFFHERE", StaffEntry.read(elm.getAsJsonObject()));
+
+        /*
         for (Pair<String, ModConfigS.StaffInfo> pair : ModConfigS.STAFFS) {
             String id = pair.getFirst();
             ModConfigS.StaffInfo staff = pair.getSecond();

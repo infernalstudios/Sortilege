@@ -22,6 +22,7 @@
     "InventoryMixin",
     "ItemMixin",
     "ItemStackMixin",
+    "sol.JsonBuilderMixin",
     "LeveledCauldronBlockMixin",
     "LingeringPotionItemMixin",
     "LivingEntityMixin",

@@ -1,10 +1,13 @@
 package net.lyof.sortilege.setup;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IJsonBuilder;
 import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.custom.staff.StaffEntry;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.minecraft.resources.ResourceLocation;
 
@@ -314,13 +317,9 @@ public class ModConfig {
     public static final ConfigEntry<String> enchantLimiterMode = new ConfigEntry<>("relative");
     public static final ConfigEntry<Map<String, Integer>> enchantLimiterOverrides = new ConfigEntry<Map<String, Integer>>(Map.of()).withProcessor(json -> {
         Map<String, Integer> result = new HashMap<>();
-        if (json == null || !json.isJsonObject()) return result;
-
         JsonObject obj = json.getAsJsonObject();
         for (String key : obj.keySet())
-            if (obj.get(key).isJsonPrimitive() && obj.getAsJsonPrimitive(key).isNumber())
-                result.put(key, obj.getAsJsonPrimitive(key).getAsInt());
-
+            result.put(key, obj.getAsJsonPrimitive(key).getAsInt());
         return result;
     });
     public static final ConfigEntry<Boolean> alwaysShowEnchantLimit = new ConfigEntry<>(true);
@@ -345,13 +344,10 @@ public class ModConfig {
     public static final ConfigEntry<Boolean> altStorytelling = new ConfigEntry<>(false);
     public static final ConfigEntry<Set<String>> disabledEnchants = new ConfigEntry<Set<String>>(Set.of()).withProcessor(json -> {
         Set<String> result = new HashSet<>();
-        if (json == null || !json.isJsonObject()) return result;
-
         JsonObject obj = json.getAsJsonObject();
         for (String key : obj.keySet())
-            if (obj.get(key).isJsonPrimitive() && obj.getAsJsonPrimitive(key).isBoolean() && !obj.getAsJsonPrimitive(key).getAsBoolean())
+            if (!obj.getAsJsonPrimitive(key).getAsBoolean())
                 result.add(key);
-
         return result;
     });
 
@@ -362,22 +358,14 @@ public class ModConfig {
     public static final ConfigEntry<Boolean> doIncreasedEnchantCosts = new ConfigEntry<>(true);
     public static final ConfigEntry<List<Integer>> increasedEnchantCosts = new ConfigEntry<>(List.of(1, 3, 7)).withProcessor(json -> {
         List<Integer> result = new ArrayList<>();
-        if (json == null || !json.isJsonArray()) return result;
-
         for (JsonElement elm : json.getAsJsonArray())
-            if (elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isNumber())
-                result.add(elm.getAsInt());
-
+           result.add(elm.getAsInt());
         return result;
     });
     public static final ConfigEntry<List<Integer>> increasedEnchantNeeds = new ConfigEntry<>(List.of(5, 10, 15)).withProcessor(json -> {
         List<Integer> result = new ArrayList<>();
-        if (json == null || !json.isJsonArray()) return result;
-
         for (JsonElement elm : json.getAsJsonArray())
-            if (elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isNumber())
-                result.add(elm.getAsInt());
-
+            result.add(elm.getAsInt());
         return result;
     });
     public static final ConfigEntry<Boolean> noXPAnvil = new ConfigEntry<>(true);
@@ -388,7 +376,6 @@ public class ModConfig {
     public static final ConfigEntry<Double> bountyChance = new ConfigEntry<>(0.05);
     public static final ConfigEntry<Map<String, RecipeLock>> recipeLocks = new ConfigEntry<Map<String, RecipeLock>>(Map.of()).withProcessor(json -> {
         Map<String, RecipeLock> result = new HashMap<>();
-        if (json == null || !json.isJsonArray()) return result;
 
         JsonObject obj = json.getAsJsonObject();
         for (String key : obj.keySet()) {
@@ -417,12 +404,8 @@ public class ModConfig {
     public static final ConfigEntry<Boolean> antidoteEnabled = new ConfigEntry<>(true);
     public static final ConfigEntry<Set<ResourceLocation>> antidoteBlacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
         Set<ResourceLocation> result = new HashSet<>();
-        if (json == null || !json.isJsonObject()) return result;
-
         for (JsonElement elm : json.getAsJsonArray())
-            if (elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isString())
-                result.add(Identifier.of(elm.getAsString()));
-
+            result.add(Identifier.of(elm.getAsString()));
         return result;
     });
     public static final ConfigEntry<Integer> antidoteStackSize = new ConfigEntry<>(16);
@@ -438,12 +421,8 @@ public class ModConfig {
     public static final ConfigEntry<Boolean> swampHutCauldrons = new ConfigEntry<>(true);
     public static final ConfigEntry<Set<ResourceLocation>> swampHutBlacklist = new ConfigEntry<Set<ResourceLocation>>(Set.of()).withProcessor(json -> {
         Set<ResourceLocation> result = new HashSet<>();
-        if (json == null || !json.isJsonObject()) return result;
-
         for (JsonElement elm : json.getAsJsonArray())
-            if (elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isString())
-                result.add(Identifier.of(elm.getAsString()));
-
+            result.add(Identifier.of(elm.getAsString()));
         return result;
     });
 
@@ -452,6 +431,92 @@ public class ModConfig {
     public static final ConfigEntry<Integer> lapisShieldDurability = new ConfigEntry<>(152);
     public static final ConfigEntry<Integer> lapisShieldCooldown = new ConfigEntry<>(80);
 
+
     // Staff
-    //public static final ConfigEntry
+    public static void buildStaffs(IJsonBuilder builder) {
+        builder.addObject("overcharge", overcharge -> overcharge
+                .comment("Default overcharge configs, unless custom behavior is set for a staff")
+                .comment("  by following the same structure in `cost.overcharge`")
+                .comment("")
+                .comment("Maximal overcharge a staff can hold at any given time")
+                .add("max", 20)
+                .bind(defaultOverchargeMax)
+                .comment("Color for the overcharge bar. Hexadecimal format")
+                .add("bar_color", 0x0000ff)
+                .bind(defaultOverchargeColor)
+                .comment("Should overcharged staffs ignore durability cost when firing")
+                .add("ignore_durability", true)
+                .bind(defaultOverchargeIgnoresDurability)
+                .comment("Should overcharged staffs ignore resource cost when firing")
+                .add("ignore_cost", true)
+                .bind(defaultOverchargeIgnoresCost)
+                .comment("Which items can be used to overcharge staffs. Must be formatted as \"modid:itemid\": value")
+                .addObject("ingredients", ingredients -> ingredients
+                        .add("minecraft:lapis_lazuli", 2)
+                        .add("minecraft:lapis_block", 20)
+                )
+                .bind(defaultOverchargeIngredients)
+        )
+        .comment("")
+        .comment("ENTRIES")
+        .addArray("entries", entries -> entries
+                .addObject(staff -> staff
+                        .add("id", "golden_staff")
+                        .add("sort_index", 40)
+                        .add("type", "sortilege:experience")
+                        .add("dependency", "minecraft")
+                        .comment("")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "GOLD")
+                                .comment("")
+                                .add("fireproof", false)
+                                .add("durability", 112)
+                                .add("repair_material", "minecraft:gold_ingot")
+                                .add("enchantability", 18)
+                                .comment("")
+                                .add("damage", 3)
+                                .add("piercing", 2)
+                                .add("range", 12)
+                                .add("charge_time", 1)
+                                .add("cooldown", 20)
+                        )
+                        .comment("")
+                        .addObject("cost", cost -> cost
+                                .addObject("overcharge", overcharge -> {})
+                                .add("value", 3)
+                        )
+                        .comment("")
+                        .addObject("effects", effects -> effects
+                                .add("on_shoot", "")
+                                .add("on_hit_self", "")
+                                .add("on_hit_target", "")
+                                .comment("")
+                                .addObject("enchants", enchants -> {})
+                        )
+                        .comment("")
+                        .addObject("display", display -> display
+                                .add("particle", "sortilege:wisp")
+                                .add("sound", "minecraft:amethyst")
+                                .addArray("colors", List.of())
+                        )
+                        .comment("")
+                        .addArray("recipes", recipes -> {})
+                )
+        ).bind(staffs);
+    }
+
+
+    public static final ConfigEntry<Integer> defaultOverchargeMax = new ConfigEntry<>(20);
+    public static final ConfigEntry<Integer> defaultOverchargeColor = new ConfigEntry<>(0x0000ff)
+            .withProcessor(json -> Integer.decode(json.getAsString()));
+    public static final ConfigEntry<Boolean> defaultOverchargeIgnoresDurability = new ConfigEntry<>(true);
+    public static final ConfigEntry<Boolean> defaultOverchargeIgnoresCost = new ConfigEntry<>(true);
+    public static final ConfigEntry<Map<ResourceLocation, Integer>> defaultOverchargeIngredients = new ConfigEntry<Map<ResourceLocation, Integer>>(Map.of()).withProcessor(json -> {
+        Map<ResourceLocation, Integer> result = new HashMap<>();
+        JsonObject obj = json.getAsJsonObject();
+        for (String key : obj.keySet())
+            result.put(Identifier.of(key), obj.getAsJsonPrimitive(key).getAsInt());
+        return result;
+    });
+    public static final ConfigEntry<JsonArray> staffs = new ConfigEntry<>(new JsonArray());
 }

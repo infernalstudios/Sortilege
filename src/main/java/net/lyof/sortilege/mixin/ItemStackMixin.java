@@ -3,9 +3,9 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.lyof.sortilege.item.custom.staff.AStaffItem;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.item.custom.staff.StaffItem;
 import net.lyof.sortilege.item.custom.potion.CustomPotionData;
 import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
@@ -61,7 +61,7 @@ public abstract class ItemStackMixin {
 
     @ModifyReturnValue(method = "is(Lnet/minecraft/tags/TagKey;)Z", at = @At("RETURN"))
     private boolean isInKinetic(boolean original, TagKey<Item> tag) {
-        if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof StaffItem)
+        if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof AStaffItem)
             return original && EnchantHelper.hasEnchant(ModEnchants.BONK, (ItemStack) (Object) this);
         return original;
     }

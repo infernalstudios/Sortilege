@@ -2,7 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.item.custom.staff.StaffItem;
+import net.lyof.sortilege.item.custom.staff.AStaffItem;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
@@ -20,7 +20,7 @@ public abstract class DamageSourcesMixin {
     @ModifyReturnValue(method = "playerAttack", at = @At("RETURN"))
     public DamageSource arcaneDamage(DamageSource original, Player attacker) {
         if ((ModEnchants.ARCANE != null && EnchantmentHelper.getEnchantmentLevel(ModEnchants.ARCANE, attacker) > 0)
-                || attacker.getMainHandItem().getItem() instanceof StaffItem) {
+                || attacker.getMainHandItem().getItem() instanceof AStaffItem) {
             return this.indirectMagic(attacker, attacker);
         }
         return original;

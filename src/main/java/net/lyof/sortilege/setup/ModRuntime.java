@@ -9,6 +9,7 @@ import net.lcc.sollib.api.common.config.builder.JsonBuilder;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.item.staff.StaffEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.enchantment.Enchantment;
 
@@ -27,7 +28,7 @@ public class ModRuntime {
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/items/staffs.json"),
                 ModRuntime.Common::changeStaffTag);
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
-                ModRuntime.Common::changeVoluntaryExileParent, () -> ModConfig.witchHatEnabled.get());
+                ModRuntime.Common::changeVoluntaryExileParent, ModConfig.witchHatEnabled);
 
         if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
             addMiningMaster("power_pyrite", ModEnchants.POTENCY);
@@ -42,10 +43,9 @@ public class ModRuntime {
     }
 
     public static void loadClient() {
-        /*for (Pair<String, ModConfigS.StaffInfo> staff : ModConfigS.STAFFS)
-            register(Sortilege.MOD.makeID("models/item/" + staff.getFirst() + ".json"),
-                    () -> FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency),
-                    json -> Client.generateDefaultModel(json, staff.getFirst()));*/
+        for (StaffEntry entry : ModConfig.staffs.get())
+            SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + entry.getID() + ".json"),
+                    json -> Client.generateDefaultModel(json, entry.getID()));
 
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), ModRuntime.Client::generateTranslations);
 
@@ -64,10 +64,8 @@ public class ModRuntime {
             if (json == null) json = new JsonObject();
             json.add("values", new JsonArray());
 
-            /*for (Pair<String, ModConfigS.StaffInfo> staff : ModConfigS.STAFFS) {
-                if (!FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency)) continue;
-                json.getAsJsonObject().get("values").getAsJsonArray().add(Sortilege.MOD.makeID(staff.getFirst()).toString());
-            }*/
+            for (StaffEntry entry : ModConfig.staffs.get())
+                json.get("values").getAsJsonArray().add(Sortilege.MOD.makeID(entry.getID()).toString());
             return json;
         }
 
@@ -99,11 +97,9 @@ public class ModRuntime {
         public static JsonObject generateTranslations(JsonObject json) {
             if (json == null) json = new JsonObject();
 
-            /*for (Pair<String, ModConfigS.StaffInfo> staff : ModConfigS.STAFFS) {
-                if (!FabricLoader.getInstance().isModLoaded(staff.getSecond().dependency)) continue;
-
-                String id = staff.getFirst();
-                if (o.has("item." + Sortilege.MOD_ID + "." + id)) continue;
+            for (StaffEntry entry : ModConfig.staffs.get()) {
+                String id = entry.getID();
+                if (json.has("item." + Sortilege.MOD_ID + "." + id)) continue;
 
                 StringBuilder translation = new StringBuilder(id.toUpperCase().charAt(0) + "");
                 for (int i = 1; i < id.length(); i++) {
@@ -114,9 +110,9 @@ public class ModRuntime {
                     else
                         translation.append(id.charAt(i));
                 }
-                o.addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
+                json.addProperty("item." + Sortilege.MOD_ID + "." + id, translation.toString());
             }
-*/
+
             if (ModConfig.expandedMagicProt.get())
                 json.asMap().replace("enchantment.sortilege.magic_protection.desc",
                         new JsonPrimitive("Reduces damage from magic, and gives a chance to dodge attacks."));

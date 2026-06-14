@@ -1,9 +1,15 @@
 package net.lyof.sortilege.item.custom.staff;
 
+import com.binaris.wizardry.api.content.item.ICastItem;
+import com.binaris.wizardry.api.content.util.CastItemDataHelper;
+import com.binaris.wizardry.api.content.util.CastItemUtils;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import de.cas_ual_ty.spells.SpellsAndShields;
+import de.cas_ual_ty.spells.capability.ManaHolder;
+import de.cas_ual_ty.spells.spell.action.mana.ManaCheckAction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;

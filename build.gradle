@@ -76,9 +76,16 @@ dependencies {
 	modLocalRuntime "com.terraformersmc:modmenu:7.2.2"
 
 	// Botania
-	modCompileOnly "vazkii.botania:Botania:1.20.1-453-FORGE"
+	modCompileOnly "vazkii.botania:Botania:1.20.1-453-FABRIC"
 	// ISS
 	modCompileOnly "curse.maven:irons-spells-n-spellbooks-855414:8237094"
+	// Feathers
+	modCompileOnly "curse.maven:feathers-699933:4814309"
+	// Electroblob
+	// https://electroblobs-redux-wiki.pages.dev/developer/adding_cast_items.html
+	modCompileOnly "maven.modrinth:electroblobs-wizardry-redux:0.8.5.1-fabric"
+	// SpellsNShields - Requires forge api stuff and I can't import it
+	//modCompileOnly "curse.maven:spells-shields-582301:5047887"
 }
 
 processResources {

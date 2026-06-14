@@ -9,9 +9,15 @@ import java.util.Iterator;
 import java.util.ServiceLoader;
 
 public interface IStaffEntryReader {
-    StaffEntry.Cost readCost(JsonObject json);
-    StaffEntry.Effects readEffects(JsonObject json);
-    StaffEntry.Display readDisplay(JsonObject json);
+    default StaffEntry.Cost readCost(JsonObject json) {
+        return new StaffEntry.Cost().read(json);
+    }
+    default StaffEntry.Effects readEffects(JsonObject json) {
+        return new StaffEntry.Effects().read(json);
+    }
+    default StaffEntry.Display readDisplay(JsonObject json) {
+        return new StaffEntry.Display().read(json);
+    }
     AStaffItem make(StaffEntry entry);
 
     static IStaffEntryReader getFor(String type) {

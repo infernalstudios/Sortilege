@@ -1,2 +1,3 @@
-net.lyof.sortilege.item.staff.entry.ExperienceStaffEntry
-net.lyof.sortilege.item.staff.entry.HealthStaffEntry
+net.lyof.sortilege.item.custom.staff.ExperienceStaffItem$Reader
+net.lyof.sortilege.item.custom.staff.HealthStaffItem$Reader
+net.lyof.sortilege.item.custom.staff.HungerStaffItem$Reader

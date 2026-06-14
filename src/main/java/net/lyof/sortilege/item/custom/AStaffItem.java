@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.staff;
+package net.lyof.sortilege.item.custom;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;

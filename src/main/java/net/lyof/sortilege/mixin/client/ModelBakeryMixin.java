@@ -2,7 +2,7 @@ package net.lyof.sortilege.mixin.client;
 
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.setup.ModConfig;
-import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelBakery;

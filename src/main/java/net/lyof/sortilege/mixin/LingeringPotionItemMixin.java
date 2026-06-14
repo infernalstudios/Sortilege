@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import net.lyof.sortilege.setup.ModConfig;
-import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

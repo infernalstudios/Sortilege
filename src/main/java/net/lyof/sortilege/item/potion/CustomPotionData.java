@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.potion;
+package net.lyof.sortilege.item.potion;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

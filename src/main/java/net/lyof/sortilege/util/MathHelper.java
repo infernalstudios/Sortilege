@@ -42,8 +42,4 @@ public class MathHelper {
         if (list.isEmpty()) return null;
         return list.get(rnd.nextInt(list.size()));
     }
-
-    public static int toInt(Object x) {
-        return (int) Math.round(Double.parseDouble(String.valueOf(x)));
-    }
 }

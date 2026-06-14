@@ -1,34 +1,32 @@
-package net.lyof.sortilege.item.custom.staff.entry;
+package net.lyof.sortilege.item.staff.entry;
 
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.item.custom.staff.AStaffItem;
-import net.lyof.sortilege.item.custom.staff.IStaffEntryReader;
-import net.lyof.sortilege.item.custom.staff.StaffEntry;
+import net.lyof.sortilege.item.custom.AStaffItem;
+import net.lyof.sortilege.item.staff.IStaffEntryReader;
+import net.lyof.sortilege.item.staff.OverchargeEntry;
+import net.lyof.sortilege.item.staff.StaffEntry;
+import net.minecraft.world.item.ItemStack;
 
 @Dependency(mod = "sortilege:experience")
 public class ExperienceStaffEntry implements IStaffEntryReader {
     @Override
     public StaffEntry.Cost readCost(JsonObject json) {
-        return new Cost();
+        return new ValueCost().read(json);
     }
 
     @Override
     public StaffEntry.Effects readEffects(JsonObject json) {
-        return new StaffEntry.Effects();
+        return new StaffEntry.Effects().read(json);
     }
 
     @Override
     public StaffEntry.Display readDisplay(JsonObject json) {
-        return new StaffEntry.Display();
+        return new StaffEntry.Display().read(json);
     }
 
     @Override
     public AStaffItem make(StaffEntry entry) {
         return null;
-    }
-
-    public static class Cost extends StaffEntry.Cost {
-
     }
 }

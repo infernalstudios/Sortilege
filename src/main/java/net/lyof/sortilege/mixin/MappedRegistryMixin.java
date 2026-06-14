@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.MappedRegistry;

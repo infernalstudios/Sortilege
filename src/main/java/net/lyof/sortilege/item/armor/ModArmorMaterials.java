@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.armor;
+package net.lyof.sortilege.item.armor;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;

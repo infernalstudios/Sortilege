@@ -2,7 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.item.custom.staff.AStaffItem;
+import net.lyof.sortilege.item.custom.AStaffItem;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;

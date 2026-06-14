@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.potion;
+package net.lyof.sortilege.item.potion;
 
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.util.Tuple;

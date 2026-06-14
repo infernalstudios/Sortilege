@@ -1,8 +1,9 @@
-package net.lyof.sortilege.item.custom.staff;
+package net.lyof.sortilege.item.staff;
 
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.custom.AStaffItem;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;

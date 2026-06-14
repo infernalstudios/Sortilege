@@ -3,7 +3,7 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
-import net.lyof.sortilege.item.custom.potion.PotionCooldownManager;
+import net.lyof.sortilege.item.potion.PotionCooldownManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;

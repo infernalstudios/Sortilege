@@ -1,6 +1,5 @@
 package net.lyof.sortilege;
 
-import io.redspace.ironsspellbooks.IronsSpellbooks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -9,7 +8,6 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.common.config.SolConfig;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.attribute.ModAttributes;
@@ -19,7 +17,7 @@ import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.potion.CustomPotionData;
+import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
@@ -31,7 +29,6 @@ import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.packs.PackType;
 
 import java.util.ArrayList;
 import java.util.List;

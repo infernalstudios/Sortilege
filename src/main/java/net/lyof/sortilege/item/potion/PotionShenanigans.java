@@ -1,4 +1,4 @@
-package net.lyof.sortilege.item.custom.potion;
+package net.lyof.sortilege.item.potion;
 
 import net.minecraft.world.effect.MobEffect;
 

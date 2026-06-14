@@ -101,6 +101,10 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         public String onHitTarget() {
             return this.onHitTarget;
         }
+
+        public Map<ResourceLocation, Integer> getEnchants() {
+            return this.enchants;
+        }
     }
 
     public static class Display {

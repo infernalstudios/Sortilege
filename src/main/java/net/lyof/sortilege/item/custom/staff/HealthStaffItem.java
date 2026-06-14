@@ -27,7 +27,7 @@ public class HealthStaffItem extends AStaffItem {
 
     public HealthStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
-        this.cost = (ValueCost) this.entry.getCost();
+        this.cost = (ValueCost) this.getEntry().getCost();
     }
 
     @Override

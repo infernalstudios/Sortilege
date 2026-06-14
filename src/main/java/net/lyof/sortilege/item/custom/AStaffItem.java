@@ -68,6 +68,9 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         this.entry = entry;
     }
 
+    public StaffEntry getEntry() {
+        return this.entry;
+    }
 
     //#region Rendering
     @Override
@@ -96,7 +99,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     @Override
     public int getAddedBarColor(ItemStack stack) {
-        return this.entry.getCost().getOvercharge().getColor();
+        return this.getEntry().getCost().getOvercharge().getColor();
     }
     //#endregion
 
@@ -104,7 +107,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     //#region Display
     @Override
     public int getUseDuration(ItemStack stack) {
-        return this.entry.getTier().getChargeTime();
+        return this.getEntry().getTier().getChargeTime();
     }
 
     @Override
@@ -143,7 +146,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public int getMaxOvercharge(ItemStack stack) {
-        return this.entry.getCost().getOvercharge().getMax();
+        return this.getEntry().getCost().getOvercharge().getMax();
     }
 
     @Override
@@ -151,12 +154,12 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         if (clickType != ClickAction.SECONDARY) return false;
 
         ResourceLocation id = BuiltInRegistries.ITEM.getKey(other.getItem());
-        if (this.entry.getCost().getOvercharge().getIngredients().containsKey(id)
+        if (this.getEntry().getCost().getOvercharge().getIngredients().containsKey(id)
                 && this.getOvercharge(stack) < this.getMaxOvercharge(stack)) {
 
             other.shrink(1);
             this.setOvercharge(stack, this.getOvercharge(stack)
-                    + this.entry.getCost().getOvercharge().getIngredients().get(id));
+                    + this.getEntry().getCost().getOvercharge().getIngredients().get(id));
 
             return true;
         }
@@ -167,15 +170,15 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Properties
     public float getDamage(ItemStack stack) {
-        return this.entry.getTier().getAttackDamageBonus() + EnchantHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
+        return this.getEntry().getTier().getAttackDamageBonus() + EnchantHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
     }
 
     public int getPiercing(ItemStack stack) {
-        return this.entry.getTier().getPiercing() + EnchantHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
+        return this.getEntry().getTier().getPiercing() + EnchantHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
     }
 
     public int getRange(ItemStack stack) {
-        return this.entry.getTier().getRange() + EnchantHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
+        return this.getEntry().getTier().getRange() + EnchantHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
     }
 
     private int getCooldown(ItemStack stack, Player player) {
@@ -185,7 +188,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             multiplier -= player.experienceLevel / 200f;
 
         multiplier = Math.max(multiplier, 0);
-        return (int) (this.entry.getTier().getCooldown() * multiplier);
+        return (int) (this.getEntry().getTier().getCooldown() * multiplier);
     }
 
     public List<float[]> getBeamColors(ItemStack stack, Set<ElementalStaffEnchantment> elements) {
@@ -197,8 +200,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
                 FastColor.ARGB32.blue(rgb) / 255f};
 
         if (rgb == DyeableLeatherItem.DEFAULT_LEATHER_COLOR) {
-            if (!this.entry.getDisplay().getColors().isEmpty())
-                return this.entry.getDisplay().getColors();
+            if (!this.getEntry().getDisplay().getColors().isEmpty())
+                return this.getEntry().getDisplay().getColors();
 
             for (ElementalStaffEnchantment element : elements)
                 result.addAll(element.colors);
@@ -229,7 +232,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND && this.entry.getTier().getPiercing() > 0) {
+        if (slot == EquipmentSlot.MAINHAND && this.getEntry().getTier().getPiercing() > 0) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
             if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
@@ -330,8 +333,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         targetsHit.add(target.getUUID());
 
-        this.runCommand(player, this.entry.getEffects().onHitSelf());
-        this.runCommand(target, this.entry.getEffects().onHitTarget());
+        this.runCommand(player, this.getEntry().getEffects().onHitSelf());
+        this.runCommand(target, this.getEntry().getEffects().onHitTarget());
 
         if (kinesis != 0)
             target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));
@@ -375,7 +378,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Abstraction
     public void applyCost(ItemStack stack, Player player) {
-        if (this.getOvercharge(stack) <= 0 || !this.entry.getCost().getOvercharge().ignoreDurability())
+        if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreDurability())
             stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.hand));
 
         if (this.getOvercharge(stack) > 0)
@@ -385,11 +388,11 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public boolean canShoot(ItemStack stack, Player player) {
-        return this.entry.getCost().getOvercharge().ignoreCost() && this.getOvercharge(stack) > 0;
+        return this.getEntry().getCost().getOvercharge().ignoreCost() && this.getOvercharge(stack) > 0;
     }
 
     public void onShoot(ItemStack stack, Player player) {
-        this.runCommand(player, this.entry.getEffects().onShoot());
+        this.runCommand(player, this.getEntry().getEffects().onShoot());
     }
 
     public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors,
@@ -451,12 +454,12 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public void displayShot(ItemStack stack, Player player) {
         if (this.hand != null) player.swing(this.hand, true);
 
-        if (this.entry.getDisplay().getSound() != null)
-            player.level().playSound(player, player.blockPosition(), this.entry.getDisplay().getSound(), SoundSource.PLAYERS, 1, 1);
+        if (this.getEntry().getDisplay().getSound() != null)
+            player.level().playSound(player, player.blockPosition(), this.getEntry().getDisplay().getSound(), SoundSource.PLAYERS, 1, 1);
     }
 
     public void displayBeam(Player player, float x, float y, float z, List<float[]> colors) {
-        ParticleType<?> particle = this.entry.getDisplay().getParticle();
+        ParticleType<?> particle = this.getEntry().getDisplay().getParticle();
         float[] color = MathHelper.randi(colors);
 
         if (particle == ModParticles.WISP_PIXEL)

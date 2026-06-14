@@ -11,8 +11,10 @@ import net.lyof.sortilege.item.potion.PotionCooldownManager;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,6 +27,7 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,14 +37,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Map;
+
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
     @Shadow public abstract CompoundTag getOrCreateTag();
     @Shadow public abstract boolean is(TagKey<Item> tag);
     @Shadow public abstract Item getItem();
 
+    @Shadow public abstract void enchant(Enchantment enchantment, int level);
+
     @Inject(method = "enchant", at = @At("HEAD"), cancellable = true)
-    public void enchant(Enchantment enchantment, int level, CallbackInfo ci) {
+    public void enchantWithLimit(Enchantment enchantment, int level, CallbackInfo ci) {
         ItemStack self = (ItemStack) (Object) this;
 
         int a = EnchantHelper.getUsedEnchantSlots(self);
@@ -56,6 +63,17 @@ public abstract class ItemStackMixin {
             }
 
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;I)V", at = @At("TAIL"))
+    private void setStaffEnchantments(ItemLike item, int count, CallbackInfo ci) {
+        if (item.asItem() instanceof AStaffItem staff) {
+            for (Map.Entry<ResourceLocation, Integer> entry : staff.getEntry().getEffects().getEnchants().entrySet()) {
+                Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(entry.getKey());
+                if (enchant != null)
+                    this.enchant(enchant, entry.getValue());
+            }
         }
     }
 

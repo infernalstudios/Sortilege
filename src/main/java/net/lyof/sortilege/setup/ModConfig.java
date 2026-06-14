@@ -15,7 +15,6 @@ import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class ModConfig {
     public static void build(IJsonBuilder builder) {
@@ -457,6 +456,11 @@ public class ModConfig {
                 )
         )
         .bind(defaultOvercharge)
+        .addObject("behavior", behavior -> behavior
+                .comment("If true, staff beams will pass through blocks up to their pierce value")
+                .add("pierce_blocks", false)
+                .bind(staffsPierceBlocks)
+        )
         .comment("")
         .comment("ENTRIES")
         .addArray("entries", entries -> entries
@@ -508,6 +512,7 @@ public class ModConfig {
 
     public static final ConfigEntry<OverchargeEntry> defaultOvercharge = new ConfigEntry<>(new OverchargeEntry())
             .withProcessor(json -> OverchargeEntry.read(json.getAsJsonObject()));
+    public static final ConfigEntry<Boolean> staffsPierceBlocks = new ConfigEntry<>(false);
     public static final ConfigEntry<List<StaffEntry>> staffs = new ConfigEntry<List<StaffEntry>>(List.of()).withProcessor(json -> {
         List<StaffEntry> result = new ArrayList<>();
         if (!json.isJsonArray()) return result;

@@ -109,7 +109,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         protected List<float[]> colors;
 
         public Display read(JsonObject json) {
-            this.particle = Identifier.of(GsonHelper.getAsString(json, "particle", ""));
+            this.particle = Identifier.of(GsonHelper.getAsString(json, "particle", "sortilege:wisp_pixel"));
             this.sound = Identifier.of(GsonHelper.getAsString(json, "particle", "minecraft:block.amethyst_block.hit"));
 
             this.colors = new ArrayList<>();

@@ -3,6 +3,7 @@ package net.lyof.sortilege.item.staff.entry;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.item.custom.AStaffItem;
+import net.lyof.sortilege.item.custom.BlankStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.minecraft.world.item.Item;
@@ -26,6 +27,6 @@ public class HealthStaffEntry implements IStaffEntryReader {
 
     @Override
     public AStaffItem make(StaffEntry entry) {
-        return new AStaffItem(entry, new Item.Properties());
+        return new BlankStaffItem(entry, new Item.Properties());
     }
 }

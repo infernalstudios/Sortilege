@@ -49,8 +49,8 @@ public class StaffEnchantment extends Enchantment {
 
     @Override
     public boolean canEnchant(ItemStack stack) {
-        return super.canEnchant(stack) && (this != ModEnchants.WISDOM
-                || (stack.getItem() instanceof AStaffItem staff && staff.getXPCost(stack) > 0));
+        return super.canEnchant(stack)/* && (this != ModEnchants.WISDOM
+                || (stack.getItem() instanceof AStaffItem staff && staff.getXPCost(stack) > 0))*/;
     }
 
     @Override

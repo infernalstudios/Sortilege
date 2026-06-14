@@ -5,6 +5,7 @@ import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
+import net.minecraft.world.item.Item;
 
 @Dependency(mod = "sortilege:health")
 public class HealthStaffEntry implements IStaffEntryReader {
@@ -25,6 +26,6 @@ public class HealthStaffEntry implements IStaffEntryReader {
 
     @Override
     public AStaffItem make(StaffEntry entry) {
-        return null;
+        return new AStaffItem(entry, new Item.Properties());
     }
 }

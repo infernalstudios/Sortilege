@@ -6,6 +6,7 @@ import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.OverchargeEntry;
 import net.lyof.sortilege.item.staff.StaffEntry;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 @Dependency(mod = "sortilege:experience")
@@ -27,6 +28,6 @@ public class ExperienceStaffEntry implements IStaffEntryReader {
 
     @Override
     public AStaffItem make(StaffEntry entry) {
-        return null;
+        return new AStaffItem(entry, new Item.Properties());
     }
 }

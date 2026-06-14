@@ -21,21 +21,23 @@ import java.util.function.Supplier;
 
 // Yes I'm aware naming them all getThing is stupid but else it messes with my brain
 public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getReader,
-                         StaffTier getTier, Cost getCost, Effects getEffects, Display getDisplay,
-                         Set<ResourceLocation> getRecipes) {
+                         StaffTier getTier, Cost getCost, Effects getEffects, Display getDisplay) {
 
-    public static StaffEntry read(JsonObject json) throws JsonSyntaxException {
+    public static StaffEntry read(JsonObject json, Set<ResourceLocation> recipes) throws JsonSyntaxException {
+        for (JsonElement elm : GsonHelper.getAsJsonArray(json, "recipes", new JsonArray()))
+            recipes.add(Identifier.of(elm.getAsString()));
+
         String dependency = GsonHelper.getAsString(json, "dependency", "minecraft");
         if (!FabricLoader.getInstance().isModLoaded(dependency))
-            return null;
+            return fail();
 
         String type = GsonHelper.getAsString(json, "type");
         IStaffEntryReader reader = IStaffEntryReader.getFor(type);
         if (reader == null)
-            return null;
+            return fail();
 
         String id = GsonHelper.getAsString(json, "id");
-        int sortIndex = GsonHelper.getAsInt(json, "sort_index", -1);
+        int sortIndex = GsonHelper.getAsInt(json, "sort_index", Integer.MAX_VALUE);
 
         Sortilege.log().info("Found reader", reader, "for", id);
 
@@ -44,11 +46,11 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         Effects effects = reader.readEffects(GsonHelper.getAsJsonObject(json, "effects", new JsonObject()));
         Display display = reader.readDisplay(GsonHelper.getAsJsonObject(json, "display", new JsonObject()));
 
-        Set<ResourceLocation> recipes = new HashSet<>();
-        for (JsonElement elm : GsonHelper.getAsJsonArray(json, "recipes", new JsonArray()))
-            recipes.add(Identifier.of(elm.getAsString()));
+        return new StaffEntry(id, sortIndex, reader, tier, cost, effects, display);
+    }
 
-        return new StaffEntry(id, sortIndex, reader, tier, cost, effects, display, recipes);
+    private static StaffEntry fail() {
+        return null;
     }
 
     public AStaffItem makeStaff() {

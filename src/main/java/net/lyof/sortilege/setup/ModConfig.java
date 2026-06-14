@@ -3,14 +3,19 @@ package net.lyof.sortilege.setup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.ConfigEntry;
 import net.lcc.sollib.api.common.config.builder.IJsonBuilder;
 import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.staff.OverchargeEntry;
+import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 public class ModConfig {
     public static void build(IJsonBuilder builder) {
@@ -503,5 +508,33 @@ public class ModConfig {
 
     public static final ConfigEntry<OverchargeEntry> defaultOvercharge = new ConfigEntry<>(new OverchargeEntry())
             .withProcessor(json -> OverchargeEntry.read(json.getAsJsonObject()));
-    public static final ConfigEntry<JsonArray> staffs = new ConfigEntry<>(new JsonArray());
+    public static final ConfigEntry<List<StaffEntry>> staffs = new ConfigEntry<List<StaffEntry>>(List.of()).withProcessor(json -> {
+        List<StaffEntry> result = new ArrayList<>();
+        if (!json.isJsonArray()) return result;
+
+        Set<ResourceLocation> disabledRecipes = new HashSet<>();
+        Runnable remover = () -> {
+            for (ResourceLocation recipe : disabledRecipes) {
+                SolRegistries.Data.RUNTIME.addRemoval(
+                        Sortilege.log().error(Identifier.of(recipe.getNamespace(), "recipes/" + recipe.getPath() + ".json")), () -> true);
+            }
+        };
+
+        for (JsonElement it : json.getAsJsonArray()) {
+            if (!it.isJsonObject()) continue;
+
+            disabledRecipes.clear();
+            try {
+                StaffEntry entry = StaffEntry.read(it.getAsJsonObject(), disabledRecipes);
+                if (entry == null) remover.run();
+                else result.add(entry);
+            } catch (JsonSyntaxException e) {
+                Sortilege.log().error("Failed to read Staff entry: " + e);
+                remover.run();
+            }
+        }
+
+        result.sort(Comparator.comparingInt(StaffEntry::getSortIndex));
+        return result;
+    });
 }

@@ -20,17 +20,8 @@ public class ModItems {
     public static List<Item> STAFFS = new ArrayList<>();
 
     public static void register() {
-        Sortilege.log().warn("STAFF", ModConfig.defaultOvercharge.get());
-        for (JsonElement elm : ModConfig.staffs.get())
-            Sortilege.log().warn("STAFFHERE", StaffEntry.read(elm.getAsJsonObject()));
-
-        /*
-        for (Pair<String, ModConfigS.StaffInfo> pair : ModConfigS.STAFFS) {
-            String id = pair.getFirst();
-            ModConfigS.StaffInfo staff = pair.getSecond();
-            if (FabricLoader.getInstance().isModLoaded(staff.dependency))
-                STAFFS.add(register(true, id, () -> new StaffItem(staff, new FabricItemSettings())));
-        }*/
+        for (StaffEntry entry : ModConfig.staffs.get())
+            STAFFS.add(register(true, entry.getID(), entry::makeStaff));
     }
 
     public static Item register(boolean config, String name, Supplier<Item> item) {

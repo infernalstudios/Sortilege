@@ -41,7 +41,7 @@
   "sortilege.staff.cost.experience": "Costs %s XP",
   "sortilege.staff.cost.health": "Consumes %s HP",
   "sortilege.staff.cost.hunger": "Exhausts %s hunger",
-  "sortilege.staff.cost.mana": "Costs %s mana",
+  "sortilege.staff.cost.mana": "Costs %s Mana",
   "sortilege.staff.cooldown": "%ss Cooldown",
 
   "attribute.name.generic.staff_damage": "Magic Damage",

@@ -3,27 +3,19 @@ package net.lyof.sortilege.item.custom.staff;
 import com.binaris.wizardry.api.content.item.ICustomDamageItem;
 import com.binaris.wizardry.api.content.item.IManaItem;
 import com.binaris.wizardry.api.content.item.IWorkbenchItem;
-import com.binaris.wizardry.api.content.spell.SpellContext;
 import com.binaris.wizardry.api.content.util.CastItemDataHelper;
 import com.binaris.wizardry.api.content.util.DrawingUtils;
 import com.binaris.wizardry.api.content.util.WorkbenchUtils;
-import com.binaris.wizardry.content.item.WandItem;
 import com.binaris.wizardry.core.config.EBServerConfig;
 import com.binaris.wizardry.setup.registries.EBAdvancementTriggers;
 import com.binaris.wizardry.setup.registries.EBItems;
-import com.binaris.wizardry.setup.registries.Elements;
-import com.binaris.wizardry.setup.registries.SpellTiers;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
-import net.lyof.sortilege.util.EnchantHelper;
-import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
@@ -35,18 +27,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWorkbenchItem, ICustomDamageItem {
     @Dependency(mod = "ebwizardry:mana")
     public static class Reader implements IStaffEntryReader {
         @Override
         public StaffEntry.Cost readCost(JsonObject json) {
-            return new Cost().read(json);
+            return new ValueCost().read(json);
+        }
+
+        @Override
+        public StaffEntry.Effects readEffects(JsonObject json) {
+            return new Effects().read(json);
         }
 
         @Override
@@ -55,26 +50,59 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
         }
     }
 
-    public static class Cost extends ValueCost {
+    public static class Effects extends StaffEntry.Effects {
         protected int maxUpgrades;
+        protected int range;
+        protected float cooldown;
+        protected int siphon;
+        protected int condenser;
+        protected float storage;
 
         @Override
-        public Cost read(JsonObject json) {
+        public Effects read(JsonObject json) {
             super.read(json);
-            this.maxUpgrades = GsonHelper.getAsInt(json, "max_upgrades", 1);
+            JsonObject upgrades = GsonHelper.getAsJsonObject(json, "upgrades", new JsonObject());
+            this.maxUpgrades = GsonHelper.getAsInt(upgrades, "max", 1);
+            this.range = GsonHelper.getAsInt(upgrades, "range_per_level", 4);
+            this.cooldown = GsonHelper.getAsFloat(upgrades, "cooldown_per_level", 0.1f);
+            this.siphon = GsonHelper.getAsInt(upgrades, "siphon_per_level", 5);
+            this.condenser = GsonHelper.getAsInt(upgrades, "condenser_interval", 50);
+            this.storage = GsonHelper.getAsFloat(upgrades, "storage_per_level", 0.15f);
             return this;
         }
 
         public int getMaxUpgrades() {
             return this.maxUpgrades;
         }
+
+        public int getRange() {
+            return this.range;
+        }
+
+        public float getCooldown() {
+            return this.cooldown;
+        }
+
+        public int getSiphon() {
+            return this.siphon;
+        }
+
+        public int getCondenser() {
+            return this.condenser;
+        }
+
+        public float getStorage() {
+            return this.storage;
+        }
     }
 
-    protected final Cost cost;
+    protected final ValueCost cost;
+    protected final Effects effects;
 
     public WizardryManaStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
-        this.cost = (Cost) this.getEntry().getCost();
+        this.cost = (ValueCost) this.getEntry().getCost();
+        this.effects = (Effects) this.getEntry().getEffects();
     }
 
     @Override
@@ -84,7 +112,7 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
     @Override
     public void consumeResource(ItemStack stack, Player player) {
-        this.consumeMana(stack, this.getCost(stack, player, cost.getValue()), player);
+        this.consumeMana(stack, this.getCost(stack, player, cost.getValue() - 1), player);
     }
 
     @Override
@@ -103,20 +131,18 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
     @Override
     public int getRange(ItemStack stack) {
-        return super.getRange(stack) + CastItemDataHelper.getUpgradeLevel(stack, EBItems.RANGE_UPGRADE.get());
+        return super.getRange(stack) + CastItemDataHelper.getUpgradeLevel(stack, EBItems.RANGE_UPGRADE.get()) * this.effects.getRange();
     }
 
     @Override
     public int getCooldown(ItemStack stack, Player player) {
-        float multiplier = 1 - CastItemDataHelper.getUpgradeLevel(stack, EBItems.COOLDOWN_UPGRADE.get()) * 0.05f;
+        float multiplier = 1 - CastItemDataHelper.getUpgradeLevel(stack, EBItems.COOLDOWN_UPGRADE.get()) * this.effects.getCooldown();
         return (int) (super.getCooldown(stack, player) * Math.max(0, multiplier));
     }
 
     @Override
-    public void triggerBlastAttack(ItemStack stack, LivingEntity player, Set<ElementalStaffEnchantment> elements,
-                                   Vec3 direction, double x, double y, double z, double radius, List<LivingEntity> targetsHit) {
-        super.triggerBlastAttack(stack, player, elements, direction, x, y, z,
-                radius + CastItemDataHelper.getUpgradeLevel(stack, EBItems.MELEE_UPGRADE.get()), targetsHit);
+    public double getBlastRadius(ItemStack stack, LivingEntity player) {
+        return super.getBlastRadius(stack, player) + CastItemDataHelper.getUpgradeLevel(stack, EBItems.BLAST_UPGRADE.get());
     }
 
     @Override
@@ -126,10 +152,18 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
         for (LivingEntity entity : targetsHit) {
             if (entity.isDeadOrDying()) {
-                this.rechargeMana(stack, EBServerConfig.SIPHON_MANA_PER_LEVEL.get()
+                this.rechargeMana(stack, this.effects.getSiphon()
                         * CastItemDataHelper.getUpgradeLevel(stack, EBItems.SIPHON_UPGRADE.get()));
             }
         }
+    }
+
+    @Override
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
+        if (player instanceof Player &&
+                (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreCost()))
+            this.consumeResource(stack, (Player) player);
+        return super.hurtEnemy(stack, target, player);
     }
 
     @Override
@@ -149,13 +183,13 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
     @Override
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotId, boolean isSelected) {
-        if (!world.isClientSide() && !this.isManaFull(stack) && world.getGameTime() % (long) EBServerConfig.CONDENSER_TICK_INTERVAL.get() == 0)
+        if (!world.isClientSide() && !this.isManaFull(stack) && world.getGameTime() % this.effects.getCondenser() == 0)
             this.rechargeMana(stack, CastItemDataHelper.getUpgradeLevel(stack, EBItems.CONDENSER_UPGRADE.get()));
     }
 
     @Override
     public int getCustomMaxDamage(ItemStack stack) {
-        return (int) (this.getMaxDamage() * (1 + EBServerConfig.STORAGE_INCREASE_PER_LEVEL.get()
+        return (int) (this.getMaxDamage() * (1 + this.effects.getStorage()
                 * CastItemDataHelper.getUpgradeLevel(stack, EBItems.STORAGE_UPGRADE.get())) + 0.5);
     }
 
@@ -201,7 +235,7 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
         if (!isValidUpgrade(specialUpgrade)) return stack;
 
-        if (CastItemDataHelper.getTotalUpgrades(stack) < this.cost.getMaxUpgrades()
+        if (CastItemDataHelper.getTotalUpgrades(stack) < this.effects.getMaxUpgrades()
                 && CastItemDataHelper.getUpgradeLevel(stack, specialUpgrade) < EBServerConfig.UPGRADE_STACK_LIMIT.get()) {
 
             int prevMana = this.getMana(stack);

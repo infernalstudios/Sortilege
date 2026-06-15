@@ -205,6 +205,10 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return (int) (this.getEntry().getTier().getCooldown() * multiplier);
     }
 
+    public double getBlastRadius(ItemStack stack, LivingEntity player) {
+        return EnchantHelper.getEnchantLevel(ModEnchants.BLAST, stack);
+    }
+
     public List<float[]> getBeamColors(ItemStack stack, Set<ElementalStaffEnchantment> elements) {
         List<float[]> result = new ArrayList<>();
 
@@ -357,15 +361,18 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             int elementLevel = EnchantHelper.getEnchantLevel(element, stack);
 
             element.triggerAttack(target, elementLevel);
-            if (element == ModEnchants.BLAST && elementLevel > 1 && propagate) {
-                this.triggerBlastAttack(stack, player, elements, direction,
-                        target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), 2, targetsHit);
-            }
+        }
+        if (propagate) {
+            this.triggerBlastAttack(stack, player, elements, direction,
+                    target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), targetsHit);
         }
     }
 
     public void triggerBlastAttack(ItemStack stack, LivingEntity player, Set<ElementalStaffEnchantment> elements, Vec3 direction,
-                                   double x, double y, double z, double radius, List<LivingEntity> targetsHit) {
+                                   double x, double y, double z, List<LivingEntity> targetsHit) {
+
+        double radius = this.getBlastRadius(stack, player);
+        if (radius <= 0) return;
 
         if (player.level().isClientSide())
             player.level().explode(player, x, y, z, 1, Level.ExplosionInteraction.NONE);
@@ -463,8 +470,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             }
         }
 
-        if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLAST))
-            this.triggerBlastAttack(stack, player, elements, direction, x, y, z, 2, targetsHit);
+        this.triggerBlastAttack(stack, player, elements, direction, x, y, z, targetsHit);
     }
 
     public boolean canHit(ItemStack stack, LivingEntity player, LivingEntity target) {

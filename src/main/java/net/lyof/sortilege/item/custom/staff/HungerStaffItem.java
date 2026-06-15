@@ -32,14 +32,12 @@ public class HungerStaffItem extends AStaffItem {
     }
 
     @Override
-    public boolean canShoot(ItemStack stack, Player player) {
-        return super.canShoot(stack, player) || player.getFoodData().getFoodLevel() >= this.cost.getValue();
+    public boolean hasResource(ItemStack stack, Player player) {
+        return player.getFoodData().getFoodLevel() >= this.getCost(stack, player, this.cost.getValue());
     }
 
     @Override
-    public void applyCost(ItemStack stack, Player player) {
-        if (this.getOvercharge(stack) <= 0 || !this.cost.getOvercharge().ignoreCost())
-            player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - this.cost.getValue());
-        super.applyCost(stack, player);
+    public void consumeResource(ItemStack stack, Player player) {
+        player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - this.getCost(stack, player, this.cost.getValue()));
     }
 }

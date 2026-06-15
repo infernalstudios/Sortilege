@@ -31,14 +31,12 @@ public class HealthStaffItem extends AStaffItem {
     }
 
     @Override
-    public boolean canShoot(ItemStack stack, Player player) {
-        return super.canShoot(stack, player) || player.getHealth() > this.cost.getValue();
+    public boolean hasResource(ItemStack stack, Player player) {
+        return player.getHealth() > this.getCost(stack, player, this.cost.getValue());
     }
 
     @Override
-    public void applyCost(ItemStack stack, Player player) {
-        if (this.getOvercharge(stack) <= 0 || !this.cost.getOvercharge().ignoreCost())
-            player.hurt(player.damageSources().wither(), this.cost.getValue());
-        super.applyCost(stack, player);
+    public void consumeResource(ItemStack stack, Player player) {
+        player.hurt(player.damageSources().wither(), this.getCost(stack, player, this.cost.getValue()));
     }
 }

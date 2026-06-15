@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
@@ -67,9 +68,9 @@ public abstract class ItemStackMixin {
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;I)V", at = @At("TAIL"))
-    private void setStaffEnchantments(ItemLike item, int count, CallbackInfo ci) {
-        if (item.asItem() instanceof AStaffItem staff) {
-            for (Map.Entry<ResourceLocation, Integer> entry : staff.getEntry().getEffects().getEnchants().entrySet()) {
+    private void builtinEnchants(ItemLike item, int count, CallbackInfo ci) {
+        if (item.asItem() instanceof IBuiltinEnchantsItem builtin) {
+            for (Map.Entry<ResourceLocation, Integer> entry : builtin.getBuiltinEnchantments().entrySet()) {
                 Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(entry.getKey());
                 if (enchant != null)
                     this.enchant(enchant, entry.getValue());

@@ -11,6 +11,7 @@ import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
+import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
@@ -52,8 +53,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
-public abstract class AStaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem {
+public abstract class AStaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem,
+                                                               IBuiltinEnchantsItem {
     private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
     private static final float[] COLOR_ENCHANTED = new float[]{0.7f, 0f, 1f};
 
@@ -169,6 +173,16 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
 
     //#region Properties
+    @Override
+    public Map<ResourceLocation, Integer> getBuiltinEnchantments() {
+        return this.getEntry().getEffects().getEnchants();
+    }
+
+    public int getCost(ItemStack stack, Player player, int original) {
+        return Math.max(0, original - EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack)
+                + EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack));
+    }
+
     public float getDamage(ItemStack stack) {
         return this.getEntry().getTier().getAttackDamageBonus() + EnchantHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
     }
@@ -377,9 +391,17 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
 
     //#region Abstraction
+    public boolean canShoot(ItemStack stack, Player player) {
+        return (this.getOvercharge(stack) > 0 && this.getEntry().getCost().getOvercharge().ignoreCost()) || this.hasResource(stack, player);
+    }
+
+    public abstract boolean hasResource(ItemStack stack, Player player);
+
     public void applyCost(ItemStack stack, Player player) {
         if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreDurability())
             stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.hand));
+        if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreCost())
+            this.consumeResource(stack, player);
 
         if (this.getOvercharge(stack) > 0)
             this.setOvercharge(stack, this.getOvercharge(stack) - 1);
@@ -387,9 +409,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         player.getCooldowns().addCooldown(this, this.getCooldown(stack, player));
     }
 
-    public boolean canShoot(ItemStack stack, Player player) {
-        return this.getEntry().getCost().getOvercharge().ignoreCost() && this.getOvercharge(stack) > 0;
-    }
+    public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
         this.runCommand(player, this.getEntry().getEffects().onShoot());

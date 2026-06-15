@@ -33,14 +33,12 @@ public class ExperienceStaffItem extends AStaffItem {
     }
 
     @Override
-    public boolean canShoot(ItemStack stack, Player player) {
-        return super.canShoot(stack, player) || XPHelper.hasXP(player, this.cost.getValue());
+    public boolean hasResource(ItemStack stack, Player player) {
+        return XPHelper.hasXP(player, this.getCost(stack, player, cost.getValue()));
     }
 
     @Override
-    public void applyCost(ItemStack stack, Player player) {
-        if (this.getOvercharge(stack) <= 0 || !this.cost.getOvercharge().ignoreCost())
-            player.giveExperiencePoints(-this.cost.getValue());
-        super.applyCost(stack, player);
+    public void consumeResource(ItemStack stack, Player player) {
+        player.giveExperiencePoints(-this.getCost(stack, player, cost.getValue()));
     }
 }

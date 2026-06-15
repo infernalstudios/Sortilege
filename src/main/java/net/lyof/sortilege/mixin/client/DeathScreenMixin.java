@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin.client;
 
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.network.chat.Component;

@@ -2,8 +2,8 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.potion.CustomPotionData;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;

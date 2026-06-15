@@ -7,8 +7,6 @@ import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
-import net.lyof.sortilege.item.staff.entry.ValueCost;
-import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;

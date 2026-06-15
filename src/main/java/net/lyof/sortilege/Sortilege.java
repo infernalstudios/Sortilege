@@ -1,6 +1,5 @@
 package net.lyof.sortilege;
 
-import com.binaris.wizardry.WizardryMainMod;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
@@ -14,7 +13,6 @@ import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
 import net.lyof.sortilege.block.ModBlocks;
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
@@ -25,6 +23,7 @@ import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.screen.ModScreenHandlers;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
@@ -34,7 +33,7 @@ import net.minecraft.network.chat.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sortilege implements ModInitializer {
+public class Sortilege implements ModInitializer/*, ISortilegePlugin*/ {
 	public static final SolModContainer MOD = new SolModContainer("Sortilege", "sortilege");
 	public static final String MOD_ID = MOD.getNamespace();
 

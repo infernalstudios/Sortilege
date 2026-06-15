@@ -12,12 +12,10 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.GsonHelper;
 
 import java.util.*;
-import java.util.function.Supplier;
 
 // Yes I'm aware naming them all getThing is stupid but else it messes with my brain
 public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getReader,
@@ -29,12 +27,15 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
 
         String dependency = GsonHelper.getAsString(json, "dependency", "minecraft");
         if (!FabricLoader.getInstance().isModLoaded(dependency))
-            return fail();
+            return null;
 
-        String type = GsonHelper.getAsString(json, "type");
-        IStaffEntryReader reader = IStaffEntryReader.getFor(type);
+        ResourceLocation type = Identifier.of(GsonHelper.getAsString(json, "type"));
+
+        Sortilege.log().info("Searching reader for", type, "in", GsonHelper.getAsString(json, "id"));
+
+        IStaffEntryReader reader = IStaffEntryReader.getFor(type.toString());
         if (reader == null)
-            return fail();
+            return null;
 
         String id = GsonHelper.getAsString(json, "id");
         int sortIndex = GsonHelper.getAsInt(json, "sort_index", Integer.MAX_VALUE);
@@ -47,10 +48,6 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         Display display = reader.readDisplay(GsonHelper.getAsJsonObject(json, "display", new JsonObject()));
 
         return new StaffEntry(id, sortIndex, reader, tier, cost, effects, display);
-    }
-
-    private static StaffEntry fail() {
-        return null;
     }
 
     public AStaffItem makeStaff() {

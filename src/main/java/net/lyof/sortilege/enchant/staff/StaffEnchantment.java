@@ -1,8 +1,6 @@
 package net.lyof.sortilege.enchant.staff;
 
 import com.chocohead.mm.api.ClassTinkerers;
-import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.item.custom.AStaffItem;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

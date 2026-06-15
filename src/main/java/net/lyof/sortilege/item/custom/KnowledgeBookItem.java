@@ -1,10 +1,10 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.factory.KnowledgeBookScreenFactory;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;

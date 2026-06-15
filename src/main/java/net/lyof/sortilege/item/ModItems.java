@@ -1,13 +1,15 @@
 package net.lyof.sortilege.item;
 
-import com.google.gson.JsonElement;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.armor.ModArmorMaterials;
+import net.lyof.sortilege.item.custom.AntidotePotionItem;
+import net.lyof.sortilege.item.custom.KnowledgeBookItem;
+import net.lyof.sortilege.item.custom.LapisShieldItem;
+import net.lyof.sortilege.item.custom.LimititeItem;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.setup.ModConfig;
-import net.lyof.sortilege.item.custom.*;
-import net.lyof.sortilege.item.armor.ModArmorMaterials;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;

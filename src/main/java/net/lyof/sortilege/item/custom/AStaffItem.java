@@ -12,9 +12,9 @@ import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
-import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModTags;
@@ -31,7 +31,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
@@ -53,8 +52,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 public abstract class AStaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem,
                                                                IBuiltinEnchantsItem {

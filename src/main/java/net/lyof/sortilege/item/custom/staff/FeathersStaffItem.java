@@ -1,5 +1,6 @@
 package net.lyof.sortilege.item.custom.staff;
 
+import com.elenai.feathers.api.FeathersHelper;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.item.custom.AStaffItem;
@@ -8,13 +9,15 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 
-public class HungerStaffItem extends AStaffItem {
-    @Dependency(mod = "sortilege:hunger")
+public class FeathersStaffItem extends AStaffItem {
+    @Dependency(mod = "feathers:feathers")
     public static class Reader implements IStaffEntryReader {
         @Override
         public StaffEntry.Cost readCost(JsonObject json) {
@@ -23,32 +26,38 @@ public class HungerStaffItem extends AStaffItem {
 
         @Override
         public AStaffItem make(StaffEntry entry) {
-            return new HungerStaffItem(entry, new Properties());
+            return new FeathersStaffItem(entry, new Item.Properties());
         }
     }
 
+
     protected final ValueCost cost;
 
-    public HungerStaffItem(StaffEntry entry, Properties properties) {
+    public FeathersStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
         this.cost = (ValueCost) this.getEntry().getCost();
     }
 
     @Override
     public boolean hasResource(ItemStack stack, Player player) {
-        return player.getFoodData().getFoodLevel() >= this.getCost(stack, player, this.cost.getValue());
+        return player instanceof ServerPlayer serverPlayer
+                ? FeathersHelper.getFeathers(serverPlayer) >= this.getCost(stack, player, cost.getValue())
+                : FeathersHelper.getFeathers() >= this.getCost(stack, player, cost.getValue());
     }
 
     @Override
     public void consumeResource(ItemStack stack, Player player) {
-        player.getFoodData().setFoodLevel(player.getFoodData().getFoodLevel() - this.getCost(stack, player, this.cost.getValue()));
+        if (player instanceof ServerPlayer serverPlayer)
+            FeathersHelper.spendFeathers(serverPlayer, this.getCost(stack, player, cost.getValue()));
+        else
+            FeathersHelper.spendFeathers(this.getCost(stack, player, cost.getValue()));
     }
 
     @Override
     public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
         if (this.getCost(stack, player, cost.getValue()) > 0) {
-            tooltip.add(Component.translatable("sortilege.staff.cost.hunger", this.getCost(stack, player, cost.getValue()))
-                    .withStyle(ChatFormatting.YELLOW));
+            tooltip.add(Component.translatable("sortilege.staff.cost.feathers", this.getCost(stack, player, cost.getValue()))
+                    .withStyle(ChatFormatting.AQUA));
             tooltip.add(Component.empty());
         }
     }

@@ -46,11 +46,11 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
         @Override
         public AStaffItem make(StaffEntry entry) {
-            return new WizardryManaStaffItem(entry, new Properties());
+            return new WizardryManaStaffItem(entry, new Item.Properties());
         }
     }
 
-    protected static class Effects extends StaffEntry.Effects {
+    public static class Effects extends StaffEntry.Effects {
         protected int maxUpgrades;
         protected int range;
         protected float cooldown;
@@ -95,6 +95,7 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
             return this.storage;
         }
     }
+
 
     protected final ValueCost cost;
     protected final Effects effects;

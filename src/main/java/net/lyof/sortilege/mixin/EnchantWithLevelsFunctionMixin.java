@@ -1,7 +1,7 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;

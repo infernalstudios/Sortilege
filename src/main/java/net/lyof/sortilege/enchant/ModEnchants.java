@@ -1,7 +1,6 @@
 package net.lyof.sortilege.enchant;
 
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.enchant.armor.MagicProtectionEnchantment;
 import net.lyof.sortilege.enchant.common.SoulboundEnchantment;
 import net.lyof.sortilege.enchant.common.StorytellingEnchantment;
@@ -9,6 +8,7 @@ import net.lyof.sortilege.enchant.staff.CurseStaffEnchantment;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.enchant.staff.StaffEnchantment;
 import net.lyof.sortilege.enchant.weapon.ArcaneEnchantment;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffectInstance;

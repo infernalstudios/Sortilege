@@ -1,10 +1,10 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.item.potion.PotionShenanigans;
 import net.lyof.sortilege.mixin.accessor.MobEffectInstanceAccessor;
+import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;

@@ -1,26 +1,13 @@
 package net.lyof.sortilege.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.block.entity.PotionCauldronBlockEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockSource;
-import net.minecraft.core.dispenser.DispenseItemBehavior;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.LayeredCauldronBlock;
-import net.minecraft.world.level.block.entity.DispenserBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(DispenserBlock.class)
 public class DispenserBlockMixin {
+    /*
+    // That mixin apparently makes Sinytra explode
+
     @Unique
     private ItemStack tryPutFilledBottle(BlockSource pointer, ItemStack empty, ItemStack filled, DispenseItemBehavior fallback) {
         empty.shrink(1);
@@ -58,5 +45,5 @@ public class DispenserBlockMixin {
             result = original.call(instance, pointer, stack);
 
         return result;
-    }
+    }*/
 }

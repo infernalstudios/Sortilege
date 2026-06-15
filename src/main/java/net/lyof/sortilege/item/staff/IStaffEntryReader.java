@@ -31,7 +31,7 @@ public interface IStaffEntryReader {
                     continue;
 
                 return loadedService;
-            } catch (Exception ignored) {}
+            } catch (Throwable ignored) {}
         }
 
         Sortilege.log().error(type + " is not a valid Staff type");

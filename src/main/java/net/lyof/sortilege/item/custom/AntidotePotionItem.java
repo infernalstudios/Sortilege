@@ -2,9 +2,9 @@ package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.item.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;

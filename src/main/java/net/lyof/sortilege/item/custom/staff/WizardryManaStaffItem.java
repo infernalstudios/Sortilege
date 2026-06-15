@@ -50,7 +50,7 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
         }
     }
 
-    public static class Effects extends StaffEntry.Effects {
+    protected static class Effects extends StaffEntry.Effects {
         protected int maxUpgrades;
         protected int range;
         protected float cooldown;

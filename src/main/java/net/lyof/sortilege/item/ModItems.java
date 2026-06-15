@@ -20,8 +20,10 @@ public class ModItems {
     public static List<Item> STAFFS = new ArrayList<>();
 
     public static void register() {
-        for (StaffEntry entry : ModConfig.staffs.get())
+        for (StaffEntry entry : ModConfig.staffs.get()) {
+            //Sortilege.log().info(entry.getID(), entry.makeStaff());
             STAFFS.add(register(true, entry.getID(), entry::makeStaff));
+        }
     }
 
     public static Item register(boolean config, String name, Supplier<Item> item) {

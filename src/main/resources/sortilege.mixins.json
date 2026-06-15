@@ -22,7 +22,6 @@
     "InventoryMixin",
     "ItemMixin",
     "ItemStackMixin",
-    "sol.JsonBuilderMixin",
     "LeveledCauldronBlockMixin",
     "LingeringPotionItemMixin",
     "LivingEntityMixin",
@@ -40,7 +39,8 @@
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",
-    "accessor.MobEffectInstanceAccessor"
+    "accessor.MobEffectInstanceAccessor",
+    "sol.JsonBuilderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

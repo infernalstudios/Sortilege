@@ -80,8 +80,8 @@ public abstract class ItemStackMixin {
 
     @ModifyReturnValue(method = "is(Lnet/minecraft/tags/TagKey;)Z", at = @At("RETURN"))
     private boolean isInKinetic(boolean original, TagKey<Item> tag) {
-        if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof AStaffItem)
-            return original && EnchantHelper.hasEnchant(ModEnchants.BONK, (ItemStack) (Object) this);
+        if (tag.equals(ModTags.Items.KINETIC_BOOSTED) && this.getItem() instanceof AStaffItem staff)
+            return original && staff.canMelee((ItemStack) (Object) this);
         return original;
     }
 

@@ -38,7 +38,10 @@
   "aquaculture.neptunium_staff.tooltip.title": "Neptune's Flood",
   "aquaculture.neptunium_staff.tooltip.desc": "Conjures water at your foes, even in hot environments",
 
-  "sortilege.staff.experience_cost": "Costs %s XP",
+  "sortilege.staff.cost.experience": "Costs %s XP",
+  "sortilege.staff.cost.health": "Consumes %s HP",
+  "sortilege.staff.cost.hunger": "Exhausts %s hunger",
+  "sortilege.staff.cost.mana": "Costs %s mana",
   "sortilege.staff.cooldown": "%ss Cooldown",
 
   "attribute.name.generic.staff_damage": "Magic Damage",

@@ -6,8 +6,12 @@ import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.List;
 
 public class HealthStaffItem extends AStaffItem {
     @Dependency(mod = "sortilege:health")
@@ -38,5 +42,14 @@ public class HealthStaffItem extends AStaffItem {
     @Override
     public void consumeResource(ItemStack stack, Player player) {
         player.hurt(player.damageSources().wither(), this.getCost(stack, player, this.cost.getValue()));
+    }
+
+    @Override
+    public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
+        if (this.getCost(stack, player, cost.getValue()) > 0) {
+            tooltip.add(Component.translatable("sortilege.staff.cost.health", this.getCost(stack, player, cost.getValue()))
+                    .withStyle(ChatFormatting.DARK_RED));
+            tooltip.add(Component.empty());
+        }
     }
 }

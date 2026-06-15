@@ -1,3 +1,4 @@
 net.lyof.sortilege.item.custom.staff.ExperienceStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.HealthStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.HungerStaffItem$Reader
+net.lyof.sortilege.item.custom.staff.WizardryManaStaffItem$Reader

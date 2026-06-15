@@ -132,9 +132,9 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         if (stack.is(ModTags.Items.FORGOTTEN_ITEMS))
             tooltip.add(Component.translatable("tooltip.forgotten_sword").withStyle(ChatFormatting.GREEN));
 
-        if (world != null && world.isClientSide())
-            tooltip.add(Component.translatable("sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f)
-                    .withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f)
+                .withStyle(ChatFormatting.GRAY));
+        this.appendExtraTooltip(stack, Minecraft.getInstance().player, tooltip);
     }
     //#endregion
 
@@ -195,7 +195,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return this.getEntry().getTier().getRange() + EnchantHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
     }
 
-    private int getCooldown(ItemStack stack, Player player) {
+    public int getCooldown(ItemStack stack, Player player) {
         float multiplier = 1 - EnchantHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
 
         if (stack.is(ModTags.Items.XP_BOOSTED) && player != null)
@@ -249,7 +249,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         if (slot == EquipmentSlot.MAINHAND && this.getEntry().getTier().getPiercing() > 0) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-            if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
+            if (this.canMelee(stack)) {
                 builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID,
                         "Weapon modifier", this.getDamage(stack)-1, AttributeModifier.Operation.ADDITION));
                 builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID,
@@ -329,7 +329,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public void triggerAttack(ItemStack stack, LivingEntity player, LivingEntity target, Set<ElementalStaffEnchantment> elements,
-                              Vec3 direction, boolean propagate, List<UUID> targetsHit) {
+                              Vec3 direction, boolean propagate, List<LivingEntity> targetsHit) {
 
         if (targetsHit.contains(target.getUUID())) return;
 
@@ -345,7 +345,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
                     10, new float[]{1, 0.5f, 0.5f});
         }
 
-        targetsHit.add(target.getUUID());
+        targetsHit.add(target);
 
         this.runCommand(player, this.getEntry().getEffects().onHitSelf());
         this.runCommand(target, this.getEntry().getEffects().onHitTarget());
@@ -365,7 +365,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public void triggerBlastAttack(ItemStack stack, LivingEntity player, Set<ElementalStaffEnchantment> elements, Vec3 direction,
-                                   double x, double y, double z, double radius, List<UUID> targetsHit) {
+                                   double x, double y, double z, double radius, List<LivingEntity> targetsHit) {
 
         if (player.level().isClientSide())
             player.level().explode(player, x, y, z, 1, Level.ExplosionInteraction.NONE);
@@ -381,7 +381,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
-        if (EnchantHelper.hasEnchant(ModEnchants.BONK, stack)) {
+        if (this.canMelee(stack)) {
             this.triggerAttack(stack, player, target, this.getElements(stack), MathHelper.getLookVector(player),
                     true, new ArrayList<>());
         }
@@ -416,7 +416,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors,
-                      Vec3 direction, List<UUID> targetsHit) {
+                      Vec3 direction, List<LivingEntity> targetsHit) {
 
         int targetsLeft = this.getPiercing(stack);
         int index;
@@ -454,7 +454,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             index = 0;
             while (!entities.isEmpty() && entities.size() > index && targetsLeft > 0) {
                 if (entities.get(index) instanceof LivingEntity target
-                        && !targetsHit.contains(target.getUUID()) && this.canHit(stack, player, target)) {
+                        && !targetsHit.contains(target) && this.canHit(stack, player, target)) {
 
                     this.triggerAttack(stack, player, target, elements, direction, true, targetsHit);
                     targetsLeft--;
@@ -469,6 +469,10 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     public boolean canHit(ItemStack stack, LivingEntity player, LivingEntity target) {
         return !(target instanceof OwnableEntity tameable && tameable.getOwner() == player) && !target.getPassengers().contains(player);
+    }
+
+    public boolean canMelee(ItemStack stack) {
+        return EnchantHelper.hasEnchant(ModEnchants.BONK, stack);
     }
 
     public void displayShot(ItemStack stack, Player player) {
@@ -487,5 +491,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         else if (particle instanceof ParticleOptions options)
             player.level().addAlwaysVisibleParticle(options, x, y, z, color[0], color[1], color[2]);
     }
+
+    @Environment(EnvType.CLIENT)
+    public abstract void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip);
     //#endregion
 }

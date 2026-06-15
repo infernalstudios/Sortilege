@@ -348,8 +348,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         targetsHit.add(target);
 
-        this.runCommand(player, this.getEntry().getEffects().onHitSelf());
-        this.runCommand(target, this.getEntry().getEffects().onHitTarget());
+        this.onHit(stack, player, target);
+        if (target.isDeadOrDying()) this.onKill(stack, player, target);
 
         if (kinesis != 0)
             target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));
@@ -473,6 +473,13 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public boolean canHit(ItemStack stack, LivingEntity player, LivingEntity target) {
         return !(target instanceof OwnableEntity tameable && tameable.getOwner() == player) && !target.getPassengers().contains(player);
     }
+
+    public void onHit(ItemStack stack, LivingEntity player, LivingEntity target) {
+        this.runCommand(player, this.getEntry().getEffects().onHitSelf());
+        this.runCommand(target, this.getEntry().getEffects().onHitTarget());
+    }
+
+    public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {}
 
     public boolean canMelee(ItemStack stack) {
         return EnchantHelper.hasEnchant(ModEnchants.BONK, stack);

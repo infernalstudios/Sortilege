@@ -118,7 +118,8 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
     @Override
     public boolean canMelee(ItemStack stack) {
-        return super.canMelee(stack) || CastItemDataHelper.getUpgradeLevel(stack, EBItems.MELEE_UPGRADE.get()) > 0;
+        return super.canMelee(stack) ||
+                (CastItemDataHelper.getUpgradeLevel(stack, EBItems.MELEE_UPGRADE.get()) > 0 && this.canShoot(stack, null));
     }
 
     @Override
@@ -147,16 +148,9 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
     }
 
     @Override
-    public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors,
-                      Vec3 direction, List<LivingEntity> targetsHit) {
-        super.shoot(stack, player, elements, colors, direction, targetsHit);
-
-        for (LivingEntity entity : targetsHit) {
-            if (entity.isDeadOrDying()) {
-                this.rechargeMana(stack, this.effects.getSiphon()
-                        * CastItemDataHelper.getUpgradeLevel(stack, EBItems.SIPHON_UPGRADE.get()));
-            }
-        }
+    public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {
+        super.onKill(stack, player, target);
+        this.rechargeMana(stack, this.effects.getSiphon() * CastItemDataHelper.getUpgradeLevel(stack, EBItems.SIPHON_UPGRADE.get()));
     }
 
     @Override

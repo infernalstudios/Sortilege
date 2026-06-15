@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
@@ -63,7 +64,7 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;appendEnchantmentNames(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"))
     private void showEnchantLimit(@Nullable Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir,
-                                 @Local List<Component> list) {
+                                  @Local List<Component> list) {
         ItemStack self = (ItemStack) (Object) this;
 
         if (self.getItem().getEnchantmentValue() > 0 && !self.is(Items.ENCHANTED_BOOK)) {
@@ -83,6 +84,20 @@ public abstract class ItemStackMixin {
 
         sorti_player = player;
         sorti_stack = self;
+    }
+
+    @WrapOperation(method = "getTooltipLines", at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/List;add(Ljava/lang/Object;)Z",
+            //shift = At.Shift.AFTER,
+            ordinal = 16
+    ))
+    private <E> boolean showStaffType(List<E> instance, E e, Operation<Boolean> original) {
+        ItemStack self = (ItemStack) (Object) this;
+
+        if (self.getItem() instanceof AStaffItem staff)
+            ((MutableComponent) e).append(Component.literal(" (" + staff.getEntry().getReader().getType() + ")"));
+        return original.call(instance, e);
     }
 
     @WrapOperation(method = "appendEnchantmentNames", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"))

@@ -1,9 +1,11 @@
 package net.lyof.sortilege.item.staff;
 
 import com.google.gson.JsonObject;
+import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.AStaffItem;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
@@ -20,17 +22,21 @@ public interface IStaffEntryReader {
     }
     AStaffItem make(StaffEntry entry);
 
+
+    default String getType() {
+        Dependency dependency = this.getClass().getAnnotation(Dependency.class);
+        return dependency == null ? null : dependency.mod();
+    }
+
     static IStaffEntryReader getFor(String type) {
         Iterator<IStaffEntryReader> iterator = ServiceLoader.load(IStaffEntryReader.class).iterator();
         while (iterator.hasNext()) {
             try {
                 IStaffEntryReader loadedService = iterator.next();
 
-                Dependency dependency = loadedService.getClass().getAnnotation(Dependency.class);
-                if (dependency != null && !dependency.mod().equals(type))
-                    continue;
+                if (type.equals(loadedService.getType()))
+                    return loadedService;
 
-                return loadedService;
             } catch (Throwable ignored) {}
         }
 

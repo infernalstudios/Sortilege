@@ -31,8 +31,6 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
 
         ResourceLocation type = Identifier.of(GsonHelper.getAsString(json, "type"));
 
-        Sortilege.log().info("Searching reader for", type, "in", GsonHelper.getAsString(json, "id"));
-
         IStaffEntryReader reader = IStaffEntryReader.getFor(type.toString());
         if (reader == null)
             return null;

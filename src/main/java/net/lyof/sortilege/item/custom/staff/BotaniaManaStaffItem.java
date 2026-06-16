@@ -1,27 +1,48 @@
 package net.lyof.sortilege.item.custom.staff;
 
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.lyof.sortilege.util.EnchantHelper;
+import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import vazkii.botania.api.item.SortableTool;
+import vazkii.botania.api.mana.BurstProperties;
+import vazkii.botania.api.mana.LensEffectItem;
 import vazkii.botania.api.mana.ManaItemHandler;
+import vazkii.botania.common.advancements.ManaBlasterTrigger;
+import vazkii.botania.common.crafting.recipe.ManaBlasterLensRecipe;
+import vazkii.botania.common.crafting.recipe.ManaBlasterRemoveLensRecipe;
+import vazkii.botania.common.entity.ManaBurstEntity;
+import vazkii.botania.common.item.BotaniaItems;
 import vazkii.botania.common.item.equipment.CustomDamageItem;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem, SortableTool {
@@ -85,7 +106,7 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
     public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
         if (this.getCost(stack, player, cost.getValue()) > 0) {
             tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack))
-                    .withStyle(ChatFormatting.BLUE));
+                    .withStyle(ChatFormatting.AQUA));
             tooltip.add(Component.empty());
         }
     }
@@ -101,5 +122,83 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
 
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
         return ToolCommons.damageItemIfPossible(stack, amount, entity, this.getDurabilityCost(stack));
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public boolean shouldAddRender(ItemStack stack) {
+        return super.shouldAddRender(stack) || !this.getLens(stack).isEmpty();
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void render(ItemStack stack, ItemDisplayContext context, PoseStack matrices, MultiBufferSource vertexConsumers,
+                       int light, int overlay) {
+        super.render(stack, context, matrices, vertexConsumers, light, overlay);
+
+        if (context == ItemDisplayContext.GUI) {
+            matrices.pushPose();
+            matrices.translate(0.19, 0.19, 0);
+            matrices.scale(0.5f, 0.5f, 0.5f);
+
+            Minecraft.getInstance().getItemRenderer().renderStatic(this.getLens(stack),
+                    context, light, overlay, matrices, vertexConsumers, Minecraft.getInstance().level, 0);
+
+            matrices.popPose();
+        }
+    }
+
+    protected static final String LENS_NBT = "sorti_Lens";
+
+    public ItemStack getLens(ItemStack stack) {
+        return ItemStack.of(stack.getOrCreateTag().getCompound(LENS_NBT));
+    }
+
+    public void setLens(ItemStack stack, ItemStack lens) {
+        if (lens.isEmpty())
+            stack.removeTagKey(LENS_NBT);
+        else
+            stack.getOrCreateTag().put(LENS_NBT, lens.save(new CompoundTag()));
+    }
+
+    protected BurstProperties getBurstProps(Player player, ItemStack stack, List<float[]> colors) {
+        float[] c = MathHelper.randi(colors);
+        int color = FastColor.ARGB32.color(255, (int) (c[0] * 255), (int) (c[1] * 255), (int) (c[2] * 255));
+
+        BurstProperties props = new BurstProperties(this.getCost(stack), 60, 4, 0, 5, color);
+        ItemStack lens = this.getLens(stack);
+        if (!lens.isEmpty())
+            ((LensEffectItem) lens.getItem()).apply(lens, props, player.level());
+
+        return props;
+    }
+
+    protected ManaBurstEntity getBurst(Player player, ItemStack stack, List<float[]> colors) {
+        ManaBurstEntity burst = new ManaBurstEntity(player);
+        BurstProperties props = this.getBurstProps(player, stack, colors);
+        burst.setSourceLens(this.getLens(stack));
+
+        burst.setColor(props.color);
+        burst.setMana(props.maxMana);
+        burst.setStartingMana(props.maxMana);
+        burst.setMinManaLoss(props.ticksBeforeManaLoss);
+        burst.setManaLossPerTick(props.manaLossPerTick);
+        burst.setGravity(props.gravity);
+        burst.setDeltaMovement(burst.getDeltaMovement().scale(props.motionModifier));
+        return burst;
+    }
+
+    @Override
+    public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors, Vec3 direction, List<LivingEntity> targetsHit) {
+        if (!player.isShiftKeyDown()) super.shoot(stack, player, elements, colors, direction, targetsHit);
+        else {
+            Level world = player.level();
+            ManaBurstEntity burst = this.getBurst(player, stack, colors);
+
+            if (!world.isClientSide()) {
+                world.addFreshEntity(burst);
+                ManaBlasterTrigger.INSTANCE.trigger((ServerPlayer) player, stack);
+            }
+        }
     }
 }

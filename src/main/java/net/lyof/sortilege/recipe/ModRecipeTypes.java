@@ -5,6 +5,7 @@ import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.A2PBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.P2ABrewingRecipe;
+import net.lyof.sortilege.recipe.crafting.BotaniaStaffLensRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.minecraft.core.Registry;
@@ -15,7 +16,11 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
 public class ModRecipeTypes {
-    public static void register() {}
+    public static void register() {
+        try {
+            register("botania_staff_lens", BotaniaStaffLensRecipe.SERIALIZER);
+        } catch (Throwable ignored) {}
+    }
 
     private static <T extends Container, R extends Recipe<T>> RecipeType<R> register(String name) {
         return Registry.register(BuiltInRegistries.RECIPE_TYPE, Sortilege.MOD.makeID(name), new RecipeType<>() {

@@ -8,6 +8,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.AStaffItem;
+import net.lyof.sortilege.particle.ModParticles;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -124,7 +125,8 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         }
 
         public ParticleType<?> getParticle() {
-            return BuiltInRegistries.PARTICLE_TYPE.get(this.particle);
+            ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(this.particle);
+            return particle == null ? ModParticles.WISP_PIXEL : particle;
         }
 
         public SoundEvent getSound() {

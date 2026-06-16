@@ -498,8 +498,8 @@ public class ModConfig {
                         )
                         .comment("")
                         .addObject("display", display -> display
-                                .add("particle", "sortilege:wisp")
-                                .add("sound", "minecraft:amethyst")
+                                .add("particle", "sortilege:wisp_pixel")
+                                .add("sound", "minecraft:block.amethyst_block.hit")
                                 .addArray("colors", List.of())
                         )
                         .comment("")

@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item.staff;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.Sortilege;
@@ -23,9 +24,9 @@ public interface IStaffEntryReader {
     AStaffItem make(StaffEntry entry);
 
 
-    default String getType() {
+    default ResourceLocation getType() {
         Dependency dependency = this.getClass().getAnnotation(Dependency.class);
-        return dependency == null ? null : dependency.mod();
+        return dependency == null ? null : Identifier.of(dependency.mod());
     }
 
     static IStaffEntryReader getFor(String type) {
@@ -34,7 +35,9 @@ public interface IStaffEntryReader {
             try {
                 IStaffEntryReader loadedService = iterator.next();
 
-                if (type.equals(loadedService.getType()))
+                ResourceLocation id = loadedService.getType();
+                if (id == null) continue;
+                if (FabricLoader.getInstance().isModLoaded(id.getNamespace()) && type.equals(id.toString()))
                     return loadedService;
 
             } catch (Throwable ignored) {}

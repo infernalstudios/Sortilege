@@ -50,6 +50,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import vazkii.botania.client.fx.BotaniaParticles;
+import vazkii.botania.client.fx.WispParticleData;
+import vazkii.botania.common.item.equipment.bauble.ManaseerMonocleItem;
+import vazkii.botania.common.proxy.Proxy;
+import vazkii.botania.xplat.BotaniaConfig;
 
 import java.util.*;
 
@@ -496,9 +501,45 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         ParticleType<?> particle = this.getEntry().getDisplay().getParticle();
         float[] color = MathHelper.randi(colors);
 
-        if (particle == ModParticles.WISP_PIXEL)
+        if (particle == ModParticles.WISP_PIXEL) {
             ModParticles.spawnWisps(player.level(), x, y, z, 1, color);
-        else if (particle instanceof ParticleOptions options)
+            return;
+        }
+
+        try {
+            if (player.level().isClientSide() && particle == BotaniaParticles.WISP) {
+                float r = color[0], g = color[1], b = color[2];
+                boolean depth = !ManaseerMonocleItem.hasMonocle(player);
+
+                if (BotaniaConfig.client().subtlePowerSystem()) {
+                    WispParticleData data = WispParticleData.wisp(0.1f, r, g, b, 0.5f, depth);
+                    Proxy.INSTANCE.addParticleForceNear(player.level(), data, x, y, z,
+                            (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02);
+                } else {
+                    float or = r;
+                    float og = g;
+                    float ob = b;
+                    double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+                    WispParticleData data;
+                    if (luminance < 0.1) {
+                        r = or + (float) Math.random() * 0.125f;
+                        g = og + (float) Math.random() * 0.125f;
+                        b = ob + (float) Math.random() * 0.125f;
+                    }
+
+                    float size = (float) (1 + (Math.random() - 0.5) * 0.065 + Math.sin(new Random(player.getUUID().getMostSignificantBits()).nextInt(9001)) * 0.4);
+                    data = WispParticleData.wisp(0.2f * size, r, g, b, 0.3f, depth);
+                    Proxy.INSTANCE.addParticleForceNear(player.level(), data, x, y, z, 0, 0, 0);
+
+                    data = WispParticleData.wisp(0.1f * size, or, og, ob, 0.3f, depth);
+                    player.level().addParticle(data, x, y, z, (float) (Math.random() - 0.5) * 0.06f, (float) (Math.random() - 0.5) * 0.06f, (float) (Math.random() - 0.5) * 0.06f);
+                }
+            }
+            return;
+        } catch (Throwable ignored) {}
+
+        if (particle instanceof ParticleOptions options)
             player.level().addAlwaysVisibleParticle(options, x, y, z, color[0], color[1], color[2]);
     }
 

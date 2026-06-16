@@ -154,7 +154,7 @@ public class ModConfig {
         .addObject("experience", experience -> experience
                 .addObject("witch_hat", witch_hat -> witch_hat
                         .comment("Should the Witch Hat be registered as an item")
-                        .add("enabled", true)
+                        .add("enable", true)
                         .bind(witchHatEnabled)
                         .comment("Chance for the Witch Hat to drop when killing a Witch. Set to 0 to disable the drop")
                         .add("drop_chance", 0.1)
@@ -464,10 +464,10 @@ public class ModConfig {
         .comment("ENTRIES")
         .addArray("entries", entries -> entries
                 .addObject(staff -> staff
-                        .add("id", "golden_staff")
+                        .add("id", "example_staff")
                         .add("sort_index", 40)
                         .add("type", "sortilege:experience")
-                        .add("dependency", "minecraft")
+                        .add("dependency", "nah")
                         .comment("")
                         .addObject("properties", properties -> properties
                                 .add("parent", "GOLD")
@@ -504,6 +504,175 @@ public class ModConfig {
                         )
                         .comment("")
                         .addArray("recipes", recipes -> {})
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "wooden_staff")
+                        .add("sort_index", 10)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "WOOD")
+                                .add("damage", 3)
+                                .add("piercing", 2)
+                                .add("range", 6)
+                                .add("cooldown", 20)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 1)
+                        )
+                        .addArray("recipes", List.of("sortilege:wooden_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "stone_staff")
+                        .add("sort_index", 20)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "STONE")
+                                .add("damage", 4)
+                                .add("piercing", 1)
+                                .add("range", 8)
+                                .add("cooldown", 25)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 2)
+                        )
+                        .addArray("recipes", List.of("sortilege:stone_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "iron_staff")
+                        .add("sort_index", 30)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "IRON")
+                                .add("damage", 5)
+                                .add("piercing", 1)
+                                .add("range", 10)
+                                .add("cooldown", 20)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addArray("recipes", List.of("sortilege:iron_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "golden_staff")
+                        .add("sort_index", 40)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "GOLD")
+                                .add("damage", 2)
+                                .add("piercing", 2)
+                                .add("range", 14)
+                                .add("cooldown", 15)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 2)
+                        )
+                        .addArray("recipes", List.of("sortilege:golden_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "diamond_staff")
+                        .add("sort_index", 50)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "DIAMOND")
+                                .add("damage", 5)
+                                .add("piercing", 2)
+                                .add("range", 12)
+                                .add("cooldown", 20)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addArray("recipes", List.of("sortilege:diamond_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "netherite_staff")
+                        .add("sort_index", 60)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "NETHERITE")
+                                .add("damage", 6)
+                                .add("piercing", 3)
+                                .add("range", 16)
+                                .add("cooldown", 25)
+                                .add("fireproof", true)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 4)
+                        )
+                        .addArray("recipes", List.of("sortilege:netherite_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "crystalline_staff")
+                        .add("sort_index", 35)
+                        .add("dependency", "phantasm")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 19)
+                                .add("damage", 4)
+                                .add("piercing", 3)
+                                .add("range", 10)
+                                .add("cooldown", 20)
+                                .add("durability", 612)
+                                .add("repair_material", "phantasm:crystal_shard")
+                                .comment("XP speed boost handled by the native Phantasm tag")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addArray("recipes", List.of("sortilege:compat/crystalline_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "silver_staff")
+                        .add("sort_index", 45)
+                        .add("dependency", "caverns_and_chasms")
+                        .add("type", "sortilege:health")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 18)
+                                .add("damage", 4)
+                                .add("piercing", 2)
+                                .add("range", 15)
+                                .add("cooldown", 20)
+                                .add("durability", 157)
+                                .add("repair_material", "#forge:ingots/silver")
+                                .comment("XP speed boost handled by the native Phantasm tag")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 1)
+                        )
+                        .addArray("recipes", List.of("sortilege:compat/silver_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "gripcrystal_staff")
+                        .add("dependency", "unseen_world")
+                        .add("type", "sortilege:health")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 18)
+                                .add("damage", 5)
+                                .add("piercing", 2)
+                                .add("range", 12)
+                                .add("cooldown", 15)
+                                .add("durability", 157)
+                                .add("repair_material", "unseen_world:gripcrystal")
+                                .comment("XP speed boost handled by the native Phantasm tag")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 1)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_self", "/set_gripcrystal_mana 2")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#4400ff")
+                                        .add("##5544ff")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:compat/gripcrystal_staff"))
                 )
         ).bind(staffs);
     }

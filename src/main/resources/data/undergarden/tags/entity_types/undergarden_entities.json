@@ -16,5 +16,10 @@
     "undergarden:mog",
     "undergarden:smog_mog",
     "undergarden:forgotten"
-  ]
+  ],
+
+  "sollib:load_condition": {
+    "type": "dependency",
+    "mod": "undergarden"
+  }
 }

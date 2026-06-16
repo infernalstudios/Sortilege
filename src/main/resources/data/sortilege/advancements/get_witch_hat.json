@@ -34,5 +34,10 @@
       "has_witch_hat"
     ]
   ],
-  "sends_telemetry_event": true
+  "sends_telemetry_event": false,
+
+  "sollib:load_condition": {
+    "type": "config",
+    "mod": "sortilege:experience.witch_hat.enable"
+  }
 }

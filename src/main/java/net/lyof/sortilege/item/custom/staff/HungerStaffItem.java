@@ -45,11 +45,10 @@ public class HungerStaffItem extends AStaffItem {
     }
 
     @Override
-    public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
-        if (this.getCost(stack, player, cost.getValue()) > 0) {
-            tooltip.add(Component.translatable("sortilege.staff.cost.hunger", this.getCost(stack, player, cost.getValue()))
-                    .withStyle(ChatFormatting.YELLOW));
-            tooltip.add(Component.empty());
-        }
+    public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
+        super.appendTooltipCosts(stack, player, tooltip);
+
+        if (this.getCost(stack, player, cost.getValue()) > 0)
+            tooltip.add(Component.translatable("sortilege.staff.cost.hunger", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.YELLOW));
     }
 }

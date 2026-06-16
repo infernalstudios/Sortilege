@@ -11,7 +11,6 @@ import com.binaris.wizardry.setup.registries.EBAdvancementTriggers;
 import com.binaris.wizardry.setup.registries.EBItems;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
@@ -26,10 +25,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.Set;
 
 public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWorkbenchItem, ICustomDamageItem {
     @Dependency(mod = "ebwizardry:mana")
@@ -123,12 +120,11 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
     }
 
     @Override
-    public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
-        if (this.getCost(stack, player, cost.getValue()) > 0) {
-            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack, player, cost.getValue()))
-                    .withStyle(ChatFormatting.BLUE));
-            tooltip.add(Component.empty());
-        }
+    public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
+        super.appendTooltipCosts(stack, player, tooltip);
+
+        if (this.getCost(stack, player, cost.getValue()) > 0)
+            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.BLUE));
     }
 
     @Override

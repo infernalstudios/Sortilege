@@ -126,17 +126,13 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
 
-        // Undergarden compat
-        if (stack.is(ModTags.Items.FROSTSTEEL_ITEMS))
-            tooltip.add(Component.translatable("tooltip.froststeel_sword").withStyle(ChatFormatting.AQUA));
-        if (stack.is(ModTags.Items.UTHERIUM_ITEMS))
-            tooltip.add(Component.translatable("tooltip.utheric_sword").withStyle(ChatFormatting.RED));
-        if (stack.is(ModTags.Items.FORGOTTEN_ITEMS))
-            tooltip.add(Component.translatable("tooltip.forgotten_sword").withStyle(ChatFormatting.GREEN));
+        int i = tooltip.size();
+        this.appendTooltipAbilities(stack, Minecraft.getInstance().player, tooltip);
+        if (i < tooltip.size()) tooltip.add(Component.empty());
 
-        tooltip.add(Component.translatable("sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f)
-                .withStyle(ChatFormatting.GRAY));
-        this.appendExtraTooltip(stack, Minecraft.getInstance().player, tooltip);
+        i = tooltip.size();
+        this.appendTooltipCosts(stack, Minecraft.getInstance().player, tooltip);
+        if (i < tooltip.size()) tooltip.add(Component.empty());
     }
     //#endregion
 
@@ -544,6 +540,19 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip);
+    public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
+        // Undergarden compat
+        if (stack.is(ModTags.Items.FROSTSTEEL_ITEMS))
+            tooltip.add(Component.translatable("tooltip.froststeel_sword").withStyle(ChatFormatting.AQUA));
+        if (stack.is(ModTags.Items.UTHERIUM_ITEMS))
+            tooltip.add(Component.translatable("tooltip.utheric_sword").withStyle(ChatFormatting.RED));
+        if (stack.is(ModTags.Items.FORGOTTEN_ITEMS))
+            tooltip.add(Component.translatable("tooltip.forgotten_sword").withStyle(ChatFormatting.GREEN));
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
+        tooltip.add(Component.translatable("sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f).withStyle(ChatFormatting.GRAY));
+    }
     //#endregion
 }

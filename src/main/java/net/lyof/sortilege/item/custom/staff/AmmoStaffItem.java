@@ -109,13 +109,12 @@ public class AmmoStaffItem extends AStaffItem {
     }
 
     @Override
-    public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
+    public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
+        super.appendTooltipCosts(stack, player, tooltip);
+
         if (cost.getCount() == 1)
-            tooltip.add(Component.translatable("sortilege.staff.cost.item.single", cost.getItemsTranslation())
-                    .withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("sortilege.staff.cost.item.single", cost.getItemsTranslation()).withStyle(ChatFormatting.DARK_GRAY));
         else
-            tooltip.add(Component.translatable("sortilege.staff.cost.item", cost.getCount(), cost.getItemsTranslation())
-                    .withStyle(ChatFormatting.DARK_GRAY));
-        tooltip.add(Component.empty());
+            tooltip.add(Component.translatable("sortilege.staff.cost.item", cost.getCount(), cost.getItemsTranslation()).withStyle(ChatFormatting.DARK_GRAY));
     }
 }

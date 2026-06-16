@@ -37,6 +37,7 @@
 
   "aquaculture.neptunium_staff.tooltip.title": "Neptune's Flood",
   "aquaculture.neptunium_staff.tooltip.desc": "Conjures water at your foes, even in hot environments",
+  "item.sortilege.staff.botania.desc": "Use while sneaking to fire a mana burst",
 
   "sortilege.staff.cost.experience": "Costs %s XP",
   "sortilege.staff.cost.health": "Consumes %s HP",

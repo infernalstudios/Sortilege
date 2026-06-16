@@ -47,11 +47,10 @@ public class ExperienceStaffItem extends AStaffItem {
     }
 
     @Override
-    public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
-        if (this.getCost(stack, player, cost.getValue()) > 0) {
-            tooltip.add(Component.translatable("sortilege.staff.cost.experience", this.getCost(stack, player, cost.getValue()))
-                    .withStyle(ChatFormatting.GREEN));
-            tooltip.add(Component.empty());
-        }
+    public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
+        super.appendTooltipCosts(stack, player, tooltip);
+
+        if (this.getCost(stack, player, cost.getValue()) > 0)
+            tooltip.add(Component.translatable("sortilege.staff.cost.experience", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.GREEN));
     }
 }

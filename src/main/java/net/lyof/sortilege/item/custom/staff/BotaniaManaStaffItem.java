@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
@@ -17,7 +16,6 @@ import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,22 +32,13 @@ import vazkii.botania.api.item.SortableTool;
 import vazkii.botania.api.mana.BurstProperties;
 import vazkii.botania.api.mana.LensEffectItem;
 import vazkii.botania.api.mana.ManaItemHandler;
-import vazkii.botania.client.fx.BotaniaParticles;
-import vazkii.botania.client.fx.WispParticleData;
-import vazkii.botania.client.fx.WispParticleType;
 import vazkii.botania.common.advancements.ManaBlasterTrigger;
-import vazkii.botania.common.crafting.recipe.ManaBlasterLensRecipe;
-import vazkii.botania.common.crafting.recipe.ManaBlasterRemoveLensRecipe;
 import vazkii.botania.common.entity.ManaBurstEntity;
-import vazkii.botania.common.item.BotaniaItems;
+import vazkii.botania.common.item.ManaBlasterItem;
 import vazkii.botania.common.item.equipment.CustomDamageItem;
-import vazkii.botania.common.item.equipment.bauble.ManaseerMonocleItem;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
-import vazkii.botania.common.proxy.Proxy;
-import vazkii.botania.xplat.BotaniaConfig;
 
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -90,6 +79,20 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
         this.cost = (Cost) this.getEntry().getCost();
     }
 
+    @Override
+    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotId, boolean isSelected) {
+        if (!world.isClientSide() && entity instanceof Player player) {
+            if (stack.getDamageValue() > 0 && ManaItemHandler.instance()
+                    .requestManaExactForTool(stack, player, this.getDurabilityCost(stack) * 2, true))
+                stack.setDamageValue(stack.getDamageValue() - 1);
+        }
+    }
+
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+        return ToolCommons.damageItemIfPossible(stack, amount, entity, this.getDurabilityCost(stack));
+    }
+
     public int getDurabilityCost(ItemStack stack) {
         return Math.max(0, cost.getValuePerDurability() - 10 * EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack)
                 + 10 * EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack));
@@ -111,25 +114,22 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
     }
 
     @Override
-    public void appendExtraTooltip(ItemStack stack, Player player, List<Component> tooltip) {
-        if (this.getCost(stack, player, cost.getValue()) > 0) {
-            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack))
-                    .withStyle(ChatFormatting.AQUA));
-            tooltip.add(Component.empty());
-        }
+    public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
+        tooltip.add(Component.translatable("item.sortilege.staff.botania.desc").withStyle(ChatFormatting.GRAY));
+        ItemStack lens = this.getLens(stack);
+        if (!lens.isEmpty())
+            tooltip.add(Component.empty().withStyle(ChatFormatting.GRAY)
+                    .append(" (").append(lens.getHoverName().copy().withStyle(ChatFormatting.GREEN)).append(")"));
+
+        super.appendTooltipAbilities(stack, player, tooltip);
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotId, boolean isSelected) {
-        if (!world.isClientSide() && entity instanceof Player player) {
-            if (stack.getDamageValue() > 0 && ManaItemHandler.instance()
-                    .requestManaExactForTool(stack, player, this.getDurabilityCost(stack) * 2, true))
-                stack.setDamageValue(stack.getDamageValue() - 1);
-        }
-    }
+    public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
+        super.appendTooltipCosts(stack, player, tooltip);
 
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        return ToolCommons.damageItemIfPossible(stack, amount, entity, this.getDurabilityCost(stack));
+        if (this.getCost(stack, player, cost.getValue()) > 0)
+            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack)).withStyle(ChatFormatting.AQUA));
     }
 
     @Override

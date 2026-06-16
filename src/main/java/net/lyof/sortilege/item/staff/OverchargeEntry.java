@@ -59,8 +59,17 @@ public class OverchargeEntry {
     }
 
     protected static OverchargeEntry read(JsonObject json, OverchargeEntry parent) {
-        if (json.keySet().isEmpty())
-            return new OverchargeEntry();
+        if (json.keySet().isEmpty()) {
+            OverchargeEntry self = new OverchargeEntry();
+
+            self.max = 0;
+            self.color = 0;
+            self.ignoreDurability = false;
+            self.ignoreCost = false;
+            self.ingredients.clear();
+
+            return self;
+        }
 
         OverchargeEntry self = new OverchargeEntry(parent);
 

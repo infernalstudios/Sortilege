@@ -39,8 +39,7 @@
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",
-    "accessor.MobEffectInstanceAccessor",
-    "sol.JsonBuilderMixin"
+    "accessor.MobEffectInstanceAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

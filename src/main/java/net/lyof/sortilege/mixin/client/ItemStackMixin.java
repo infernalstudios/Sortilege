@@ -95,9 +95,10 @@ public abstract class ItemStackMixin {
     private <E> boolean showStaffType(List<E> instance, E e, Operation<Boolean> original) {
         ItemStack self = (ItemStack) (Object) this;
 
+        original.call(instance, e);
         if (self.getItem() instanceof AStaffItem staff)
-            ((MutableComponent) e).append(Component.literal(" (" + staff.getEntry().getReader().getType() + ")"));
-        return original.call(instance, e);
+            original.call(instance, Component.literal(" (" + staff.getEntry().getReader().getType() + ")").withStyle(ChatFormatting.DARK_GRAY));
+        return true;
     }
 
     @WrapOperation(method = "appendEnchantmentNames", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"))

@@ -10,11 +10,9 @@ import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import vazkii.botania.api.mana.BasicLensItem;
 import vazkii.botania.common.crafting.recipe.NoOpRecipeSerializer;
 import vazkii.botania.common.crafting.recipe.RecipeUtils;
-import vazkii.botania.common.item.BotaniaItems;
 import vazkii.botania.common.item.ManaBlasterItem;
 
 public class BotaniaStaffLensRecipe extends CustomRecipe {

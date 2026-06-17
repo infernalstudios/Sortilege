@@ -5,12 +5,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
-import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
@@ -30,7 +28,6 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import vazkii.botania.api.item.SortableTool;
 import vazkii.botania.api.mana.BurstProperties;
 import vazkii.botania.api.mana.LensEffectItem;
 import vazkii.botania.api.mana.ManaItemHandler;
@@ -65,7 +62,7 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
         @Override
         public Cost read(JsonObject json) {
             super.read(json);
-            this.mana = GsonHelper.getAsInt(json, "mana", 100);
+            this.mana = GsonHelper.getAsInt(json, "mana");
             this.manaPerDurability = GsonHelper.getAsInt(json, "mana_per_durability", this.getMana());
             return this;
         }

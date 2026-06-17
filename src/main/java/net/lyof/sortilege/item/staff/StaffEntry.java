@@ -8,8 +8,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.AStaffItem;
-import net.lyof.sortilege.particle.ModParticles;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

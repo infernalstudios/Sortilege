@@ -42,11 +42,11 @@ public class ModTags {
             return TagKey.create(Registries.ITEM, Sortilege.MOD.makeID(name));
         }
 
-        public static final TagKey<Item> XP_BOOSTED = TagKey.create(Registries.ITEM, new ResourceLocation("phantasm", "has_xp_boost"));
-        public static final TagKey<Item> KINETIC_BOOSTED = TagKey.create(Registries.ITEM, new ResourceLocation("oreganized", "has_kinetic_damage"));
+        public static final TagKey<Item> XP_BOOSTED = TagKey.create(Registries.ITEM,
+                new ResourceLocation("phantasm", "has_xp_boost"));
+        public static final TagKey<Item> KINETIC_BOOSTED = TagKey.create(Registries.ITEM,
+                new ResourceLocation("oreganized", "has_kinetic_damage"));
 
-        public static final TagKey<Item> CLOGGRUM_ITEMS = TagKey.create(Registries.ITEM,
-                new ResourceLocation("undergarden", "cloggrum_items"));
         public static final TagKey<Item> FROSTSTEEL_ITEMS = TagKey.create(Registries.ITEM,
                 new ResourceLocation("undergarden", "froststeel_items"));
         public static final TagKey<Item> UTHERIUM_ITEMS = TagKey.create(Registries.ITEM,

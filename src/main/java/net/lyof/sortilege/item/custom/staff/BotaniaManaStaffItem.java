@@ -219,11 +219,11 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
                 int t = (int) player.level().getDayTime();
                 if (player.level().isClientSide()) t += 1;
 
-                double dx = 0.25*Mth.sin(t);
-                double dy = 0.25*Mth.sin(t * 2);
-                double dz = 0.25*Mth.sin(t * 3);
+                double dx = 0.2*Mth.sin(t);
+                double dy = 0.2*Mth.sin(t * 2);
+                double dz = 0.2*Mth.sin(t * 3);
 
-                //super.shoot(stack, player, elements, colors, direction.subtract(dx, dy, dz), targetsHit);
+                super.shoot(stack, player, elements, colors, direction.subtract(dx, dy, dz), targetsHit);
                 super.shoot(stack, player, elements, colors, direction.add(dx, dy, dz), targetsHit);
             }
         } else {

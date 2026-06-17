@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lcc.sollib.platform.Dependency;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
@@ -21,6 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -42,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem, SortableTool {
+public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem {
     @Dependency(mod = "botania:mana")
     public static class Reader implements IStaffEntryReader {
         @Override
@@ -214,10 +216,14 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
             super.shoot(stack, player, elements, colors, direction, targetsHit);
 
             if (stack.is(ModTags.Items.TERRA_ITEMS)) {
-                double dx = 0.5*(Math.random() - 0.5);
-                double dy = 0.5*(Math.random() - 0.5);
-                double dz = 0.5*(Math.random() - 0.5);
-                super.shoot(stack, player, elements, colors, direction.subtract(dx, dy, dz), targetsHit);
+                int t = (int) player.level().getDayTime();
+                if (player.level().isClientSide()) t += 1;
+
+                double dx = 0.25*Mth.sin(t);
+                double dy = 0.25*Mth.sin(t * 2);
+                double dz = 0.25*Mth.sin(t * 3);
+
+                //super.shoot(stack, player, elements, colors, direction.subtract(dx, dy, dz), targetsHit);
                 super.shoot(stack, player, elements, colors, direction.add(dx, dy, dz), targetsHit);
             }
         } else {

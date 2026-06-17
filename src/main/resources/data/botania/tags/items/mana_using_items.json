@@ -1,0 +1,16 @@
+{
+  "values": [
+    {
+      "id": "sortilege:manasteel_staff",
+      "required": false
+    },
+    {
+      "id": "sortilege:elementium_staff",
+      "required": false
+    },
+    {
+      "id": "sortilege:terrasteel_staff",
+      "required": false
+    }
+  ]
+}

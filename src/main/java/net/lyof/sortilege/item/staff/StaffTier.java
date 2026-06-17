@@ -67,7 +67,7 @@ public class StaffTier implements Tier {
             self.enchantability = GsonHelper.getAsInt(json, "enchantability");
 
         if (json.has("damage"))
-            self.attackDamage = GsonHelper.getAsInt(json, "damage");
+            self.attackDamage = GsonHelper.getAsFloat(json, "damage");
         if (json.has("piercing"))
             self.piercing = GsonHelper.getAsInt(json, "piercing");
         if (json.has("range"))

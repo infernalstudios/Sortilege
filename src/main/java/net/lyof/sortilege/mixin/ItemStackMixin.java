@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.potion.CustomPotionData;
@@ -11,9 +12,11 @@ import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -44,8 +47,15 @@ public abstract class ItemStackMixin {
     @Shadow public abstract CompoundTag getOrCreateTag();
     @Shadow public abstract boolean is(TagKey<Item> tag);
     @Shadow public abstract Item getItem();
-
     @Shadow public abstract void enchant(Enchantment enchantment, int level);
+
+    @WrapOperation(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/MutableComponent;withStyle(Lnet/minecraft/ChatFormatting;)Lnet/minecraft/network/chat/MutableComponent;", ordinal = 0))
+    private MutableComponent changeRarityFormatting(MutableComponent instance, ChatFormatting formatting, Operation<MutableComponent> original) {
+        ItemStack self = (ItemStack) (Object) this;
+        if (self.is(ModTags.Items.FORGOTTEN_ITEMS))
+            return instance.withStyle(ChatFormatting.GREEN);
+        return original.call(instance, formatting);
+    }
 
     @Inject(method = "enchant", at = @At("HEAD"), cancellable = true)
     public void enchantWithLimit(Enchantment enchantment, int level, CallbackInfo ci) {

@@ -53,6 +53,9 @@ public class ModTags {
                 new ResourceLocation("undergarden", "utherium_items"));
         public static final TagKey<Item> FORGOTTEN_ITEMS = TagKey.create(Registries.ITEM,
                 new ResourceLocation("undergarden", "forgotten_items"));
+
+        public static final TagKey<Item> TERRA_ITEMS = TagKey.create(Registries.ITEM,
+                new ResourceLocation("botania", "terra_items"));
     }
 
     public static class Blocks {

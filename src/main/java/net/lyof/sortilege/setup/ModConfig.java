@@ -643,13 +643,13 @@ public class ModConfig {
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_self", "/effect give @s minecraft:regeneration 12 0 true")
+                                .add("on_hit_self", "/effect give @s minecraft:regeneration 8 1 true")
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
                                         .add("#883388")
                                         .add("#661566")
-                                        .add("#440044")
+                                        .add("#400040")
                                 )
                         )
                         .addArray("recipes", List.of("sortilege:staff/spawner_staff"))
@@ -803,6 +803,74 @@ public class ModConfig {
                 )
 
                 .addObject(staff -> staff
+                        .add("id", "manasteel_staff")
+                        .add("sort_index", 35)
+                        .add("dependency", "botania")
+                        .add("type", "botania:mana")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 20)
+                                .add("durability", 300)
+                                .add("damage", 5)
+                                .add("piercing", 1)
+                                .add("range", 10)
+                                .add("cooldown", 20)
+                                .add("repair_material", "botania:manasteel_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("mana", 120)
+                                .add("mana_per_durability", 60)
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/manasteel_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "elementium_staff")
+                        .add("sort_index", 36)
+                        .add("dependency", "botania")
+                        .add("type", "botania:mana")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 20)
+                                .add("durability", 720)
+                                .add("damage", 5)
+                                .add("piercing", 2)
+                                .add("range", 12)
+                                .add("cooldown", 20)
+                                .add("repair_material", "botania:elementium_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("mana", 120)
+                                .add("mana_per_durability", 60)
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/elementium_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "terrasteel_staff")
+                        .add("sort_index", 75)
+                        .add("dependency", "botania")
+                        .add("type", "botania:mana")
+                        .addObject("properties", properties -> properties
+                                .add("fireproof", true)
+                                .add("enchantability", 26)
+                                .add("durability", 2300)
+                                .add("damage", 7)
+                                .add("piercing", 3)
+                                .add("range", 18)
+                                .add("cooldown", 25)
+                                .add("repair_material", "botania:terrasteel_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("mana", 500)
+                                .add("mana_per_durability", 100)
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#20ff20")
+                                )
+                                .add("rarity", "UNCOMMON")
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/terrasteel_staff"))
+                )
+
+                .addObject(staff -> staff
                         .add("id", "silver_staff")
                         .add("sort_index", 45)
                         .add("dependency", "caverns_and_chasms")
@@ -884,8 +952,8 @@ public class ModConfig {
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
-                                        .add("#4400ff")
-                                        .add("#5544ff")
+                                        .add("#4000ff")
+                                        .add("#5540ff")
                                 )
                         )
                         .addArray("recipes", List.of("sortilege:staff/gripcrystal_staff"))
@@ -897,6 +965,7 @@ public class ModConfig {
                         .add("dependency", "unusualend")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
+                                .add("enchantability", 10)
                                 .add("damage", 7)
                                 .add("piercing", 1)
                                 .add("range", 20)
@@ -913,7 +982,7 @@ public class ModConfig {
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
                                         .add("#8800d0")
-                                        .add("#d044ff")
+                                        .add("#d040ff")
                                 )
                         )
                         .addArray("recipes", List.of("sortilege:staff/pearlescent_staff"))
@@ -941,6 +1010,117 @@ public class ModConfig {
                                 .add("on_hit_target", "/tp @s ~ ~5 ~")
                         )
                         .addArray("recipes", List.of("sortilege:staff/enderite_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "neptunium_staff")
+                        .add("sort_index", 70)
+                        .add("dependency", "aquaculture")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 14)
+                                .add("damage", 6)
+                                .add("piercing", 1)
+                                .add("range", 12)
+                                .add("cooldown", 20)
+                                .add("durability", 4096)
+                                .add("repair_material", "aquaculture:neptunium_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_target", "/setblock ~ ~ ~ minecraft:water[level=15] keep")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#4075e2")
+                                        .add("#44aaf2")
+                                        .add("#3d56d6")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/neptunium_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "cloggrum_staff")
+                        .add("sort_index", 100)
+                        .add("dependency", "undergarden")
+                        .add("type", "sortilege:ammo")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 8)
+                                .add("damage", 7)
+                                .add("piercing", 1)
+                                .add("range", 12)
+                                .add("cooldown", 30)
+                                .add("durability", 286)
+                                .add("repair_material", "#forge:ingots/cloggrum")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("items", "undergarden:depthrock_pebble")
+                                .add("count", 1)
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/cloggrum_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "froststeel_staff")
+                        .add("sort_index", 101)
+                        .add("dependency", "undergarden")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 20)
+                                .add("damage", 5)
+                                .add("piercing", 1)
+                                .add("range", 10)
+                                .add("cooldown", 20)
+                                .add("durability", 575)
+                                .add("repair_material", "#forge:ingots/froststeel")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 2)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_target", "/effect give @s undergarden:chilly 30 2 true")
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/froststeel_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "utherium_staff")
+                        .add("sort_index", 102)
+                        .add("dependency", "undergarden")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 17)
+                                .add("damage", 5.5)
+                                .add("piercing", 2)
+                                .add("range", 12)
+                                .add("cooldown", 25)
+                                .add("durability", 1279)
+                                .add("repair_material", "#forge:ingots/utherium")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/utherium_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "forgotten_staff")
+                        .add("sort_index", 1876)
+                        .add("dependency", "undergarden")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 2)
+                                .add("damage", 6)
+                                .add("piercing", 4)
+                                .add("range", 14)
+                                .add("cooldown", 25)
+                                .add("durability", 1279)
+                                .add("repair_material", "#forge:ingots/forgotten_metal")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/forgotten_staff"))
                 )
         ).bind(staffs);
     }

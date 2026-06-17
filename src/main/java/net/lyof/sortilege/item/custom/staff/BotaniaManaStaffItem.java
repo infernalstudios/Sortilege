@@ -10,6 +10,7 @@ import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -183,7 +184,8 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
         float[] c = MathHelper.randi(colors);
         int color = FastColor.ARGB32.color(255, (int) (c[0] * 255), (int) (c[1] * 255), (int) (c[2] * 255));
 
-        BurstProperties props = new BurstProperties(this.getMana(stack), 60, 4, 0, 5, color);
+        float speed = stack.is(ModTags.Items.TERRA_ITEMS) ? 7 : 5;
+        BurstProperties props = new BurstProperties(this.getMana(stack), 60, 4, 0, speed, color);
         ItemStack lens = this.getLens(stack);
         if (!lens.isEmpty())
             ((LensEffectItem) lens.getItem()).apply(lens, props, player.level());
@@ -208,8 +210,17 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
 
     @Override
     public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors, Vec3 direction, List<LivingEntity> targetsHit) {
-        if (!player.isShiftKeyDown()) super.shoot(stack, player, elements, colors, direction, targetsHit);
-        else {
+        if (!player.isShiftKeyDown()) {
+            super.shoot(stack, player, elements, colors, direction, targetsHit);
+
+            if (stack.is(ModTags.Items.TERRA_ITEMS)) {
+                double dx = 0.5*(Math.random() - 0.5);
+                double dy = 0.5*(Math.random() - 0.5);
+                double dz = 0.5*(Math.random() - 0.5);
+                super.shoot(stack, player, elements, colors, direction.subtract(dx, dy, dz), targetsHit);
+                super.shoot(stack, player, elements, colors, direction.add(dx, dy, dz), targetsHit);
+            }
+        } else {
             Level world = player.level();
             ManaBurstEntity burst = this.getBurst(player, stack, colors);
 

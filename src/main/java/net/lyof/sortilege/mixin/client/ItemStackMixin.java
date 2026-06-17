@@ -31,9 +31,6 @@ import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    @Shadow public abstract Item getItem();
-    @Shadow public abstract boolean is(TagKey<Item> tag);
-
     @Unique private static Player sorti_player;
     @Unique private static ItemStack sorti_stack;
 
@@ -115,12 +112,5 @@ public abstract class ItemStackMixin {
                 tooltip.set(tooltip.size() - 1, text);
             }
         });
-    }
-
-    @WrapOperation(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/MutableComponent;withStyle(Lnet/minecraft/ChatFormatting;)Lnet/minecraft/network/chat/MutableComponent;", ordinal = 0))
-    private MutableComponent changeRarityFormatting(MutableComponent instance, ChatFormatting formatting, Operation<MutableComponent> original) {
-        if (this.is(ModTags.Items.FORGOTTEN_ITEMS))
-            return instance.withStyle(ChatFormatting.GREEN);
-        return original.call(instance, formatting);
     }
 }

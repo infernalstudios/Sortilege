@@ -70,7 +70,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     protected InteractionHand hand;
 
     public AStaffItem(StaffEntry entry, Properties properties) {
-        super(entry.getTier(), entry.getTier().isFireproof() ? properties.fireResistant() : properties);
+        super(entry.getTier(), entry.applyProperties(properties));
         this.entry = entry;
     }
 

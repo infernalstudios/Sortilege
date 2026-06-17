@@ -15,6 +15,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 
 import java.util.*;
 
@@ -60,6 +62,12 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
 
     public AStaffItem makeStaff() {
         return this.getReader().make(this);
+    }
+
+    public Item.Properties applyProperties(Item.Properties properties) {
+        if (this.getTier().isFireproof()) properties = properties.fireResistant();
+        if (this.getDisplay().getRarity() != null) properties = properties.rarity(this.getDisplay().getRarity());
+        return properties;
     }
 
 
@@ -116,6 +124,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         protected ResourceLocation particle;
         protected ResourceLocation sound;
         protected List<float[]> colors;
+        protected Rarity rarity;
 
         public Display read(JsonObject json) {
             this.particle = json.has("particle") ? Identifier.of(GsonHelper.getAsString(json, "particle")) : null;
@@ -128,6 +137,12 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
                 this.colors.add(new float[]{FastColor.ARGB32.red(rgb) / 255f,
                         FastColor.ARGB32.green(rgb) / 255f,
                         FastColor.ARGB32.blue(rgb) / 255f});
+            }
+
+            try {
+                this.rarity = Rarity.valueOf(GsonHelper.getAsString(json, "rarity"));
+            } catch (Exception ignored) {
+                this.rarity = null;
             }
 
             return this;
@@ -143,6 +158,10 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
 
         public List<float[]> getColors() {
             return this.colors;
+        }
+
+        public Rarity getRarity() {
+            return this.rarity;
         }
     }
 }

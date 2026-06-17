@@ -520,7 +520,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 1)
                         )
-                        .addArray("recipes", List.of("sortilege:wooden_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/wooden_staff"))
                 )
                 .addObject(staff -> staff
                         .add("id", "stone_staff")
@@ -535,8 +535,10 @@ public class ModConfig {
                         )
                         .addObject("cost", cost -> cost
                                 .add("value", 2)
+                                .add("mana", 300)
+                                .add("mana_per_durability", 60)
                         )
-                        .addArray("recipes", List.of("sortilege:stone_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/stone_staff"))
                 )
                 .addObject(staff -> staff
                         .add("id", "iron_staff")
@@ -552,7 +554,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
-                        .addArray("recipes", List.of("sortilege:iron_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/iron_staff"))
                 )
                 .addObject(staff -> staff
                         .add("id", "golden_staff")
@@ -568,7 +570,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 2)
                         )
-                        .addArray("recipes", List.of("sortilege:golden_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/golden_staff"))
                 )
                 .addObject(staff -> staff
                         .add("id", "diamond_staff")
@@ -584,7 +586,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
-                        .addArray("recipes", List.of("sortilege:diamond_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/diamond_staff"))
                 )
                 .addObject(staff -> staff
                         .add("id", "netherite_staff")
@@ -601,7 +603,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 4)
                         )
-                        .addArray("recipes", List.of("sortilege:netherite_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/netherite_staff"))
                 )
 
                 .addObject(staff -> staff
@@ -617,19 +619,194 @@ public class ModConfig {
                                 .add("cooldown", 20)
                                 .add("durability", 612)
                                 .add("repair_material", "phantasm:crystal_shard")
-                                .comment("XP speed boost handled by the native Phantasm tag")
                         )
                         .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
-                        .addArray("recipes", List.of("sortilege:compat/crystalline_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/crystalline_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "spawner_staff")
+                        .add("sort_index", 55)
+                        .add("dependency", "dungeonnowloading")
+                        .add("type", "sortilege:health")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "DIAMOND")
+                                .add("damage", 4)
+                                .add("piercing", 3)
+                                .add("range", 14)
+                                .add("cooldown", 25)
+                                .add("repair_material", "dungeonnowloading:spawner_blade")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 2)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_self", "/effect give @s minecraft:regeneration 12 0 true")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#883388")
+                                        .add("#661566")
+                                        .add("#440044")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/spawner_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "divine_beryl_staff")
+                        .add("sort_index", 51)
+                        .add("dependency", "miningmaster")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 15)
+                                .add("durability", 1851)
+                                .add("damage", 5)
+                                .add("piercing", 3)
+                                .add("range", 14)
+                                .add("cooldown", 25)
+                                .add("repair_material", "miningmaster:divine_beryl")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addObject("effects", effects -> effects
+                                .addObject("enchants", enchants -> enchants
+                                        .add("sortilege:blessing", 4)
+                                )
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#007715")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/divine_beryl_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "heart_rhodonite_staff")
+                        .add("sort_index", 52)
+                        .add("dependency", "miningmaster")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 15)
+                                .add("durability", 1851)
+                                .add("damage", 5)
+                                .add("piercing", 3)
+                                .add("range", 14)
+                                .add("cooldown", 25)
+                                .add("repair_material", "miningmaster:heart_rhodonite")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_self", "/effect give @s minecraft:instant_health")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#ff7788")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/heart_rhodonite_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "spider_kunzite_staff")
+                        .add("sort_index", 53)
+                        .add("dependency", "miningmaster")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 15)
+                                .add("durability", 1851)
+                                .add("damage", 5)
+                                .add("piercing", 3)
+                                .add("range", 14)
+                                .add("cooldown", 25)
+                                .add("repair_material", "miningmaster:spider_kunzite")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_target", "/effect give @s minecraft:poison 3 1")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#ffdddd")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/spider_kunzite_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "ultima_staff")
+                        .add("sort_index", 54)
+                        .add("dependency", "miningmaster")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 20)
+                                .add("durability", 2341)
+                                .add("damage", 7)
+                                .add("piercing", 3)
+                                .add("range", 16)
+                                .add("cooldown", 30)
+                                .add("repair_material", "minecraft:diamond")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 4)
+                        )
+                        .addObject("effects", effects -> effects
+                                .addObject("enchants", enchants -> enchants
+                                        .add("sortilege:blessing", 4)
+                                )
+                                .add("on_hit_self", "/effect give @s minecraft:instant_health")
+                                .add("on_hit_target", "/effect give @s minecraft:poison 3 1")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#007715")
+                                        .add("#ff7788")
+                                        .add("#ffdddd")
+                                )
+                        )
+                        .addArray("recipes", recipes -> recipes
+                                .add("sortilege:staff/ultima_staff_1")
+                                .add("sortilege:staff/ultima_staff_2")
+                                .add("sortilege:staff/ultima_staff_3")
+                                .add("sortilege:staff/ultima_staff_4")
+                        )
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "electrum_staff")
+                        .add("sort_index", 49)
+                        .add("dependency", "oreganized")
+                        .addArray("type", List.of("feathers:feathers", "sortilege:experience"))
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 14)
+                                .add("durability", 1851)
+                                .add("damage", 2)
+                                .add("piercing", 2)
+                                .add("range", 16)
+                                .add("cooldown", 15)
+                                .add("repair_material", "oreganized:electrum_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 2)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_shoot", "/effect give @s minecraft:speed 5 0")
+                                .add("on_hit_self", "/effect give @s minecraft:haste 3 0")
+                                .add("on_hit_target", "/effect give @s minecraft:slowness 3 0")
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/electrum_staff"))
                 )
 
                 .addObject(staff -> staff
                         .add("id", "silver_staff")
                         .add("sort_index", 45)
                         .add("dependency", "caverns_and_chasms")
-                        .add("type", "sortilege:health")
+                        .add("type", "sortilege:ammo")
                         .addObject("properties", properties -> properties
                                 .add("enchantability", 18)
                                 .add("damage", 4)
@@ -638,12 +815,52 @@ public class ModConfig {
                                 .add("cooldown", 20)
                                 .add("durability", 157)
                                 .add("repair_material", "#forge:ingots/silver")
-                                .comment("XP speed boost handled by the native Phantasm tag")
                         )
                         .addObject("cost", cost -> cost
-                                .add("value", 1)
+                                .addObject("overcharge", overcharge -> overcharge
+                                        .add("max", 100)
+                                        .add("ignore_durability", true)
+                                        .add("ignore_cost", true)
+                                        .addObject("ingredients", ingredients -> ingredients
+                                                .add("minecraft:lapis_lazuli", 1)
+                                                .add("minecraft:lapis_block", 10)
+                                        )
+                                )
+                                .add("items", "minecraft:lapis_lazuli")
+                                .add("count", 1)
                         )
-                        .addArray("recipes", List.of("sortilege:compat/silver_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/silver_staff"))
+                )
+                .addObject(staff -> staff
+                        .add("id", "necromium_staff")
+                        .add("sort_index", 65)
+                        .add("dependency", "caverns_and_chasms")
+                        .add("type", "sortilege:hunger")
+                        .addObject("properties", properties -> properties
+                                .add("fireproof", true)
+                                .add("enchantability", 15)
+                                .add("damage", 5)
+                                .add("piercing", 2)
+                                .add("range", 16)
+                                .add("cooldown", 25)
+                                .add("durability", 2031)
+                                .add("repair_material", "caverns_and_chasms:necromium_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .addObject("overcharge", overcharge -> overcharge
+                                        .add("ignore_durability", true)
+                                        .add("ignore_cost", true)
+                                        .addObject("ingredients", ingredients -> ingredients
+                                                .add("minecraft:lapis_lazuli", 1)
+                                                .add("minecraft:lapis_block", 10)
+                                        )
+                                )
+                                .add("value", 2)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_target", "/effect give @e[distance=..2] slowness 5 2")
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/necromium_staff"))
                 )
 
                 .addObject(staff -> staff
@@ -658,21 +875,72 @@ public class ModConfig {
                                 .add("cooldown", 15)
                                 .add("durability", 157)
                                 .add("repair_material", "unseen_world:gripcrystal")
-                                .comment("XP speed boost handled by the native Phantasm tag")
                         )
                         .addObject("cost", cost -> cost
                                 .add("value", 1)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_self", "/set_gripcrystal_mana 2")
+                                .add("on_hit_target", "/effect give @e[distance=..2] slowness 5 2")
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
                                         .add("#4400ff")
-                                        .add("##5544ff")
+                                        .add("#5544ff")
                                 )
                         )
-                        .addArray("recipes", List.of("sortilege:compat/gripcrystal_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/gripcrystal_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "pearlescent_staff")
+                        .add("sort_index", 67)
+                        .add("dependency", "unusualend")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("damage", 7)
+                                .add("piercing", 1)
+                                .add("range", 20)
+                                .add("cooldown", 25)
+                                .add("durability", 1000)
+                                .add("repair_material", "unusualend:pearlescent_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 4)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_shoot", "/effect give @s minecraft:speed 3 0 true")
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#8800d0")
+                                        .add("#d044ff")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/pearlescent_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "enderite_staff")
+                        .add("sort_index", 70)
+                        .add("dependency", "enderitemod")
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("fireproof", true)
+                                .add("enchantability", 17)
+                                .add("damage", 7)
+                                .add("piercing", 3)
+                                .add("range", 16)
+                                .add("cooldown", 25)
+                                .add("durability", 4096)
+                                .add("repair_material", "enderitemod:enderite_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 5)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("on_hit_target", "/tp @s ~ ~5 ~")
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/enderite_staff"))
                 )
         ).bind(staffs);
     }
@@ -689,7 +957,7 @@ public class ModConfig {
         Runnable remover = () -> {
             for (ResourceLocation recipe : disabledRecipes) {
                 SolRegistries.Data.RUNTIME.addRemoval(
-                        Sortilege.log().error(Identifier.of(recipe.getNamespace(), "recipes/" + recipe.getPath() + ".json")), () -> true);
+                        Identifier.of(recipe.getNamespace(), "recipes/" + recipe.getPath() + ".json"), () -> true);
             }
         };
 

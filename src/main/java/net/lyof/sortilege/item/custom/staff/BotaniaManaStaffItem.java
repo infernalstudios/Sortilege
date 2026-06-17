@@ -5,17 +5,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
-import net.lyof.sortilege.item.staff.entry.ValueCost;
-import net.lyof.sortilege.util.EnchantHelper;
+import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -32,9 +31,9 @@ import vazkii.botania.api.item.SortableTool;
 import vazkii.botania.api.mana.BurstProperties;
 import vazkii.botania.api.mana.LensEffectItem;
 import vazkii.botania.api.mana.ManaItemHandler;
+import vazkii.botania.client.fx.BotaniaParticles;
 import vazkii.botania.common.advancements.ManaBlasterTrigger;
 import vazkii.botania.common.entity.ManaBurstEntity;
-import vazkii.botania.common.item.ManaBlasterItem;
 import vazkii.botania.common.item.equipment.CustomDamageItem;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 
@@ -56,18 +55,24 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
         }
     }
 
-    protected static class Cost extends ValueCost {
-        protected int valuePerDurability;
+    protected static class Cost extends StaffEntry.Cost {
+        protected int mana;
+        protected int manaPerDurability;
 
         @Override
-        public ValueCost read(JsonObject json) {
+        public Cost read(JsonObject json) {
             super.read(json);
-            this.valuePerDurability = GsonHelper.getAsInt(json, "value_per_durability", this.getValue());
+            this.mana = GsonHelper.getAsInt(json, "mana", 100);
+            this.manaPerDurability = GsonHelper.getAsInt(json, "mana_per_durability", this.getMana());
             return this;
         }
 
-        public int getValuePerDurability() {
-            return this.valuePerDurability;
+        public int getMana() {
+            return this.mana;
+        }
+
+        public int getManaPerDurability() {
+            return this.manaPerDurability;
         }
     }
 
@@ -83,34 +88,32 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
     public void inventoryTick(ItemStack stack, Level world, Entity entity, int slotId, boolean isSelected) {
         if (!world.isClientSide() && entity instanceof Player player) {
             if (stack.getDamageValue() > 0 && ManaItemHandler.instance()
-                    .requestManaExactForTool(stack, player, this.getDurabilityCost(stack) * 2, true))
+                    .requestManaExactForTool(stack, player, this.getDurabilityMana(stack) * 2, true))
                 stack.setDamageValue(stack.getDamageValue() - 1);
         }
     }
 
     @Override
     public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-        return ToolCommons.damageItemIfPossible(stack, amount, entity, this.getDurabilityCost(stack));
+        return ToolCommons.damageItemIfPossible(stack, amount, entity, this.getDurabilityMana(stack));
     }
 
-    public int getDurabilityCost(ItemStack stack) {
-        return Math.max(0, cost.getValuePerDurability() - 10 * EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack)
-                + 10 * EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack));
+    public int getDurabilityMana(ItemStack stack) {
+        return this.getCost(stack, null, cost.getManaPerDurability());
     }
 
-    public int getCost(ItemStack stack) {
-        return Math.max(0, cost.getValue() - 100 * EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack)
-                + 100 * EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack));
+    public int getMana(ItemStack stack) {
+        return this.getCost(stack, null, cost.getMana());
     }
 
     @Override
     public boolean hasResource(ItemStack stack, Player player) {
-        return ManaItemHandler.instance().requestManaExactForTool(stack, player, this.getCost(stack), false);
+        return ManaItemHandler.instance().requestManaExactForTool(stack, player, this.getMana(stack), false);
     }
 
     @Override
     public void consumeResource(ItemStack stack, Player player) {
-        ManaItemHandler.instance().requestManaExactForTool(stack, player, this.getCost(stack), true);
+        ManaItemHandler.instance().requestManaExactForTool(stack, player, this.getMana(stack), true);
     }
 
     @Override
@@ -128,8 +131,14 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
     public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
         super.appendTooltipCosts(stack, player, tooltip);
 
-        if (this.getCost(stack, player, cost.getValue()) > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack)).withStyle(ChatFormatting.AQUA));
+        if (this.getMana(stack) > 0)
+            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getMana(stack)).withStyle(ChatFormatting.AQUA));
+    }
+
+    @Override
+    public ParticleType<?> getParticle() {
+        if (this.getEntry().getDisplay().getParticle() == null) return BotaniaParticles.WISP;
+        return super.getParticle();
     }
 
     @Override
@@ -142,7 +151,8 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
     @Environment(EnvType.CLIENT)
     public void render(ItemStack stack, ItemDisplayContext context, PoseStack matrices, MultiBufferSource vertexConsumers,
                        int light, int overlay) {
-        super.render(stack, context, matrices, vertexConsumers, light, overlay);
+        if (super.shouldAddRender(stack))
+            super.render(stack, context, matrices, vertexConsumers, light, overlay);
 
         if (context == ItemDisplayContext.GUI) {
             matrices.pushPose();
@@ -173,7 +183,7 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
         float[] c = MathHelper.randi(colors);
         int color = FastColor.ARGB32.color(255, (int) (c[0] * 255), (int) (c[1] * 255), (int) (c[2] * 255));
 
-        BurstProperties props = new BurstProperties(this.getCost(stack), 60, 4, 0, 5, color);
+        BurstProperties props = new BurstProperties(this.getMana(stack), 60, 4, 0, 5, color);
         ItemStack lens = this.getLens(stack);
         if (!lens.isEmpty())
             ((LensEffectItem) lens.getItem()).apply(lens, props, player.level());

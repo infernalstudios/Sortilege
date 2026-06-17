@@ -177,8 +177,10 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public int getCost(ItemStack stack, Player player, int original) {
-        return Math.max(0, original - EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack)
-                + EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack));
+        int wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack);
+        int ignorance = EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack);
+
+        return (int) (original * (1 - 0.25f * wisdom) + (ignorance == 0 ? 0 : Math.min(1, original * 0.25f * ignorance)));
     }
 
     public float getDamage(ItemStack stack) {
@@ -493,8 +495,14 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             player.level().playSound(player, player.blockPosition(), this.getEntry().getDisplay().getSound(), SoundSource.PLAYERS, 1, 1);
     }
 
+    public ParticleType<?> getParticle() {
+        if (this.getEntry().getDisplay().getParticle() == null) return ModParticles.WISP_PIXEL;
+        ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(this.getEntry().getDisplay().getParticle());
+        return particle == null ? ModParticles.WISP_PIXEL : particle;
+    }
+
     public void displayBeam(Player player, float x, float y, float z, List<float[]> colors) {
-        ParticleType<?> particle = this.getEntry().getDisplay().getParticle();
+        ParticleType<?> particle = this.getParticle();
         float[] color = MathHelper.randi(colors);
 
         if (particle == ModParticles.WISP_PIXEL) {

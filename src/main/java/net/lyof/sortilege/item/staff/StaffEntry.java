@@ -30,9 +30,18 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         if (!FabricLoader.getInstance().isModLoaded(dependency))
             return null;
 
-        ResourceLocation type = Identifier.of(GsonHelper.getAsString(json, "type"));
+        List<ResourceLocation> type = new ArrayList<>();
+        if (json.get("type").isJsonArray()) {
+            for (JsonElement e : GsonHelper.getAsJsonArray(json, "type"))
+                type.add(Identifier.of(e.getAsString()));
+        } else
+            type.add(Identifier.of(GsonHelper.getAsString(json, "type")));
 
-        IStaffEntryReader reader = IStaffEntryReader.getFor(type.toString());
+        IStaffEntryReader reader;
+        Iterator<ResourceLocation> iterator = type.iterator();
+        do {
+            reader = IStaffEntryReader.getFor(iterator.next().toString());
+        } while (reader == null && iterator.hasNext());
         if (reader == null)
             return null;
 
@@ -109,7 +118,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         protected List<float[]> colors;
 
         public Display read(JsonObject json) {
-            this.particle = Identifier.of(GsonHelper.getAsString(json, "particle", "sortilege:wisp_pixel"));
+            this.particle = json.has("particle") ? Identifier.of(GsonHelper.getAsString(json, "particle")) : null;
             this.sound = Identifier.of(GsonHelper.getAsString(json, "particle", "minecraft:block.amethyst_block.hit"));
 
             this.colors = new ArrayList<>();
@@ -124,9 +133,8 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
             return this;
         }
 
-        public ParticleType<?> getParticle() {
-            ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(this.particle);
-            return particle == null ? ModParticles.WISP_PIXEL : particle;
+        public ResourceLocation getParticle() {
+            return this.particle;
         }
 
         public SoundEvent getSound() {

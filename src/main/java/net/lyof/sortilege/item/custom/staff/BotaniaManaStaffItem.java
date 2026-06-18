@@ -151,18 +151,18 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
     @Environment(EnvType.CLIENT)
     public void render(ItemStack stack, ItemDisplayContext context, PoseStack matrices, MultiBufferSource vertexConsumers,
                        int light, int overlay) {
-        if (super.shouldAddRender(stack))
+        if (super.shouldAddRender(stack)) {
+            matrices.pushPose();
             super.render(stack, context, matrices, vertexConsumers, light, overlay);
+            matrices.popPose();
+        }
 
         if (context == ItemDisplayContext.GUI) {
-            matrices.pushPose();
             matrices.translate(0.19, 0.19, 0);
             matrices.scale(0.5f, 0.5f, 0.5f);
 
             Minecraft.getInstance().getItemRenderer().renderStatic(this.getLens(stack),
                     context, light, overlay, matrices, vertexConsumers, Minecraft.getInstance().level, 0);
-
-            matrices.popPose();
         }
     }
 

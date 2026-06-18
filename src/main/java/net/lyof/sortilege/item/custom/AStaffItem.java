@@ -267,6 +267,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             builder.put(ModAttributes.STAFF_RANGE, new AttributeModifier(ModAttributes.STAFF_RANGE.getUUID(),
                     "Staff modifier", this.getRange(stack), AttributeModifier.Operation.ADDITION));
 
+            this.addAttributeModifiers(stack, builder);
+
             return builder.build();
         }
         return super.getDefaultAttributeModifiers(slot);
@@ -315,7 +317,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return stack;
     }
 
-    public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity target, Set<ElementalStaffEnchantment> elements) {
+    public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, Set<ElementalStaffEnchantment> elements) {
         if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
             if (target.getType().is(ModTags.Entities.UNDEAD))
                 damage *= 1 + EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
@@ -335,11 +337,11 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public void triggerAttack(ItemStack stack, LivingEntity player, LivingEntity target, Set<ElementalStaffEnchantment> elements,
                               Vec3 direction, boolean propagate, List<LivingEntity> targetsHit) {
 
-        if (targetsHit.contains(target.getUUID())) return;
+        if (targetsHit.contains(target)) return;
 
         Level world = player.level();
         float kinesis = EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
-        float d = this.modifyDamageDealt(stack, this.getDamage(stack), target, elements);
+        float d = this.modifyDamageDealt(stack, this.getDamage(stack), player, target, elements);
 
         if (d > 0)
             target.hurt(player.damageSources().indirectMagic(player, player), d);
@@ -487,6 +489,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public boolean canMelee(ItemStack stack) {
         return EnchantHelper.hasEnchant(ModEnchants.BONK, stack);
     }
+
+    public void addAttributeModifiers(ItemStack stack, ImmutableMultimap.Builder<Attribute, AttributeModifier> builder) {}
 
     public void displayShot(ItemStack stack, Player player) {
         if (this.hand != null) player.swing(this.hand, true);

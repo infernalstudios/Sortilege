@@ -78,15 +78,16 @@ dependencies {
 
 	// Botania
 	modCompileOnly "vazkii.botania:Botania:1.20.1-453-FABRIC"
-	// ISS
-	modCompileOnly "curse.maven:irons-spells-n-spellbooks-855414:8237094"
 	// Feathers
 	modCompileOnly "curse.maven:feathers-699933:4814309"
 	// Electroblob
-	// https://electroblobs-redux-wiki.pages.dev/developer/adding_cast_items.html
 	modCompileOnly "maven.modrinth:electroblobs-wizardry-redux:0.8.5.1-fabric"
-	// SpellsNShields - Requires forge api stuff and I can't import it
-	//modCompileOnly "curse.maven:spells-shields-582301:5047887"
+	// Affinity
+	modCompileOnly "maven.modrinth:affinity:0.1.8+1.20"
+	// RPGMana
+	modCompileOnly "curse.maven:rpgmana-1021902:6204209"
+	modCompileOnly "maven.modrinth:spell-engine:0.15.12+1.20.1"
+	modCompileOnly "maven.modrinth:spell-power:0.12.0+1.20.1"
 }
 
 processResources {

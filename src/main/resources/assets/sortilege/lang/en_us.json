@@ -45,6 +45,7 @@
   "sortilege.staff.cost.mana": "Costs %s Mana",
   "sortilege.staff.cost.item.single": "Uses %s as ammo",
   "sortilege.staff.cost.item": "Uses %s %s as ammo",
+  "sortilege.staff.cost.item.spell_engine": "Requires: %s",
   "sortilege.staff.cost.feathers": "Exhausts %s Feathers",
   "sortilege.staff.cooldown": "%ss Cooldown",
 

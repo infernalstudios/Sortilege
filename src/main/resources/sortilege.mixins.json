@@ -36,6 +36,7 @@
     "ShieldItemMixin",
     "SlotMixin",
     "SmithingTransformRecipeMixin",
+    "SpellInfinityEnchantmentMixin",
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",

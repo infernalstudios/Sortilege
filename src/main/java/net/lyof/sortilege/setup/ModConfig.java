@@ -1136,8 +1136,8 @@ public class ModConfig {
         Set<ResourceLocation> disabledRecipes = new HashSet<>();
         Runnable remover = () -> {
             for (ResourceLocation recipe : disabledRecipes) {
-                SolRegistries.Data.RUNTIME.addRemoval(
-                        Identifier.of(recipe.getNamespace(), "recipes/" + recipe.getPath() + ".json"), () -> true);
+                SolRegistries.Data.RUNTIME.addRemoval(Identifier.of(recipe.getNamespace(),
+                        "recipes/" + recipe.getPath() + ".json"), () -> true);
             }
         };
 

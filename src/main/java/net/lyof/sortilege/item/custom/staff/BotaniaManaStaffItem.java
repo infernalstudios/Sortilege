@@ -2,6 +2,7 @@ package net.lyof.sortilege.item.custom.staff;
 
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lcc.sollib.platform.Dependency;
@@ -158,6 +159,8 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
         }
 
         if (context == ItemDisplayContext.GUI) {
+            matrices.translate(0, 1, 0.5);
+            matrices.mulPose(Axis.XP.rotationDegrees(180));
             matrices.translate(0.19, 0.19, 0);
             matrices.scale(0.5f, 0.5f, 0.5f);
 

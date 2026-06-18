@@ -156,7 +156,7 @@ public class RPGManaStaffItem extends AStaffItem {
                 "School modifier", 1, AttributeModifier.Operation.ADDITION))
         );
         SpellPower.Result spellPower = SpellPower.getSpellPower(effects.getSchool(), player);
-        float s = (float) spellPower.randomValue(SpellPower.getVulnerability(target, effects.getSchool())) - 1;
+        float s = (float) spellPower.randomValue(SpellPower.getVulnerability(target, effects.getSchool()));
 
         return super.modifyDamageDealt(stack, damage, player, target, elements) * (1 + m * 0.01f / 4) * s;
     }

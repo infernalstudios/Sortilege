@@ -6,4 +6,4 @@ net.lyof.sortilege.item.custom.staff.AmmoStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.WizardryManaStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.FeathersStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.BotaniaManaStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.RPGManaStaffItem$Reader
+net.lyof.sortilege.item.custom.staff.SpellEngineStaffItem$Reader

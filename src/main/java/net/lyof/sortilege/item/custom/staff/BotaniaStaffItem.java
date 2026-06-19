@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem {
+public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
     @Dependency(mod = "botania:mana")
     public static class Reader implements IStaffEntryReader {
         @Override
@@ -52,7 +52,7 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
 
         @Override
         public AStaffItem make(StaffEntry entry) {
-            return new BotaniaManaStaffItem(entry, new Properties());
+            return new BotaniaStaffItem(entry, new Properties());
         }
     }
 
@@ -80,7 +80,7 @@ public class BotaniaManaStaffItem extends AStaffItem implements CustomDamageItem
 
     protected final Cost cost;
 
-    public BotaniaManaStaffItem(StaffEntry entry, Properties properties) {
+    public BotaniaStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
         this.cost = (Cost) this.getEntry().getCost();
     }

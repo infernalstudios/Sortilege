@@ -22,6 +22,12 @@ repositories {
 		url "https://maven.terraformersmc.com/"
 	}
 
+	// owo
+	maven {
+		name = 'WispForest'
+		url 'https://maven.wispforest.io/releases/'
+	}
+
 	// Botania needs these
 	maven {
 		name = "BlameJared"
@@ -58,13 +64,13 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	// Sol
-	modImplementation "curse.maven:sollib-1573497:8259753"
-	//modImplementation "maven.modrinth:sollib:fabric-1.20.1-1.1"
-
 	// Fabric ASM
 	modImplementation "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"
 	include "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"
+
+	// Sol
+	modImplementation "curse.maven:sollib-1573497:8259753"
+	//modImplementation "maven.modrinth:sollib:fabric-1.20.1-1.1"
 
 	// EMI
 	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
@@ -84,10 +90,12 @@ dependencies {
 	modCompileOnly "maven.modrinth:electroblobs-wizardry-redux:0.8.5.1-fabric"
 	// Affinity
 	modCompileOnly "maven.modrinth:affinity:0.1.8+1.20"
-	// RPGMana
-	modCompileOnly "curse.maven:rpgmana-1021902:6204209"
+	modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.3"
+	modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.3"
+	// Spell Engine
 	modCompileOnly "maven.modrinth:spell-engine:0.15.12+1.20.1"
 	modCompileOnly "maven.modrinth:spell-power:0.12.0+1.20.1"
+	modCompileOnly "curse.maven:rpgmana-1021902:6204209"
 }
 
 processResources {

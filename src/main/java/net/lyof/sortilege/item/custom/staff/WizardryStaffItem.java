@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWorkbenchItem, ICustomDamageItem {
+public class WizardryStaffItem extends AStaffItem implements IManaItem, IWorkbenchItem, ICustomDamageItem {
     @Dependency(mod = "ebwizardry:mana")
     public static class Reader implements IStaffEntryReader {
         @Override
@@ -43,7 +43,7 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
 
         @Override
         public AStaffItem make(StaffEntry entry) {
-            return new WizardryManaStaffItem(entry, new Item.Properties());
+            return new WizardryStaffItem(entry, new Item.Properties());
         }
     }
 
@@ -97,7 +97,7 @@ public class WizardryManaStaffItem extends AStaffItem implements IManaItem, IWor
     protected final ValueCost cost;
     protected final Effects effects;
 
-    public WizardryManaStaffItem(StaffEntry entry, Properties properties) {
+    public WizardryStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
         this.cost = (ValueCost) this.getEntry().getCost();
         this.effects = (Effects) this.getEntry().getEffects();

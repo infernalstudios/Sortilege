@@ -1,6 +1,6 @@
 package net.lyof.sortilege.recipe.crafting;
 
-import net.lyof.sortilege.item.custom.staff.BotaniaManaStaffItem;
+import net.lyof.sortilege.item.custom.staff.BotaniaStaffItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
@@ -30,7 +30,7 @@ public class BotaniaStaffLensRecipe extends CustomRecipe {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
-                if (stack.getItem() instanceof BotaniaManaStaffItem) {
+                if (stack.getItem() instanceof BotaniaStaffItem) {
                     foundStaff++;
                 } else {
                     if (!ManaBlasterItem.isValidLens(stack))
@@ -52,7 +52,7 @@ public class BotaniaStaffLensRecipe extends CustomRecipe {
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
-                if (stack.getItem() instanceof BotaniaManaStaffItem)
+                if (stack.getItem() instanceof BotaniaStaffItem)
                     staff = stack;
                 else if (stack.getItem() instanceof BasicLensItem)
                     lens = stack.copyWithCount(1);
@@ -60,7 +60,7 @@ public class BotaniaStaffLensRecipe extends CustomRecipe {
         }
 
         if (!staff.isEmpty()) {
-            BotaniaManaStaffItem item = ((BotaniaManaStaffItem) staff.getItem());
+            BotaniaStaffItem item = ((BotaniaStaffItem) staff.getItem());
             if (item.getLens(staff).isEmpty() && lens.isEmpty())
                 return ItemStack.EMPTY;
 
@@ -74,7 +74,7 @@ public class BotaniaStaffLensRecipe extends CustomRecipe {
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         return RecipeUtils.getRemainingItemsSub(inv, (s) -> {
-            if (s.getItem() instanceof BotaniaManaStaffItem staff) {
+            if (s.getItem() instanceof BotaniaStaffItem staff) {
                 ItemStack stack = staff.getLens(s);
                 stack.setCount(1);
                 return stack;

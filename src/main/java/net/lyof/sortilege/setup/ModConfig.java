@@ -949,8 +949,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 1)
                         )
-                        .addObject("effects", effects -> effects
-                                .add("on_hit_target", "/effect give @e[distance=..2] slowness 5 2")
+                        .addObject("effects", effects -> {}
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors

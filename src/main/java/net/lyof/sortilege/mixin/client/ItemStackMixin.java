@@ -54,8 +54,7 @@ public abstract class ItemStackMixin {
                         text.withStyle(ChatFormatting.GRAY);
                     list.add(text);
                 }
-            } else
-                list.add(EnchantHelper.getShiftTooltip());
+            } else list.add(EnchantHelper.getShiftTooltip());
         }
     }
 
@@ -73,7 +72,7 @@ public abstract class ItemStackMixin {
                 MutableComponent txt = Component.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
                         a + "/" + m + " " + Component.translatable("sortilege.enchantments").getString());
 
-                if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
+                if (list.size() > 1 && !list.get(list.size() - 1).getString().isEmpty() && !(self.getItem()instanceof AStaffItem))
                     list.add(Component.empty());
                 list.add(txt.withStyle(a >= m ? ChatFormatting.RED : ChatFormatting.WHITE));
             }

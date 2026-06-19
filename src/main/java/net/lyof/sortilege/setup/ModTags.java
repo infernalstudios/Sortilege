@@ -56,6 +56,9 @@ public class ModTags {
 
         public static final TagKey<Item> TERRA_ITEMS = TagKey.create(Registries.ITEM,
                 new ResourceLocation("botania", "terra_items"));
+
+        public static final TagKey<Item> AQUACULTURE_TOOLTIP = TagKey.create(Registries.ITEM,
+                new ResourceLocation("aquaculture", "tooltip"));
     }
 
     public static class Blocks {

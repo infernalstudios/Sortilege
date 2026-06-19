@@ -22,6 +22,7 @@ import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
@@ -124,15 +125,18 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     @Override
     @Environment(EnvType.CLIENT)
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
-        super.appendHoverText(stack, world, tooltip, flag);
+        if (Screen.hasShiftDown()) {
+            int i = tooltip.size();
+            super.appendHoverText(stack, world, tooltip, flag);
 
-        int i = tooltip.size();
-        this.appendTooltipAbilities(stack, Minecraft.getInstance().player, tooltip);
-        if (i < tooltip.size()) tooltip.add(Component.empty());
+            this.appendTooltipAbilities(stack, Minecraft.getInstance().player, tooltip);
+            if (i < tooltip.size())
+                tooltip.add(Component.empty());
 
-        i = tooltip.size();
-        this.appendTooltipCosts(stack, Minecraft.getInstance().player, tooltip);
-        if (i < tooltip.size()) tooltip.add(Component.empty());
+            i = tooltip.size();
+            this.appendTooltipCosts(stack, Minecraft.getInstance().player, tooltip);
+            if (i < tooltip.size()) tooltip.add(Component.empty());
+        } else tooltip.add(EnchantHelper.getShiftTooltip());
     }
     //#endregion
 
@@ -556,6 +560,12 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     @Environment(EnvType.CLIENT)
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
+        Component desc = Component.translatableWithFallback(this.getDescriptionId() + ".desc", "");
+        if (!desc.getString().isEmpty()) {
+            for (String s : desc.getString().split("\n"))
+                tooltip.add(Component.literal(s).withStyle(ChatFormatting.GRAY));
+        }
+
         // Undergarden compat
         if (stack.is(ModTags.Items.FROSTSTEEL_ITEMS))
             tooltip.add(Component.translatable("tooltip.froststeel_sword").withStyle(ChatFormatting.AQUA));

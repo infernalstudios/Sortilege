@@ -8,11 +8,13 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.util.EnchantHelper;
+import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -21,6 +23,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
@@ -219,12 +222,22 @@ public class SpellEngineStaffItem extends AStaffItem {
         else if (EnchantHelper.hasEnchant(Enchantments_SpellEngine.INFINITY, stack))
             return;
 
+        float wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack) * 0.25f;
+        RandomSource random = MathHelper.getRandom(player.level());
+        if (random.nextFloat() < wisdom) return;
+
+        int c = 1;
+        if (EnchantHelper.hasEnchant(ModEnchants.IGNORANCE_CURSE, stack) && random.nextFloat() < 0.25)
+            c *= 2;
+
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack s = player.getInventory().getItem(i);
             if (this.cost.getRune().test(s) && s != stack) {
-                s.shrink(1);
-                return;
+                int k = Math.min(c, s.getCount());
+                s.shrink(k);
+                c -= k;
             }
+            if (c <= 0) return;
         }
 
         if (cost.isManaEnabled()) {

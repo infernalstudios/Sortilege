@@ -1,6 +1,9 @@
 package net.lyof.sortilege.util;
 
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -37,9 +40,16 @@ public class MathHelper {
         return list.get(random.nextInt(list.size()));
     }
 
-    public static <T> T randi(List<T> list, net.minecraft.util.RandomSource rnd) {
+    public static <T> T randi(List<T> list, RandomSource rnd) {
         if (list.size() == 1) return list.get(0);
         if (list.isEmpty()) return null;
         return list.get(rnd.nextInt(list.size()));
+    }
+
+    public static RandomSource getRandom(Level world) {
+        long t = world.getDayTime();
+        if (world.isClientSide()) t += 1;
+
+        return RandomSource.create(t);
     }
 }

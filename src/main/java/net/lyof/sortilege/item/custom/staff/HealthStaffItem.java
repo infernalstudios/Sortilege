@@ -8,17 +8,21 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HealthStaffItem extends AStaffItem {
     @Dependency(mod = "sortilege:health")
     public static class Reader implements IStaffEntryReader {
         @Override
         public StaffEntry.Cost readCost(JsonObject json) {
-            return new ValueCost().read(json);
+            return new Cost().read(json);
         }
 
         @Override
@@ -27,21 +31,69 @@ public class HealthStaffItem extends AStaffItem {
         }
     }
 
-    protected final ValueCost cost;
+    public static class Cost extends ValueCost {
+        protected boolean freeOnMiss;
+        protected boolean freeOnKill;
+
+        @Override
+        public Cost read(JsonObject json) {
+            super.read(json);
+            this.freeOnMiss = GsonHelper.getAsBoolean(json, "free_on_miss", true);
+            this.freeOnKill = GsonHelper.getAsBoolean(json, "free_on_kill", true);
+            return this;
+        }
+
+        public boolean isFreeOnMiss() {
+            return this.freeOnMiss;
+        }
+
+        public boolean isFreeOnKill() {
+            return this.freeOnKill;
+        }
+    }
+
+    private static final Set<ItemStack> toConsume = new HashSet<>();
+
+    protected final Cost cost;
 
     public HealthStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
-        this.cost = (ValueCost) this.getEntry().getCost();
+        this.cost = (Cost) this.getEntry().getCost();
     }
 
     @Override
     public boolean hasResource(ItemStack stack, Player player) {
-        return player.getHealth() > this.getCost(stack, player, this.cost.getValue());
+        return player.getHealth() > this.getCost(stack, player, cost.getValue());
     }
 
     @Override
     public void consumeResource(ItemStack stack, Player player) {
-        player.hurt(player.damageSources().wither(), this.getCost(stack, player, this.cost.getValue()));
+        if (cost.isFreeOnMiss())
+            toConsume.add(stack);
+        else
+            this.consumeHealth(stack, player);
+    }
+
+    public void consumeHealth(ItemStack stack, Player player) {
+        player.hurt(player.damageSources().wither(), this.getCost(stack, player, cost.getValue()));
+    }
+
+    @Override
+    public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {
+        super.onKill(stack, player, target);
+
+        if (cost.isFreeOnKill())
+            toConsume.remove(stack);
+    }
+
+    @Override
+    public void onHit(ItemStack stack, LivingEntity player, LivingEntity target) {
+        super.onHit(stack, player, target);
+
+        if (toConsume.contains(stack) && player instanceof Player p) {
+            toConsume.remove(stack);
+            this.consumeHealth(stack, p);
+        }
     }
 
     @Override

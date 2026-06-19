@@ -448,6 +448,8 @@ public class ModConfig {
                 .add("ignore_durability", true)
                 .comment("Should overcharged staffs ignore resource cost when firing")
                 .add("ignore_cost", true)
+                .comment("If true, staffs can't be fired unless they have overcharge")
+                .add("required", false)
                 .comment("Which items can be used to overcharge staffs. Must be formatted as \"modid:itemid\": value")
                 .addObject("ingredients", ingredients -> ingredients
                         .add("minecraft:lapis_lazuli", 2)

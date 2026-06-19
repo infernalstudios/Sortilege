@@ -14,6 +14,7 @@ public class OverchargeEntry {
     private int color;
     private boolean ignoreDurability;
     private boolean ignoreCost;
+    private boolean required;
     private Map<ResourceLocation, Integer> ingredients;
 
     public OverchargeEntry() {
@@ -21,6 +22,7 @@ public class OverchargeEntry {
         this.color = 0x0000ff;
         this.ignoreDurability = true;
         this.ignoreCost = true;
+        this.required = false;
         this.ingredients = new HashMap<>(Map.of(
                 Identifier.of("minecraft:lapis_lazuli"), 2,
                 Identifier.of("minecraft:lapis_block"), 20
@@ -49,6 +51,7 @@ public class OverchargeEntry {
         self.color = Integer.decode(GsonHelper.getAsString(json, "bar_color", "#000000"));
         self.ignoreDurability = GsonHelper.getAsBoolean(json, "ignore_durability", true);
         self.ignoreCost = GsonHelper.getAsBoolean(json, "ignore_cost", true);
+        self.required = GsonHelper.getAsBoolean(json, "required", false);
 
         self.ingredients.clear();
         JsonObject obj = GsonHelper.getAsJsonObject(json, "ingredients", new JsonObject());
@@ -66,6 +69,7 @@ public class OverchargeEntry {
             self.color = 0;
             self.ignoreDurability = false;
             self.ignoreCost = false;
+            self.required = false;
             self.ingredients.clear();
 
             return self;
@@ -81,6 +85,8 @@ public class OverchargeEntry {
             self.ignoreDurability = GsonHelper.getAsBoolean(json, "ignore_durability");
         if (json.has("ignore_cost"))
             self.ignoreCost = GsonHelper.getAsBoolean(json, "ignore_cost");
+        if (json.has("required"))
+            self.ignoreCost = GsonHelper.getAsBoolean(json, "required");
 
         if (json.has("ingredients")) {
             self.ingredients.clear();
@@ -106,6 +112,10 @@ public class OverchargeEntry {
 
     public boolean ignoreCost() {
         return this.ignoreCost;
+    }
+
+    public boolean isRequired() {
+        return this.required;
     }
 
     public Map<ResourceLocation, Integer> getIngredients() {

@@ -353,8 +353,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         targetsHit.add(target);
 
-        this.onHit(stack, player, target);
         if (target.isDeadOrDying()) this.onKill(stack, player, target);
+        this.onHit(stack, player, target);
 
         if (kinesis != 0)
             target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));
@@ -401,12 +401,17 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Abstraction
     public boolean canShoot(ItemStack stack, Player player) {
-        return (this.getOvercharge(stack) > 0 && this.getEntry().getCost().getOvercharge().ignoreCost()) || this.hasResource(stack, player);
+        return (this.getOvercharge(stack) > 0 && this.getEntry().getCost().getOvercharge().ignoreCost())
+                || (!this.getEntry().getCost().getOvercharge().isRequired() && this.hasResource(stack, player));
     }
 
     public abstract boolean hasResource(ItemStack stack, Player player);
 
     public void applyCost(ItemStack stack, Player player) {
+        player.getCooldowns().addCooldown(this, this.getCooldown(stack, player));
+
+        if (player.isCreative()) return;
+
         if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreDurability())
             stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.hand));
         if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreCost())
@@ -414,8 +419,6 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         if (this.getOvercharge(stack) > 0)
             this.setOvercharge(stack, this.getOvercharge(stack) - 1);
-
-        player.getCooldowns().addCooldown(this, this.getCooldown(stack, player));
     }
 
     public abstract void consumeResource(ItemStack stack, Player player);

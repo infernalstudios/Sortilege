@@ -1,6 +1,5 @@
 package net.lyof.sortilege;
 
-import com.cleannrooster.rpgmana.Rpgmana;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;

@@ -42,6 +42,12 @@ repositories {
 		url 'https://maven.ladysnake.org/releases'
 	}
 
+	// ClothConfig (for Origins)
+	maven {
+		name = "Shedaniel"
+		url "https://maven.shedaniel.me/"
+	}
+
 	maven {
 		name = "Modrinth"
 		url "https://api.modrinth.com/maven"
@@ -82,6 +88,7 @@ dependencies {
 	// ModMenu
 	modLocalRuntime "com.terraformersmc:modmenu:7.2.2"
 
+	// So many staff type dependencies ._.
 	// Botania
 	modCompileOnly "vazkii.botania:Botania:1.20.1-453-FABRIC"
 	// Feathers
@@ -96,6 +103,8 @@ dependencies {
 	modCompileOnly "maven.modrinth:spell-engine:0.15.12+1.20.1"
 	modCompileOnly "maven.modrinth:spell-power:0.12.0+1.20.1"
 	modCompileOnly "curse.maven:rpgmana-1021902:6204209"
+	// Origins
+	modCompileOnly "com.github.apace100:origins-fabric:v1.10.1"
 }
 
 processResources {

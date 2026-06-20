@@ -49,6 +49,7 @@
   "sortilege.staff.cost.health": "Consumes %s HP",
   "sortilege.staff.cost.hunger": "Exhausts %s Hunger",
   "sortilege.staff.cost.mana": "Costs %s Mana",
+  "sortilege.staff.cost.origins_resource": "Costs %s %s",
   "sortilege.staff.cost.item.single": "Uses %s as ammo",
   "sortilege.staff.cost.item": "Uses %s %s as ammo",
   "sortilege.staff.cost.item.spell_engine": "Requires: %s",

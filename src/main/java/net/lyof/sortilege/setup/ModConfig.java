@@ -896,7 +896,7 @@ public class ModConfig {
                                                 .add("minecraft:lapis_block", 10)
                                         )
                                 )
-                                .add("items", "minecraft:lapis_lazuli")
+                                .add("item", "minecraft:lapis_lazuli")
                                 .add("count", 1)
                         )
                         .addArray("recipes", List.of("sortilege:staff/silver_staff"))
@@ -1058,7 +1058,7 @@ public class ModConfig {
                                 .add("repair_material", "#forge:ingots/cloggrum")
                         )
                         .addObject("cost", cost -> cost
-                                .add("items", "undergarden:depthrock_pebble")
+                                .add("item", "undergarden:depthrock_pebble")
                                 .add("count", 1)
                         )
                         .addArray("recipes", List.of("sortilege:staff/cloggrum_staff"))

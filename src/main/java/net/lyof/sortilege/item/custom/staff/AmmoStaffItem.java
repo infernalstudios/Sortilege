@@ -42,24 +42,24 @@ public class AmmoStaffItem extends AStaffItem {
     }
 
     protected static class Cost extends StaffEntry.Cost {
-        protected Supplier<Ingredient> items;
-        protected Supplier<Component> itemsTranslation;
+        protected Supplier<Ingredient> item;
+        protected Supplier<Component> itemTranslation;
         protected int count;
 
         @Override
         public StaffEntry.Cost read(JsonObject json) {
             super.read(json);
 
-            String items = GsonHelper.getAsString(json, "items");
+            String items = GsonHelper.getAsString(json, "item");
             if (items.startsWith("#")) {
                 ResourceLocation id = Identifier.of(items.substring(1));
                 TagKey<Item> tag = TagKey.create(Registries.ITEM, id);
-                this.itemsTranslation = Suppliers.memoize(() -> Component.translatable("tag.item." + id.getNamespace() + "." + id.getPath()));
-                this.items = Suppliers.memoize(() -> Ingredient.of(tag));
+                this.itemTranslation = Suppliers.memoize(() -> Component.translatable("tag.item." + id.getNamespace() + "." + id.getPath()));
+                this.item = Suppliers.memoize(() -> Ingredient.of(tag));
             } else {
                 ResourceLocation id = Identifier.of(items);
-                this.itemsTranslation = Suppliers.memoize(() -> BuiltInRegistries.ITEM.get(id).getDescription());
-                this.items = Suppliers.memoize(() -> Ingredient.of(BuiltInRegistries.ITEM.get(id)));
+                this.itemTranslation = Suppliers.memoize(() -> BuiltInRegistries.ITEM.get(id).getDescription());
+                this.item = Suppliers.memoize(() -> Ingredient.of(BuiltInRegistries.ITEM.get(id)));
             }
 
             this.count = GsonHelper.getAsInt(json, "count", 1);
@@ -70,12 +70,12 @@ public class AmmoStaffItem extends AStaffItem {
             return this.count;
         }
 
-        public Ingredient getItems() {
-            return items.get();
+        public Ingredient getItem() {
+            return item.get();
         }
 
-        public Component getItemsTranslation() {
-            return ((MutableComponent) this.itemsTranslation.get()).withStyle(ChatFormatting.GRAY);
+        public Component getItemTranslation() {
+            return ((MutableComponent) this.itemTranslation.get()).withStyle(ChatFormatting.GRAY);
         }
     }
 
@@ -91,7 +91,7 @@ public class AmmoStaffItem extends AStaffItem {
         int c = this.cost.getCount();
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack s = player.getInventory().getItem(i);
-            if (this.cost.getItems().test(s) && s != stack)
+            if (this.cost.getItem().test(s) && s != stack)
                 c -= s.getCount();
             if (c <= 0) return true;
         }
@@ -110,7 +110,7 @@ public class AmmoStaffItem extends AStaffItem {
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack s = player.getInventory().getItem(i);
-            if (this.cost.getItems().test(s) && s != stack) {
+            if (this.cost.getItem().test(s) && s != stack) {
                 int k = Math.min(c, s.getCount());
                 s.shrink(k);
                 c -= k;
@@ -124,8 +124,8 @@ public class AmmoStaffItem extends AStaffItem {
         super.appendTooltipCosts(stack, player, tooltip);
 
         if (cost.getCount() == 1)
-            tooltip.add(Component.translatable("sortilege.staff.cost.item.single", cost.getItemsTranslation()).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("sortilege.staff.cost.item.single", cost.getItemTranslation()).withStyle(ChatFormatting.DARK_GRAY));
         else
-            tooltip.add(Component.translatable("sortilege.staff.cost.item", cost.getCount(), cost.getItemsTranslation()).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("sortilege.staff.cost.item", cost.getCount(), cost.getItemTranslation()).withStyle(ChatFormatting.DARK_GRAY));
     }
 }

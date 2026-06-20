@@ -1,9 +1,0 @@
-{
-  "type": "sortilege:enchanting_catalyst",
-  "item": "miningmaster:ice_sapphire",
-  "enchantments": [
-    "minecraft:frost_walker",
-    "miningmaster:freezing",
-    "miningmaster:snowpiercer"
-  ]
-}

@@ -1,0 +1,24 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:power_pyrite",
+  "enchantments": [
+    "minecraft:sharpness",
+    "minecraft:power",
+    "minecraft:impaling",
+    "miningmaster:stonebreaker"
+  ],
+
+  "sollib:load_condition": {
+    "type": "and",
+    "values": [
+      {
+        "type": "config",
+        "mod": "sortilege:enchanting.mining_master_integration.enable"
+      },
+      {
+        "type": "dependency",
+        "mod": "miningmaster"
+      }
+    ]
+  }
+}

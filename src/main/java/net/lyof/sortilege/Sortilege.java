@@ -58,24 +58,11 @@ public class Sortilege implements ModInitializer {
 		ModRecipeTypes.register();
 
 		registerPackets();
-		registerModules();
 		registerEvents();
 	}
 
 	private static void registerPackets() {
 		ServerPlayNetworking.registerGlobalReceiver(ModPackets.SET_KNOWLEDGE_AUTHORS, ModPackets.Server::setKnowledgeAuthors);
-	}
-
-	private static void registerModules() {
-		if (FabricLoader.getInstance().isModLoaded("miningmaster") && ModConfig.miningMasterIntegration.get())
-			registerPack("compat_miningmaster", "Mining Master Compat", false);
-	}
-
-	private static void registerPack(String id, String name, boolean force) {
-		Sortilege.log().info("Enabling module : " + name);
-		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(container ->
-				ResourceManagerHelper.registerBuiltinResourcePack(MOD.makeID(id), container, Component.literal(name),
-						force ? ResourcePackActivationType.ALWAYS_ENABLED : ResourcePackActivationType.DEFAULT_ENABLED));
 	}
 
 	private static void registerEvents() {

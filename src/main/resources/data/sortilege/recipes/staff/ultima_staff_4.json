@@ -20,16 +20,11 @@
         "item": "miningmaster:spider_kunzite"
     }
   ],
-    "catalyst": {
-        "item": "sortilege:heart_rhodonite_staff"
-    },
-    "result": {
-        "item": "sortilege:ultima_staff"
-    },
-  "enchantments": [
-    {
-        "enchantment": "sortilege:blessing",
-        "lvl": 4
-    }
-  ]
+  "catalyst": {
+      "item": "sortilege:heart_rhodonite_staff"
+  },
+  "result": {
+      "item": "sortilege:ultima_staff"
+  },
+  "enchantments": []
 }

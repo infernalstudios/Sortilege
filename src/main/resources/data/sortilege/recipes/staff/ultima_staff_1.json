@@ -29,16 +29,11 @@
         "item": "miningmaster:heart_rhodonite"
     }
   ],
-    "catalyst": {
-        "item": "sortilege:diamond_staff"
-    },
-    "result": {
-        "item": "sortilege:ultima_staff"
-    },
-  "enchantments": [
-    {
-        "enchantment": "sortilege:blessing",
-        "lvl": 4
-    }
-  ]
+  "catalyst": {
+      "item": "sortilege:diamond_staff"
+  },
+  "result": {
+      "item": "sortilege:ultima_staff"
+  },
+  "enchantments": []
 }

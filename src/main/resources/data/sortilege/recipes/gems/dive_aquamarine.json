@@ -1,0 +1,23 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:dive_aquamarine",
+  "enchantments": [
+    "minecraft:aqua_affinity",
+    "minecraft:riptide",
+    "miningmaster:grace"
+  ],
+
+  "sollib:load_condition": {
+    "type": "and",
+    "values": [
+      {
+        "type": "config",
+        "mod": "sortilege:enchanting.mining_master_integration.enable"
+      },
+      {
+        "type": "dependency",
+        "mod": "miningmaster"
+      }
+    ]
+  }
+}

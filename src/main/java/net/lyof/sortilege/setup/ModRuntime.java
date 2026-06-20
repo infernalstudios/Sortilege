@@ -18,7 +18,7 @@ public class ModRuntime {
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("miningmaster", "recipes/smithing/" + gem + "_smithing.json"),
                 json -> ModRuntime.Common.changeMiningMasterGem(json, BuiltInRegistries.ENCHANTMENT.getKey(enchant).toString()),
                 () -> enchant != null && ModConfig.miningMasterIntegration.get());
-        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("recipes/catalyst/" + gem + ".json"),
+        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("recipes/gems/" + gem + ".json"),
                 json -> ModRuntime.Common.changeMiningMasterGem(json, BuiltInRegistries.ENCHANTMENT.getKey(enchant).toString()),
                 () -> enchant != null && ModConfig.miningMasterIntegration.get());
     }

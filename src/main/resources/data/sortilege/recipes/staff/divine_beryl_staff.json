@@ -11,16 +11,11 @@
         "item": "miningmaster:divine_beryl"
     }
   ],
-    "catalyst": {
-        "item": "sortilege:diamond_staff"
-    },
-    "result": {
-        "item": "sortilege:divine_beryl_staff"
-    },
-  "enchantments": [
-    {
-        "enchantment": "sortilege:blessing",
-        "lvl": 4
-    }
-  ]
+  "catalyst": {
+      "item": "sortilege:diamond_staff"
+  },
+  "result": {
+      "item": "sortilege:divine_beryl_staff"
+  },
+  "enchantments": []
 }

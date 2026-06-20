@@ -1,0 +1,22 @@
+{
+  "type": "sortilege:enchanting_catalyst",
+  "item": "miningmaster:spider_kunzite",
+  "enchantments": [
+    "minecraft:bane_of_arthropods",
+    "minecraft:silk_touch"
+  ],
+
+  "sollib:load_condition": {
+    "type": "and",
+    "values": [
+      {
+        "type": "config",
+        "mod": "sortilege:enchanting.mining_master_integration.enable"
+      },
+      {
+        "type": "dependency",
+        "mod": "miningmaster"
+      }
+    ]
+  }
+}

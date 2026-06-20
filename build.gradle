@@ -75,8 +75,7 @@ dependencies {
 	include "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"
 
 	// Sol
-	modImplementation "curse.maven:sollib-1573497:8259753"
-	//modImplementation "maven.modrinth:sollib:fabric-1.20.1-1.1"
+	modImplementation "maven.modrinth:sollib:fabric-1.20.1-1.1"
 
 	// EMI
 	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
@@ -105,6 +104,8 @@ dependencies {
 	modCompileOnly "curse.maven:rpgmana-1021902:6204209"
 	// Origins
 	modCompileOnly "com.github.apace100:origins-fabric:v1.10.1"
+	// Goety
+	modCompileOnly "maven.modrinth:goety-fabric:0.3.5-forge2.5.54.5+mc1.20.1"
 }
 
 processResources {

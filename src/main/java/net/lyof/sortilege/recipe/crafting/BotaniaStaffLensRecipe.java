@@ -30,7 +30,7 @@ public class BotaniaStaffLensRecipe extends CustomRecipe {
         for (int i = 0; i < inv.getContainerSize(); ++i) {
             ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty()) {
-                if (stack.getItem() instanceof BotaniaStaffItem) {
+                if (stack.getItem() instanceof BotaniaStaffItem item && item.getEffects().allowsManaBurst()) {
                     foundStaff++;
                 } else {
                     if (!ManaBlasterItem.isValidLens(stack))

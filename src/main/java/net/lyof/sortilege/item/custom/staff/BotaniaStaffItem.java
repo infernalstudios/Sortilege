@@ -51,6 +51,11 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
         }
 
         @Override
+        public StaffEntry.Effects readEffects(JsonObject json) {
+            return new Effects().read(json);
+        }
+
+        @Override
         public AStaffItem make(StaffEntry entry) {
             return new BotaniaStaffItem(entry, new Properties());
         }
@@ -77,12 +82,33 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
         }
     }
 
+    public static class Effects extends StaffEntry.Effects {
+        protected boolean allowManaBurst;
+
+        @Override
+        public StaffEntry.Effects read(JsonObject json) {
+            super.read(json);
+            this.allowManaBurst = GsonHelper.getAsBoolean(json, "allow_mana_burst", true);
+            return this;
+        }
+
+        public boolean allowsManaBurst() {
+            return this.allowManaBurst;
+        }
+    }
+
 
     protected final Cost cost;
+    protected final Effects effects;
 
     public BotaniaStaffItem(StaffEntry entry, Properties properties) {
         super(entry, properties);
         this.cost = (Cost) this.getEntry().getCost();
+        this.effects = (Effects) this.getEntry().getEffects();
+    }
+
+    public Effects getEffects() {
+        return effects;
     }
 
     @Override
@@ -119,11 +145,14 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
 
     @Override
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
-        tooltip.add(Component.translatable("item.sortilege.staff.botania.desc").withStyle(ChatFormatting.GRAY));
-        ItemStack lens = this.getLens(stack);
-        if (!lens.isEmpty())
-            tooltip.add(Component.empty().withStyle(ChatFormatting.GRAY)
-                    .append(" (").append(lens.getHoverName().copy().withStyle(ChatFormatting.GREEN)).append(")"));
+        if (effects.allowsManaBurst()) {
+            tooltip.add(Component.translatable("item.sortilege.staff.botania.desc").withStyle(ChatFormatting.GRAY));
+
+            ItemStack lens = this.getLens(stack);
+            if (!lens.isEmpty())
+                tooltip.add(Component.empty().withStyle(ChatFormatting.GRAY)
+                        .append(" (").append(lens.getHoverName().copy().withStyle(ChatFormatting.GREEN)).append(")"));
+        }
 
         super.appendTooltipAbilities(stack, player, tooltip);
     }
@@ -212,7 +241,7 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
 
     @Override
     public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors, Vec3 direction, List<LivingEntity> targetsHit) {
-        if (!player.isShiftKeyDown()) {
+        if (!player.isShiftKeyDown() || !effects.allowsManaBurst()) {
             super.shoot(stack, player, elements, colors, direction, targetsHit);
 
             if (stack.is(ModTags.Items.TERRA_ITEMS)) {

@@ -1,5 +1,6 @@
 package net.lyof.sortilege.setup;
 
+import com.Polarice3.Goety.api.magic.SpellType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -1126,7 +1127,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "forgotten_staff")
-                        .add("sort_index", 1876)
+                        .add("sort_index", 103)
                         .add("dependency", "undergarden")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1142,6 +1143,35 @@ public class ModConfig {
                                 .add("value", 3)
                         )
                         .addArray("recipes", List.of("sortilege:staff/forgotten_staff"))
+                )
+
+                .addObject(staff -> staff
+                        .add("id", "dark_staff")
+                        .add("sort_index", 59)
+                        .add("dependency", "goety")
+                        .add("type", "goety:soul_energy")
+                        .addObject("properties", properties -> properties
+                                .add("enchantability", 20)
+                                .add("damage", 4)
+                                .add("piercing", 6)
+                                .add("range", 12)
+                                .add("cooldown", 25)
+                                .add("durability", 166)
+                                .add("repair_material", "goety:dark_ingot")
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 50)
+                        )
+                        .addObject("effects", effects -> effects
+                                .add("spell_type", "ILL")
+                                .add("persists", true)
+                        )
+                        .addObject("display", display -> display
+                                .addArray("colors", colors -> colors
+                                        .add("#000000")
+                                )
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/dark_staff"))
                 )
         ).bind(staffs);
     }

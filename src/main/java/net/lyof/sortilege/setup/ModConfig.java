@@ -645,7 +645,9 @@ public class ModConfig {
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_self", "/effect give @s minecraft:regeneration 8 1 true")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_self", "/effect give @s minecraft:regeneration 8 1 true")
+                                )
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
@@ -704,7 +706,9 @@ public class ModConfig {
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_self", "/effect give @s minecraft:instant_health")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_self", "/effect give @s minecraft:instant_health")
+                                )
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
@@ -731,7 +735,9 @@ public class ModConfig {
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_target", "/effect give @s minecraft:poison 3 1")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_target", "/effect give @s minecraft:poison 3 1")
+                                )
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
@@ -761,8 +767,10 @@ public class ModConfig {
                                 .addObject("enchants", enchants -> enchants
                                         .add("sortilege:blessing", 4)
                                 )
-                                .add("on_hit_self", "/effect give @s minecraft:instant_health")
-                                .add("on_hit_target", "/effect give @s minecraft:poison 3 1")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_self", "/effect give @s minecraft:instant_health")
+                                        .add("on_hit_target", "/effect give @s minecraft:poison 3 1")
+                                )
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
@@ -797,9 +805,11 @@ public class ModConfig {
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_shoot", "/effect give @s minecraft:speed 5 0")
-                                .add("on_hit_self", "/effect give @s minecraft:haste 3 0")
-                                .add("on_hit_target", "/effect give @s minecraft:slowness 3 0")
+                                .addObject("commands", commands -> commands
+                                        .add("on_shoot", "/effect give @s minecraft:speed 5 0")
+                                        .add("on_hit_self", "/effect give @s minecraft:haste 3 0")
+                                        .add("on_hit_target", "/effect give @s minecraft:slowness 3 0")
+                                )
                         )
                         .addArray("recipes", List.of("sortilege:staff/electrum_staff"))
                 )
@@ -928,7 +938,9 @@ public class ModConfig {
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_target", "/effect give @e[distance=..2] slowness 5 2")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_target", "/effect give @e[distance=..2] slowness 5 2")
+                                )
                         )
                         .addArray("recipes", List.of("sortilege:staff/necromium_staff"))
                 )
@@ -978,7 +990,9 @@ public class ModConfig {
                                 .add("value", 4)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_shoot", "/effect give @s minecraft:speed 3 0 true")
+                                .addObject("commands", commands -> commands
+                                        .add("on_shoot", "/effect give @s minecraft:speed 3 0 true")
+                                )
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
@@ -1008,7 +1022,9 @@ public class ModConfig {
                                 .add("value", 5)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_target", "/tp @s ~ ~5 ~")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_target", "/tp @s ~ ~5 ~")
+                                )
                         )
                         .addArray("recipes", List.of("sortilege:staff/enderite_staff"))
                 )
@@ -1031,7 +1047,9 @@ public class ModConfig {
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_target", "/setblock ~ ~ ~ minecraft:water[level=15] keep")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_target", "/setblock ~ ~ ~ minecraft:water[level=15] keep")
+                                )
                         )
                         .addObject("display", display -> display
                                 .addArray("colors", colors -> colors
@@ -1081,7 +1099,9 @@ public class ModConfig {
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
-                                .add("on_hit_target", "/effect give @s undergarden:chilly 30 2 true")
+                                .addObject("commands", commands -> commands
+                                        .add("on_hit_target", "/effect give @s undergarden:chilly 30 2 true")
+                                )
                         )
                         .addArray("recipes", List.of("sortilege:staff/froststeel_staff"))
                 )

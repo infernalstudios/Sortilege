@@ -1,6 +1,5 @@
 package net.lyof.sortilege.util;
 
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;

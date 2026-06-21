@@ -1,20 +1,11 @@
 package net.lyof.sortilege.item.custom.staff;
 
 import com.google.gson.JsonObject;
-import dev.onyxstudios.cca.api.v3.component.ComponentAccess;
-import io.github.apace100.apoli.command.PowerCommand;
 import io.github.apace100.apoli.component.PowerHolderComponent;
-import io.github.apace100.apoli.power.Power;
 import io.github.apace100.apoli.power.PowerType;
 import io.github.apace100.apoli.power.VariableIntPower;
-import io.github.apace100.origins.OriginsClient;
-import io.github.apace100.origins.origin.Origin;
-import io.wispforest.affinity.component.AffinityComponents;
-import io.wispforest.affinity.component.PlayerAethumComponent;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
@@ -23,13 +14,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
-import java.util.Set;
 
 public class OriginsStaffItem extends AStaffItem {
     @Dependency(mod = "origins:resource")

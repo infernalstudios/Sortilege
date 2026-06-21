@@ -1,13 +1,9 @@
 package net.lyof.sortilege;
 
-import com.Polarice3.Goety.Goety;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.SolModContainer;
@@ -29,7 +25,6 @@ import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;

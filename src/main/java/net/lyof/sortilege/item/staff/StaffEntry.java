@@ -89,9 +89,10 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         protected Map<ResourceLocation, Integer> enchants;
 
         public Effects read(JsonObject json) {
-            this.onShoot = GsonHelper.getAsString(json, "on_shoot", null);
-            this.onHitSelf = GsonHelper.getAsString(json, "on_hit_self", null);
-            this.onHitTarget = GsonHelper.getAsString(json, "on_hit_target", null);
+            JsonObject commands = GsonHelper.getAsJsonObject(json, "commands", new JsonObject());
+            this.onShoot = GsonHelper.getAsString(commands, "on_shoot", null);
+            this.onHitSelf = GsonHelper.getAsString(commands, "on_hit_self", null);
+            this.onHitTarget = GsonHelper.getAsString(commands, "on_hit_target", null);
 
             this.enchants = new HashMap<>();
             JsonObject enchants = GsonHelper.getAsJsonObject(json, "enchants", new JsonObject());

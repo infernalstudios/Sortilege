@@ -1,39 +1,26 @@
 package net.lyof.sortilege.item.custom.staff;
 
 import com.Polarice3.Goety.api.items.magic.ITotem;
-import com.Polarice3.Goety.api.items.magic.IWand;
 import com.Polarice3.Goety.api.magic.ISpell;
-import com.Polarice3.Goety.api.magic.ITouchSpell;
 import com.Polarice3.Goety.api.magic.SpellType;
 import com.Polarice3.Goety.common.events.spell.GoetyEventFactory;
-import com.Polarice3.Goety.common.items.handler.SoulUsingItemHandler;
-import com.Polarice3.Goety.common.items.magic.*;
-import com.Polarice3.Goety.init.ModKeybindings;
 import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.utils.TotemFinder;
-import com.Polarice3.Goety.utils.WandUtil;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-// Yes, Goety code scares me
+// Goety code scares me
 public class GoetyStaffItem extends AStaffItem {
     @Dependency(mod = "goety:soul_energy")
     public static class Reader implements IStaffEntryReader {
@@ -133,10 +120,5 @@ public class GoetyStaffItem extends AStaffItem {
 
         if (this.getCost(stack, player, cost.getValue()) > 0)
             tooltip.add(Component.translatable("info.goety.wand.cost", this.getCost(stack, player, cost.getValue())));
-    }
-
-    // Focus Casting (oh the misery)
-    public boolean canCast(ItemStack stack, Player player, LivingEntity target, int ticksRemaining) {
-        return false;
     }
 }

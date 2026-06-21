@@ -1152,18 +1152,17 @@ public class ModConfig {
                         .add("type", "goety:soul_energy")
                         .addObject("properties", properties -> properties
                                 .add("enchantability", 20)
-                                .add("damage", 4)
-                                .add("piercing", 6)
+                                .add("damage", 4.5)
+                                .add("piercing", 4)
                                 .add("range", 12)
                                 .add("cooldown", 25)
                                 .add("durability", 166)
                                 .add("repair_material", "goety:dark_ingot")
                         )
                         .addObject("cost", cost -> cost
-                                .add("value", 50)
+                                .add("value", 6)
                         )
                         .addObject("effects", effects -> effects
-                                .add("spell_type", "ILL")
                                 .add("persists", true)
                         )
                         .addObject("display", display -> display

@@ -38,6 +38,11 @@ public class AffinityStaffItem extends AStaffItem {
     }
 
     @Override
+    public int getCost(ItemStack stack, Player player, int original) {
+        return super.getCost(stack, player, original);
+    }
+
+    @Override
     public boolean hasResource(ItemStack stack, Player player) {
         return player instanceof ComponentAccess access &&
                 access.getComponent(AffinityComponents.PLAYER_AETHUM).hasAethum(this.getCost(stack, player, cost.getValue()));

@@ -14,10 +14,13 @@ import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lcc.sollib.platform.Dependency;
+import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
@@ -26,6 +29,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -56,17 +60,16 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
     }
 
     public static class Effects extends StaffEntry.Effects {
-        protected SpellType spellType;
+        protected SpellType spellType = SpellType.NONE;
         protected boolean persists;
 
         @Override
         public StaffEntry.Effects read(JsonObject json) {
             super.read(json);
-            try {
-                this.spellType = SpellType.valueOf(GsonHelper.getAsString(json, "spell_type", "NONE"));
-            } catch (Exception e) {
-                this.spellType = SpellType.NONE;
-            }
+            String spellType = GsonHelper.getAsString(json, "spell_type", "NONE").toLowerCase();
+            for (SpellType type : SpellType.values())
+                if (type.getBaseName().equals(spellType))
+                    this.spellType = type;
             this.persists = GsonHelper.getAsBoolean(json, "persists", false);
             return this;
         }
@@ -89,9 +92,8 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
         this.effects = (Effects) this.getEntry().getEffects();
     }
 
-    @Override
-    public int getCost(ItemStack stack, Player player, int original) {
-        return (int) (new ISpell() {
+    public ISpell getSpell(ItemStack stack, Player player) {
+        return new ISpell() {
             @Override
             public int defaultSoulCost() { return GoetyStaffItem.super.getCost(stack, player, cost.getValue()); }
 
@@ -102,24 +104,44 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
             public int defaultSpellCooldown() { return 0; }
 
             @Override
-            public SpellType getSpellType() { return GoetyStaffItem.this.effects.getSpellType(); }
+            public SpellType getSpellType() { return GoetyStaffItem.this.getSpellType(stack); }
 
             @Override
             public List<Enchantment> acceptedEnchantments() { return List.of(); }
-        }.soulCost(player, stack) * SEHelper.soulDiscount(player));
+        };
     }
 
-    public boolean hasResource(ItemStack stack, Player player, int cost) {
-        return SEHelper.getSoulAmountInt(player) >= cost;
+    public SpellType getSpellType(ItemStack stack) {
+        SpellType base = effects.getSpellType();
+        if (base != SpellType.NONE) return base;
+
+        if (EnchantHelper.hasEnchant(ModEnchants.BRAZIER, stack)) return SpellType.NETHER;
+        if (EnchantHelper.hasEnchant(ModEnchants.BLIZZARD, stack)) return SpellType.FROST;
+        if (EnchantHelper.hasEnchant(ModEnchants.BLAST, stack)) return SpellType.GEOMANCY;
+        if (EnchantHelper.hasEnchant(ModEnchants.BLITZ, stack)) return SpellType.STORM;
+        if (EnchantHelper.hasEnchant(ModEnchants.BLESSING, stack)) return SpellType.NECROMANCY;
+        return base;
+    }
+
+    @Override
+    public int getCost(ItemStack stack, Player player, int original) {
+        return (int) (this.getSpell(stack, player).soulCost(player, stack) * SEHelper.soulDiscount(player));
+    }
+
+    @Override
+    public int getCooldown(ItemStack stack, Player player) {
+        if (this.getSpell(stack, player).ReduceCastTime(player))
+            return super.getCooldown(stack, player) / 2;
+        return super.getCooldown(stack, player);
     }
 
     @Override
     public boolean hasResource(ItemStack stack, Player player) {
-        return this.hasResource(stack, player, this.getCost(stack, player, cost.getValue()));
+        return SEHelper.getSoulAmountInt(player) >= this.getCost(stack, player, cost.getValue());
     }
 
-    public void consumeResource(ItemStack stack, Player player, int cost) {
-        cost = GoetyEventFactory.onSoulEnergyLoss(player, cost);
+    public void consumeResource(ItemStack stack, Player player) {
+        int cost = GoetyEventFactory.onSoulEnergyLoss(player, this.getCost(stack, player, this.cost.getValue()));
         if (SEHelper.getSEActive(player)) {
             SEHelper.decreaseSESouls(player, cost);
             SEHelper.sendSEUpdatePacket(player);
@@ -131,11 +153,6 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
     }
 
     @Override
-    public void consumeResource(ItemStack stack, Player player) {
-        this.consumeResource(stack, player, this.getCost(stack, player, this.cost.getValue()));
-    }
-
-    @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
         if (effects.persists() && this.isBroken(stack))
             tooltip.add(Component.translatable("info.goety.armor.broken").withStyle(ChatFormatting.DARK_RED));
@@ -144,7 +161,7 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
 
     @Override
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
-        tooltip.add(Component.translatable("info.goety.focus.spellType", effects.getSpellType().getName()));
+        tooltip.add(Component.translatable("info.goety.focus.spellType", this.getSpellType(stack).getName()));
 
         super.appendTooltipAbilities(stack, player, tooltip);
     }

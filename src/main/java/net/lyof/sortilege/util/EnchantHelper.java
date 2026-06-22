@@ -22,10 +22,12 @@ import java.util.Map;
 
 public class EnchantHelper {
     private static final Map<Enchantment, List<ItemStack>> ENCHANT_TARGETS = new HashMap<>();
+    private static int ENCHANT_COUNT;
 
     public static void clear() {
         ENCHLIMIT_CACHE.clear();
         ENCHANT_TARGETS.clear();
+        ENCHANT_COUNT = 0;
     }
 
     public static void load() {
@@ -37,6 +39,8 @@ public class EnchantHelper {
                     if (enchant.canEnchant(stack)) stacks.add(stack);
                 }
                 ENCHANT_TARGETS.put(enchant, stacks);
+
+                ENCHANT_COUNT += enchant.getMaxLevel();
             }
         });
         enchantCaching.start();
@@ -48,7 +52,7 @@ public class EnchantHelper {
     }
 
     public static int getEnchantCount() {
-        return ENCHANT_TARGETS.size();
+        return ENCHANT_COUNT;
     }
 
 

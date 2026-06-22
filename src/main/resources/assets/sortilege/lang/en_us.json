@@ -29,7 +29,7 @@
   "item.sortilege.knowledge_book": "Knowledge Book",
   "item.sortilege.knowledge_book.desc": "Grind with loot items to learn their enchantments.\nHold in your inventory while enchanting to access.",
   "screen.sortilege.knowledge_book.invalid": "This book does not recognize you as its author.",
-  "tooltip.sortilege.knowledge_book.completion": "Learnt: %s/%s",
+  "tooltip.sortilege.knowledge_book.completion": "Learnt: %s",
   "tooltip.sortilege.knowledge_book.authors": "Authors:",
   "item.sortilege.wooden_staff" : "Wooden Staff",
   "item.sortilege.stone_staff" : "Stone Staff",
@@ -115,5 +115,9 @@
   "advancement.sortilege.use_limitite": "Infinity +1",
   "advancement.sortilege.use_limitite.desc": "Increase an item's enchantment limit using limitite.",
   "advancement.sortilege.get_witch_hat": "Mad Hatter",
-  "advancement.sortilege.get_witch_hat.desc": "Kill a witch and get her hat."
+  "advancement.sortilege.get_witch_hat.desc": "Kill a witch and get her hat.",
+  "advancement.sortilege.get_knowledge_book": "It Belongs in a Library!",
+  "advancement.sortilege.get_knowledge_book.desc": "Craft a knowledge book to learn from enchanted loot.",
+  "advancement.sortilege.fill_knowledge_book": "Knowledge is Power",
+  "advancement.sortilege.fill_knowledge_book.desc": "Fill a knowledge book with every single enchantment."
 }

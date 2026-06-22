@@ -25,6 +25,13 @@ public class EnchantKnowledge {
         return this.known.entrySet();
     }
 
+    public int getCompletion() {
+        int i = 0;
+        for (Map.Entry<Enchantment, Integer> entry : this.known.entrySet())
+            i += entry.getValue();
+        return i;
+    }
+
     public boolean isLearnable(ItemStack stack, Enchantment enchant, int value) {
         if (stack.is(Items.ENCHANTED_BOOK) || !stack.hasTag() || !stack.getTag().getBoolean(LEARNABLE_KEY)) return false;
         return this.getKnownLevel(enchant) < value;
@@ -53,6 +60,7 @@ public class EnchantKnowledge {
     }
 
     public static final String KNOWLEDGE_KEY = "sorti_EnchantKnowledge";
+    public static final String COMPLETION_KEY = "sorti_Completion";
     public static final String AUTHORS_KEY = "sorti_Authors";
     public static final String LEARNABLE_KEY = "sorti_IsLearnable";
 
@@ -71,12 +79,5 @@ public class EnchantKnowledge {
             self.learn(BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(enchant)), nbt.getInt(enchant));
 
         return self;
-    }
-
-    @Override
-    public String toString() {
-        return "EnchantKnowledge{" +
-                known.entrySet().stream().map(entry -> entry.getKey().getDescriptionId() + " " + entry.getValue()).toList() +
-                '}';
     }
 }

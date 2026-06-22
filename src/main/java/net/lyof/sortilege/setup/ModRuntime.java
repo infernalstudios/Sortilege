@@ -28,7 +28,9 @@ public class ModRuntime {
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/items/staffs.json"),
                 ModRuntime.Common::changeStaffTag);
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
-                ModRuntime.Common::changeVoluntaryExileParent, ModConfig.witchHatEnabled);
+                json -> ModRuntime.Common.changeParent(json, "sortilege:get_witch_hat"), ModConfig.witchHatEnabled);
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/story/enchant_item.json"),
+                json -> ModRuntime.Common.changeParent(json, "sortilege:get_knowledge_book"), ModConfig.knowledgeEnabled);
 
         if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
             addMiningMaster("power_pyrite", ModEnchants.POTENCY);
@@ -69,8 +71,9 @@ public class ModRuntime {
             return json;
         }
 
-        public static JsonObject changeVoluntaryExileParent(JsonObject json) {
-            json.asMap().replace("parent", new JsonPrimitive(Sortilege.MOD.makeID("get_witch_hat").toString()));
+        public static JsonObject changeParent(JsonObject json, String parent) {
+            if (json == null) return null;
+            json.asMap().replace("parent", new JsonPrimitive(parent));
             return json;
         }
 

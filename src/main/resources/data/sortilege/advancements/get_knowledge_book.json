@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:story/mine_diamond",
+  "criteria": {
+    "has_knowledge_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sortilege:knowledge_book"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.sortilege.get_knowledge_book.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "sortilege:knowledge_book"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.sortilege.get_knowledge_book"
+    }
+  },
+  "requirements": [
+    [
+      "has_knowledge_book"
+    ]
+  ],
+  "sends_telemetry_event": true,
+
+  "sollib:load_condition": {
+    "type": "config",
+    "mod": "sortilege:enchanting.enchanting_table.knowledge.enable"
+  }
+}

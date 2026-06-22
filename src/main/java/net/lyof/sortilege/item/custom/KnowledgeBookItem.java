@@ -78,8 +78,10 @@ public class KnowledgeBookItem extends Item {
 
         if (!getAuthors(stack).isEmpty())
             list.add(Component.translatable("book.byAuthor", String.join(", ", getAuthors(stack))).withStyle(ChatFormatting.GRAY));
-        list.add(Component.translatable("tooltip.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
-                EnchantHelper.getEnchantCount()).withStyle(ChatFormatting.GRAY));
+
+        float completion = 100f * getKnowledge(stack).getCompletion() / EnchantHelper.getEnchantCount();
+        String c = completion == (int) completion ? (int) completion + "%" : String.format("%.1f", completion) + "%";
+        list.add(Component.translatable("tooltip.sortilege.knowledge_book.completion", c).withStyle(ChatFormatting.GRAY));
     }
 
     @Override
@@ -110,6 +112,7 @@ public class KnowledgeBookItem extends Item {
         if (self == knowledgeCacher) knowledgeCacher = null;
 
         self.getOrCreateTag().put(EnchantKnowledge.KNOWLEDGE_KEY, knowledge.write(new CompoundTag()));
+        self.getTag().putInt(EnchantKnowledge.COMPLETION_KEY, EnchantHelper.getEnchantCount() - knowledge.getCompletion());
     }
 
     public static List<String> getAuthors(ItemStack self) {

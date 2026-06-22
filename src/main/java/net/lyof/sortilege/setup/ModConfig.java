@@ -833,6 +833,9 @@ public class ModConfig {
                                 .add("mana", 120)
                                 .add("mana_per_durability", 60)
                         )
+                        .addObject("display", display -> display
+                                .add("particle", "botania:wisp")
+                        )
                         .addArray("recipes", List.of("sortilege:staff/manasteel_staff"))
                 )
                 .addObject(staff -> staff
@@ -852,6 +855,9 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("mana", 120)
                                 .add("mana_per_durability", 60)
+                        )
+                        .addObject("display", display -> display
+                                .add("particle", "botania:wisp")
                         )
                         .addArray("recipes", List.of("sortilege:staff/elementium_staff"))
                 )
@@ -878,6 +884,7 @@ public class ModConfig {
                                 .addArray("colors", colors -> colors
                                         .add("#20ff20")
                                 )
+                                .add("particle", "botania:wisp")
                                 .add("rarity", "UNCOMMON")
                         )
                         .addArray("recipes", List.of("sortilege:staff/terrasteel_staff"))

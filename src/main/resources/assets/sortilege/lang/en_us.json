@@ -36,6 +36,7 @@
   "item.sortilege.netherite_staff" : "Netherite Staff",
 
   "item.sortilege.staff.botania.desc": "Use while sneaking to fire a mana burst",
+  "item.sortilege.staff.affinity.desc": "Damage varies with environmental aethum",
   "aquaculture.neptunium_staff.tooltip.title": "Neptune's Flood",
   "aquaculture.neptunium_staff.tooltip.desc": "Conjures water at your foes, even in hot environments",
   "item.sortilege.spawner_staff.desc": "Heals you on hit",

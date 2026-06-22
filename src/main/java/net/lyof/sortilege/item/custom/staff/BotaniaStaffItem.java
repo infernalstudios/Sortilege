@@ -86,7 +86,7 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
         protected boolean allowManaBurst;
 
         @Override
-        public StaffEntry.Effects read(JsonObject json) {
+        public Effects read(JsonObject json) {
             super.read(json);
             this.allowManaBurst = GsonHelper.getAsBoolean(json, "allow_mana_burst", true);
             return this;
@@ -163,12 +163,6 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
 
         if (this.getMana(stack) > 0)
             tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getMana(stack)).withStyle(ChatFormatting.AQUA));
-    }
-
-    @Override
-    public ParticleType<?> getParticle() {
-        if (this.getEntry().getDisplay().getParticle() == null) return BotaniaParticles.WISP;
-        return super.getParticle();
     }
 
     @Override

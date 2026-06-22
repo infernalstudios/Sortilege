@@ -98,6 +98,7 @@ dependencies {
 	modCompileOnly "maven.modrinth:affinity:0.1.8+1.20"
 	modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.3"
 	modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.3"
+	modCompileOnly "dev.onyxstudios.cardinal-components-api:cardinal-components-chunk:5.2.3"
 	// Spell Engine
 	modCompileOnly "maven.modrinth:spell-engine:0.15.12+1.20.1"
 	modCompileOnly "maven.modrinth:spell-power:0.12.0+1.20.1"

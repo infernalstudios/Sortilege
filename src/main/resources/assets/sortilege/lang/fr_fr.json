@@ -105,8 +105,8 @@
   "enchantment.sortilege.arcane.desc": "Convertit les dégâts en dégâts magiques.",
   "enchantment.sortilege.soulbound": "Héritage",
   "enchantment.sortilege.soulbound.desc": "L'objet n'est pas laché lors de la mort.",
-  "enchantment.sortilege.storytelling_curse": "Curse of Storytelling",
-  "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost. Ever.",
+  "enchantment.sortilege.storytelling_curse": "Malédiction de Narration",
+  "enchantment.sortilege.storytelling_curse.desc": "Empêche l'objet d'être perdu. Pour toujours.",
 
   "advancement.sortilege.get_wooden_staff": "Tu es un sorcier, {playerName}",
   "advancement.sortilege.get_wooden_staff.desc": "Obtenez votre premier sceptre.",

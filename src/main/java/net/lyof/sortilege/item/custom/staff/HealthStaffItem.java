@@ -101,6 +101,6 @@ public class HealthStaffItem extends AStaffItem {
         super.appendTooltipCosts(stack, player, tooltip);
 
         if (this.getCost(stack, player, cost.getValue()) > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cost.health", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.DARK_RED));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.health", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.DARK_RED));
     }
 }

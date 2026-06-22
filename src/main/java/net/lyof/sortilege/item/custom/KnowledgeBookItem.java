@@ -58,7 +58,7 @@ public class KnowledgeBookItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack stack = user.getItemInHand(hand);
         if (!isAuthor(stack, user)) {
-            user.displayClientMessage(Component.translatable("item.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
+            user.displayClientMessage(Component.translatable("screen.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
             return InteractionResultHolder.success(stack);
         }
         if (!world.isClientSide())
@@ -71,14 +71,14 @@ public class KnowledgeBookItem extends Item {
         super.appendHoverText(stack, level, list, context);
 
         if (Screen.hasShiftDown()) {
-            list.add(Component.translatable("item.sortilege.knowledge_book.desc0").withStyle(ChatFormatting.YELLOW));
-            list.add(Component.translatable("item.sortilege.knowledge_book.desc1").withStyle(ChatFormatting.YELLOW));
+            for (String s : Component.translatable("item.sortilege.knowledge_book.desc").getString().split("\n"))
+                list.add(Component.literal(s).withStyle(ChatFormatting.YELLOW));
         } else
             list.add(EnchantHelper.getShiftTooltip());
 
         if (!getAuthors(stack).isEmpty())
             list.add(Component.translatable("book.byAuthor", String.join(", ", getAuthors(stack))).withStyle(ChatFormatting.GRAY));
-        list.add(Component.translatable("item.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
+        list.add(Component.translatable("tooltip.sortilege.knowledge_book.completion", getKnowledge(stack).getEntries().size(),
                 EnchantHelper.getEnchantCount()).withStyle(ChatFormatting.GRAY));
     }
 

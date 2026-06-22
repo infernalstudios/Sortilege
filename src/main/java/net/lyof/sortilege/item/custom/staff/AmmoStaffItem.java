@@ -124,8 +124,8 @@ public class AmmoStaffItem extends AStaffItem {
         super.appendTooltipCosts(stack, player, tooltip);
 
         if (cost.getCount() == 1)
-            tooltip.add(Component.translatable("sortilege.staff.cost.item.single", cost.getItemTranslation()).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.item.single", cost.getItemTranslation()).withStyle(ChatFormatting.DARK_GRAY));
         else
-            tooltip.add(Component.translatable("sortilege.staff.cost.item", cost.getCount(), cost.getItemTranslation()).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.item", cost.getCount(), cost.getItemTranslation()).withStyle(ChatFormatting.DARK_GRAY));
     }
 }

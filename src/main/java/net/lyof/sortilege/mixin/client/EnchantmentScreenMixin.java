@@ -38,7 +38,7 @@ public abstract class EnchantmentScreenMixin extends AbstractContainerScreen<Enc
 
             else if (this.menu.costs[k] == 0 && ((EnchantInfoHolder) this.menu).sorti_hasEnchantableItem()
                     && this.isHovering(60, 14 + 19*k, 108, 18, mouseX, mouseY)) {
-                context.renderTooltip(this.font, Component.translatable("sortilege.enchanting.requires_catalyst").withStyle(ChatFormatting.RED),
+                context.renderTooltip(this.font, Component.translatable("screen.sortilege.enchanting.requires_catalyst").withStyle(ChatFormatting.RED),
                         mouseX, mouseY);
             }
         }

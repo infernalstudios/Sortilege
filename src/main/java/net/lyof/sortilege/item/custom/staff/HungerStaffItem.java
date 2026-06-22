@@ -49,6 +49,6 @@ public class HungerStaffItem extends AStaffItem {
         super.appendTooltipCosts(stack, player, tooltip);
 
         if (this.getCost(stack, player, cost.getValue()) > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cost.hunger", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.YELLOW));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.hunger", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.YELLOW));
     }
 }

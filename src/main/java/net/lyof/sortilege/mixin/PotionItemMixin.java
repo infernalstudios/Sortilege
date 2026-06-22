@@ -44,10 +44,10 @@ public class PotionItemMixin {
         }
 
         if (stack.is(Items.POTION))
-            tooltip.add(Component.translatable("sortilege.potion.drinking_time", drinkingTime / 20f)
+            tooltip.add(Component.translatable("tooltip.sortilege.potion.drinking_time", drinkingTime / 20f)
                     .withStyle(ChatFormatting.GRAY));
         if (cooldown > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cooldown", cooldown / 20f)
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cooldown", cooldown / 20f)
                 .withStyle(ChatFormatting.GRAY));
     }
 }

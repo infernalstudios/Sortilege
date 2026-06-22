@@ -20,11 +20,11 @@ public class DeathScreenMixin {
     public void replaceDeathScore(CallbackInfo ci) {
         if (ModConfig.showDeathCoordinates.get()) {
             DeathScreen self = (DeathScreen) (Object) this;
-            this.deathScore = Component.translatable("sortilege.death_screen.position")
+            this.deathScore = Component.translatable("screen.sortilege.death_screen.position")
                     .append(Component.literal(" " + ((ScreenAccessor) self).getMinecraft().player.blockPosition().toShortString())
                             .withStyle(ChatFormatting.YELLOW));
 
-            ((ScreenAccessor) self).getMinecraft().player.displayClientMessage(Component.translatable("sortilege.death_screen.position")
+            ((ScreenAccessor) self).getMinecraft().player.displayClientMessage(Component.translatable("screen.sortilege.death_screen.position")
                     .append(Component.literal(" " + ((ScreenAccessor) self).getMinecraft().player.blockPosition().toShortString())
                             .withStyle(ChatFormatting.YELLOW)), false);
         }

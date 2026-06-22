@@ -72,13 +72,13 @@ public abstract class RecipeLock {
 
         @Override
         public MutableComponent getFailMessage(ServerPlayer player) {
-            return Component.translatable("sortilege.crafting.requires_level", this.lvl);
+            return Component.translatable("screen.sortilege.crafting.requires_level", this.lvl);
         }
 
         @Environment(EnvType.CLIENT)
         @Override
         public MutableComponent getFailMessage() {
-            return Component.translatable("sortilege.crafting.requires_level",
+            return Component.translatable("screen.sortilege.crafting.requires_level",
                     Component.literal("" + this.lvl).withStyle(ChatFormatting.YELLOW));
         }
 
@@ -104,7 +104,7 @@ public abstract class RecipeLock {
         public MutableComponent getFailMessage(ServerPlayer player) {
             Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancements().getAdvancement(new ResourceLocation(this.id));
             if (advc == null) return Component.empty();
-            return Component.translatable("sortilege.crafting.requires_advancement", advc.getChatComponent());
+            return Component.translatable("screen.sortilege.crafting.requires_advancement", advc.getChatComponent());
         }
 
         @Environment(EnvType.CLIENT)
@@ -130,7 +130,7 @@ public abstract class RecipeLock {
         boolean isTranslatable = packet.readBoolean();
         String title = packet.readUtf();
 
-        TITLES.putIfAbsent(id, Component.translatable("sortilege.crafting.requires_advancement",
+        TITLES.putIfAbsent(id, Component.translatable("screen.sortilege.crafting.requires_advancement",
                 Component.literal("[")
                         .append(isTranslatable ? Component.translatable(title) : Component.literal(title))
                         .append("]").withStyle(ChatFormatting.GREEN)));

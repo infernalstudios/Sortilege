@@ -254,7 +254,7 @@ public class SpellEngineStaffItem extends AStaffItem {
 
         if (cost.getRuneTranslation() != null) {
             boolean hasAmmo = this.hasItem(stack, player);
-            tooltip.add(Component.translatable("sortilege.staff.cost.item.spell_engine", cost.getRuneTranslation())
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.item.spell_engine", cost.getRuneTranslation())
                     .withStyle(hasAmmo ? ChatFormatting.GREEN : ChatFormatting.RED));
         } if (cost.isManaEnabled() && this.getCost(stack, player, cost.getMana()) > 0) {
             tooltip.add(Component.translatable("rpgmana.manacost")

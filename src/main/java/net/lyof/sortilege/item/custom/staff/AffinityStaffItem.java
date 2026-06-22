@@ -88,7 +88,7 @@ public class AffinityStaffItem extends AStaffItem {
     @Override
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
         if (effects.getAethumDamageMultiplier() != 0)
-            tooltip.add(Component.translatable("item.sortilege.staff.affinity.desc").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.affinity").withStyle(ChatFormatting.GRAY));
 
         super.appendTooltipAbilities(stack, player, tooltip);
     }

@@ -89,7 +89,7 @@ public class OriginsStaffItem extends AStaffItem {
             PowerType<VariableIntPower> powerType = getPower(player);
             if (powerType == null) return;
 
-            tooltip.add(Component.translatable("sortilege.staff.cost.origins_resource",
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.origins_resource",
                     this.getCost(stack, player, cost.getValue()),
                     powerType.getName().withStyle(ChatFormatting.GRAY)
             ).withStyle(ChatFormatting.DARK_GRAY));

@@ -577,7 +577,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     @Environment(EnvType.CLIENT)
     public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
-        tooltip.add(Component.translatable("sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f).withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable("tooltip.sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f).withStyle(ChatFormatting.GRAY));
     }
     //#endregion
 }

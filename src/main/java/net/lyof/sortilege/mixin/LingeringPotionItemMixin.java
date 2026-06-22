@@ -28,7 +28,7 @@ public class LingeringPotionItemMixin {
         if (data != null) cooldown = data.cooldown;
 
         if (cooldown > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cooldown", cooldown / 20f)
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cooldown", cooldown / 20f)
                     .withStyle(ChatFormatting.GRAY));
     }
 }

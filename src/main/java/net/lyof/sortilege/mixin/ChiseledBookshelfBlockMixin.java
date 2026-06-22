@@ -22,7 +22,7 @@ public class ChiseledBookshelfBlockMixin {
                                       int slot, CallbackInfo ci) {
         ItemStack stack = blockEntity.getItem(slot);
         if (stack.is(ModItems.KNOWLEDGE_BOOK) && !KnowledgeBookItem.isAuthor(stack, player)) {
-            player.displayClientMessage(Component.translatable("item.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
+            player.displayClientMessage(Component.translatable("screen.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
             ci.cancel();
         }
     }
@@ -31,7 +31,7 @@ public class ChiseledBookshelfBlockMixin {
     private static void authorAddition(Level world, BlockPos pos, Player player, ChiseledBookShelfBlockEntity blockEntity,
                                        ItemStack stack, int slot, CallbackInfo ci) {
         if (stack.is(ModItems.KNOWLEDGE_BOOK) && !KnowledgeBookItem.isAuthor(stack, player)) {
-            player.displayClientMessage(Component.translatable("item.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
+            player.displayClientMessage(Component.translatable("screen.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
             ci.cancel();
         }
     }

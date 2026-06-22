@@ -44,7 +44,7 @@ public abstract class ItemStackMixin {
                 if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
                     list.add(Component.empty());
 
-                list.add(Component.translatable("item.sortilege.catalyst.desc").withStyle(ChatFormatting.DARK_PURPLE));
+                list.add(Component.translatable("tooltip.sortilege.catalyst").withStyle(ChatFormatting.DARK_PURPLE));
 
                 for (Enchantment e : EnchantingCatalyst.getEnchantments(self).keySet()) {
                     MutableComponent text = Component.translatable(e.getDescriptionId());
@@ -69,8 +69,8 @@ public abstract class ItemStackMixin {
 
             if ((a > 0 || EnchantHelper.getExtraEnchantSlots(self) > 0 || ModConfig.alwaysShowEnchantLimit.get()) && m > 0) {
 
-                MutableComponent txt = Component.translatableWithFallback("sortilege.enchantments.limit." + a + "." + m,
-                        a + "/" + m + " " + Component.translatable("sortilege.enchantments").getString());
+                MutableComponent txt = Component.translatableWithFallback("tooltip.sortilege.enchantments.limit." + a + "." + m,
+                        a + "/" + m + " " + Component.translatable("tooltip.sortilege.enchantments").getString());
 
                 if (list.size() > 1 && !list.get(list.size() - 1).getString().isEmpty() && !(self.getItem()instanceof AStaffItem))
                     list.add(Component.empty());
@@ -107,7 +107,7 @@ public abstract class ItemStackMixin {
                     && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, EnchantHelper.getEnchantLevel(e, sorti_stack))) {
 
                 Component text = Component.empty().append(tooltip.get(tooltip.size() - 1))
-                        .append(Component.translatable("item.sortilege.learnable.desc").withStyle(ChatFormatting.LIGHT_PURPLE));
+                        .append(Component.translatable("tooltip.sortilege.learnable").withStyle(ChatFormatting.LIGHT_PURPLE));
                 tooltip.set(tooltip.size() - 1, text);
             }
         });

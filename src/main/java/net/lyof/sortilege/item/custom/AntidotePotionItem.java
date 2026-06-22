@@ -55,7 +55,7 @@ public class AntidotePotionItem extends PotionItem {
         if (PotionUtils.getPotion(itemstack).getEffects().isEmpty())
             return;
 
-        MutableComponent desc = Component.translatable("item.sortilege.antidote.cures").withStyle(ChatFormatting.DARK_PURPLE)
+        MutableComponent desc = Component.translatable("tooltip.sortilege.antidote.cures").withStyle(ChatFormatting.DARK_PURPLE)
                 .append(" ");
 
         MobEffectInstance effect = PotionUtils.getPotion(itemstack).getEffects().get(0);

@@ -3,22 +3,8 @@
   "tooltip.press_shift.center": "Shift",
   "tooltip.press_shift.right": "]",
 
-  "sortilege.death_screen.position": "Position:",
-
-  "sortilege.crafting.requires_level": "You need at least %s levels",
-  "sortilege.crafting.requires_advancement": "You need to complete %s",
-  "sortilege.crafting.emi.locked_recipe": "Locked recipe",
-
-  "sortilege.enchanting.requires_catalyst": "You must use a catalyst!",
-
-  "sortilege.enchantments": "Enchantments",
-  "item.sortilege.catalyst.desc": "When used to Enchant:",
-  "item.sortilege.learnable.desc": " [Learnable]",
-
-  "sortilege.potion.drinking_time": "Takes %ss to drink",
-
-  "tag.item.sortilege.is_limit_break_material": "Limit Break Material",
-  "tag.item.sortilege.is_soulbind_material": "Soulbinding Material",
+  "tag.item.sortilege.is_limit_break_material": "Limit Breakers",
+  "tag.item.sortilege.is_soulbind_material": "Soulbinders",
   "tag.item.sortilege.unbreakable": "Unbreakable",
   "tag.item.sortilege.kept_on_death": "Kept on Death",
   "tag.item.sortilege.refills_cauldrons": "Cauldron Fuel",
@@ -27,7 +13,24 @@
   "emi.category.sortilege.enchanting": "Enchanting",
   "emi.category.sortilege.cauldron_brewing": "Cauldron Brewing",
 
+  "screen.sortilege.death_screen.position": "Position:",
+  "screen.sortilege.crafting.requires_level": "You need at least %s levels",
+  "screen.sortilege.crafting.requires_advancement": "You need to complete %s",
+  "screen.sortilege.crafting.emi.locked_recipe": "Locked recipe",
+  "screen.sortilege.enchanting.requires_catalyst": "You must use a catalyst!",
 
+  "item.sortilege.witch_hat": "Witch Hat",
+  "item.sortilege.antidote": "Antidote",
+  "tooltip.sortilege.antidote.cures": "Cures:",
+  "item.sortilege.limitite": "Limitite",
+  "item.sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",
+  "item.sortilege.lapis_shield": "Lapis Shield",
+  "item.sortilege.lapis_shield.desc": " Passively blocks front attacks every %ss",
+  "item.sortilege.knowledge_book": "Knowledge Book",
+  "item.sortilege.knowledge_book.desc": "Grind with loot items to learn their enchantments.\nHold in your inventory while enchanting to access.",
+  "screen.sortilege.knowledge_book.invalid": "This book does not recognize you as its author.",
+  "tooltip.sortilege.knowledge_book.completion": "Learnt: %s/%s",
+  "tooltip.sortilege.knowledge_book.authors": "Authors:",
   "item.sortilege.wooden_staff" : "Wooden Staff",
   "item.sortilege.stone_staff" : "Stone Staff",
   "item.sortilege.iron_staff" : "Iron Staff",
@@ -35,8 +38,8 @@
   "item.sortilege.diamond_staff" : "Diamond Staff",
   "item.sortilege.netherite_staff" : "Netherite Staff",
 
-  "item.sortilege.staff.botania.desc": "Use while sneaking to fire a mana burst",
-  "item.sortilege.staff.affinity.desc": "Damage varies with environmental aethum",
+  "tooltip.sortilege.staff.botania": "Use while sneaking to fire a mana burst",
+  "tooltip.sortilege.staff.affinity": "Damage varies with environmental aethum",
   "aquaculture.neptunium_staff.tooltip.title": "Neptune's Flood",
   "aquaculture.neptunium_staff.tooltip.desc": "Conjures water at your foes, even in hot environments",
   "item.sortilege.spawner_staff.desc": "Heals you on hit",
@@ -46,16 +49,21 @@
   "item.sortilege.electrum_staff.desc": "Speeds you up",
   "item.sortilege.necromium_staff.desc": "Slows targets down",
 
-  "sortilege.staff.cost.experience": "Costs %s XP",
-  "sortilege.staff.cost.health": "Consumes %s HP",
-  "sortilege.staff.cost.hunger": "Exhausts %s Hunger",
-  "sortilege.staff.cost.mana": "Costs %s Mana",
-  "sortilege.staff.cost.origins_resource": "Costs %s %s",
-  "sortilege.staff.cost.item.single": "Uses %s as ammo",
-  "sortilege.staff.cost.item": "Uses %s %s as ammo",
-  "sortilege.staff.cost.item.spell_engine": "Requires: %s",
-  "sortilege.staff.cost.feathers": "Exhausts %s Feathers",
-  "sortilege.staff.cooldown": "%ss Cooldown",
+  "tooltip.sortilege.staff.cost.experience": "Costs %s XP",
+  "tooltip.sortilege.staff.cost.health": "Consumes %s HP",
+  "tooltip.sortilege.staff.cost.hunger": "Exhausts %s Hunger",
+  "tooltip.sortilege.staff.cost.mana": "Costs %s Mana",
+  "tooltip.sortilege.staff.cost.origins_resource": "Costs %s %s",
+  "tooltip.sortilege.staff.cost.item.single": "Uses %s as ammo",
+  "tooltip.sortilege.staff.cost.item": "Uses %s %s as ammo",
+  "tooltip.sortilege.staff.cost.item.spell_engine": "Requires: %s",
+  "tooltip.sortilege.staff.cost.feathers": "Exhausts %s Feathers",
+  "tooltip.sortilege.staff.cooldown": "%ss Cooldown",
+
+  "tooltip.sortilege.potion.drinking_time": "Takes %ss to drink",
+  "tooltip.sortilege.enchantments": "Enchantments",
+  "tooltip.sortilege.catalyst": "When used to Enchant:",
+  "tooltip.sortilege.learnable": " [Learnable]",
 
   "attribute.name.generic.staff_damage": "Magic Damage",
   "attribute.name.generic.staff_pierce": "Pierce",
@@ -89,7 +97,6 @@
   "enchantment.sortilege.bonk.desc": "Makes the Staff usable as a melee weapon.",
   "enchantment.sortilege.ignorance_curse": "Curse of Ignorance",
   "enchantment.sortilege.ignorance_curse.desc": "Makes the Staff use XP to cast.",
-
   "enchantment.sortilege.magic_protection": "Magic Protection",
   "enchantment.sortilege.magic_protection.desc": "Reduces damage from magic.",
   "enchantment.sortilege.arcane": "Arcane",
@@ -98,24 +105,6 @@
   "enchantment.sortilege.soulbound.desc": "Stays after death.",
   "enchantment.sortilege.storytelling_curse": "Curse of Storytelling",
   "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost. Ever.",
-
-  "item.sortilege.witch_hat": "Witch Hat",
-
-  "item.sortilege.antidote": "Antidote",
-  "item.sortilege.antidote.cures": "Cures:",
-
-  "item.sortilege.limitite": "Limitite",
-  "item.sortilege.limitite.desc": "Use with Lapis on a Smithing Table to increase an item's enchantment slots!",
-
-  "item.sortilege.lapis_shield": "Lapis Shield",
-  "item.sortilege.lapis_shield.desc": " Passively blocks front attacks every %ss",
-
-  "item.sortilege.knowledge_book": "Knowledge Book",
-  "item.sortilege.knowledge_book.desc0": "Grind with loot items to learn their enchantments.",
-  "item.sortilege.knowledge_book.desc1": "Hold in your inventory while enchanting to access.",
-  "item.sortilege.knowledge_book.invalid": "This book does not recognize you as its author.",
-  "item.sortilege.knowledge_book.completion": "Learnt: %s/%s",
-  "item.sortilege.knowledge_book.authors": "Authors:",
 
   "advancement.sortilege.get_wooden_staff": "You are a Wizard, {playerName}",
   "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",

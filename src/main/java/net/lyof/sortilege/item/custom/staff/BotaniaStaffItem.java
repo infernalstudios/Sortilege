@@ -146,7 +146,7 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
     @Override
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
         if (effects.allowsManaBurst()) {
-            tooltip.add(Component.translatable("item.sortilege.staff.botania.desc").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.botania").withStyle(ChatFormatting.GRAY));
 
             ItemStack lens = this.getLens(stack);
             if (!lens.isEmpty())
@@ -162,7 +162,7 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
         super.appendTooltipCosts(stack, player, tooltip);
 
         if (this.getMana(stack) > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getMana(stack)).withStyle(ChatFormatting.AQUA));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.mana", this.getMana(stack)).withStyle(ChatFormatting.AQUA));
     }
 
     @Override

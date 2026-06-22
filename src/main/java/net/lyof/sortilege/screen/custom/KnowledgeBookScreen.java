@@ -182,7 +182,7 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
         context.pose().pushPose();
         context.pose().scale(scale, scale, 1);
 
-        context.drawString(this.font, Component.translatable("item.sortilege.knowledge_book.authors").withStyle(ChatFormatting.BOLD),
+        context.drawString(this.font, Component.translatable("tooltip.sortilege.knowledge_book.authors").withStyle(ChatFormatting.BOLD),
                 (int) ((this.leftPos + this.xoffset + 36)/scale) + 1, (int) ((this.topPos + 40)/scale), 0xCCB998, false);
 
         context.pose().popPose();

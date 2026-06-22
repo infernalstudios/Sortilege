@@ -29,7 +29,8 @@ public class LimititeItem extends Item {
         super.appendHoverText(stack, level, list, context);
 
         if (Screen.hasShiftDown())
-            list.add(Component.translatable("item.sortilege.limitite.desc").withStyle(ChatFormatting.YELLOW));
+            for (String s : Component.translatable("item.sortilege.limitite.desc").getString().split("\n"))
+                list.add(Component.literal(s).withStyle(ChatFormatting.YELLOW));
         else
             list.add(EnchantHelper.getShiftTooltip());
     }

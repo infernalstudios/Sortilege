@@ -124,7 +124,7 @@ public class ElectroblobStaffItem extends AStaffItem implements IManaItem, IWork
         super.appendTooltipCosts(stack, player, tooltip);
 
         if (this.getCost(stack, player, cost.getValue()) > 0)
-            tooltip.add(Component.translatable("sortilege.staff.cost.mana", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.BLUE));
+            tooltip.add(Component.translatable("tooltip.sortilege.staff.cost.mana", this.getCost(stack, player, cost.getValue())).withStyle(ChatFormatting.BLUE));
     }
 
     @Override

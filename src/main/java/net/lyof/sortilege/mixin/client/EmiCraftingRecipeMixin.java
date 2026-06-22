@@ -40,7 +40,7 @@ public abstract class EmiCraftingRecipeMixin {
                 return List.of(ClientTooltipComponent.create(lock.getFailMessage().getVisualOrderText()));
             }
         });
-        widgets.addText(Component.translatable("sortilege.crafting.emi.locked_recipe"), 15, this.getDisplayHeight() - 9,
+        widgets.addText(Component.translatable("screen.sortilege.crafting.emi.locked_recipe"), 15, this.getDisplayHeight() - 9,
                 0, false);
     }
 

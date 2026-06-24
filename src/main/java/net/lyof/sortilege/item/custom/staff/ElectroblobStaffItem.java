@@ -152,7 +152,7 @@ public class ElectroblobStaffItem extends AStaffItem implements IManaItem, IWork
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
         if (player instanceof Player &&
-                (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreCost()))
+                (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoresCost()))
             this.consumeResource(stack, (Player) player);
         return super.hurtEnemy(stack, target, player);
     }

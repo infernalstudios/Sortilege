@@ -33,8 +33,8 @@ public class OverchargeEntry {
         this();
         this.max = parent.getMax();
         this.color = parent.getColor();
-        this.ignoreDurability = parent.ignoreDurability();
-        this.ignoreCost = parent.ignoreCost();
+        this.ignoreDurability = parent.ignoresDurability();
+        this.ignoreCost = parent.ignoresCost();
         this.ingredients = parent.ingredients;
     }
 
@@ -106,11 +106,11 @@ public class OverchargeEntry {
         return this.color;
     }
 
-    public boolean ignoreDurability() {
+    public boolean ignoresDurability() {
         return this.ignoreDurability;
     }
 
-    public boolean ignoreCost() {
+    public boolean ignoresCost() {
         return this.ignoreCost;
     }
 

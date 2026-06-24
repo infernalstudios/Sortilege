@@ -405,7 +405,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Abstraction
     public boolean canShoot(ItemStack stack, Player player) {
-        return (this.getOvercharge(stack) > 0 && this.getEntry().getCost().getOvercharge().ignoreCost())
+        return (this.getOvercharge(stack) > 0 && this.getEntry().getCost().getOvercharge().ignoresCost())
                 || (!this.getEntry().getCost().getOvercharge().isRequired() && this.hasResource(stack, player));
     }
 
@@ -416,9 +416,9 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         if (player.isCreative()) return;
 
-        if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreDurability())
+        if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoresDurability())
             stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.hand));
-        if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoreCost())
+        if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoresCost())
             this.consumeResource(stack, player);
 
         if (this.getOvercharge(stack) > 0)

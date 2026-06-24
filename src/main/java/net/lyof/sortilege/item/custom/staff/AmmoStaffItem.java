@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class AmmoStaffItem extends AStaffItem {
@@ -36,8 +37,8 @@ public class AmmoStaffItem extends AStaffItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new AmmoStaffItem(entry, new Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new AmmoStaffItem(entry, new Properties()));
         }
     }
 

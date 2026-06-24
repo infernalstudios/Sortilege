@@ -9,12 +9,13 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class FeathersStaffItem extends AStaffItem {
     @Dependency(mod = "feathers:feathers")
@@ -25,8 +26,8 @@ public class FeathersStaffItem extends AStaffItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new FeathersStaffItem(entry, new Item.Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new FeathersStaffItem(entry, new Properties()));
         }
     }
 

@@ -68,15 +68,25 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     private static final String OVERCHARGE_NBT = "sorti_Overcharge";
 
     protected final StaffEntry entry;
+    protected String name;
     protected InteractionHand hand;
 
     public AStaffItem(StaffEntry entry, Properties properties) {
         super(entry.getTier(), entry.applyProperties(properties));
         this.entry = entry;
+        this.setName(entry.getID());
     }
 
     public StaffEntry getEntry() {
         return this.entry;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     //#region Rendering

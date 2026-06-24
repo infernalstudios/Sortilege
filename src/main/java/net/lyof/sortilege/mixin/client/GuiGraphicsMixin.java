@@ -58,7 +58,7 @@ public abstract class GuiGraphicsMixin {
             if (cursor.isEmpty()) return;
 
             OverchargeEntry overcharge = staff.getEntry().getCost().getOvercharge();
-            if (staff.getOvercharge(stack) <= overcharge.getMax()) return;
+            if (staff.getOvercharge(stack) >= overcharge.getMax()) return;
 
             ResourceLocation id = BuiltInRegistries.ITEM.getKey(cursor.getItem());
             if (overcharge.getIngredients().containsKey(id)) {

@@ -9,6 +9,8 @@ import net.lcc.sollib.api.common.config.builder.JsonBuilder;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.item.ModItems;
+import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -45,9 +47,9 @@ public class ModRuntime {
     }
 
     public static void loadClient() {
-        for (StaffEntry entry : ModConfig.staffs.get())
-            SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + entry.getID() + ".json"),
-                    json -> Client.generateDefaultModel(json, entry.getID()));
+        for (AStaffItem staff : ModItems.STAFFS)
+            SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + staff.getName() + ".json"),
+                    json -> Client.generateDefaultModel(json, staff.getName()));
 
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), ModRuntime.Client::generateTranslations);
 
@@ -66,8 +68,8 @@ public class ModRuntime {
             if (json == null) json = new JsonObject();
             json.add("values", new JsonArray());
 
-            for (StaffEntry entry : ModConfig.staffs.get())
-                json.get("values").getAsJsonArray().add(Sortilege.MOD.makeID(entry.getID()).toString());
+            for (AStaffItem staff : ModItems.STAFFS)
+                json.get("values").getAsJsonArray().add(Sortilege.MOD.makeID(staff.getName()).toString());
             return json;
         }
 
@@ -87,7 +89,7 @@ public class ModRuntime {
     }
 
 
-    public static class Client {
+    private static class Client {
         public static JsonObject generateDefaultModel(JsonObject json, String path) {
             if (json != null) return json;
 
@@ -100,8 +102,8 @@ public class ModRuntime {
         public static JsonObject generateTranslations(JsonObject json) {
             if (json == null) json = new JsonObject();
 
-            for (StaffEntry entry : ModConfig.staffs.get()) {
-                String id = entry.getID();
+            for (AStaffItem staff : ModItems.STAFFS) {
+                String id = staff.getName();
                 if (json.has("item." + Sortilege.MOD_ID + "." + id)) continue;
 
                 StringBuilder translation = new StringBuilder(id.toUpperCase().charAt(0) + "");

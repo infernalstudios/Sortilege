@@ -9,11 +9,12 @@ import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class ExperienceStaffItem extends AStaffItem {
     @Dependency(mod = "sortilege:experience")
@@ -24,8 +25,8 @@ public class ExperienceStaffItem extends AStaffItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new ExperienceStaffItem(entry, new Item.Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new ExperienceStaffItem(entry, new Properties()));
         }
     }
 

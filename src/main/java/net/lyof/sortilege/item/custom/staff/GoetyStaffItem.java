@@ -5,8 +5,6 @@ import com.Polarice3.Goety.api.items.magic.ITotem;
 import com.Polarice3.Goety.api.magic.ISpell;
 import com.Polarice3.Goety.api.magic.SpellType;
 import com.Polarice3.Goety.common.events.spell.GoetyEventFactory;
-import com.Polarice3.Goety.common.items.ModItems;
-import com.Polarice3.Goety.config.ItemConfig;
 import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.utils.TotemFinder;
 import com.google.common.collect.ImmutableMultimap;
@@ -14,7 +12,6 @@ import com.google.common.collect.Multimap;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
@@ -23,13 +20,13 @@ import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -37,6 +34,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 // Goety code scares me
@@ -54,8 +52,8 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new GoetyStaffItem(entry, new FabricItemSettings().customDamage(GoetyStaffItem::damageItem));
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new GoetyStaffItem(entry, new FabricItemSettings().customDamage(GoetyStaffItem::damageItem)));
         }
     }
 

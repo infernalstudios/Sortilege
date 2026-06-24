@@ -17,6 +17,7 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class ElectroblobStaffItem extends AStaffItem implements IManaItem, IWorkbenchItem, ICustomDamageItem {
     @Dependency(mod = "ebwizardry:mana")
@@ -42,8 +44,8 @@ public class ElectroblobStaffItem extends AStaffItem implements IManaItem, IWork
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new ElectroblobStaffItem(entry, new Item.Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new ElectroblobStaffItem(entry, new Properties()));
         }
     }
 

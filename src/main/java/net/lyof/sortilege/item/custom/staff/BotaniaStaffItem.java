@@ -15,9 +15,9 @@ import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.GsonHelper;
@@ -32,7 +32,6 @@ import net.minecraft.world.phys.Vec3;
 import vazkii.botania.api.mana.BurstProperties;
 import vazkii.botania.api.mana.LensEffectItem;
 import vazkii.botania.api.mana.ManaItemHandler;
-import vazkii.botania.client.fx.BotaniaParticles;
 import vazkii.botania.common.advancements.ManaBlasterTrigger;
 import vazkii.botania.common.entity.ManaBurstEntity;
 import vazkii.botania.common.item.equipment.CustomDamageItem;
@@ -40,6 +39,7 @@ import vazkii.botania.common.item.equipment.tool.ToolCommons;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
@@ -56,8 +56,8 @@ public class BotaniaStaffItem extends AStaffItem implements CustomDamageItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new BotaniaStaffItem(entry, new Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new BotaniaStaffItem(entry, new Properties()));
         }
     }
 

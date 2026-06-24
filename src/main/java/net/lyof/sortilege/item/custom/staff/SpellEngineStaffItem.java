@@ -41,6 +41,7 @@ import net.spell_power.internals.CustomEntityAttribute;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public class SpellEngineStaffItem extends AStaffItem {
@@ -57,8 +58,8 @@ public class SpellEngineStaffItem extends AStaffItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new SpellEngineStaffItem(entry, new Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new SpellEngineStaffItem(entry, new Properties()));
         }
     }
 

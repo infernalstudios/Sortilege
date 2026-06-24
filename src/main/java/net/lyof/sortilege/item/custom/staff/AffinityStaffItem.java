@@ -13,6 +13,7 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 public class AffinityStaffItem extends AStaffItem {
     @Dependency(mod = "affinity:aethum")
@@ -30,8 +32,8 @@ public class AffinityStaffItem extends AStaffItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new AffinityStaffItem(entry, new Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new AffinityStaffItem(entry, new Properties()));
         }
     }
 

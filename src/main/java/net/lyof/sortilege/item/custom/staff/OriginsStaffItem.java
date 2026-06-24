@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class OriginsStaffItem extends AStaffItem {
     @Dependency(mod = "origins:resource")
@@ -28,8 +29,8 @@ public class OriginsStaffItem extends AStaffItem {
         }
 
         @Override
-        public AStaffItem make(StaffEntry entry) {
-            return new OriginsStaffItem(entry, new Properties());
+        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+            registrar.accept(entry.getID(), new OriginsStaffItem(entry, new Properties()));
         }
     }
 

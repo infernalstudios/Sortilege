@@ -17,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 // Yes I'm aware naming them all getThing is stupid but else it messes with my brain
 public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getReader,
@@ -56,10 +57,6 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         Display display = reader.readDisplay(GsonHelper.getAsJsonObject(json, "display", new JsonObject()));
 
         return new StaffEntry(id, sortIndex, reader, tier, cost, effects, display);
-    }
-
-    public AStaffItem makeStaff() {
-        return this.getReader().make(this);
     }
 
     public Item.Properties applyProperties(Item.Properties properties) {

@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Iterator;
 import java.util.ServiceLoader;
+import java.util.function.BiConsumer;
 
 public interface IStaffEntryReader {
     default StaffEntry.Cost readCost(JsonObject json) {
@@ -21,7 +22,8 @@ public interface IStaffEntryReader {
     default StaffEntry.Display readDisplay(JsonObject json) {
         return new StaffEntry.Display().read(json);
     }
-    AStaffItem make(StaffEntry entry);
+    void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar);
+    default void finalize(AStaffItem staff) {}
 
 
     default ResourceLocation getType() {

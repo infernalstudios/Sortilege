@@ -4,10 +4,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.armor.ModArmorMaterials;
-import net.lyof.sortilege.item.custom.AntidotePotionItem;
-import net.lyof.sortilege.item.custom.KnowledgeBookItem;
-import net.lyof.sortilege.item.custom.LapisShieldItem;
-import net.lyof.sortilege.item.custom.LimititeItem;
+import net.lyof.sortilege.item.custom.*;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.item.ArmorItem;
@@ -19,13 +16,17 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ModItems {
-    public static List<Item> STAFFS = new ArrayList<>();
+    public static List<AStaffItem> STAFFS = new ArrayList<>();
 
     public static void register() {
-        for (StaffEntry entry : ModConfig.staffs.get()) {
-            //Sortilege.log().info(entry.getID(), entry.makeStaff());
-            STAFFS.add(register(true, entry.getID(), entry::makeStaff));
-        }
+        for (StaffEntry entry : ModConfig.staffs.get())
+            entry.getReader().register(entry, (id, staff) -> {
+                staff.setName(id);
+                register(true, id, () -> staff);
+                STAFFS.add(staff);
+            });
+        for (AStaffItem staff : STAFFS)
+            staff.getEntry().getReader().finalize(staff);
     }
 
     public static Item register(boolean config, String name, Supplier<Item> item) {

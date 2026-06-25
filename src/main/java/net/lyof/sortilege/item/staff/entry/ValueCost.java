@@ -10,7 +10,8 @@ public class ValueCost extends StaffEntry.Cost {
     @Override
     public ValueCost read(JsonObject json) {
         super.read(json);
-        this.value = GsonHelper.getAsInt(json, "value", 0);
+        if (json.has("value"))
+            this.value = GsonHelper.getAsInt(json, "value");
         return this;
     }
 

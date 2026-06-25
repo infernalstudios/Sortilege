@@ -900,98 +900,50 @@ public class ModConfig {
                                 .add("damage", 4)
                                 .add("piercing", 1)
                                 .add("range", 8)
-                                .add("cooldown", 20)
                                 .add("durability", 3191)
                                 .add("repair_material", "#forge:ingots/copper")
+                                .addObject("unaffected", it -> it
+                                        .add("cooldown", 20)
+                                )
+                                .addObject("exposed", it -> it
+                                        .add("cooldown", 27)
+                                )
+                                .addObject("weathered", it -> it
+                                        .add("cooldown", 33)
+                                )
+                                .addObject("oxidized", it -> it
+                                        .add("cooldown", 40)
+                                )
                         )
                         .addObject("cost", cost -> cost
-                                .add("value", 3)
+                                .addObject("unaffected", it -> it
+                                        .add("value", 3)
+                                )
+                                .addObject("exposed", it -> it
+                                        .add("value", 2)
+                                )
+                                .addObject("weathered", it -> it
+                                        .add("value", 1)
+                                )
+                                .addObject("oxidized", it -> it
+                                        .add("value", 0)
+                                )
                         )
                         .addObject("effects", effects -> effects
                                 .addObject("enchants", enchants -> enchants
                                         .add("sortilege:blitz", 1)
                                 )
-                                .add("next", "exposed_copper_staff")
-                                .add("weather_state", "UNAFFECTED")
                         )
-                        .addArray("recipes", List.of("sortilege:staff/copper_staff"))
-                )
-                .addObject(staff -> staff
-                        .add("id", "exposed_copper_staff")
-                        .add("sort_index", 26)
-                        .add("dependency", "caverns_and_chasms")
-                        .add("type", "caverns_and_chasms:weathering_experience")
-                        .addObject("properties", properties -> properties
-                                .add("enchantability", 13)
-                                .add("damage", 4)
-                                .add("piercing", 1)
-                                .add("range", 8)
-                                .add("cooldown", 27)
-                                .add("durability", 3191)
-                                .add("repair_material", "#forge:ingots/copper")
+                        .addArray("recipes", recipes -> recipes
+                                .add("sortilege:staff/copper_staff")
+                                .add("sortilege:staff/exposed_copper_staff")
+                                .add("sortilege:staff/weathered_copper_staff")
+                                .add("sortilege:staff/oxidized_copper_staff")
+                                .add("sortilege:staff/waxed_copper_staff")
+                                .add("sortilege:staff/waxed_exposed_copper_staff")
+                                .add("sortilege:staff/waxed_weathered_copper_staff")
+                                .add("sortilege:staff/waxed_oxidized_copper_staff")
                         )
-                        .addObject("cost", cost -> cost
-                                .add("value", 2)
-                        )
-                        .addObject("effects", effects -> effects
-                                .addObject("enchants", enchants -> enchants
-                                        .add("sortilege:blitz", 1)
-                                )
-                                .add("next", "weathered_copper_staff")
-                                .add("weather_state", "EXPOSED")
-                        )
-                        .addArray("recipes", List.of("sortilege:staff/exposed_copper_staff"))
-                )
-                .addObject(staff -> staff
-                        .add("id", "weathered_copper_staff")
-                        .add("sort_index", 27)
-                        .add("dependency", "caverns_and_chasms")
-                        .add("type", "caverns_and_chasms:weathering_experience")
-                        .addObject("properties", properties -> properties
-                                .add("enchantability", 13)
-                                .add("damage", 4)
-                                .add("piercing", 1)
-                                .add("range", 8)
-                                .add("cooldown", 33)
-                                .add("durability", 3191)
-                                .add("repair_material", "#forge:ingots/copper")
-                        )
-                        .addObject("cost", cost -> cost
-                                .add("value", 1)
-                        )
-                        .addObject("effects", effects -> effects
-                                .addObject("enchants", enchants -> enchants
-                                        .add("sortilege:blitz", 1)
-                                )
-                                .add("next", "oxidized_copper_staff")
-                                .add("weather_state", "WEATHERED")
-                        )
-                        .addArray("recipes", List.of("sortilege:staff/weathered_copper_staff"))
-                )
-                .addObject(staff -> staff
-                        .add("id", "oxidized_copper_staff")
-                        .add("sort_index", 28)
-                        .add("dependency", "caverns_and_chasms")
-                        .add("type", "caverns_and_chasms:weathering_experience")
-                        .addObject("properties", properties -> properties
-                                .add("enchantability", 13)
-                                .add("damage", 4)
-                                .add("piercing", 1)
-                                .add("range", 8)
-                                .add("cooldown", 40)
-                                .add("durability", 3191)
-                                .add("repair_material", "#forge:ingots/copper")
-                        )
-                        .addObject("cost", cost -> cost
-                                .add("value", 0)
-                        )
-                        .addObject("effects", effects -> effects
-                                .addObject("enchants", enchants -> enchants
-                                        .add("sortilege:blitz", 1)
-                                )
-                                .add("weather_state", "OXIDIZED")
-                        )
-                        .addArray("recipes", List.of("sortilege:staff/oxidized_copper_staff"))
                 )
                 .addObject(staff -> staff
                         .add("id", "silver_staff")

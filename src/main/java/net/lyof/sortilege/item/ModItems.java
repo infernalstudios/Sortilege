@@ -19,14 +19,13 @@ public class ModItems {
     public static List<AStaffItem> STAFFS = new ArrayList<>();
 
     public static void register() {
-        for (StaffEntry entry : ModConfig.staffs.get())
+        for (StaffEntry entry : ModConfig.staffs.get()) {
             entry.getReader().register(entry, (id, staff) -> {
                 staff.setName(id);
                 register(true, id, () -> staff);
                 STAFFS.add(staff);
             });
-        for (AStaffItem staff : STAFFS)
-            staff.getEntry().getReader().finalize(staff);
+        }
     }
 
     public static Item register(boolean config, String name, Supplier<Item> item) {

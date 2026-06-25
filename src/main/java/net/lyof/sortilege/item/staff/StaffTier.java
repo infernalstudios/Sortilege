@@ -33,8 +33,7 @@ public class StaffTier implements Tier {
         this.chargeTime = 1;
     }
 
-    public StaffTier(Tier parent) {
-        this();
+    public void copy(Tier parent) {
         this.durability = parent.getUses();
         this.enchantability = parent.getEnchantmentValue();
         this.repairIngredient = parent::getRepairIngredient;
@@ -42,42 +41,39 @@ public class StaffTier implements Tier {
         this.fireproof = parent == Tiers.NETHERITE;
     }
 
-    public static StaffTier read(JsonObject json) throws JsonSyntaxException {
-        StaffTier self;
+    public StaffTier read(JsonObject json) throws JsonSyntaxException {
         try {
-            self = new StaffTier(Tiers.valueOf(GsonHelper.getAsString(json, "parent", "")));
-        } catch (IllegalArgumentException ignored) {
-            self = new StaffTier();
-        }
+            this.copy(Tiers.valueOf(GsonHelper.getAsString(json, "parent", "")));
+        } catch (IllegalArgumentException ignored) {}
 
         if (json.has("fireproof"))
-            self.fireproof = GsonHelper.getAsBoolean(json, "fireproof");
+            this.fireproof = GsonHelper.getAsBoolean(json, "fireproof");
         if (json.has("durability"))
-            self.durability = GsonHelper.getAsInt(json, "durability");
+            this.durability = GsonHelper.getAsInt(json, "durability");
         if (json.has("repair_material")) {
             String id = GsonHelper.getAsString(json, "repair_material");
             if (id.startsWith("#")) {
                 TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(id.substring(1)));
-                self.repairIngredient = Suppliers.memoize(() -> Ingredient.of(tag));
+                this.repairIngredient = Suppliers.memoize(() -> Ingredient.of(tag));
             } else {
-                self.repairIngredient = Suppliers.memoize(() -> Ingredient.of(BuiltInRegistries.ITEM.get(Identifier.of(id))));
+                this.repairIngredient = Suppliers.memoize(() -> Ingredient.of(BuiltInRegistries.ITEM.get(Identifier.of(id))));
             }
         }
         if (json.has("enchantability"))
-            self.enchantability = GsonHelper.getAsInt(json, "enchantability");
+            this.enchantability = GsonHelper.getAsInt(json, "enchantability");
 
         if (json.has("damage"))
-            self.attackDamage = GsonHelper.getAsFloat(json, "damage");
+            this.attackDamage = GsonHelper.getAsFloat(json, "damage");
         if (json.has("piercing"))
-            self.piercing = GsonHelper.getAsInt(json, "piercing");
+            this.piercing = GsonHelper.getAsInt(json, "piercing");
         if (json.has("range"))
-            self.range = GsonHelper.getAsInt(json, "range");
+            this.range = GsonHelper.getAsInt(json, "range");
         if (json.has("charge_time"))
-            self.chargeTime = GsonHelper.getAsInt(json, "charge_time");
+            this.chargeTime = GsonHelper.getAsInt(json, "charge_time");
         if (json.has("cooldown"))
-            self.cooldown = GsonHelper.getAsInt(json, "cooldown");
+            this.cooldown = GsonHelper.getAsInt(json, "cooldown");
 
-        return self;
+        return this;
     }
 
     @Override

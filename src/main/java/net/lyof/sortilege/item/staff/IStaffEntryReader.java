@@ -13,6 +13,9 @@ import java.util.ServiceLoader;
 import java.util.function.BiConsumer;
 
 public interface IStaffEntryReader {
+    default StaffTier readTier(JsonObject json) {
+        return new StaffTier().read(json);
+    }
     default StaffEntry.Cost readCost(JsonObject json) {
         return new StaffEntry.Cost().read(json);
     }
@@ -23,7 +26,6 @@ public interface IStaffEntryReader {
         return new StaffEntry.Display().read(json);
     }
     void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar);
-    default void finalize(AStaffItem staff) {}
 
 
     default ResourceLocation getType() {

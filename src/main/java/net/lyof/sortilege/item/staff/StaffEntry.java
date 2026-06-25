@@ -49,9 +49,9 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         String id = GsonHelper.getAsString(json, "id");
         int sortIndex = GsonHelper.getAsInt(json, "sort_index", Integer.MAX_VALUE);
 
-        Sortilege.log().info("Found reader", reader, "for", id);
+        Sortilege.log().info("Found reader", reader.getClass().getName(), "for", id);
 
-        StaffTier tier = StaffTier.read(GsonHelper.getAsJsonObject(json, "properties"));
+        StaffTier tier = reader.readTier(GsonHelper.getAsJsonObject(json, "properties"));
         Cost cost = reader.readCost(GsonHelper.getAsJsonObject(json, "cost", new JsonObject()));
         Effects effects = reader.readEffects(GsonHelper.getAsJsonObject(json, "effects", new JsonObject()));
         Display display = reader.readDisplay(GsonHelper.getAsJsonObject(json, "display", new JsonObject()));
@@ -85,16 +85,25 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         protected String onHitTarget;
         protected Map<ResourceLocation, Integer> enchants;
 
+        public Effects() {
+            this.enchants = new HashMap<>();
+        }
+
         public Effects read(JsonObject json) {
             JsonObject commands = GsonHelper.getAsJsonObject(json, "commands", new JsonObject());
-            this.onShoot = GsonHelper.getAsString(commands, "on_shoot", null);
-            this.onHitSelf = GsonHelper.getAsString(commands, "on_hit_self", null);
-            this.onHitTarget = GsonHelper.getAsString(commands, "on_hit_target", null);
+            if (commands.has("on_shoot"))
+                this.onShoot = GsonHelper.getAsString(commands, "on_shoot");
+            if (commands.has("on_hit_self"))
+                this.onHitSelf = GsonHelper.getAsString(commands, "on_hit_self");
+            if (commands.has("on_hit_target"))
+                this.onHitTarget = GsonHelper.getAsString(commands, "on_hit_target");
 
-            this.enchants = new HashMap<>();
-            JsonObject enchants = GsonHelper.getAsJsonObject(json, "enchants", new JsonObject());
-            for (String key : enchants.keySet())
-                this.enchants.put(Identifier.of(key), GsonHelper.getAsInt(enchants, key));
+            if (json.has("enchants")) {
+                this.enchants = new HashMap<>();
+                JsonObject enchants = GsonHelper.getAsJsonObject(json, "enchants");
+                for (String key : enchants.keySet())
+                    this.enchants.put(Identifier.of(key), GsonHelper.getAsInt(enchants, key));
+            }
 
             return this;
         }
@@ -122,17 +131,26 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         protected List<float[]> colors;
         protected Rarity rarity;
 
-        public Display read(JsonObject json) {
-            this.particle = json.has("particle") ? Identifier.of(GsonHelper.getAsString(json, "particle")) : null;
-            this.sound = Identifier.of(GsonHelper.getAsString(json, "particle", "minecraft:block.amethyst_block.hit"));
-
+        public Display() {
+            this.sound = Identifier.of("minecraft", "block.amethyst_block.hit");
             this.colors = new ArrayList<>();
-            JsonArray colors = GsonHelper.getAsJsonArray(json, "colors", new JsonArray());
-            for (JsonElement e : colors) {
-                int rgb = Integer.decode(e.getAsString());
-                this.colors.add(new float[]{FastColor.ARGB32.red(rgb) / 255f,
-                        FastColor.ARGB32.green(rgb) / 255f,
-                        FastColor.ARGB32.blue(rgb) / 255f});
+        }
+
+        public Display read(JsonObject json) {
+            if (json.has("particle"))
+                this.particle = Identifier.of(GsonHelper.getAsString(json, "particle"));
+            if (json.has("particle"))
+                this.sound = Identifier.of(GsonHelper.getAsString(json, "particle"));
+
+            if (json.has("colors")) {
+                this.colors = new ArrayList<>();
+                JsonArray colors = GsonHelper.getAsJsonArray(json, "colors");
+                for (JsonElement e : colors) {
+                    int rgb = Integer.decode(e.getAsString());
+                    this.colors.add(new float[]{FastColor.ARGB32.red(rgb) / 255f,
+                            FastColor.ARGB32.green(rgb) / 255f,
+                            FastColor.ARGB32.blue(rgb) / 255f});
+                }
             }
 
             try {

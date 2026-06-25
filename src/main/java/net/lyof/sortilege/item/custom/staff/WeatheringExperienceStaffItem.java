@@ -59,11 +59,11 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
 
             StaffEntry unaffectedEntry = new StaffEntry(entry.getID(), entry.getSortIndex(), entry.getReader(),
                     tier.unaffected, cost.unaffected, effects.unaffected, display.unaffected);
-            StaffEntry exposedEntry = new StaffEntry("exposed_" + entry.getID(), entry.getSortIndex(), entry.getReader(),
+            StaffEntry exposedEntry = new StaffEntry("exposed_" + entry.getID(), entry.getSortIndex() + 1, entry.getReader(),
                     tier.exposed, cost.exposed, effects.exposed, display.exposed);
-            StaffEntry weatheredEntry = new StaffEntry("weathered_" + entry.getID(), entry.getSortIndex(), entry.getReader(),
+            StaffEntry weatheredEntry = new StaffEntry("weathered_" + entry.getID(), entry.getSortIndex() + 2, entry.getReader(),
                     tier.weathered, cost.weathered, effects.weathered, display.weathered);
-            StaffEntry oxidizedEntry = new StaffEntry("oxidized_" + entry.getID(), entry.getSortIndex(), entry.getReader(),
+            StaffEntry oxidizedEntry = new StaffEntry("oxidized_" + entry.getID(), entry.getSortIndex() + 3, entry.getReader(),
                     tier.oxidized, cost.oxidized, effects.oxidized, display.oxidized);
 
             AStaffItem unaffected = new WeatheringExperienceStaffItem(unaffectedEntry, WeatheringCopper.WeatherState.UNAFFECTED, false, new Properties());
@@ -94,7 +94,7 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
         }
     }
 
-    public static class Tier extends StaffTier {
+    protected static class Tier extends StaffTier {
         protected StaffTier unaffected, exposed, weathered, oxidized;
 
         @Override
@@ -116,7 +116,7 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
         }
     }
 
-    public static class Cost extends StaffEntry.Cost {
+    protected static class Cost extends StaffEntry.Cost {
         protected ValueCost unaffected, exposed, weathered, oxidized;
 
         @Override
@@ -138,7 +138,7 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
         }
     }
 
-    public static class Effects extends StaffEntry.Effects {
+    protected static class Effects extends StaffEntry.Effects {
         protected StaffEntry.Effects unaffected, exposed, weathered, oxidized;
 
         @Override
@@ -160,7 +160,7 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
         }
     }
 
-    public static class Display extends StaffEntry.Display {
+    protected static class Display extends StaffEntry.Display {
         protected StaffEntry.Display unaffected, exposed, weathered, oxidized;
 
         @Override

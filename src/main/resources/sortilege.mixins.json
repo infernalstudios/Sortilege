@@ -37,6 +37,7 @@
     "SlotMixin",
     "SmithingTransformRecipeMixin",
     "SpellInfinityEnchantmentMixin",
+    "WeatheringCopperItemMixin",
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",

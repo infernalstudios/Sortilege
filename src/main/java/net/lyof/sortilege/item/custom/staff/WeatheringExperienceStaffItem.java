@@ -50,6 +50,7 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
             return new Display().read(json);
         }
 
+        // I'm not proud of this but welp. That or Java is even more verbose than I thought and it's not really my fault
         @Override
         public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
             Tier tier = ((Tier) entry.getTier());

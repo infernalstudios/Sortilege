@@ -49,7 +49,7 @@ public class ModRuntime {
     public static void loadClient() {
         for (AStaffItem staff : ModItems.STAFFS)
             SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + staff.getName() + ".json"),
-                    json -> Client.generateDefaultModel(json, staff.getName()));
+                    json -> Client.generateDefaultModel(json, staff.getEntry().getID()));
 
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), ModRuntime.Client::generateTranslations);
 

@@ -755,8 +755,8 @@ public class ModConfig {
                         .addObject("properties", properties -> properties
                                 .add("enchantability", 20)
                                 .add("durability", 2341)
-                                .add("damage", 7)
-                                .add("piercing", 3)
+                                .add("damage", 6)
+                                .add("piercing", 4)
                                 .add("range", 16)
                                 .add("cooldown", 30)
                                 .add("repair_material", "minecraft:diamond")

@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.setup.ModConfig;
@@ -8,7 +9,12 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ModItemGroups {
+    public static final Set<AStaffItem> STAFF_BLACKLIST = new HashSet<>(14);
+
     public static void register() {
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.INGREDIENTS).register(entries -> {
             entries.addAfter(Items.EXPERIENCE_BOTTLE, ModItems.LIMITITE);
@@ -18,8 +24,8 @@ public class ModItemGroups {
         });
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
             if (ModConfig.lapisShieldEnabled.get()) entries.addAfter(Items.SHIELD, ModItems.LAPIS_SHIELD);
-            for (Item staff : ModItems.STAFFS)
-                entries.addBefore(Items.TRIDENT, staff);
+            for (AStaffItem staff : ModItems.STAFFS)
+                if (!STAFF_BLACKLIST.contains(staff)) entries.addBefore(Items.TRIDENT, staff);
             if (ModConfig.witchHatEnabled.get()) entries.addAfter(Items.TURTLE_HELMET, ModItems.WITCH_HAT);
             AntidotePotionItem.fillItemGroup(entries, ModItems.ANTIDOTE);
         });

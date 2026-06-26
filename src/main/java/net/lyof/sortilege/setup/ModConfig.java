@@ -631,7 +631,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "spawner_staff")
-                        .add("sort_index", 55)
+                        .add("sort_index", 1055)
                         .add("dependency", "dungeonnowloading")
                         .add("type", "sortilege:health")
                         .addObject("properties", properties -> properties
@@ -662,7 +662,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "divine_beryl_staff")
-                        .add("sort_index", 51)
+                        .add("sort_index", 1051)
                         .add("dependency", "miningmaster")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -691,7 +691,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "heart_rhodonite_staff")
-                        .add("sort_index", 52)
+                        .add("sort_index", 1052)
                         .add("dependency", "miningmaster")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -720,7 +720,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "spider_kunzite_staff")
-                        .add("sort_index", 53)
+                        .add("sort_index", 1053)
                         .add("dependency", "miningmaster")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -749,7 +749,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "ultima_staff")
-                        .add("sort_index", 54)
+                        .add("sort_index", 1061)
                         .add("dependency", "miningmaster")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -790,7 +790,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "electrum_staff")
-                        .add("sort_index", 49)
+                        .add("sort_index", 51)
                         .add("dependency", "oreganized")
                         .addArray("type", List.of("feathers:feathers", "sortilege:experience"))
                         .addObject("properties", properties -> properties
@@ -817,7 +817,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "manasteel_staff")
-                        .add("sort_index", 35)
+                        .add("sort_index", 1035)
                         .add("dependency", "botania")
                         .add("type", "botania:mana")
                         .addObject("properties", properties -> properties
@@ -840,7 +840,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "elementium_staff")
-                        .add("sort_index", 36)
+                        .add("sort_index", 1036)
                         .add("dependency", "botania")
                         .add("type", "botania:mana")
                         .addObject("properties", properties -> properties
@@ -863,7 +863,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "terrasteel_staff")
-                        .add("sort_index", 75)
+                        .add("sort_index", 1075)
                         .add("dependency", "botania")
                         .add("type", "botania:mana")
                         .addObject("properties", properties -> properties
@@ -1037,7 +1037,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "pearlescent_staff")
-                        .add("sort_index", 67)
+                        .add("sort_index", 1067)
                         .add("dependency", "unusualend")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1068,7 +1068,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "enderite_staff")
-                        .add("sort_index", 70)
+                        .add("sort_index", 1070)
                         .add("dependency", "enderitemod")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1094,7 +1094,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "neptunium_staff")
-                        .add("sort_index", 70)
+                        .add("sort_index", 1066)
                         .add("dependency", "aquaculture")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1126,7 +1126,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "cloggrum_staff")
-                        .add("sort_index", 100)
+                        .add("sort_index", 2025)
                         .add("dependency", "undergarden")
                         .add("type", "sortilege:ammo")
                         .addObject("properties", properties -> properties
@@ -1146,7 +1146,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "froststeel_staff")
-                        .add("sort_index", 101)
+                        .add("sort_index", 2035)
                         .add("dependency", "undergarden")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1170,7 +1170,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "utherium_staff")
-                        .add("sort_index", 102)
+                        .add("sort_index", 2045)
                         .add("dependency", "undergarden")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1189,7 +1189,7 @@ public class ModConfig {
                 )
                 .addObject(staff -> staff
                         .add("id", "forgotten_staff")
-                        .add("sort_index", 103)
+                        .add("sort_index", 2065)
                         .add("dependency", "undergarden")
                         .add("type", "sortilege:experience")
                         .addObject("properties", properties -> properties
@@ -1209,7 +1209,7 @@ public class ModConfig {
 
                 .addObject(staff -> staff
                         .add("id", "dark_staff")
-                        .add("sort_index", 59)
+                        .add("sort_index", 1054)
                         .add("dependency", "goety")
                         .add("type", "goety:soul_energy")
                         .addObject("properties", properties -> properties

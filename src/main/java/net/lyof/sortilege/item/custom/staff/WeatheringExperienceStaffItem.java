@@ -9,6 +9,7 @@ import com.teamabnormals.caverns_and_chasms.common.item.copper.WeatheringCopperI
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
@@ -84,6 +85,14 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
             registrar.accept("waxed_" + weatheredEntry.getID(), weatheredWaxed);
             registrar.accept(oxidizedEntry.getID(), oxidized);
             registrar.accept("waxed_" + oxidizedEntry.getID(), oxidizedWaxed);
+
+            ModItemGroups.STAFF_BLACKLIST.add(unaffectedWaxed);
+            ModItemGroups.STAFF_BLACKLIST.add(exposed);
+            ModItemGroups.STAFF_BLACKLIST.add(exposedWaxed);
+            ModItemGroups.STAFF_BLACKLIST.add(weathered);
+            ModItemGroups.STAFF_BLACKLIST.add(weatheredWaxed);
+            ModItemGroups.STAFF_BLACKLIST.add(oxidized);
+            ModItemGroups.STAFF_BLACKLIST.add(oxidizedWaxed);
 
             NEXT_BY_ITEM.put(unaffected, exposed);
             NEXT_BY_ITEM.put(exposed, weathered);

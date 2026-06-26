@@ -139,8 +139,8 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         public Display read(JsonObject json) {
             if (json.has("particle"))
                 this.particle = Identifier.of(GsonHelper.getAsString(json, "particle"));
-            if (json.has("particle"))
-                this.sound = Identifier.of(GsonHelper.getAsString(json, "particle"));
+            if (json.has("sound"))
+                this.sound = Identifier.of(GsonHelper.getAsString(json, "sound"));
 
             if (json.has("colors")) {
                 this.colors = new ArrayList<>();

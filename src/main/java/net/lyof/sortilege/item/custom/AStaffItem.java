@@ -23,11 +23,13 @@ import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.particle.GlowParticle;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -580,8 +582,9 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             return;
         } catch (Throwable ignored) {}
 
-        if (particle instanceof ParticleOptions options)
-            player.level().addAlwaysVisibleParticle(options, x, y, z, color[0], color[1], color[2]);
+        if (particle instanceof ParticleOptions options) {
+            player.level().addParticle(options, true, x, y, z, color[0], color[1], color[2]);
+        }
     }
 
     @Environment(EnvType.CLIENT)

@@ -4,6 +4,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.custom.staff.WeatheringExperienceStaffItem;
@@ -101,14 +102,10 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
             weathered = new StaffTier();
             oxidized = new StaffTier();
 
-            unaffected.read(json);
-            unaffected.read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
-            exposed.read(json);
-            exposed.read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
-            weathered.read(json);
-            weathered.read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
-            oxidized.read(json);
-            oxidized.read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
+            unaffected.read(json).read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
+            exposed.read(json).read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
+            weathered.read(json).read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
+            oxidized.read(json).read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
             return this;
         }
     }
@@ -123,14 +120,10 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
             weathered = new ValueCost();
             oxidized = new ValueCost();
 
-            unaffected.read(json);
-            unaffected.read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
-            exposed.read(json);
-            exposed.read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
-            weathered.read(json);
-            weathered.read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
-            oxidized.read(json);
-            oxidized.read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
+            unaffected.read(json).read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
+            exposed.read(json).read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
+            weathered.read(json).read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
+            oxidized.read(json).read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
             return this;
         }
     }
@@ -145,14 +138,10 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
             weathered = new StaffEntry.Effects();
             oxidized = new StaffEntry.Effects();
 
-            unaffected.read(json);
-            unaffected.read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
-            exposed.read(json);
-            exposed.read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
-            weathered.read(json);
-            weathered.read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
-            oxidized.read(json);
-            oxidized.read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
+            unaffected.read(json).read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
+            exposed.read(json).read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
+            weathered.read(json).read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
+            oxidized.read(json).read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
             return this;
         }
     }
@@ -168,13 +157,12 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
             oxidized = new StaffEntry.Display();
 
             unaffected.read(json);
+            Sortilege.log().info(unaffected.getColors().stream().map(c -> c[0] + " " + c[1] + " " + c[2]).toList());
             unaffected.read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
-            exposed.read(json);
-            exposed.read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
-            weathered.read(json);
-            weathered.read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
-            oxidized.read(json);
-            oxidized.read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
+            Sortilege.log().info(unaffected.getColors().stream().map(c -> c[0] + " " + c[1] + " " + c[2]).toList());
+            exposed.read(json).read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
+            weathered.read(json).read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
+            oxidized.read(json).read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));
             return this;
         }
     }

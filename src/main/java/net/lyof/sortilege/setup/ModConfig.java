@@ -934,6 +934,15 @@ public class ModConfig {
                                         .add("sortilege:blitz", 1)
                                 )
                         )
+                        .addObject("display", display -> display
+                                .add("particle", "minecraft:electric_spark")
+                                .addArray("colors", colors -> colors
+                                        .add("#00ff00")
+                                        .add("#00aa00")
+                                        .add("#005500")
+                                        .add("#000000")
+                                )
+                        )
                         .addArray("recipes", recipes -> recipes
                                 .add("sortilege:staff/copper_staff")
                                 .add("sortilege:staff/exposed_copper_staff")

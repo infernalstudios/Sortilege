@@ -201,12 +201,24 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return this.getEntry().getTier().getAttackDamageBonus() + EnchantHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
     }
 
+    public float getDamage(ItemStack stack, LivingEntity player) {
+        return this.getDamage(stack) + (float) player.getAttributeValue(ModAttributes.STAFF_DAMAGE);
+    }
+
     public int getPiercing(ItemStack stack) {
         return this.getEntry().getTier().getPiercing() + EnchantHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
     }
 
+    public int getPiercing(ItemStack stack, LivingEntity player) {
+        return this.getPiercing(stack) + (int) player.getAttributeValue(ModAttributes.STAFF_PIERCE);
+    }
+
     public int getRange(ItemStack stack) {
         return this.getEntry().getTier().getRange() + EnchantHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
+    }
+
+    public int getRange(ItemStack stack, LivingEntity player) {
+        return this.getRange(stack) + (int) player.getAttributeValue(ModAttributes.STAFF_RANGE);
     }
 
     public int getCooldown(ItemStack stack, Player player) {
@@ -273,13 +285,13 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
                 builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID,
                         "Weapon modifier", -3, AttributeModifier.Operation.ADDITION));
             }
-
+/*
             builder.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(),
                     "Staff modifier", this.getDamage(stack), AttributeModifier.Operation.ADDITION));
             builder.put(ModAttributes.STAFF_PIERCE, new AttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(),
                     "Staff modifier", this.getPiercing(stack), AttributeModifier.Operation.ADDITION));
             builder.put(ModAttributes.STAFF_RANGE, new AttributeModifier(ModAttributes.STAFF_RANGE.getUUID(),
-                    "Staff modifier", this.getRange(stack), AttributeModifier.Operation.ADDITION));
+                    "Staff modifier", this.getRange(stack), AttributeModifier.Operation.ADDITION));*/
 
             this.addAttributeModifiers(stack, builder);
 
@@ -355,7 +367,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         Level world = player.level();
         float kinesis = EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
-        float d = this.modifyDamageDealt(stack, this.getDamage(stack), player, target, elements);
+        float d = this.getDamage(stack, player);
+        d = this.modifyDamageDealt(stack, d, player, target, elements);
 
         if (d > 0)
             target.hurt(player.damageSources().indirectMagic(player, player), d);
@@ -407,6 +420,9 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         if (this.canMelee(stack)) {
             this.triggerAttack(stack, player, target, this.getElements(stack), MathHelper.getLookVector(player),
                     true, new ArrayList<>());
+
+            if (player instanceof Player p)
+                p.getCooldowns().addCooldown(this, this.getCooldown(stack, p));
         }
         return super.hurtEnemy(stack, target, player);
     }
@@ -444,7 +460,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors,
                       Vec3 direction, List<LivingEntity> targetsHit) {
 
-        int targetsLeft = this.getPiercing(stack);
+        int targetsLeft = this.getPiercing(stack, player);
         int index;
 
         float x = (float) player.getX();
@@ -454,7 +470,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         int step = 5;
         // Main loop, displaying particles and hurting mobs on its way
-        for (int i = 1; i < this.getRange(stack) * step; i++) {
+        for (int i = 1; i < this.getRange(stack, player) * step; i++) {
             x = (float) (player.getX() + direction.x * i/step);
             y = (float) (player.getY() + direction.y * i/step + player.getEyeHeight(player.getPose()) - 0.2);
             z = (float) (player.getZ() + direction.z * i/step);

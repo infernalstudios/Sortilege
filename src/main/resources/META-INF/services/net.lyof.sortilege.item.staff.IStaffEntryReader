@@ -4,6 +4,7 @@ net.lyof.sortilege.item.custom.staff.HungerStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.AmmoStaffItem$Reader
 
 net.lyof.sortilege.item.custom.staff.WeatheringExperienceStaffItem$Reader
+net.lyof.sortilege.item.custom.staff.WeatheringFeathersStaffItem$Reader
 
 net.lyof.sortilege.item.custom.staff.ElectroblobStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.FeathersStaffItem$Reader

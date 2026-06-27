@@ -75,7 +75,7 @@ dependencies {
 	include "com.github.Chocohead:Fabric-ASM:v${project.fabric_asm_version}"
 
 	// Sol
-	modImplementation "maven.modrinth:sollib:fabric-1.20.1-1.1"
+	modImplementation "maven.modrinth:sollib:${sollib_version}"
 
 	// EMI
 	modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"

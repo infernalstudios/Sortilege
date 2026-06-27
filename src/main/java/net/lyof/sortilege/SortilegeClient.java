@@ -30,7 +30,7 @@ public class SortilegeClient implements ClientModInitializer {
         ColorProviderRegistry.ITEM.register(AntidotePotionItem::getItemColor, ModItems.ANTIDOTE);
         ColorProviderRegistry.BLOCK.register(PotionCauldronBlock::getBlockColor, ModBlocks.POTION_CAULDRON);
 
-        ParticleFactoryRegistry.getInstance().register(ModParticles.WISP_PIXEL, WispParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ModParticles.WISP, WispParticle.Factory::new);
 
         MenuScreens.register(ModScreenHandlers.KNOWLEDGE_BOOK, KnowledgeBookScreen::new);
 
@@ -46,7 +46,7 @@ public class SortilegeClient implements ClientModInitializer {
     private static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.INITIALIZE, ModPackets.Client::initialize);
 
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.WISP_PARTICLE_DISPLAY, ModPackets.Client::wispParticleDisplay);
+        ClientPlayNetworking.registerGlobalReceiver(ModPackets.PARTICLE_DISPLAY, ModPackets.Client::particleDisplay);
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.LAPIS_SHIELD_COOLDOWN, ModPackets.Client::lapisShieldCooldown);
     }
 }

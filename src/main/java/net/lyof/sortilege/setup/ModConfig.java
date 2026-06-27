@@ -937,9 +937,8 @@ public class ModConfig {
                         .addObject("display", display -> display
                                 .add("particle", "minecraft:electric_spark")
                                 .addArray("colors", colors -> colors
-                                        .add("#00ff00")
-                                        .add("#00aa00")
-                                        .add("#005500")
+                                        .add("#004400")
+                                        .add("#002200")
                                         .add("#000000")
                                 )
                         )

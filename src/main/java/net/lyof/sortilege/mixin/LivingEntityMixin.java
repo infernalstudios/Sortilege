@@ -146,7 +146,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
             if (player.level() instanceof ServerLevel world)
                 ExperienceOrb.award(world, this.position(), ModConfig.bountyValue.get());
 
-            ModParticles.spawnWisps(player.level(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
+            ModParticles.sendParticles(player.level(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
                     16, new float[]{0.5f, 1f, 0.2f});
         }
     }

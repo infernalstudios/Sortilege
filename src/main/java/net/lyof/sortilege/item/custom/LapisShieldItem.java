@@ -78,7 +78,7 @@ public class LapisShieldItem extends Item implements Equipable, IAddedRenderItem
         if (entity instanceof Player player)
             player.getCooldowns().addCooldown(ModItems.LAPIS_SHIELD, ModConfig.lapisShieldCooldown.get());
 
-        ModParticles.spawnWisps(entity.level(), entity.getX(), entity.getY() + entity.getEyeHeight(entity.getPose()) / 2, entity.getZ(),
+        ModParticles.sendParticles(entity.level(), entity.getX(), entity.getY() + entity.getEyeHeight(entity.getPose()) / 2, entity.getZ(),
                 16, new float[]{0.3f, 0.3f, 1f});
 
         if (amount >= 3f) {

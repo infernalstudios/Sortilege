@@ -23,13 +23,10 @@ import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.particle.GlowParticle;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -376,7 +373,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             target.hurt(player.damageSources().indirectMagic(player, player), d);
         else if (d < 0) {
             target.heal(-d);
-            ModParticles.spawnWisps(world, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(),
+            ModParticles.sendParticles(world, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(),
                     10, new float[]{1, 0.5f, 0.5f});
         }
 
@@ -477,7 +474,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             y = (float) (player.getY() + direction.y * i/step + player.getEyeHeight(player.getPose()) - 0.2);
             z = (float) (player.getZ() + direction.z * i/step);
 
-            this.displayBeam(player, x, y, z, colors);
+            this.displayBeam(stack, player, x, y, z, colors);
 
             if (i % step != 0) continue;
 
@@ -496,7 +493,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
                 break;
 
             index = 0;
-            while (!entities.isEmpty() && entities.size() > index && targetsLeft > 0) {
+            while (entities.size() > index && targetsLeft > 0) {
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target) && this.canHit(stack, player, target)) {
 
@@ -534,57 +531,13 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             player.level().playSound(player, player.blockPosition(), this.getEntry().getDisplay().getSound(), SoundSource.PLAYERS, 1, 1);
     }
 
-    public ParticleType<?> getParticle() {
-        if (this.getEntry().getDisplay().getParticle() == null) return ModParticles.WISP_PIXEL;
-        ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(this.getEntry().getDisplay().getParticle());
-        return particle == null ? ModParticles.WISP_PIXEL : particle;
+    public ResourceLocation getParticle() {
+        if (this.getEntry().getDisplay().getParticle() == null) return ModParticles.WISP_ID;
+        return this.getEntry().getDisplay().getParticle();
     }
 
-    public void displayBeam(Player player, float x, float y, float z, List<float[]> colors) {
-        ParticleType<?> particle = this.getParticle();
-        float[] color = MathHelper.randi(colors);
-
-        if (particle == ModParticles.WISP_PIXEL) {
-            ModParticles.spawnWisps(player.level(), x, y, z, 1, color);
-            return;
-        }
-
-        try {
-            if (player.level().isClientSide() && particle == BotaniaParticles.WISP) {
-                float r = color[0], g = color[1], b = color[2];
-                boolean depth = !ManaseerMonocleItem.hasMonocle(player);
-
-                if (BotaniaConfig.client().subtlePowerSystem()) {
-                    WispParticleData data = WispParticleData.wisp(0.1f, r, g, b, 0.5f, depth);
-                    Proxy.INSTANCE.addParticleForceNear(player.level(), data, x, y, z,
-                            (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02, (Math.random() - 0.5) * 0.02);
-                } else {
-                    float or = r;
-                    float og = g;
-                    float ob = b;
-                    double luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-                    WispParticleData data;
-                    if (luminance < 0.1) {
-                        r = or + (float) Math.random() * 0.125f;
-                        g = og + (float) Math.random() * 0.125f;
-                        b = ob + (float) Math.random() * 0.125f;
-                    }
-
-                    float size = (float) (1 + (Math.random() - 0.5) * 0.065 + Math.sin(new Random(player.getUUID().getMostSignificantBits()).nextInt(9001)) * 0.4);
-                    data = WispParticleData.wisp(0.2f * size, r, g, b, 0.3f, depth);
-                    Proxy.INSTANCE.addParticleForceNear(player.level(), data, x, y, z, 0, 0, 0);
-
-                    data = WispParticleData.wisp(0.1f * size, or, og, ob, 0.3f, depth);
-                    player.level().addParticle(data, x, y, z, (float) (Math.random() - 0.5) * 0.06f, (float) (Math.random() - 0.5) * 0.06f, (float) (Math.random() - 0.5) * 0.06f);
-                }
-            }
-            return;
-        } catch (Throwable ignored) {}
-
-        if (particle instanceof ParticleOptions options) {
-            player.level().addParticle(options, true, x, y, z, color[0], color[1], color[2]);
-        }
+    public void displayBeam(ItemStack stack, Player player, float x, float y, float z, List<float[]> colors) {
+        ModParticles.sendParticles(player.level(), this.getParticle(), x, y, z, 1, MathHelper.randi(colors));
     }
 
     @Environment(EnvType.CLIENT)

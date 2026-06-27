@@ -82,7 +82,7 @@ public class AntidotePotionItem extends PotionItem {
                 float r = FastColor.ARGB32.red(color) / 255f,
                       g = FastColor.ARGB32.green(color) / 255f,
                       b = FastColor.ARGB32.blue(color) / 255f;
-                ModParticles.spawnWisps(world, entity.getX(), entity.getEyeY(), entity.getZ(), 16, new float[]{r, g, b});
+                ModParticles.sendParticles(world, entity.getX(), entity.getEyeY(), entity.getZ(), 16, new float[]{r, g, b});
             }
             if (ModConfig.antidoteImmunityTime.get() > 0)
                 ((PotionShenanigans) entity).sorti_setImmunity(effect, ModConfig.antidoteImmunityTime.get() * 20);

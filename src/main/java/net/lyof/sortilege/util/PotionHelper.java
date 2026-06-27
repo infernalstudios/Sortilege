@@ -24,29 +24,26 @@ public class PotionHelper {
     }
 
     public static void load() {
-        Thread potionMapping = new Thread(() -> {
-            for (Potion potion : BuiltInRegistries.POTION) {
-                if (potion.getEffects().size() == 1 &&
-                        !potion.hasInstantEffects() &&
-                        potion.getEffects().get(0).getAmplifier() == 0 &&
-                        !ModConfig.antidoteBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect()))) {
+        for (Potion potion : BuiltInRegistries.POTION) {
+            if (potion.getEffects().size() == 1 &&
+                    !potion.hasInstantEffects() &&
+                    potion.getEffects().get(0).getAmplifier() == 0 &&
+                    !ModConfig.antidoteBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect()))) {
 
-                    MobEffect effect = potion.getEffects().get(0).getEffect();
-                    int duration = potion.getEffects().get(0).getDuration();
+                MobEffect effect = potion.getEffects().get(0).getEffect();
+                int duration = potion.getEffects().get(0).getDuration();
 
-                    if (!POTIONS.containsKey(effect))
-                        POTIONS.put(effect, potion);
-                    else if (POTIONS.get(effect).getEffects().get(0).getDuration() > duration)
-                        POTIONS.replace(effect, potion);
-                }
+                if (!POTIONS.containsKey(effect))
+                    POTIONS.put(effect, potion);
+                else if (POTIONS.get(effect).getEffects().get(0).getDuration() > duration)
+                    POTIONS.replace(effect, potion);
             }
+        }
 
-            for (Potion potion : POTIONS.values()) {
-                if (!ModConfig.swampHutBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect())))
-                    GEN_ALLOWED_POTIONS.add(potion);
-            }
-        });
-        potionMapping.start();
+        for (Potion potion : POTIONS.values()) {
+            if (!ModConfig.swampHutBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.getEffects().get(0).getEffect())))
+                GEN_ALLOWED_POTIONS.add(potion);
+        }
     }
 
     public static Potion getDefaultPotion(MobEffect effect) {

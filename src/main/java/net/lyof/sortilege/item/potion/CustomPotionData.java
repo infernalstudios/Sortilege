@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModPackets;
@@ -48,7 +49,7 @@ public class CustomPotionData {
 
     public static void read(JsonObject json) {
         if (json.has("potion")) {
-            INSTANCES.add(new CustomPotionData(new ResourceLocation(json.get("potion").getAsString()),
+            INSTANCES.add(new CustomPotionData(Identifier.of(json.get("potion").getAsString()),
                     json.has("effects") && json.get("effects").isJsonArray() ?
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
@@ -68,7 +69,7 @@ public class CustomPotionData {
             JsonObject o = e.getAsJsonObject();
             if (!o.has("effect") || !o.has("duration") || !o.has("amplifier")) continue;
 
-            MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(new ResourceLocation(o.get("effect").getAsString()));
+            MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(Identifier.of(o.get("effect").getAsString()));
             if (effect == null) continue;
             int duration = o.get("duration").getAsInt();
             int amplifier = o.get("amplifier").getAsInt();

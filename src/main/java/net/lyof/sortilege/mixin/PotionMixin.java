@@ -40,8 +40,7 @@ public class PotionMixin implements PotionShenanigans {
 
         if (!this.lengthened) {
             for (MobEffectInstance effect : original) {
-                ((MobEffectInstanceAccessor) effect).setDuration(
-                        (int) Math.round(effect.getDuration() * ModConfig.potionDurationMultiplier.get()));
+                ((MobEffectInstanceAccessor) effect).setDuration((int) Math.round(effect.getDuration() * ModConfig.potionDurationMultiplier.get()));
             }
             this.lengthened = true;
         }

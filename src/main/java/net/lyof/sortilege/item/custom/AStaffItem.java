@@ -531,13 +531,13 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
             player.level().playSound(player, player.blockPosition(), this.getEntry().getDisplay().getSound(), SoundSource.PLAYERS, 1, 1);
     }
 
-    public ResourceLocation getParticle() {
+    public ResourceLocation getParticle(ItemStack stack) {
         if (this.getEntry().getDisplay().getParticle() == null) return ModParticles.WISP_ID;
         return this.getEntry().getDisplay().getParticle();
     }
 
     public void displayBeam(ItemStack stack, Player player, float x, float y, float z, List<float[]> colors) {
-        ModParticles.sendParticles(player.level(), this.getParticle(), x, y, z, 1, MathHelper.randi(colors));
+        ModParticles.sendParticles(player.level(), this.getParticle(stack), x, y, z, 1, MathHelper.randi(colors));
     }
 
     @Environment(EnvType.CLIENT)

@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
@@ -126,6 +127,7 @@ public abstract class ItemStackMixin {
     ))
     private void showEnchantLimit(@Nullable Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir,
                                   @Local List<Component> list) {
+        if (player == null) return;
         ItemStack self = (ItemStack) (Object) this;
 
         if (self.getItem().getEnchantmentValue() > 0 && !self.is(Items.ENCHANTED_BOOK)) {

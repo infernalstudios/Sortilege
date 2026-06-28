@@ -68,35 +68,44 @@ public class EnchantHelper {
 
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
     private static final Map<Item, Integer> ENCHLIMIT_CACHE = new HashMap<>();
+    private static ItemStack cacher = null;
+    private static int usedSlots;
+    private static int totalSlots;
+
+    private static void buildCache(ItemStack stack) {
+        cacher = stack;
+
+        usedSlots = 0;
+        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())
+            if (!enchant.isCurse() || !ModConfig.cursesAddSlots.get()) usedSlots++;
+
+        totalSlots = getBaseEnchantSlots(stack);
+        if (totalSlots >= 0) totalSlots += getExtraEnchantSlots(stack) + getCurseEnchantSlots(stack);
+    }
 
     public static int getUsedEnchantSlots(ItemStack stack) {
-        int l = 0;
-        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())
-            if (!enchant.isCurse() || !ModConfig.cursesAddSlots.get()) l++;
-        return l;
+        if (cacher == stack) return usedSlots;
+        buildCache(stack);
+
+        return usedSlots;
     }
 
     public static int getTotalEnchantSlots(ItemStack stack) {
-        if (ENCHLIMIT_CACHE == null) return 0;
+        if (cacher == stack) return totalSlots;
+        buildCache(stack);
 
-        int l = getBaseEnchantSlots(stack);
-        if (l >= 0)
-            l = l + getExtraEnchantSlots(stack) + getCurseEnchantSlots(stack);
-        return l;
+        return totalSlots;
     }
 
     public static int getBaseEnchantSlots(ItemStack stack) {
-        if (ENCHLIMIT_CACHE.containsKey(stack.getItem())) return ENCHLIMIT_CACHE.get(stack.getItem());
-
         String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 
-        int default_limit = ModConfig.enchantLimiterDefault.get();
+        int defaultLimit = ModConfig.enchantLimiterDefault.get();
         boolean sum = ModConfig.enchantLimiterMode.get().equals("relative");
 
         if (ModConfig.enchantLimiterOverrides.get().containsKey(id)) {
             int l = ModConfig.enchantLimiterOverrides.get().get(id);
-            l = sum ? l + default_limit : l;
-            ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), l);
+            l = sum ? l + defaultLimit : l;
             return l;
         }
 
@@ -106,14 +115,12 @@ public class EnchantHelper {
             TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(str.substring(1)));
             if (stack.is(tag)) {
                 int l = ModConfig.enchantLimiterOverrides.get().get(str);
-                l = sum ? l + default_limit : l;
-                ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), l);
+                l = sum ? l + defaultLimit : l;
                 return l;
             }
         }
 
-        ENCHLIMIT_CACHE.putIfAbsent(stack.getItem(), default_limit);
-        return default_limit;
+        return defaultLimit;
     }
 
     public static int getCurseEnchantSlots(ItemStack stack) {

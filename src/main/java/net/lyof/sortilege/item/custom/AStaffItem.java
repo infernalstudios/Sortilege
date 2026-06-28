@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
@@ -273,7 +274,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return elements;
     }
 
-    @Override
+    //@Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND && this.getEntry().getTier().getPiercing() > 0) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -284,13 +285,6 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
                 builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID,
                         "Weapon modifier", -3, AttributeModifier.Operation.ADDITION));
             }
-/*
-            builder.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.STAFF_DAMAGE.getUUID(),
-                    "Staff modifier", this.getDamage(stack), AttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STAFF_PIERCE, new AttributeModifier(ModAttributes.STAFF_PIERCE.getUUID(),
-                    "Staff modifier", this.getPiercing(stack), AttributeModifier.Operation.ADDITION));
-            builder.put(ModAttributes.STAFF_RANGE, new AttributeModifier(ModAttributes.STAFF_RANGE.getUUID(),
-                    "Staff modifier", this.getRange(stack), AttributeModifier.Operation.ADDITION));*/
 
             this.addAttributeModifiers(stack, builder);
 

@@ -51,7 +51,7 @@ public abstract class ItemStackMixin {
     public Multimap<Attribute, AttributeModifier> setStaffAttributes(ItemStack stack, EquipmentSlot slot, Operation<Multimap<Attribute, AttributeModifier>> original) {
         Multimap<Attribute, AttributeModifier> map = original.call(stack, slot);
 
-        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem staff) {
+        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem) {
             map = HashMultimap.create(map);
             map.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.MARKER_UUID,
                     "Staff marker", 0, AttributeModifier.Operation.ADDITION));
@@ -77,9 +77,9 @@ public abstract class ItemStackMixin {
                 list.add(CommonComponents.space().append(Component.translatable(key, format.format(staff.getDamage(self, player)),
                         Component.translatable(ModAttributes.STAFF_DAMAGE.getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
                 list.add(CommonComponents.space().append(Component.translatable(key, format.format(staff.getPiercing(self, player)),
-                        Component.translatable(ModAttributes.STAFF_PIERCE.getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
+                        Component.translatable(ModAttributes.STAFF_PIERCE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
                 list.add(CommonComponents.space().append(Component.translatable(key, format.format(staff.getRange(self, player)),
-                        Component.translatable(ModAttributes.STAFF_RANGE.getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
+                        Component.translatable(ModAttributes.STAFF_RANGE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
 
                 return value;
             }

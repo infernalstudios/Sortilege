@@ -274,7 +274,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return elements;
     }
 
-    //@Override
+    @Override
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
         if (slot == EquipmentSlot.MAINHAND && this.getEntry().getTier().getPiercing() > 0) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();

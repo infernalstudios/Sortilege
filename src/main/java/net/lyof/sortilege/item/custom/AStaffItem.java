@@ -175,7 +175,16 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         if (this.getEntry().getCost().getOvercharge().getIngredients().containsKey(id)
                 && this.getOvercharge(stack) < this.getMaxOvercharge(stack)) {
 
-            other.shrink(1);
+            ItemStack remainder = other.getRecipeRemainder();
+            if (!remainder.isEmpty()) {
+                if (other.getCount() == 1)
+                    cursorStackReference.set(remainder);
+                else {
+                    player.addItem(remainder);
+                    other.shrink(1);
+                }
+            } else other.shrink(1);
+
             this.setOvercharge(stack, this.getOvercharge(stack)
                     + this.getEntry().getCost().getOvercharge().getIngredients().get(id));
 

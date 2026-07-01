@@ -517,25 +517,32 @@ public class ModConfig {
                         .comment()
                         .addObject("properties", properties -> properties
                                 .add("fireproof", true)
-                                .add("durability", 864)
+                                .add("durability", 666)
                                 .add("repair_material", "minecraft:blaze_rod")
-                                .add("enchantability", 0)
+                                .add("enchantability", 6)
                                 .comment()
                                 .add("damage", 6)
                                 .add("piercing", 1)
                                 .add("range", 0)
-                                .add("charge_time", 1)
-                                .add("cooldown", 50)
+                                .add("charge_time", 20)
+                                .add("cooldown", 60)
                         )
                         .comment()
                         .addObject("cost", cost -> cost
+                                .addObject("overcharge", overcharge -> overcharge
+                                        .add("max", 8)
+                                        .add("bar_color", "#ff9900")
+                                        .addObject("ingredients", ingredients -> ingredients
+                                                .add("minecraft:lava_bucket", 8)
+                                        )
+                                )
                                 .add("item", "minecraft:blaze_powder")
                                 .add("count", 1)
                         )
                         .comment()
                         .addObject("effects", effects -> effects
                                 .addObject("commands", commands -> commands
-                                        .add("on_shoot", "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower: 3, power: [{direction.x}, {direction.y}, {direction.z}], Motion: [{direction.x}, {direction.y}, {direction.z}]}")
+                                        .add("on_shoot", "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower: 2, power: [{direction.x}, {direction.y}, {direction.z}], Motion: [{direction.x}, {direction.y}, {direction.z}]}")
                                 )
                         )
                         .comment()

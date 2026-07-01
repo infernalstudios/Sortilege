@@ -51,7 +51,7 @@ public abstract class ItemStackMixin {
     public Multimap<Attribute, AttributeModifier> setStaffAttributes(ItemStack stack, EquipmentSlot slot, Operation<Multimap<Attribute, AttributeModifier>> original) {
         Multimap<Attribute, AttributeModifier> map = original.call(stack, slot);
 
-        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem) {
+        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem staff && staff.getEntry().getTier().getPiercing() > 0) {
             map = HashMultimap.create(map);
             map.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.MARKER_UUID,
                     "Staff marker", 0, AttributeModifier.Operation.ADDITION));
@@ -74,12 +74,17 @@ public abstract class ItemStackMixin {
                 String key = "attribute.modifier.equals." + AttributeModifier.Operation.ADDITION.toValue();
                 DecimalFormat format = ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
-                list.add(CommonComponents.space().append(Component.translatable(key, format.format(staff.getDamage(self, player)),
-                        Component.translatable(ModAttributes.STAFF_DAMAGE.getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
-                list.add(CommonComponents.space().append(Component.translatable(key, format.format(staff.getPiercing(self, player)),
-                        Component.translatable(ModAttributes.STAFF_PIERCE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
-                list.add(CommonComponents.space().append(Component.translatable(key, format.format(staff.getRange(self, player)),
-                        Component.translatable(ModAttributes.STAFF_RANGE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+                float damage = staff.getDamage(self, player), piercing = staff.getPiercing(self, player), range = staff.getRange(self, player);
+
+                if (damage > 0)
+                    list.add(CommonComponents.space().append(Component.translatable(key, format.format(damage),
+                            Component.translatable(ModAttributes.STAFF_DAMAGE.getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
+                if (piercing > 0)
+                    list.add(CommonComponents.space().append(Component.translatable(key, format.format(piercing),
+                            Component.translatable(ModAttributes.STAFF_PIERCE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+                if (range > 0)
+                    list.add(CommonComponents.space().append(Component.translatable(key, format.format(range),
+                            Component.translatable(ModAttributes.STAFF_RANGE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
 
                 return value;
             }

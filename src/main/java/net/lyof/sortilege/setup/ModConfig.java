@@ -493,9 +493,11 @@ public class ModConfig {
                         )
                         .comment()
                         .addObject("effects", effects -> effects
-                                .add("on_shoot", "")
-                                .add("on_hit_self", "")
-                                .add("on_hit_target", "")
+                                .addObject("commands", commands -> commands
+                                    .add("on_shoot", "")
+                                    .add("on_hit_self", "")
+                                    .add("on_hit_target", "")
+                                )
                                 .comment()
                                 .addObject("enchants", enchants -> {})
                         )
@@ -507,6 +509,40 @@ public class ModConfig {
                         )
                         .comment()
                         .addArray("recipes", recipes -> {})
+                )
+                .addObject(staff -> staff
+                        .add("id", "fireball_rod")
+                        .add("type", "sortilege:ammo")
+                        .add("dependency", "sortilege")
+                        .comment()
+                        .addObject("properties", properties -> properties
+                                .add("fireproof", true)
+                                .add("durability", 864)
+                                .add("repair_material", "minecraft:blaze_rod")
+                                .add("enchantability", 0)
+                                .comment()
+                                .add("damage", 6)
+                                .add("piercing", 1)
+                                .add("range", 0)
+                                .add("charge_time", 1)
+                                .add("cooldown", 50)
+                        )
+                        .comment()
+                        .addObject("cost", cost -> cost
+                                .add("item", "minecraft:blaze_powder")
+                                .add("count", 1)
+                        )
+                        .comment()
+                        .addObject("effects", effects -> effects
+                                .addObject("commands", commands -> commands
+                                        .add("on_shoot", "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower: 3, power: [{direction.x}, {direction.y}, {direction.z}], Motion: [{direction.x}, {direction.y}, {direction.z}]}")
+                                )
+                        )
+                        .comment()
+                        .addObject("display", display -> display
+                                .add("particle", "minecraft:flame")
+                                .add("sound", "minecraft:entity.ghast.shoot")
+                        )
                 )
 
                 .addObject(staff -> staff

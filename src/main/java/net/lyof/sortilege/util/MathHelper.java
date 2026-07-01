@@ -11,16 +11,6 @@ import java.util.Random;
 public class MathHelper {
     public static final Random rnd = new Random();
 
-    public static Vec3 getLookVector(LivingEntity entity) {
-        double y = Math.sin(-entity.getXRot() * Math.PI / 180);
-        double nullifier = Math.cos(entity.getXRot() * Math.PI / 180);
-
-        double x = Math.sin(-entity.getYRot() * Math.PI / 180) * nullifier;
-        double z = Math.cos( entity.getYRot() * Math.PI / 180) * nullifier;
-
-        return new Vec3(x, y, z);
-    }
-
     public static int randint(int max) {
         return randint(0, max + 1);
     }

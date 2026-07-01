@@ -41,7 +41,9 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
@@ -311,12 +313,20 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
     }
 
-    public void runCommand(LivingEntity origin, @Nullable String command) {
+    public String processCommand(ItemStack stack, LivingEntity origin, String command) {
+        Vec3 look = origin.getLookAngle().scale(0.1);
+
+        return command.replace("{direction.x}", String.valueOf(look.x))
+                .replace("{direction.y}", String.valueOf(look.y))
+                .replace("{direction.z}", String.valueOf(look.z));
+    }
+
+    public void runCommand(ItemStack stack, LivingEntity origin, @Nullable String command) {
         if (origin.level() instanceof ServerLevel server && command != null) {
             server.getServer().getCommands().performPrefixedCommand(
                     origin.createCommandSourceStack()
                             .withMaximumPermission(Commands.LEVEL_OWNERS)
-                            .withSuppressedOutput(), command);
+                            .withSuppressedOutput(), this.processCommand(stack, origin, command));
         }
     }
 
@@ -324,13 +334,13 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         if (!(entity instanceof Player player)) return stack;
 
+        Set<ElementalStaffEnchantment> elements = this.getElements(stack);
+        List<float[]> colors = this.getBeamColors(stack, elements);
+        Vec3 look = player.getLookAngle();
+
         this.displayShot(stack, player);
         this.onShoot(stack, player);
         this.applyCost(stack, player);
-
-        Set<ElementalStaffEnchantment> elements = this.getElements(stack);
-        List<float[]> colors = this.getBeamColors(stack, elements);
-        Vec3 look = MathHelper.getLookVector(player);
 
         this.shoot(stack, player, elements, colors, look, new ArrayList<>());
         return stack;
@@ -411,7 +421,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
         if (this.canMelee(stack)) {
-            this.triggerAttack(stack, player, target, this.getElements(stack), MathHelper.getLookVector(player),
+            this.triggerAttack(stack, player, target, this.getElements(stack), player.getLookAngle(),
                     true, new ArrayList<>());
 
             if (player instanceof Player p)
@@ -447,7 +457,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
-        this.runCommand(player, this.getEntry().getEffects().onShoot());
+        this.runCommand(stack, player, this.getEntry().getEffects().onShoot());
     }
 
     public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors,
@@ -506,8 +516,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target) {
-        this.runCommand(player, this.getEntry().getEffects().onHitSelf());
-        this.runCommand(target, this.getEntry().getEffects().onHitTarget());
+        this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
+        this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());
     }
 
     public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {}

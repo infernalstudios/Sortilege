@@ -466,6 +466,7 @@ public class ModConfig {
         .comment()
         .comment("ENTRIES")
         .addArray("entries", entries -> entries
+                .comment("An example staff. Won't be loaded in game, but shows pretty much every configuration possible")
                 .addObject(staff -> staff
                         .add("id", "example_staff")
                         .add("sort_index", 40)
@@ -510,6 +511,7 @@ public class ModConfig {
                         .comment()
                         .addArray("recipes", recipes -> {})
                 )
+                .comment("And this one is a good example of \"thinking outside the box\" things you can do")
                 .addObject(staff -> staff
                         .add("id", "fireball_rod")
                         .add("type", "sortilege:ammo")
@@ -552,6 +554,7 @@ public class ModConfig {
                         )
                 )
 
+                .comment()
                 .addObject(staff -> staff
                         .add("id", "wooden_staff")
                         .add("sort_index", 10)

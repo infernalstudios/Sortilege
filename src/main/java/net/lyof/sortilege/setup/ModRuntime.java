@@ -29,6 +29,7 @@ public class ModRuntime {
     public static void load() {
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/items/staffs.json"),
                 ModRuntime.Common::changeStaffTag);
+
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
                 json -> ModRuntime.Common.changeParent(json, "sortilege:get_witch_hat"), ModConfig.witchHatEnabled);
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/story/enchant_item.json"),

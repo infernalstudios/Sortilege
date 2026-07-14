@@ -13,3 +13,4 @@ net.lyof.sortilege.item.custom.staff.SpellEngineStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.AffinityStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.OriginsStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.GoetyStaffItem$Reader
+net.lyof.sortilege.item.custom.staff.RebornEnergyStaffItem$Reader

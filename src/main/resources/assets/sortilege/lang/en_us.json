@@ -59,6 +59,7 @@
   "tooltip.sortilege.staff.cost.item": "Uses %s %s as ammo",
   "tooltip.sortilege.staff.cost.item.spell_engine": "Requires: %s",
   "tooltip.sortilege.staff.cost.feathers": "Exhausts %s Feathers",
+  "tooltip.sortilege.staff.cost.energy": "Uses %s",
   "tooltip.sortilege.staff.cooldown": "%ss Cooldown",
 
   "tooltip.sortilege.potion.drinking_time": "Takes %ss to drink",

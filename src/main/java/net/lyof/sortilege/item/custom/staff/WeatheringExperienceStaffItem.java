@@ -1,33 +1,13 @@
 package net.lyof.sortilege.item.custom.staff;
 
-import com.google.common.base.Suppliers;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import com.teamabnormals.caverns_and_chasms.common.item.copper.WeatheringCopperItem;
-import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
-import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
-import net.lyof.sortilege.item.staff.StaffTier;
-import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.lyof.sortilege.item.staff.entry.WeatheringStaffReader;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WeatheringCopper;
-
-import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Supplier;
 
 public class WeatheringExperienceStaffItem extends ExperienceStaffItem implements WeatheringCopperItem {
     @Dependency(mod = "caverns_and_chasms:weathering_experience")

@@ -1,6 +1,5 @@
 package net.lyof.sortilege.setup;
 
-import com.Polarice3.Goety.api.magic.SpellType;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;

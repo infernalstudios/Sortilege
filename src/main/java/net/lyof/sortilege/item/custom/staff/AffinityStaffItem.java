@@ -13,7 +13,6 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;

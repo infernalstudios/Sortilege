@@ -7,7 +7,6 @@ import com.google.gson.JsonSyntaxException;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.item.custom.AStaffItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -17,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 // Yes I'm aware naming them all getThing is stupid but else it messes with my brain
 public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getReader,

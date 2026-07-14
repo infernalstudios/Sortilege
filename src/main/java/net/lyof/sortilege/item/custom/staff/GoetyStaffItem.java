@@ -20,7 +20,6 @@ import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;

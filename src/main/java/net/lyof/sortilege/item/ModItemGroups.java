@@ -6,7 +6,6 @@ import net.lyof.sortilege.item.custom.AntidotePotionItem;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.item.CreativeModeTabs;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 import java.util.HashSet;

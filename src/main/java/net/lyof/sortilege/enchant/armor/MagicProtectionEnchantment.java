@@ -1,15 +1,12 @@
 package net.lyof.sortilege.enchant.armor;
 
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;

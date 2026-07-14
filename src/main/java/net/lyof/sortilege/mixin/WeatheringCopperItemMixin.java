@@ -1,8 +1,6 @@
 package net.lyof.sortilege.mixin;
 
 import com.teamabnormals.caverns_and_chasms.common.item.copper.WeatheringCopperItem;
-import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.staff.WeatheringExperienceStaffItem;
 import net.lyof.sortilege.item.staff.entry.WeatheringStaffReader;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;

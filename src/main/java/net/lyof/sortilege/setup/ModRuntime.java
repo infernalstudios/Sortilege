@@ -11,7 +11,6 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AStaffItem;
-import net.lyof.sortilege.item.staff.StaffEntry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.enchantment.Enchantment;
 

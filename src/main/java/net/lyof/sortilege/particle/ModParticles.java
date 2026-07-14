@@ -8,7 +8,6 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;

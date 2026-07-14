@@ -7,7 +7,6 @@ import com.google.gson.JsonSyntaxException;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
-import net.lyof.sortilege.item.custom.staff.WeatheringExperienceStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.StaffTier;

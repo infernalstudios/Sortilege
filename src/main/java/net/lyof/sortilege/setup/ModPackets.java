@@ -6,7 +6,6 @@ import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.potion.CustomPotionData;
-import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;

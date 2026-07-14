@@ -1,7 +1,6 @@
 package net.lyof.sortilege.recipe.loot;
 
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
-import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.setup.ModConfig;

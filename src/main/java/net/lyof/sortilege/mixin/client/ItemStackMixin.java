@@ -13,6 +13,7 @@ import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -48,10 +49,11 @@ public abstract class ItemStackMixin {
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/ItemStack;getAttributeModifiers(Lnet/minecraft/world/entity/EquipmentSlot;)Lcom/google/common/collect/Multimap;"
     ))
-    public Multimap<Attribute, AttributeModifier> setStaffAttributes(ItemStack stack, EquipmentSlot slot, Operation<Multimap<Attribute, AttributeModifier>> original) {
+    public Multimap<Attribute, AttributeModifier> setStaffAttributes(ItemStack stack, EquipmentSlot slot, Operation<Multimap<Attribute, AttributeModifier>> original,
+                                                                     Player player) {
         Multimap<Attribute, AttributeModifier> map = original.call(stack, slot);
 
-        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem staff && staff.getEntry().getTier().getPiercing() > 0) {
+        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem staff && staff.shouldDisplayAttributes(stack, player)) {
             map = HashMultimap.create(map);
             map.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.MARKER_UUID,
                     "Staff marker", 0, AttributeModifier.Operation.ADDITION));
@@ -74,7 +76,9 @@ public abstract class ItemStackMixin {
                 String key = "attribute.modifier.equals." + AttributeModifier.Operation.ADDITION.toValue();
                 DecimalFormat format = ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
 
-                float damage = staff.getDamage(self, player), piercing = staff.getPiercing(self, player), range = staff.getRange(self, player);
+                float damage = staff.getDamage(self, player);
+                float piercing = staff.getPiercing(self, player);
+                float range = staff.getRange(self, player);
 
                 if (damage > 0)
                     list.add(CommonComponents.space().append(Component.translatable(key, format.format(damage),

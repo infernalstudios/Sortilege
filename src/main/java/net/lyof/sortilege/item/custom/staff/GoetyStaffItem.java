@@ -201,6 +201,11 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
         return this.isBroken(stack) ? ImmutableMultimap.of() : super.getAttributeModifiers(stack, slot);
     }
 
+    @Override
+    public boolean shouldDisplayAttributes(ItemStack stack, Player player) {
+        return !this.isBroken(stack) && super.shouldDisplayAttributes(stack, player);
+    }
+
     private static <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
         if (stack.getItem() instanceof GoetyStaffItem item && item.effects.persists()) {
             if (stack.getDamageValue() + amount >= stack.getMaxDamage()) {

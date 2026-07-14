@@ -535,6 +535,10 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return EnchantHelper.hasEnchant(ModEnchants.BONK, stack);
     }
 
+    public boolean shouldDisplayAttributes(ItemStack stack, Player player) {
+        return this.getRange(stack) > 0 || this.getDamage(stack) > 0 || this.getPiercing(stack) > 0;
+    }
+
     public void addAttributeModifiers(ItemStack stack, ImmutableMultimap.Builder<Attribute, AttributeModifier> builder) {}
 
     public void displayShot(ItemStack stack, Player player) {

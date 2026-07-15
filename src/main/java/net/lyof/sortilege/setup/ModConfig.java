@@ -308,7 +308,6 @@ public class ModConfig {
                         .add("cooldown", 80)
                         .bind(lapisShieldCooldown)
                 )
-                .comment("Staffs are coming later")
         );
     }
 

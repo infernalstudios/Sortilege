@@ -35,10 +35,5 @@
       "has_knowledge_book"
     ]
   ],
-  "sends_telemetry_event": true,
-
-  "sollib:load_condition": {
-    "type": "config",
-    "mod": "sortilege:enchanting.enchanting_table.knowledge.enable"
-  }
+  "sends_telemetry_event": true
 }

@@ -1,8 +1,3 @@
 {
-  "type": "sortilege:botania_staff_lens",
-
-  "sollib:load_condition": {
-    "type": "dependency",
-    "mod": "botania"
-  }
+  "type": "sortilege:botania_staff_lens"
 }

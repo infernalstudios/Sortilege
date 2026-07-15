@@ -117,7 +117,7 @@ public abstract class ItemStackMixin {
                 list.add(Component.translatable("tooltip.sortilege.catalyst").withStyle(ChatFormatting.DARK_PURPLE));
 
                 for (Enchantment e : EnchantingCatalyst.getEnchantments(self).keySet()) {
-                    MutableComponent text = Component.translatable(e.getDescriptionId());
+                    MutableComponent text = CommonComponents.space().append(Component.translatable(e.getDescriptionId()));
                     if (e.isCurse())
                         text.withStyle(ChatFormatting.RED);
                     else

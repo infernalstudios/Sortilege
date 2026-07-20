@@ -44,6 +44,7 @@ public abstract class InventoryMixin {
             if (ModConfig.consumeSoulbound.get() && ModEnchants.SOULBOUND != null) {
                 Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
                 enchants.remove(ModEnchants.SOULBOUND);
+                EnchantmentHelper.setEnchantments(enchants, stack);
             }
             return true;
         }

@@ -513,21 +513,17 @@ public class ModConfig {
                 .addObject(staff -> staff
                         .add("id", "fireball_rod")
                         .add("type", "sortilege:ammo")
-                        .add("dependency", "sortilege")
-                        .comment()
                         .addObject("properties", properties -> properties
                                 .add("fireproof", true)
                                 .add("durability", 666)
                                 .add("repair_material", "minecraft:blaze_rod")
                                 .add("enchantability", 6)
-                                .comment()
                                 .add("damage", 6)
                                 .add("piercing", 1)
                                 .add("range", 0)
                                 .add("charge_time", 20)
                                 .add("cooldown", 60)
                         )
-                        .comment()
                         .addObject("cost", cost -> cost
                                 .addObject("overcharge", overcharge -> overcharge
                                         .add("max", 8)
@@ -539,20 +535,18 @@ public class ModConfig {
                                 .add("item", "minecraft:blaze_powder")
                                 .add("count", 1)
                         )
-                        .comment()
                         .addObject("effects", effects -> effects
                                 .addObject("commands", commands -> commands
                                         .add("on_shoot", "/summon minecraft:fireball ~ ~1 ~ {ExplosionPower: 2, power: [{direction.x}, {direction.y}, {direction.z}], Motion: [{direction.x}, {direction.y}, {direction.z}]}")
                                 )
                         )
-                        .comment()
                         .addObject("display", display -> display
                                 .add("particle", "minecraft:flame")
                                 .add("sound", "minecraft:entity.ghast.shoot")
                         )
                 )
 
-                .comment()
+                .comment("Minecraft")
                 .addObject(staff -> staff
                         .add("id", "wooden_staff")
                         .add("sort_index", 10)
@@ -653,6 +647,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/netherite_staff"))
                 )
 
+                .comment("End's Phantasm")
                 .addObject(staff -> staff
                         .add("id", "crystalline_staff")
                         .add("sort_index", 35)
@@ -673,6 +668,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/crystalline_staff"))
                 )
 
+                .comment("Dungeon Now Loading")
                 .addObject(staff -> staff
                         .add("id", "spawner_staff")
                         .add("sort_index", 1055)
@@ -704,6 +700,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/spawner_staff"))
                 )
 
+                .comment("Mining Master")
                 .addObject(staff -> staff
                         .add("id", "divine_beryl_staff")
                         .add("sort_index", 1051)
@@ -832,6 +829,7 @@ public class ModConfig {
                         )
                 )
 
+                .comment("Oreganized")
                 .addObject(staff -> staff
                         .add("id", "electrum_staff")
                         .add("sort_index", 51)
@@ -859,6 +857,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/electrum_staff"))
                 )
 
+                .comment("Botania")
                 .addObject(staff -> staff
                         .add("id", "manasteel_staff")
                         .add("sort_index", 1035)
@@ -934,6 +933,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/terrasteel_staff"))
                 )
 
+                .comment("Caverns & Chasms")
                 .addObject(staff -> staff
                         .add("id", "copper_staff")
                         .add("sort_index", 25)
@@ -1060,6 +1060,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/necromium_staff"))
                 )
 
+                .comment("Unseen World")
                 .addObject(staff -> staff
                         .add("id", "gripcrystal_staff")
                         .add("dependency", "unseen_world")
@@ -1087,6 +1088,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/gripcrystal_staff"))
                 )
 
+                .comment("Unusual End")
                 .addObject(staff -> staff
                         .add("id", "pearlescent_staff")
                         .add("sort_index", 1067)
@@ -1118,6 +1120,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/pearlescent_staff"))
                 )
 
+                .comment("Enderite")
                 .addObject(staff -> staff
                         .add("id", "enderite_staff")
                         .add("sort_index", 1070)
@@ -1144,6 +1147,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/enderite_staff"))
                 )
 
+                .comment("Aquaculture 2")
                 .addObject(staff -> staff
                         .add("id", "neptunium_staff")
                         .add("sort_index", 1066)
@@ -1176,6 +1180,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/neptunium_staff"))
                 )
 
+                .comment("The Undergarden")
                 .addObject(staff -> staff
                         .add("id", "cloggrum_staff")
                         .add("sort_index", 2025)
@@ -1259,6 +1264,7 @@ public class ModConfig {
                         .addArray("recipes", List.of("sortilege:staff/forgotten_staff"))
                 )
 
+                .comment("Goety")
                 .addObject(staff -> staff
                         .add("id", "dark_staff")
                         .add("sort_index", 1054)

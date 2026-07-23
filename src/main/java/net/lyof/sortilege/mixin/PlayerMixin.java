@@ -43,7 +43,7 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
 
     @WrapMethod(method = "onEnchantmentPerformed")
     public void applyEnchantmentCosts(ItemStack enchantedItem, int levelcost, Operation<Void> original) {
-        if (levelcost > 0 && ModConfig.doIncreasedEnchantCosts.get() && ModConfig.increasedEnchantCosts.get().size() == 3)
+        if (levelcost > 0 && levelcost <= 3 && ModConfig.doIncreasedEnchantCosts.get() && ModConfig.increasedEnchantCosts.get().size() == 3)
             levelcost = ModConfig.increasedEnchantCosts.get().get(levelcost - 1);
 
         original.call(enchantedItem, levelcost);

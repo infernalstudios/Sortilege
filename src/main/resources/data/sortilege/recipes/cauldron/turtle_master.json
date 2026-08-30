@@ -1,7 +1,0 @@
-{
-  "type": "sortilege:cauldron_brewing",
-  "input": {
-    "item": "minecraft:scute"
-  },
-  "output": "minecraft:turtle_master"
-}

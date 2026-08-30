@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "enderitemod:enderite_upgrade_smithing_template"
+  },
+  "base": {
+    "item": "sortilege:netherite_staff"
+  },
+  "addition": {
+    "item": "enderitemod:enderite_ingot"
+  },
+  "result": {
+    "id": "sortilege:enderite_staff"
+  }
+}

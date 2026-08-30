@@ -1,66 +1,28 @@
 package net.lyof.sortilege.item.armor;
 
-import net.minecraft.sounds.SoundEvent;
+import net.lyof.sortilege.Sortilege;
+import net.minecraft.Util;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
-public enum ModArmorMaterials implements ArmorMaterial {
-    WITCH("witch_hat", 94, new int[]{1, 2, 3, 1}, 24, SoundEvents.WITCH_CELEBRATE,
-            0.0F, 0.0F, Ingredient.of(Items.PHANTOM_MEMBRANE));
+import java.util.EnumMap;
+import java.util.List;
 
-    private static final int[] BASE_DURABILITY = new int[]{1, 1, 1, 1};
-    private final String name;
-    private final int durabilityMultiplier;
-    private final int[] protectionAmounts;
-    private final int enchantability;
-    private final SoundEvent equipSound;
-    private final float toughness;
-    private final float knockbackResistance;
-    private final Ingredient repairIngredient;
-
-    ModArmorMaterials(String name, int durabilityMultiplier, int[] protectionAmounts, int enchantability, SoundEvent equipSound, float toughness, float knockbackResistance, Ingredient repairIngredient) {
-        this.name = name;
-        this.durabilityMultiplier = durabilityMultiplier;
-        this.protectionAmounts = protectionAmounts;
-        this.enchantability = enchantability;
-        this.equipSound = equipSound;
-        this.toughness = toughness;
-        this.knockbackResistance = knockbackResistance;
-        this.repairIngredient = repairIngredient;
-    }
-
-    public int getDurabilityForType(ArmorItem.Type type) {
-        return BASE_DURABILITY[type.ordinal()] * this.durabilityMultiplier;
-    }
-
-    public int getDefenseForType(ArmorItem.Type type) {
-        return this.protectionAmounts[type.ordinal()];
-    }
-
-    public int getEnchantmentValue() {
-        return this.enchantability;
-    }
-
-    public SoundEvent getEquipSound() {
-        return this.equipSound;
-    }
-
-    public Ingredient getRepairIngredient() {
-        return this.repairIngredient;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public float getToughness() {
-        return this.toughness;
-    }
-
-    public float getKnockbackResistance() {
-        return this.knockbackResistance;
-    }
+public class ModArmorMaterials {
+    public static final Holder<ArmorMaterial> WITCH = Registry.registerForHolder(BuiltInRegistries.ARMOR_MATERIAL,
+            Sortilege.MOD.makeID("witch_hat"),
+            new ArmorMaterial(Util.make(new EnumMap<ArmorItem.Type, Integer>(ArmorItem.Type.class), map -> {
+                map.put(ArmorItem.Type.BOOTS, 1);
+                map.put(ArmorItem.Type.LEGGINGS, 2);
+                map.put(ArmorItem.Type.CHESTPLATE, 3);
+                map.put(ArmorItem.Type.HELMET, 1);
+                map.put(ArmorItem.Type.BODY, 3);
+            }), 24, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.WITCH_CELEBRATE),
+            () -> Ingredient.of(Items.PHANTOM_MEMBRANE), List.of(new ArmorMaterial.Layer(Sortilege.MOD.makeID("witch_hat"))), 0, 0));
 }

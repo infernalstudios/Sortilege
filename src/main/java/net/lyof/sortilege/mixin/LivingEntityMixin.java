@@ -13,12 +13,13 @@ import net.lyof.sortilege.item.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModTags;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.XPHelper;
 import net.lyof.sortilege.util.inject.BountyHolder;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -50,32 +51,31 @@ import java.util.Map;
 public abstract class LivingEntityMixin extends Entity implements PotionShenanigans, BountyHolder {
     @Unique private static final String BOUNTY_KEY = "sorti_StolenXP";
 
-    @Unique private final Map<MobEffect, Integer> effectImmunities = new HashMap<>();
-    @Unique private int stolenxp = 0;
+    @Unique private final Map<Holder<MobEffect>, Integer> sorti_effectImmunities = new HashMap<>();
+    @Unique private int sorti_stolenxp = 0;
 
     @Override
-    public void sorti_setImmunity(MobEffect effect, int time) {
+    public void sorti_setImmunity(Holder<MobEffect> effect, int time) {
         int timeOff = this.tickCount + time;
-        if (this.effectImmunities.containsKey(effect)) {
-            if (this.effectImmunities.get(effect) < timeOff)
-                this.effectImmunities.replace(effect, timeOff);
+        if (this.sorti_effectImmunities.containsKey(effect)) {
+            if (this.sorti_effectImmunities.get(effect) < timeOff)
+                this.sorti_effectImmunities.replace(effect, timeOff);
         }
         else
-            this.effectImmunities.put(effect, timeOff);
+            this.sorti_effectImmunities.put(effect, timeOff);
     }
 
     @Override
     public void sorti_setExperience(int i) {
-        this.stolenxp = i;
+        this.sorti_stolenxp = i;
     }
 
     @Override
     public int sorti_getExperience() {
-        return this.stolenxp;
+        return this.sorti_stolenxp;
     }
 
     @Shadow public abstract boolean hurt(DamageSource source, float amount);
-    @Shadow public abstract RandomSource getRandom();
     @Shadow @Nullable protected Player lastHurtByPlayer;
     @Shadow public abstract ItemStack getOffhandItem();
     @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot slot);
@@ -119,7 +119,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     }
 
     @Inject(method = "dropAllDeathLoot", at = @At("HEAD"))
-    public void giveKillXP(DamageSource damageSource, CallbackInfo ci) {
+    public void giveKillXP(ServerLevel level, DamageSource damageSource, CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;
         PotionCooldownManager.clear(self);
 
@@ -147,7 +147,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
                 ExperienceOrb.award(world, this.position(), ModConfig.bountyValue.get());
 
             ModParticles.sendParticles(player.level(), this.getX(), this.getY() + this.getEyeHeight(this.getPose()) / 2, this.getZ(),
-                    16, new float[]{0.5f, 1f, 0.2f});
+                    16, 0x88ff26);
         }
     }
 
@@ -159,24 +159,24 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (ModConfig.expandedFeatherFalling.get() > 0 && source.is(DamageTypeTags.IS_FALL) &&
-                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FALL_PROTECTION,
+                EnchantHelper.getEnchantLevel(Enchantments.FEATHER_FALLING,
                         this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.expandedFeatherFalling.get())
             cir.setReturnValue(false);
 
         if (ModConfig.expandedFireProt.get() > 0 && source.is(DamageTypeTags.IS_FIRE) &&
-                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
                         this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.expandedFireProt.get() &&
-                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
                         this.getItemBySlot(EquipmentSlot.LEGS)) >= ModConfig.expandedFireProt.get() &&
-                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
                         this.getItemBySlot(EquipmentSlot.CHEST)) >= ModConfig.expandedFireProt.get() &&
-                EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION,
+                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
                         this.getItemBySlot(EquipmentSlot.HEAD)) >= ModConfig.expandedFireProt.get())
             cir.setReturnValue(false);
 
-        if (ModEnchants.MAGIC_PROTECTION != null && ModConfig.expandedMagicProt.get() && Math.random() <=
+        /*if (ModEnchants.MAGIC_PROTECTION != null && ModConfig.expandedMagicProt.get() && Math.random() <=
                 0.05 * EnchantmentHelper.getEnchantmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
-            cir.setReturnValue(false);
+            cir.setReturnValue(false);*/
     }
 
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
@@ -222,19 +222,19 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @WrapMethod(method = "canBeAffected")
     public boolean applyEffectImmunity(MobEffectInstance effect, Operation<Boolean> original) {
-        if (this.effectImmunities.containsKey(effect.getEffect())) {
-            if (this.effectImmunities.get(effect.getEffect()) >= this.tickCount) {
+        if (this.sorti_effectImmunities.containsKey(effect.getEffect())) {
+            if (this.sorti_effectImmunities.get(effect.getEffect()) >= this.tickCount) {
                 return false;
             }
             else
-                this.effectImmunities.remove(effect.getEffect());
+                this.sorti_effectImmunities.remove(effect.getEffect());
         }
         return original.call(effect);
     }
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
     private static AttributeSupplier.Builder addGlobalAttributes(AttributeSupplier.Builder original) {
-        for (Attribute attribute : ModAttributes.GLOBALS)
+        for (Holder<Attribute> attribute : ModAttributes.GLOBALS)
             original.add(attribute);
         return original;
     }

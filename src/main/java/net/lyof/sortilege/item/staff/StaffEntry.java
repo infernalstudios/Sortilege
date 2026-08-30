@@ -10,7 +10,6 @@ import net.lyof.sortilege.Sortilege;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.FastColor;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
@@ -126,7 +125,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
     public static class Display {
         protected ResourceLocation particle;
         protected ResourceLocation sound;
-        protected List<float[]> colors;
+        protected List<Integer> colors;
         protected Rarity rarity;
 
         public Display() {
@@ -144,10 +143,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
                 this.colors = new ArrayList<>();
                 JsonArray colors = GsonHelper.getAsJsonArray(json, "colors");
                 for (JsonElement e : colors) {
-                    int rgb = Integer.decode(e.getAsString());
-                    this.colors.add(new float[]{FastColor.ARGB32.red(rgb) / 255f,
-                            FastColor.ARGB32.green(rgb) / 255f,
-                            FastColor.ARGB32.blue(rgb) / 255f});
+                    this.colors.add(Integer.decode(e.getAsString()));
                 }
             }
 
@@ -168,7 +164,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
             return BuiltInRegistries.SOUND_EVENT.get(this.sound);
         }
 
-        public List<float[]> getColors() {
+        public List<Integer> getColors() {
             return this.colors;
         }
 

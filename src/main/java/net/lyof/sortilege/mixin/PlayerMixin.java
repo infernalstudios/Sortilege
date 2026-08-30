@@ -3,9 +3,10 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
@@ -78,7 +79,7 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
         return original.call(instance, rule);
     }
 
-    @Inject(method = "getExperienceReward", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getBaseExperienceReward", at = @At("HEAD"), cancellable = true)
     public void keepXP(CallbackInfoReturnable<Integer> cir) {
         if (ModConfig.doXPKeep.get() && this.level() instanceof ServerLevel world) {
             int safe_xp = (int) Math.round(XPHelper.getTotalXP(this.experienceLevel, this.experienceProgress, world) * ModConfig.selfXPRatio.get());
@@ -106,7 +107,7 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
 
     @WrapMethod(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;")
     private ItemEntity preventStorytoldDrop(ItemStack stack, boolean throwRandomly, boolean retainOwnership, Operation<ItemEntity> original) {
-        if (!throwRandomly && EnchantHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
+        if (!throwRandomly && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, stack))
             return null;
         return original.call(stack, throwRandomly, retainOwnership);
     }
@@ -125,12 +126,16 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
         ItemStack stack;
         for (int i = 0; i < self.getInventory().getContainerSize(); i++) {
             stack = self.getInventory().getItem(i);
-            if (stack.is(ModItems.KNOWLEDGE_BOOK) && KnowledgeBookItem.isAuthor(stack, self))
+            if (stack.has(ModDataComponents.KNOWLEDGE) && stack.get(ModDataComponents.KNOWLEDGE).isAuthor(self))
                 knowledge.learn(stack);
         }
+        for (ItemStack accessory : Services.ACCESSORY.getAccessories(self).values()) {
+            if (accessory.has(ModDataComponents.KNOWLEDGE) && accessory.get(ModDataComponents.KNOWLEDGE).isAuthor(self))
+                knowledge.learn(accessory);
+        }
+
         this.sorti_knowledge = knowledge;
         this.sorti_knowledgeCacher = cacher;
-        // TODO: Trinkets compat (by Sol)
 
         return this.sorti_knowledge;
     }

@@ -1,0 +1,42 @@
+{
+  "parent": "sortilege:get_wooden_staff",
+  "criteria": {
+    "recipe_crafted": {
+      "conditions": {
+        "recipe_id": "minecraft:armor_dye",
+        "ingredients": [
+          {
+            "tag": "sortilege:staffs"
+          }
+        ]
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.sortilege.dye_staff.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "sortilege:iron_staff",
+      "components": {
+        "minecraft:dyed_color": {
+          "rgb": 65535
+        }
+      }
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.sortilege.dye_staff"
+    }
+  },
+  "requirements": [
+    [
+      "recipe_crafted"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

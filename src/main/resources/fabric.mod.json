@@ -18,8 +18,8 @@
 		"main": [
 			"net.lyof.sortilege.Sortilege"
 		],
-		"mm:early_risers": [
-			"net.lyof.sortilege.setup.asm.EarlyRiser"
+		"server": [
+			"net.lyof.sortilege.Sortilege"
 		],
 		"client": [
 			"net.lyof.sortilege.SortilegeClient"
@@ -34,7 +34,7 @@
 	"accessWidener" : "sortilege.accesswidener",
 	"depends": {
 		"fabricloader": ">=0.15.11",
-		"minecraft": "~1.20.1",
+		"minecraft": "~1.21.1",
 		"java": ">=17",
 		"fabric-api": "*",
 		"sollib": "*"

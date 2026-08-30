@@ -1,0 +1,71 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.magic_protection"
+  },
+  "max_level": 4,
+  "weight": 4,
+  "supported_items": "#minecraft:enchantable/armor",
+  "exclusive_set": "#minecraft:exclusive_set/armor",
+  "slots": [
+    "armor"
+  ],
+  "effects": {
+    "minecraft:damage_protection": [
+      {
+        "effect": {
+          "type": "minecraft:add",
+          "value": {
+            "type": "minecraft:linear",
+            "base": 3,
+            "per_level_above_first": 3
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:any_of",
+          "terms": [
+            {
+              "condition": "minecraft:damage_source_properties",
+              "predicate": {
+                "tags": [
+                  {
+                    "expected": true,
+                    "id": "minecraft:witch_resistant_to"
+                  },
+                  {
+                    "expected": false,
+                    "id": "minecraft:bypasses_invulnerability"
+                  }
+                ]
+              }
+            },
+            {
+              "condition": "minecraft:damage_source_properties",
+              "predicate": {
+                "tags": [
+                  {
+                    "expected": true,
+                    "id": "c:is_magic"
+                  },
+                  {
+                    "expected": false,
+                    "id": "minecraft:bypasses_invulnerability"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+
+  "anvil_cost": 2,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 8
+  },
+  "max_cost": {
+    "base": 18,
+    "per_level_above_first": 8
+  }
+}

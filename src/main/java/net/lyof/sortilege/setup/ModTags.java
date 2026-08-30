@@ -2,11 +2,12 @@ package net.lyof.sortilege.setup;
 
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.Block;
 
 public class ModTags {
@@ -29,7 +30,7 @@ public class ModTags {
     public static class Items {
         public static final TagKey<Item> SOULBINDERS = create("is_soulbind_material");
         public static final TagKey<Item> LIMIT_BREAKER = create("is_limit_break_material");
-        public static final TagKey<Item> SOULBIND_BLACKLIST = create("soulbind_blacklist");
+        public static final TagKey<Item> SOULBOUND_BLACKLIST = create("enchantable/soulbound");
 
         public static final TagKey<Item> KEEP_ON_DEATH = create("kept_on_death");
         public static final TagKey<Item> UNBREAKABLE = create("unbreakable");
@@ -43,19 +44,19 @@ public class ModTags {
         }
 
         public static final TagKey<Item> XP_BOOSTED = TagKey.create(Registries.ITEM,
-                new ResourceLocation("phantasm", "has_xp_boost"));
+                Identifier.of("phantasm", "has_xp_boost"));
         public static final TagKey<Item> KINETIC_BOOSTED = TagKey.create(Registries.ITEM,
-                new ResourceLocation("oreganized", "has_kinetic_damage"));
+                Identifier.of("oreganized", "has_kinetic_damage"));
 
         public static final TagKey<Item> FROSTSTEEL_ITEMS = TagKey.create(Registries.ITEM,
-                new ResourceLocation("undergarden", "froststeel_items"));
+                Identifier.of("undergarden", "froststeel_items"));
         public static final TagKey<Item> UTHERIUM_ITEMS = TagKey.create(Registries.ITEM,
-                new ResourceLocation("undergarden", "utherium_items"));
+                Identifier.of("undergarden", "utherium_items"));
         public static final TagKey<Item> FORGOTTEN_ITEMS = TagKey.create(Registries.ITEM,
-                new ResourceLocation("undergarden", "forgotten_items"));
+                Identifier.of("undergarden", "forgotten_items"));
 
         public static final TagKey<Item> TERRA_ITEMS = TagKey.create(Registries.ITEM,
-                new ResourceLocation("botania", "terra_items"));
+                Identifier.of("botania", "terra_items"));
     }
 
     public static class Blocks {
@@ -63,6 +64,14 @@ public class ModTags {
 
         private static TagKey<Block> create(String name) {
             return TagKey.create(Registries.BLOCK, Sortilege.MOD.makeID(name));
+        }
+    }
+
+    public static class Enchants {
+        public static final TagKey<Enchantment> ELEMENTAL = create("elemental");
+
+        private static TagKey<Enchantment> create(String name) {
+            return TagKey.create(Registries.ENCHANTMENT, Sortilege.MOD.makeID(name));
         }
     }
 }

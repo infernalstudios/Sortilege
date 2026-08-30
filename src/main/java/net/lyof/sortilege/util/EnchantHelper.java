@@ -1,38 +1,42 @@
 package net.lyof.sortilege.util;
 
-import net.lyof.sortilege.Sortilege;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class EnchantHelper {
     private static final Map<Enchantment, List<ItemStack>> ENCHANT_TARGETS = new HashMap<>();
     private static int ENCHANT_COUNT;
 
     public static void clear() {
-        ENCHLIMIT_CACHE.clear();
         ENCHANT_TARGETS.clear();
         ENCHANT_COUNT = 0;
     }
 
     public static void load() {
         Thread enchantCaching = new Thread(() -> {
-            for (Enchantment enchant : BuiltInRegistries.ENCHANTMENT) {
+            for (Enchantment enchant : Set.<Enchantment>of()) {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (Item item : BuiltInRegistries.ITEM) {
                     ItemStack stack = item.getDefaultInstance();
@@ -47,8 +51,8 @@ public class EnchantHelper {
     }
 
 
-    public static List<ItemStack> getCompatibleStacks(Enchantment enchant) {
-        return ENCHANT_TARGETS.getOrDefault(enchant, List.of());
+    public static Iterable<Holder<Item>> getCompatibleStacks(Holder<Enchantment> enchant) {
+        return enchant.value().getSupportedItems();
     }
 
     public static int getEnchantCount() {
@@ -56,18 +60,34 @@ public class EnchantHelper {
     }
 
 
-    public static int getEnchantLevel(@Nullable Enchantment enchant, ItemStack item) {
+    public static int getEnchantLevel(ResourceKey<Enchantment> enchant, ItemStack stack) {
         if (enchant == null) return 0;
-        return EnchantmentHelper.getItemEnchantmentLevel(enchant, item);
+        for (Object2IntMap.Entry<Holder<Enchantment>> entry : stack.getEnchantments().entrySet())
+            if (enchant.equals(entry.getKey().unwrapKey().orElse(null)))
+                return entry.getIntValue();
+        return 0;
     }
 
-    public static boolean hasEnchant(Enchantment enchant, ItemStack item) {
-        return getEnchantLevel(enchant, item) > 0;
+    public static int getEnchantLevel(Holder<Enchantment> enchant, ItemStack stack) {
+        if (enchant == null) return 0;
+        return EnchantmentHelper.getItemEnchantmentLevel(enchant, stack);
+    }
+
+    public static boolean hasEnchant(ResourceKey<Enchantment> enchant, ItemStack stack) {
+        return getEnchantLevel(enchant, stack) > 0;
+    }
+
+    public static boolean hasEnchant(Holder<Enchantment> enchant, ItemStack stack) {
+        return getEnchantLevel(enchant, stack) > 0;
+    }
+
+    public static boolean hasEffect(DataComponentType<?> type, ItemStack stack) {
+        for (Holder<Enchantment> enchant : stack.getEnchantments().keySet())
+            if (enchant.value().effects().has(type)) return true;
+        return false;
     }
 
 
-    public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
-    private static final Map<Item, Integer> ENCHLIMIT_CACHE = new HashMap<>();
     private static ItemStack cacher = null;
     private static int usedSlots;
     private static int totalSlots;
@@ -76,8 +96,8 @@ public class EnchantHelper {
         cacher = stack;
 
         usedSlots = 0;
-        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())
-            if (!enchant.isCurse() || !ModConfig.cursesAddSlots.get()) usedSlots++;
+        for (Holder<Enchantment> enchant : stack.getEnchantments().keySet())
+            if (!enchant.is(EnchantmentTags.CURSE) || !ModConfig.cursesAddSlots.get()) usedSlots++;
 
         totalSlots = getBaseEnchantSlots(stack);
         if (totalSlots >= 0) totalSlots += getExtraEnchantSlots(stack) + getCurseEnchantSlots(stack);
@@ -112,7 +132,7 @@ public class EnchantHelper {
         for (String str : ModConfig.enchantLimiterOverrides.get().keySet()) {
             if (!str.startsWith("#")) continue;
 
-            TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(str.substring(1)));
+            TagKey<Item> tag = TagKey.create(Registries.ITEM, Identifier.of(str.substring(1)));
             if (stack.is(tag)) {
                 int l = ModConfig.enchantLimiterOverrides.get().get(str);
                 l = sum ? l + defaultLimit : l;
@@ -125,23 +145,22 @@ public class EnchantHelper {
 
     public static int getCurseEnchantSlots(ItemStack stack) {
         int l = 0;
-        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet()) {
-            if (enchant.isCurse() && ModConfig.cursesAddSlots.get()) l++;
+        for (Holder<Enchantment> enchant : stack.getEnchantments().keySet()) {
+            if (enchant.is(EnchantmentTags.CURSE) && ModConfig.cursesAddSlots.get()) l++;
         }
         return l;
     }
 
     public static int getExtraEnchantSlots(ItemStack stack) {
-        return stack.hasTag() ? stack.getOrCreateTag().getInt(ENCHLIMIT_NBT) : 0;
+        return stack.has(ModDataComponents.LIMIT_BREAK) ? stack.get(ModDataComponents.LIMIT_BREAK) : 0;
     }
 
     public static ItemStack addExtraEnchantSlot(ItemStack stack) {
-        CompoundTag tag = stack.getOrCreateTag();
-        int current = tag.getInt(ENCHLIMIT_NBT);
+        int current = getExtraEnchantSlots(stack);
 
         if (current < ModConfig.maxLimitBreak.get())
-            tag.putInt(ENCHLIMIT_NBT, current + 1);
-        stack.setTag(tag);
+            current++;
+        stack.set(ModDataComponents.LIMIT_BREAK, current);
         return stack;
     }
 

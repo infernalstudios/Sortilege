@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/cloggrum",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "M": {
+      "tag": "forge:ingots/cloggrum"
+    }
+  },
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "result": {
+    "id": "sortilege:cloggrum_staff"
+  }
+}

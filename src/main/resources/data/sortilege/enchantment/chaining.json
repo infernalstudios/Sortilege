@@ -1,0 +1,26 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.chaining"
+  },
+  "max_level": 5,
+  "weight": 5,
+  "supported_items": "#sortilege:enchantable/staff",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:staff_stats": {
+      "pierce": 1
+    }
+  },
+
+  "anvil_cost": 2,
+  "min_cost": {
+    "base": 5,
+    "per_level_above_first": 5
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 10
+  }
+}

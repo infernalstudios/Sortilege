@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(DeathScreen.class)
 public class DeathScreenMixin {
-
     @Shadow private Component deathScore;
 
     @Inject(method = "init", at = @At("TAIL"))

@@ -1,48 +1,34 @@
 package net.lyof.sortilege.recipe.smithing;
 
-import com.google.gson.JsonObject;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModTags;
-import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.level.Level;
 
 public class SoulbindingRecipe implements SmithingRecipe {
-    public final ResourceLocation id;
-
-    public SoulbindingRecipe(ResourceLocation id) {
-        this.id = id;
-    }
-
     @Override
-    public boolean matches(Container inventory, Level world) {
+    public boolean matches(SmithingRecipeInput inventory, Level world) {
         return this.isTemplateIngredient(inventory.getItem(0)) && this.isBaseIngredient(inventory.getItem(1))
                 && this.isAdditionIngredient(inventory.getItem(2));
     }
 
     @Override
-    public ItemStack assemble(Container inventory, RegistryAccess registryManager) {
+    public ItemStack assemble(SmithingRecipeInput inventory, HolderLookup.Provider lookup) {
         ItemStack stack = inventory.getItem(1).copyWithCount(1);
-        stack.enchant(ModEnchants.SOULBOUND, 1);
+        stack.enchant(lookup.lookupOrThrow(Registries.ENCHANTMENT).getOrThrow(ModEnchants.SOULBOUND), 1);
         return stack;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryManager) {
+    public ItemStack getResultItem(HolderLookup.Provider lookup) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
     }
 
     @Override
@@ -52,8 +38,7 @@ public class SoulbindingRecipe implements SmithingRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack stack) {
-        return ModEnchants.SOULBOUND != null && !EnchantHelper.hasEnchant(ModEnchants.SOULBOUND, stack)
-                && ModEnchants.SOULBOUND.canEnchant(stack);
+        return stack.is(ModTags.Items.SOULBOUND_BLACKLIST);
     }
 
     @Override
@@ -64,19 +49,5 @@ public class SoulbindingRecipe implements SmithingRecipe {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.SOULBINDING_SERIALIZER;
-    }
-
-
-    public static class Serializer implements RecipeSerializer<SoulbindingRecipe> {
-        public SoulbindingRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new SoulbindingRecipe(id);
-        }
-
-        public SoulbindingRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packetByteBuf) {
-            return new SoulbindingRecipe(identifier);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf packetByteBuf, SoulbindingRecipe recipe) {}
     }
 }

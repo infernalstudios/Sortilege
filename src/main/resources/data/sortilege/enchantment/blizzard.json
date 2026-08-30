@@ -1,0 +1,49 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.blizzard"
+  },
+  "max_level": 2,
+  "weight": 3,
+  "supported_items": "#sortilege:enchantable/staff",
+  "exclusive_set": "#sortilege:elemental",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:post_staff_hit": [
+      {
+        "effect": {
+          "type": "sortilege:freeze",
+          "duration": {
+            "type": "minecraft:linear",
+            "base": 160,
+            "per_level_above_first": 160
+          },
+          "wither": {
+            "type": "minecraft:linear",
+            "base": 1,
+            "per_level_above_first": 1
+          }
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
+      }
+    ],
+    "sortilege:staff_beam_colors": {
+      "colors": [
+        "#b8b8ff",
+        "#bbddff"
+      ]
+    }
+  },
+
+  "anvil_cost": 4,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 45,
+    "per_level_above_first": 10
+  }
+}

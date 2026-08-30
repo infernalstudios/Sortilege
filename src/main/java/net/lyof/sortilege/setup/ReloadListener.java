@@ -1,7 +1,5 @@
 package net.lyof.sortilege.setup;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
@@ -35,24 +33,10 @@ public class ReloadListener implements IReloadListener {
         EnchantHelper.load();
         PotionHelper.load();
 
-        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources("recipes",
-                path -> path.toString().endsWith(".json")).entrySet()) {
-
-            try {
-                Resource resource = entry.getValue();
-
-                String content = new String(resource.open().readAllBytes());
-                JsonElement json = new Gson().fromJson(content, JsonElement.class);
-
-                if (json == null || !json.isJsonObject()) continue;
-                JsonObject jsono = json.getAsJsonObject();
-
-                if (jsono.has("type") && jsono.get("type").getAsString().equals(Sortilege.MOD_ID + ":enchanting_catalyst"))
-                    EnchantingCatalyst.read(jsono);
-
-            } catch (Throwable e) {
-                //Sortilege.log("Could not read data file " + entry.getKey(), 2);
-            }
+        for (Map.Entry<ResourceLocation, Resource> entry : FileToIdConverter.json("recipe").listMatchingResources(manager).entrySet()) {
+            JsonObject json = IReloadListener.open(entry);
+            if (json != null && json.has("type") && json.get("type").getAsString().equals(Sortilege.MOD_ID + ":enchanting_catalyst"))
+                EnchantingCatalyst.read(json);
         }
 
         if (FabricLoader.getInstance().isModLoaded("emi"))
@@ -76,22 +60,10 @@ public class ReloadListener implements IReloadListener {
                 CustomPotionData.MODELS.add(FileToIdConverter.json("models/item").fileToId(model));
         }
 
-        for (Map.Entry<ResourceLocation, Resource> entry : manager.listResources("potions",
-                path -> path.toString().endsWith(".json")).entrySet()) {
-
-            try {
-                Resource resource = entry.getValue();
-
-                String content = new String(resource.open().readAllBytes());
-                JsonElement json = new Gson().fromJson(content, JsonElement.class);
-
-                if (json == null || !json.isJsonObject()) continue;
-
+        for (Map.Entry<ResourceLocation, Resource> entry : FileToIdConverter.json("potions").listMatchingResources(manager).entrySet()) {
+            JsonObject json = IReloadListener.open(entry);
+            if (json != null)
                 CustomPotionData.read(json.getAsJsonObject());
-            }
-            catch (Throwable e) {
-                //Sortilege.log("Could not read data file " + entry.getKey(), 2);
-            }
         }
     }
 

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/copper",
+  "category": "equipment",
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "key": {
+    "M": {
+      "item": "minecraft:waxed_oxidized_copper"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "sortilege:waxed_oxidized_copper_staff"
+  }
+}

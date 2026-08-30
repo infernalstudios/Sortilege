@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "group": "staff/electrum",
+  "addition": {
+    "item": "oreganized:electrum_ingot"
+  },
+  "base": {
+    "item": "sortilege:diamond_staff"
+  },
+  "result": {
+    "id": "sortilege:electrum_staff"
+  },
+  "template": {
+    "item": "oreganized:electrum_upgrade_smithing_template"
+  }
+}

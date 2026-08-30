@@ -9,6 +9,8 @@
   "tag.item.sortilege.kept_on_death": "Kept on Death",
   "tag.item.sortilege.refills_cauldrons": "Cauldron Fuel",
   "tag.item.sortilege.staffs": "Staffs",
+  "tag.item.sortilege.enchantable.staffs": "Enchantable Staffs",
+  "tag.item.sortilege.enchantable.soulbound": "Soulbound Enchantable",
 
   "emi.category.sortilege.enchanting": "Enchanting",
   "emi.category.sortilege.cauldron_brewing": "Cauldron Brewing",
@@ -109,17 +111,17 @@
   "enchantment.sortilege.storytelling_curse.desc": "Prevents the item from being lost. Ever.",
 
   "advancement.sortilege.get_wooden_staff": "You are a Wizard, {playerName}",
-  "advancement.sortilege.get_wooden_staff.desc": "Get your first magic staff.",
+  "advancement.sortilege.get_wooden_staff.desc": "Get your first magic Staff.",
   "advancement.sortilege.dye_staff": "The Colour of Magic",
-  "advancement.sortilege.dye_staff.desc": "Use dye on a staff to change its beam color.",
+  "advancement.sortilege.dye_staff.desc": "Use dye on a Staff to change its beam color.",
   "advancement.sortilege.get_netherite_staff": "The Elder Wand",
-  "advancement.sortilege.get_netherite_staff.desc": "Upgrade a diamond staff to Netherite.",
+  "advancement.sortilege.get_netherite_staff.desc": "Upgrade a Diamond Staff to Netherite.",
   "advancement.sortilege.use_limitite": "Infinity +1",
-  "advancement.sortilege.use_limitite.desc": "Increase an item's enchantment limit using limitite.",
+  "advancement.sortilege.use_limitite.desc": "Increase an item's enchantment limit using Limitite.",
   "advancement.sortilege.get_witch_hat": "Mad Hatter",
   "advancement.sortilege.get_witch_hat.desc": "Kill a witch and get her hat.",
   "advancement.sortilege.get_knowledge_book": "It Belongs in a Library!",
-  "advancement.sortilege.get_knowledge_book.desc": "Craft a knowledge book to learn from enchanted loot.",
+  "advancement.sortilege.get_knowledge_book.desc": "Craft a Knowledge Book to learn from enchanted loot.",
   "advancement.sortilege.fill_knowledge_book": "Knowledge is Power",
-  "advancement.sortilege.fill_knowledge_book.desc": "Fill a knowledge book with every single enchantment."
+  "advancement.sortilege.fill_knowledge_book.desc": "Fill a Knowledge Book with every single enchantment."
 }

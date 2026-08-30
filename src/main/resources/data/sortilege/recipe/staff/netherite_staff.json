@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "category": "equipment",
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "base": {
+    "item": "sortilege:diamond_staff"
+  },
+  "result": {
+    "id": "sortilege:netherite_staff"
+  },
+  "template": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
+  }
+}

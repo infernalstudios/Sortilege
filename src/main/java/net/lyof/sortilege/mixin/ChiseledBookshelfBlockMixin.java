@@ -1,7 +1,6 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.KnowledgeBookItem;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -21,7 +20,7 @@ public class ChiseledBookshelfBlockMixin {
     private static void authorRemoval(Level world, BlockPos pos, Player player, ChiseledBookShelfBlockEntity blockEntity,
                                       int slot, CallbackInfo ci) {
         ItemStack stack = blockEntity.getItem(slot);
-        if (stack.is(ModItems.KNOWLEDGE_BOOK) && !KnowledgeBookItem.isAuthor(stack, player)) {
+        if (stack.has(ModDataComponents.KNOWLEDGE) && !stack.get(ModDataComponents.KNOWLEDGE).isAuthor(player)) {
             player.displayClientMessage(Component.translatable("screen.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
             ci.cancel();
         }
@@ -30,7 +29,7 @@ public class ChiseledBookshelfBlockMixin {
     @Inject(method = "addBook", at = @At("HEAD"), cancellable = true)
     private static void authorAddition(Level world, BlockPos pos, Player player, ChiseledBookShelfBlockEntity blockEntity,
                                        ItemStack stack, int slot, CallbackInfo ci) {
-        if (stack.is(ModItems.KNOWLEDGE_BOOK) && !KnowledgeBookItem.isAuthor(stack, player)) {
+        if (stack.has(ModDataComponents.KNOWLEDGE) && !stack.get(ModDataComponents.KNOWLEDGE).isAuthor(player)) {
             player.displayClientMessage(Component.translatable("screen.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
             ci.cancel();
         }

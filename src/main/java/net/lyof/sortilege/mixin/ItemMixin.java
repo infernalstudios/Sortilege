@@ -1,7 +1,9 @@
 package net.lyof.sortilege.mixin;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
@@ -12,12 +14,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Map;
 
 @Mixin(Item.class)
 public class ItemMixin {
@@ -34,14 +35,14 @@ public class ItemMixin {
         if ((!ModConfig.allowInventoryEnchanting.get() && !player.isCreative()) || clickType == ClickAction.PRIMARY) return;
         if (!(stack.getItem() instanceof EnchantedBookItem)) return;
 
-        Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
+        ItemEnchantments enchants = stack.getEnchantments();
         ItemStack other = slot.getItem();
         boolean used = false;
 
-        for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
-            if (entry.getKey().canEnchant(other)
-                    && EnchantmentHelper.isEnchantmentCompatible(EnchantmentHelper.getEnchantments(other).keySet(), entry.getKey())) {
-                other.enchant(entry.getKey(), entry.getValue());
+        for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
+            if (entry.getKey().value().canEnchant(other)
+                    && EnchantmentHelper.isEnchantmentCompatible(other.getEnchantments().keySet(), entry.getKey())) {
+                other.enchant(entry.getKey(), entry.getIntValue());
                 used = true;
             }
         }

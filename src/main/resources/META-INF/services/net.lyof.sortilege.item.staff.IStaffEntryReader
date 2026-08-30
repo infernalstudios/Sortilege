@@ -2,15 +2,3 @@ net.lyof.sortilege.item.custom.staff.ExperienceStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.HealthStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.HungerStaffItem$Reader
 net.lyof.sortilege.item.custom.staff.AmmoStaffItem$Reader
-
-net.lyof.sortilege.item.custom.staff.WeatheringExperienceStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.WeatheringFeathersStaffItem$Reader
-
-net.lyof.sortilege.item.custom.staff.ElectroblobStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.FeathersStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.BotaniaStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.SpellEngineStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.AffinityStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.OriginsStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.GoetyStaffItem$Reader
-net.lyof.sortilege.item.custom.staff.RebornEnergyStaffItem$Reader

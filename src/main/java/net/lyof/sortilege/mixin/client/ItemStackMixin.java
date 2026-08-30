@@ -1,31 +1,29 @@
 package net.lyof.sortilege.mixin.client;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
-import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.tags.EnchantmentTags;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.EnchantedBookItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import org.jetbrains.annotations.Nullable;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,8 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
@@ -43,70 +40,51 @@ public abstract class ItemStackMixin {
     @Unique private static Player sorti_player;
     @Unique private static ItemStack sorti_stack;
 
-    @WrapOperation(method = "getTooltipLines", at = @At(
+    @WrapOperation(method = "addAttributeTooltips", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;getAttributeModifiers(Lnet/minecraft/world/entity/EquipmentSlot;)Lcom/google/common/collect/Multimap;"
+            target = "Lnet/minecraft/world/item/ItemStack;forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V"
     ))
-    public Multimap<Attribute, AttributeModifier> setStaffAttributes(ItemStack stack, EquipmentSlot slot, Operation<Multimap<Attribute, AttributeModifier>> original,
-                                                                     Player player) {
-        Multimap<Attribute, AttributeModifier> map = original.call(stack, slot);
-
-        if (slot == EquipmentSlot.MAINHAND && stack.getItem() instanceof AStaffItem staff && staff.shouldDisplayAttributes(stack, player)) {
-            map = HashMultimap.create(map);
-            map.put(ModAttributes.STAFF_DAMAGE, new AttributeModifier(ModAttributes.MARKER_UUID,
-                    "Staff marker", 0, AttributeModifier.Operation.ADDITION));
-        }
-
-        return map;
-    }
-
-    @SuppressWarnings("unchecked")
-    @WrapOperation(method = "getTooltipLines", at = @At(
-            value = "INVOKE",
-            target = "Ljava/util/Map$Entry;getValue()Ljava/lang/Object;"
-    ))
-    public <K, V> V showStaffAttributes(Map.Entry<K, V> instance, Operation<V> original, Player player, @Local List<Component> list) {
-        V value = original.call(instance);
+    private void showStaffAttributes(ItemStack instance, EquipmentSlotGroup slot,
+                                     BiConsumer<Holder<Attribute>, AttributeModifier> action, Operation<Void> original,
+                                     Consumer<Component> tooltip, @Local MutableBoolean flag) {
         ItemStack self = (ItemStack) (Object) this;
+        Player player = Minecraft.getInstance().player;
 
-        if (self.getItem() instanceof AStaffItem staff && value instanceof AttributeModifier modifier) {
-            if (player != null && modifier.getId().equals(ModAttributes.MARKER_UUID)) {
-                String key = "attribute.modifier.equals." + AttributeModifier.Operation.ADDITION.toValue();
-                DecimalFormat format = ItemStack.ATTRIBUTE_MODIFIER_FORMAT;
+        if (self.getItem() instanceof AStaffItem staff && staff.shouldDisplayAttributes(self, player) && slot == EquipmentSlotGroup.HAND) {
+            tooltip.accept(CommonComponents.EMPTY);
+            tooltip.accept(Component.translatable("item.modifiers." + slot.getSerializedName()).withStyle(ChatFormatting.GRAY));
+            flag.setFalse();
 
-                float damage = staff.getDamage(self, player);
-                float piercing = staff.getPiercing(self, player);
-                float range = staff.getRange(self, player);
+            String key = "attribute.modifier.equals." + AttributeModifier.Operation.ADD_VALUE.id();
+            DecimalFormat format = ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT;
 
-                if (damage > 0)
-                    list.add(CommonComponents.space().append(Component.translatable(key, format.format(damage),
-                            Component.translatable(ModAttributes.STAFF_DAMAGE.getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
-                if (piercing > 0)
-                    list.add(CommonComponents.space().append(Component.translatable(key, format.format(piercing),
-                            Component.translatable(ModAttributes.STAFF_PIERCE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
-                if (range > 0)
-                    list.add(CommonComponents.space().append(Component.translatable(key, format.format(range),
-                            Component.translatable(ModAttributes.STAFF_RANGE.getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+            float damage = staff.getDamage(self, player);
+            float piercing = staff.getPiercing(self, player);
+            float range = staff.getRange(self, player);
 
-                return value;
-            }
+            if (damage > 0)
+                tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(damage),
+                        Component.translatable(ModAttributes.STAFF_DAMAGE.value().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
+            if (piercing > 0)
+                tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(piercing),
+                        Component.translatable(ModAttributes.STAFF_PIERCE.value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+            if (range > 0)
+                tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(range),
+                        Component.translatable(ModAttributes.STAFF_RANGE.value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
 
-            K key = instance.getKey();
-            if (key instanceof Attribute attribute) {
+            original.call(instance, slot, (BiConsumer<Holder<Attribute>, AttributeModifier>) (attribute, modifier) -> {
                 if (attribute == ModAttributes.STAFF_DAMAGE || attribute == ModAttributes.STAFF_PIERCE || attribute == ModAttributes.STAFF_RANGE)
-                    return (V) new AttributeModifier(modifier.getId(), modifier.getName() + " override", 0, modifier.getOperation());
-            }
-        }
-
-        return value;
+                    return;
+                action.accept(attribute, modifier);
+            });
+        } else original.call(instance, slot, action);
     }
 
     @Inject(method = "getTooltipLines", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/level/Level;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"
+            target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"
     ))
-    public void showCatalyst(@Nullable Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir,
-                             @Local List<Component> list) {
+    public void showCatalyst(Item.TooltipContext tooltipContext, Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
         ItemStack self = (ItemStack) (Object) this;
 
         if (ModConfig.catalystTooltip.get() && EnchantingCatalyst.isCatalyst(self) && !(self.getItem() instanceof EnchantedBookItem)) {
@@ -116,9 +94,9 @@ public abstract class ItemStackMixin {
 
                 list.add(Component.translatable("tooltip.sortilege.catalyst").withStyle(ChatFormatting.DARK_PURPLE));
 
-                for (Enchantment e : EnchantingCatalyst.getEnchantments(self).keySet()) {
-                    MutableComponent text = CommonComponents.space().append(Component.translatable(e.getDescriptionId()));
-                    if (e.isCurse())
+                for (Holder<Enchantment> e : EnchantingCatalyst.getEnchantments(self).keySet()) {
+                    MutableComponent text = CommonComponents.space().append(e.value().description());
+                    if (e.is(EnchantmentTags.CURSE))
                         text.withStyle(ChatFormatting.RED);
                     else
                         text.withStyle(ChatFormatting.GRAY);
@@ -130,10 +108,10 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "getTooltipLines", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;appendEnchantmentNames(Ljava/util/List;Lnet/minecraft/nbt/ListTag;)V"
+            target = "Lnet/minecraft/world/item/ItemStack;addToTooltip(Lnet/minecraft/core/component/DataComponentType;Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/world/item/TooltipFlag;)V",
+            ordinal = 2
     ))
-    private void showEnchantLimit(@Nullable Player player, TooltipFlag context, CallbackInfoReturnable<List<Component>> cir,
-                                  @Local List<Component> list) {
+    private void showEnchantLimit(Item.TooltipContext tooltipContext, Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
         if (player == null) return;
         ItemStack self = (ItemStack) (Object) this;
 
@@ -160,7 +138,7 @@ public abstract class ItemStackMixin {
             value = "INVOKE",
             target = "Ljava/util/List;add(Ljava/lang/Object;)Z",
             //shift = At.Shift.AFTER,
-            ordinal = 16
+            ordinal = 3
     ))
     private <E> boolean showStaffType(List<E> instance, E e, Operation<Boolean> original) {
         ItemStack self = (ItemStack) (Object) this;
@@ -170,6 +148,8 @@ public abstract class ItemStackMixin {
             original.call(instance, Component.literal(" (" + staff.getEntry().getReader().getType() + ")").withStyle(ChatFormatting.DARK_GRAY));
         return true;
     }
+
+/* TODO: move to ItemEnchantmentsMixin
 
     @WrapOperation(method = "appendEnchantmentNames", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"))
     private static void showLearnable(Optional<Enchantment> instance, Consumer<? super Enchantment> action, Operation<Void> original,
@@ -185,5 +165,5 @@ public abstract class ItemStackMixin {
                 tooltip.set(tooltip.size() - 1, text);
             }
         });
-    }
+    }*/
 }

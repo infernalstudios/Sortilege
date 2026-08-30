@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.List;
 import java.util.Random;
@@ -21,13 +22,13 @@ public class BetterBrewingEmiRecipe extends BasicEmiRecipe {
     private static final ResourceLocation BACKGROUND = Identifier.of("minecraft", "textures/gui/container/brewing_stand.png");
     private static final EmiStack BLAZE_POWDER = EmiStack.of(Items.BLAZE_POWDER);
 
-    public BetterBrewingEmiRecipe(BrewingRecipe recipe) {
-        super(VanillaEmiRecipeCategories.BREWING, recipe.getId(), 120, 61);
-        this.recipe = recipe;
+    public BetterBrewingEmiRecipe(RecipeHolder<BrewingRecipe> recipe) {
+        super(VanillaEmiRecipeCategories.BREWING, recipe.id(), 120, 61);
+        this.recipe = recipe.value();
         this.uniq = MathHelper.rnd.nextInt();
-        this.inputs.add(EmiStack.of(recipe.getIngredient()));
-        this.inputs.add(EmiStack.of(recipe.getInput()));
-        this.outputs.add(EmiStack.of(recipe.getOutput()));
+        this.inputs.add(EmiStack.of(this.recipe.getIngredient()));
+        this.inputs.add(EmiStack.of(this.recipe.getInput()));
+        this.outputs.add(EmiStack.of(this.recipe.getOutput()));
     }
 
     @Override

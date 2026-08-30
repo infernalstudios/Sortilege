@@ -6,13 +6,14 @@ import com.google.gson.JsonSyntaxException;
 import net.lcc.sollib.core.Identifier;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 
 import java.util.function.Supplier;
 
@@ -53,7 +54,7 @@ public class StaffTier implements Tier {
         if (json.has("repair_material")) {
             String id = GsonHelper.getAsString(json, "repair_material");
             if (id.startsWith("#")) {
-                TagKey<Item> tag = TagKey.create(Registries.ITEM, new ResourceLocation(id.substring(1)));
+                TagKey<Item> tag = TagKey.create(Registries.ITEM, Identifier.of(id.substring(1)));
                 this.repairIngredient = Suppliers.memoize(() -> Ingredient.of(tag));
             } else {
                 this.repairIngredient = Suppliers.memoize(() -> Ingredient.of(BuiltInRegistries.ITEM.get(Identifier.of(id))));
@@ -82,11 +83,6 @@ public class StaffTier implements Tier {
     }
 
     @Override
-    public int getLevel() {
-        return 0;
-    }
-
-    @Override
     public int getUses() {
         return this.durability;
     }
@@ -108,6 +104,11 @@ public class StaffTier implements Tier {
     @Override
     public float getAttackDamageBonus() {
         return this.attackDamage;
+    }
+
+    @Override
+    public TagKey<Block> getIncorrectBlocksForDrops() {
+        return BlockTags.INCORRECT_FOR_WOODEN_TOOL;
     }
 
     public int getPiercing() {

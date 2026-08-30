@@ -1,7 +1,9 @@
 package net.lyof.sortilege.screen.custom;
 
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.lyof.sortilege.screen.ModScreenHandlers;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -11,12 +13,27 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class KnowledgeBookScreenHandler extends AbstractContainerMenu {
+    public static ExtendedScreenHandlerFactory<ItemStack> getFactory(ItemStack stack) {
+        return new ExtendedScreenHandlerFactory<>() {
+            @Override
+            public ItemStack getScreenOpeningData(ServerPlayer player) {
+                return stack;
+            }
+
+            @Override
+            public Component getDisplayName() {
+                return stack.getDisplayName();
+            }
+
+            @Override
+            public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+                return new KnowledgeBookScreenHandler(syncId, inventory, stack);
+            }
+        };
+    }
+
     public final ItemStack stack;
     public final Container inventory;
-
-    public KnowledgeBookScreenHandler(int syncId, Inventory inventory, FriendlyByteBuf buf) {
-        this(syncId, inventory, buf.readItem());
-    }
 
     public KnowledgeBookScreenHandler(int syncId, Inventory inventory, ItemStack stack) {
         super(ModScreenHandlers.KNOWLEDGE_BOOK, syncId);

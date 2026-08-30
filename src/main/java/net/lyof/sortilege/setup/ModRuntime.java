@@ -11,30 +11,30 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AStaffItem;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ModRuntime {
-    protected static void addMiningMaster(String gem, Enchantment enchant) {
+    protected static void addMiningMaster(String gem, Holder<Enchantment> enchant) {
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("miningmaster", "recipes/smithing/" + gem + "_smithing.json"),
-                json -> ModRuntime.Common.changeMiningMasterGem(json, BuiltInRegistries.ENCHANTMENT.getKey(enchant).toString()),
+                json -> ModRuntime.Common.changeMiningMasterGem(json, enchant.getRegisteredName()),
                 () -> enchant != null && ModConfig.miningMasterIntegration.get());
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("recipes/gems/" + gem + ".json"),
-                json -> ModRuntime.Common.changeMiningMasterGem(json, BuiltInRegistries.ENCHANTMENT.getKey(enchant).toString()),
+                json -> ModRuntime.Common.changeMiningMasterGem(json, enchant.getRegisteredName()),
                 () -> enchant != null && ModConfig.miningMasterIntegration.get());
     }
 
 
     public static void load() {
-        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/items/staffs.json"),
-                ModRuntime.Common::changeStaffTag);
+        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/item/staffs.json"),
+                ModRuntime.Common::generateStaffTag);
 
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
                 json -> ModRuntime.Common.changeParent(json, "sortilege:get_witch_hat"), ModConfig.witchHatEnabled);
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/story/enchant_item.json"),
                 json -> ModRuntime.Common.changeParent(json, "sortilege:get_knowledge_book"), ModConfig.knowledgeEnabled);
 
-        if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
+        if (FabricLoader.getInstance().isModLoaded("miningmaster")) {/*
             addMiningMaster("power_pyrite", ModEnchants.POTENCY);
             addMiningMaster("kinetic_opal", ModEnchants.BLAST);
             addMiningMaster("ice_sapphire", ModEnchants.BLIZZARD);
@@ -42,7 +42,7 @@ public class ModRuntime {
             addMiningMaster("air_malachite", ModEnchants.BLITZ);
             addMiningMaster("spirit_garnet", ModEnchants.WISDOM);
             addMiningMaster("haste_peridot", ModEnchants.FOCUS);
-            addMiningMaster("divine_beryl", ModEnchants.BLESSING);
+            addMiningMaster("divine_beryl", ModEnchants.BLESSING);*/
         }
     }
 
@@ -64,7 +64,7 @@ public class ModRuntime {
 
 
     private static class Common {
-        public static JsonObject changeStaffTag(JsonObject json) {
+        public static JsonObject generateStaffTag(JsonObject json) {
             if (json == null) json = new JsonObject();
             json.add("values", new JsonArray());
 

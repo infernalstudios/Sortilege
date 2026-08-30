@@ -1,6 +1,5 @@
 package net.lyof.sortilege.item;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.armor.ModArmorMaterials;
@@ -34,17 +33,17 @@ public class ModItems {
 
 
     public static final Item LIMITITE = register(true, "limitite",
-            () -> new LimititeItem(new FabricItemSettings()));
+            () -> new LimititeItem(new Item.Properties()));
 
     public static final Item ANTIDOTE = register(true, "antidote",
-            () -> new AntidotePotionItem(new FabricItemSettings().maxCount(ModConfig.antidoteStackSize.get())));
+            () -> new AntidotePotionItem(new Item.Properties().stacksTo(ModConfig.antidoteStackSize.get())));
 
     public static final Item WITCH_HAT = register(ModConfig.witchHatEnabled.get(), "witch_hat",
-            () -> new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new FabricItemSettings()));
+            () -> new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new Item.Properties()));
 
     public static final Item LAPIS_SHIELD = register(ModConfig.lapisShieldEnabled.get(), "lapis_shield",
-            () -> new LapisShieldItem(new FabricItemSettings().durability(ModConfig.lapisShieldDurability.get())));
+            () -> new LapisShieldItem(new Item.Properties().durability(ModConfig.lapisShieldDurability.get())));
 
     public static final Item KNOWLEDGE_BOOK = register(ModConfig.knowledgeEnabled.get(), "knowledge_book",
-            () -> new KnowledgeBookItem(new FabricItemSettings().stacksTo(1)));
+            () -> new KnowledgeBookItem(new Item.Properties().stacksTo(1)));
 }

@@ -1,8 +1,9 @@
 package net.lyof.sortilege;
 
+import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
@@ -10,10 +11,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.SolModContainer;
+import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
 import net.lyof.sortilege.block.ModBlocks;
 import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.potion.CustomPotionData;
@@ -27,13 +30,13 @@ import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sortilege implements ModInitializer {
+public class Sortilege implements ModInitializer, DedicatedServerModInitializer {
 	public static final SolModContainer MOD = new SolModContainer("Sortilege", "sortilege");
 	public static final String MOD_ID = MOD.getNamespace();
 
@@ -47,6 +50,7 @@ public class Sortilege implements ModInitializer {
 		ModBlockEntities.register();
 
 		ModAttributes.register();
+		ModDataComponents.register();
 		ModItems.register();
 		ModItemGroups.register();
 
@@ -62,8 +66,21 @@ public class Sortilege implements ModInitializer {
 		registerEvents();
 	}
 
+	@Override
+	public void onInitializeServer() {
+
+	}
+
 	private static void registerPackets() {
-		ServerPlayNetworking.registerGlobalReceiver(ModPackets.SET_KNOWLEDGE_AUTHORS, ModPackets.Server::setKnowledgeAuthors);
+		PayloadTypeRegistry.playS2C().register(ModPackets.InitializePacket.TYPE, ModPackets.InitializePacket.STREAM_CODEC);
+		PayloadTypeRegistry.playS2C().register(ModPackets.InitializeEnchantPacket.TYPE, ModPackets.InitializeEnchantPacket.STREAM_CODEC);
+		PayloadTypeRegistry.playS2C().register(CustomPotionData.TYPE, CustomPotionData.STREAM_CODEC);
+		PayloadTypeRegistry.playS2C().register(ModPackets.InitializeLockPacket.TYPE, ModPackets.InitializeLockPacket.STREAM_CODEC);
+		PayloadTypeRegistry.playS2C().register(ModPackets.ParticlePacket.TYPE, ModPackets.ParticlePacket.STREAM_CODEC);
+		PayloadTypeRegistry.playS2C().register(ModPackets.LapisShieldPacket.TYPE, ModPackets.LapisShieldPacket.STREAM_CODEC);
+		PayloadTypeRegistry.playC2S().register(ModPackets.KnowledgeBook.TYPE, ModPackets.KnowledgeBook.STREAM_CODEC);
+
+		ServerPlayNetworking.registerGlobalReceiver(ModPackets.KnowledgeBook.TYPE, ModPackets.KnowledgeBook::run);
 	}
 
 	private static void registerModules() {
@@ -77,17 +94,15 @@ public class Sortilege implements ModInitializer {
 		SolRegistries.Data.RELOAD.register(ReloadListener.INSTANCE);
 
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-			List<FriendlyByteBuf> packets = new ArrayList<>();
+			List<CustomPacketPayload> packets = new ArrayList<>();
 
-			FriendlyByteBuf packet = PacketByteBufs.create();
-			packet.writeInt(0);
-			packets.add(packet);
+			packets.add(new ModPackets.InitializePacket());
 
 			EnchantingCatalyst.write(packets);
 			CustomPotionData.write(packets);
 			RecipeLock.write(packets, player);
 
-			packets.forEach(p -> ServerPlayNetworking.send(player, ModPackets.INITIALIZE, p));
+			packets.forEach(p -> ServerPlayNetworking.send(player, p));
 		});
 	}
 

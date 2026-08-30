@@ -1,0 +1,8 @@
+{
+  "values": [
+    {
+      "id": "sortilege:potency",
+      "required": false
+    }
+  ]
+}

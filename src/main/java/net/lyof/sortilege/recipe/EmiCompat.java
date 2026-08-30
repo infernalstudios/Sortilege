@@ -18,8 +18,10 @@ import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.lyof.sortilege.setup.ModTags;
+import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.List;
@@ -42,18 +44,18 @@ public class EmiCompat implements EmiPlugin {
         registry.addCategory(CAULDRON_CATEGORY);
         registry.addWorkstation(CAULDRON_CATEGORY, EmiStack.of(Items.CAULDRON));
 
-        registry.addRecipe(new SpecialSmithingEmiRecipe(new SoulbindingRecipe(Sortilege.MOD.makeID("soulbinding_instance")),
+        registry.addRecipe(new SpecialSmithingEmiRecipe(new SoulbindingRecipe(), Sortilege.MOD.makeID("soulbinding_instance"),
                 EmiIngredient.of(ModTags.Items.SOULBINDERS)));
-        registry.addRecipe(new SpecialSmithingEmiRecipe(new LimitBreakRecipe(Sortilege.MOD.makeID("limit_break_instance")),
+        registry.addRecipe(new SpecialSmithingEmiRecipe(new LimitBreakRecipe(), Sortilege.MOD.makeID("limit_break_instance"),
                 EmiIngredient.of(ModTags.Items.LIMIT_BREAKER)));
 
-        for (Map.Entry<Item, List<Enchantment>> entry : EnchantingCatalyst.CATALYSTS.entrySet())
+        for (Map.Entry<Item, List<Holder<Enchantment>>> entry : EnchantingCatalyst.CATALYSTS.entrySet())
             registry.addRecipe(new CatalystEmiRecipe(entry.getKey(), entry.getValue()));
 
-        for (BrewingRecipe recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.BREWING))
+        for (RecipeHolder<BrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.BREWING))
             registry.addRecipe(new BetterBrewingEmiRecipe(recipe));
 
-        for (CauldronBrewingRecipe recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CAULDRON_BREWING))
+        for (RecipeHolder<CauldronBrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CAULDRON_BREWING))
             registry.addRecipe(new CauldronBrewingEmiRecipe(recipe));
     }
 }

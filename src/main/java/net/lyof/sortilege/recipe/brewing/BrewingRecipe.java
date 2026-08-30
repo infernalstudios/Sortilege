@@ -1,18 +1,13 @@
 package net.lyof.sortilege.recipe.brewing;
 
-import com.google.gson.JsonObject;
+import com.mojang.serialization.MapCodec;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
-import net.lyof.sortilege.recipe.brewing.custom.ItemBrewingRecipe;
-import net.lyof.sortilege.recipe.brewing.custom.PotionBrewingRecipe;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.Item;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -20,14 +15,7 @@ import net.minecraft.world.level.Level;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
-    private final ResourceLocation id;
-
-    public BrewingRecipe(ResourceLocation id) {
-        this.id = id;
-    }
-
-
+public abstract class BrewingRecipe implements Recipe<RecipeInput> {
     // Bottom Slots
     public abstract boolean isInput(ItemStack stack);
     // Top Slot
@@ -48,19 +36,14 @@ public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
 
     // Vanilla handling
     @Override
-    public ResourceLocation getId() {
-        return this.id;
-    }
-
-    @Override
-    public boolean matches(SimpleContainer inventory, Level world) {
+    public boolean matches(RecipeInput inventory, Level world) {
         // 0, 1, 2: Input/Output - 3: Ingredient
         return this.isIngredient(inventory.getItem(3)) && Stream.of(0, 1, 2).anyMatch(i ->
                 this.isInput(inventory.getItem(i)));
     }
 
     @Override
-    public ItemStack assemble(SimpleContainer inventory, RegistryAccess registryManager) {
+    public ItemStack assemble(RecipeInput inventory, HolderLookup.Provider lookup) {
         ItemStack input, ingredient;
         for (int i = 0; i < 3; i++) {
             input = inventory.getItem(i);
@@ -72,7 +55,7 @@ public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryManager) {
+    public ItemStack getResultItem(HolderLookup.Provider registries) {
         return this.getOutput();
     }
 
@@ -87,16 +70,16 @@ public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
     }
 
 
-    public static class Serializer implements RecipeSerializer<BrewingRecipe> {
+    public static class Serializer implements RecipeSerializer<BrewingRecipe> {/*
         public BrewingRecipe fromJson(ResourceLocation id, JsonObject json) {
             if (!json.has("input") || !json.has("ingredient") || !json.has("output"))
                 return null;
             if (json.get("input").isJsonObject() && json.get("input").getAsJsonObject().has("potion")) {
-                Potion in = BuiltInRegistries.POTION.get(new ResourceLocation(json.get("input")
+                Potion in = BuiltInRegistries.POTION.get(Identifier.of(json.get("input")
                         .getAsJsonObject().get("potion").getAsString()));
-                Item add = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("ingredient")
+                Item add = BuiltInRegistries.ITEM.get(Identifier.of(json.get("ingredient")
                         .getAsJsonObject().get("item").getAsString()));
-                Potion out = BuiltInRegistries.POTION.get(new ResourceLocation(json.get("output")
+                Potion out = BuiltInRegistries.POTION.get(Identifier.of(json.get("output")
                         .getAsJsonObject().get("potion").getAsString()));
 
                 BrewingRecipe recipe = new PotionBrewingRecipe(in, add, out, id);
@@ -104,11 +87,11 @@ public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
                 return recipe;
             }
 
-            Item in = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("input")
+            Item in = BuiltInRegistries.ITEM.get(Identifier.of(json.get("input")
                     .getAsJsonObject().get("item").getAsString()));
-            Item add = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("ingredient")
+            Item add = BuiltInRegistries.ITEM.get(Identifier.of(json.get("ingredient")
                     .getAsJsonObject().get("item").getAsString()));
-            Item out = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("output")
+            Item out = BuiltInRegistries.ITEM.get(Identifier.of(json.get("output")
                     .getAsJsonObject().get("item").getAsString()));
 
             BrewingRecipe recipe = new ItemBrewingRecipe(in, add, out, id);
@@ -148,6 +131,16 @@ public abstract class BrewingRecipe implements Recipe<SimpleContainer> {
                 packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(potionRecipe.ingredient));
                 packet.writeResourceLocation(BuiltInRegistries.POTION.getKey(potionRecipe.output));
             }
+        }*/
+
+        @Override
+        public MapCodec<BrewingRecipe> codec() {
+            return null;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, BrewingRecipe> streamCodec() {
+            return null;
         }
     }
 }

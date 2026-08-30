@@ -4,8 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
@@ -13,7 +13,9 @@ import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.MathHelper;
 import net.lyof.sortilege.util.inject.EnchantInfoHolder;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -25,7 +27,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.level.block.EnchantmentTableBlock;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.EnchantingTableBlock;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -39,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Stream;
 
 @Mixin(EnchantmentMenu.class)
 public abstract class EnchantmentMenuMixin extends AbstractContainerMenu implements EnchantInfoHolder {
@@ -110,13 +113,13 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
             this.sorti_knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge(null);
 
             this.access.execute((world, pos) -> {
-                for (BlockPos p : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
+                for (BlockPos p : EnchantingTableBlock.BOOKSHELF_OFFSETS) {
                     if (!(world.getBlockEntity(pos.offset(p)) instanceof ChiseledBookShelfBlockEntity bookshelf)) continue;
 
                     ItemStack stack;
                     for (int i = 0; i < ChiseledBookShelfBlockEntity.MAX_BOOKS_IN_STORAGE; i++) {
                         stack = bookshelf.getItem(i);
-                        if (stack.is(ModItems.KNOWLEDGE_BOOK) && KnowledgeBookItem.isAuthor(stack, sorti_player))
+                        if (stack.is(ModItems.KNOWLEDGE_BOOK) && stack.get(ModDataComponents.KNOWLEDGE).isAuthor(sorti_player))
                             this.sorti_knowledge.learn(stack);
                     }
                 }
@@ -136,15 +139,19 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         this.access.execute((world, pos) -> this.clearContainer(player, this.sorti_catalyst));
     }
 
-    @WrapOperation(method = "getEnchantmentList", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;selectEnchantment(Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/item/ItemStack;IZ)Ljava/util/List;"))
-    public List<EnchantmentInstance> overrideDefaultEnchanting(RandomSource random, ItemStack stack, int level, boolean treasureAllowed, Operation<List<EnchantmentInstance>> original) {
+    @WrapOperation(method = "getEnchantmentList", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;selectEnchantment(Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/item/ItemStack;ILjava/util/stream/Stream;)Ljava/util/List;"))
+    public List<EnchantmentInstance> overrideDefaultEnchanting(RandomSource random, ItemStack stack, int level,
+                                                               Stream<Holder<Enchantment>> possibleEnchantments,
+                                                               Operation<List<EnchantmentInstance>> original) {
         if (ModConfig.catalystOnly.get())
             return new ArrayList<>();
-        return original.call(random, stack, level, treasureAllowed);
+        return original.call(random, stack, level, possibleEnchantments);
     }
 
     @ModifyReturnValue(method = "getEnchantmentList", at = @At("RETURN"))
-    public List<EnchantmentInstance> generateSortiEnchantments(List<EnchantmentInstance> original, ItemStack stack, int slot, int level) {
+    public List<EnchantmentInstance> generateSortiEnchantments(List<EnchantmentInstance> original, RegistryAccess registryAccess,
+                                                               ItemStack stack, int slot, int cost) {
         int power = this.costs[slot];
         this.sorti_catalyzed[slot] = 0;
 
@@ -162,33 +169,34 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         }
 
         // Catalyst logic
-        Map<Enchantment, Integer> enchants = EnchantingCatalyst.getEnchantments(this.sorti_catalyst.getItem(0));
+        ItemEnchantments enchants = EnchantingCatalyst.getEnchantments(this.sorti_catalyst.getItem(0));
         if (!enchants.isEmpty()) {
             // Randomize seed
             for (int i = 0; i < slot; i++) this.random.nextDouble();
 
             // Get catalyzed enchant
-            Enchantment chosen = MathHelper.randi(enchants.keySet().stream().filter(enchant -> enchant.canEnchant(stack)
-                    || stack.is(Items.BOOK)).toList(), this.random);
+            Holder<Enchantment> chosen = MathHelper.randi(enchants.keySet().stream().filter(enchant ->
+                    enchant.value().canEnchant(stack) || stack.is(Items.BOOK)).toList(), this.random);
             if (chosen == null) return original;
 
             // Randomize seed
-            for (int i = 0; i < BuiltInRegistries.ENCHANTMENT.getId(chosen) % 8; i++) this.random.nextDouble();
+            for (int i = 0; i < registryAccess.registryOrThrow(Registries.ENCHANTMENT).getId(chosen.value()) % 8; i++)
+                this.random.nextDouble();
 
             // Catalysts don't always apply
             if (this.random.nextDouble() <= ModConfig.catalystChance.get()) {
-                int lvl = chosen.getMaxLevel();
+                int lvl = chosen.value().getMaxLevel();
                 // Higher level in costier slots
                 for (int i = 0; i < 3 - slot; i++)
-                    lvl = Math.min(lvl, this.random.nextInt(chosen.getMaxLevel()));
+                    lvl = Math.min(lvl, this.random.nextInt(chosen.value().getMaxLevel()));
                 lvl += 1;
 
                 // Nerf books, because they are reusable
                 if (this.sorti_catalyst.getItem(0).getItem() instanceof EnchantedBookItem)
-                    lvl = Math.min(lvl, enchants.get(chosen));
+                    lvl = Math.min(lvl, enchants.getLevel(chosen));
 
                 // Remove incompatible and duplicate enchants
-                result.removeIf(entry -> !entry.enchantment.isCompatibleWith(chosen));
+                result.removeIf(entry -> !Enchantment.areCompatible(chosen, entry.enchantment));
                 result.add(0, new EnchantmentInstance(chosen, lvl));
 
                 // Slot was successfully catalyzed

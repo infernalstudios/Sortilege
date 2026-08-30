@@ -10,9 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -34,16 +35,16 @@ public abstract class LeveledCauldronBlockMixin {
 
     @Inject(method = "entityInside", at = @At("HEAD"), cancellable = true)
     public void brewItemEntity(BlockState state, Level world, BlockPos pos, Entity entity, CallbackInfo ci) {
-        if (ModConfig.cauldronBrewingEnabled.get() &&  entity instanceof ItemEntity item && world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES)
+        if (ModConfig.cauldronBrewingEnabled.get() && entity instanceof ItemEntity item && world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES)
                 && PotionCauldronBlock.isLit(world.getBlockState(pos.below())) && state.is(Blocks.WATER_CAULDRON)) {
 
-            Optional<CauldronBrewingRecipe> optional = world.getRecipeManager().getRecipeFor(ModRecipeTypes.CAULDRON_BREWING,
-                    new SimpleContainer(item.getItem()), world);
+            Optional<RecipeHolder<CauldronBrewingRecipe>> optional = world.getRecipeManager().getRecipeFor(ModRecipeTypes.CAULDRON_BREWING,
+                    new SingleRecipeInput(item.getItem()), world);
 
             if (optional.isPresent() && item.getItem().getCount() >= state.getValue(LEVEL)) {
                 world.setBlockAndUpdate(pos, ModBlocks.POTION_CAULDRON.defaultBlockState().setValue(LEVEL, state.getValue(LEVEL)));
                 if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)
-                    cauldron.potion = optional.get().output;
+                    cauldron.potion = optional.get().value().output;
 
                 world.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
                 world.gameEvent(null, GameEvent.FLUID_PLACE, pos);

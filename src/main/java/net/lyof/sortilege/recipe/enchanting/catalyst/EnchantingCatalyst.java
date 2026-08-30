@@ -1,28 +1,26 @@
 package net.lyof.sortilege.recipe.enchanting.catalyst;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModPackets;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.*;
 
 public class EnchantingCatalyst {
-    public static final Map<Item, List<Enchantment>> CATALYSTS = new HashMap<>();
+    public static final Map<Item, List<Holder<Enchantment>>> CATALYSTS = new HashMap<>();
 
     public static void clear() {
         CATALYSTS.clear();
     }
 
-    public static void register(Item catalyst, List<Enchantment> enchants) {
+    public static void register(Item catalyst, List<Holder<Enchantment>> enchants) {
         if (CATALYSTS.containsKey(catalyst))
             CATALYSTS.get(catalyst).addAll(enchants);
         else
@@ -36,14 +34,14 @@ public class EnchantingCatalyst {
         return !ModConfig.catalystBooks.get() && CATALYSTS.isEmpty();
     }
 
-    public static Map<Enchantment, Integer> getEnchantments(ItemStack catalyst) {
+    public static ItemEnchantments getEnchantments(ItemStack catalyst) {
         if (catalyst.getItem() instanceof EnchantedBookItem && ModConfig.catalystBooks.get())
-            return EnchantmentHelper.getEnchantments(catalyst);
+            return catalyst.getEnchantments();
 
-        Map<Enchantment, Integer> result = new HashMap<>();
-        for (Enchantment enchant : CATALYSTS.getOrDefault(catalyst.getItem(), List.of()))
-            result.put(enchant, 1);
-        return result;
+        ItemEnchantments.Mutable result = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
+        for (Holder<Enchantment> enchant : CATALYSTS.getOrDefault(catalyst.getItem(), List.of()))
+            result.set(enchant, 1);
+        return result.toImmutable();
     }
 
     public static boolean isCatalyst(ItemStack item) {
@@ -51,39 +49,18 @@ public class EnchantingCatalyst {
     }
 
 
-    public static void read(JsonObject json) {
+    public static void read(JsonObject json) {/*
         if (json.has("item") && json.has("enchantments") && json.get("enchantments").isJsonArray()) {
-            Item item = BuiltInRegistries.ITEM.get(new ResourceLocation(json.get("item").getAsString()));
+            Item item = BuiltInRegistries.ITEM.get(Identifier.of(json.get("item").getAsString()));
             List<Enchantment> enchants = json.get("enchantments").getAsJsonArray().asList().stream()
-                    .map(id -> BuiltInRegistries.ENCHANTMENT.get(new ResourceLocation(id.getAsString()))).filter(Objects::nonNull).toList();
+                    .map(id -> Registries.ENCHANTMENT..get(Identifier.of(id.getAsString()))).filter(Objects::nonNull).toList();
 
             register(item, enchants);
-        }
+        }*/
     }
 
-    public static void read(FriendlyByteBuf packet) {
-        Item key = BuiltInRegistries.ITEM.get(packet.readResourceLocation());
-        int enchants = packet.readInt();
-
-        List<Enchantment> value = new ArrayList<>();
-        for (int j = 0; j < enchants; j++)
-            value.add(BuiltInRegistries.ENCHANTMENT.get(packet.readResourceLocation()));
-
-        CATALYSTS.putIfAbsent(key, value);
-    }
-
-    public static void write(List<FriendlyByteBuf> packets) {
-        for (Map.Entry<Item, List<Enchantment>> entry : CATALYSTS.entrySet()) {
-            FriendlyByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(ModPackets.INIT_CATALYST);
-
-            packet.writeResourceLocation(BuiltInRegistries.ITEM.getKey(entry.getKey()));
-            packet.writeInt(entry.getValue().size());
-
-            for (Enchantment enchant : entry.getValue())
-                packet.writeResourceLocation(BuiltInRegistries.ENCHANTMENT.getKey(enchant));
-
-            packets.add(packet);
-        }
+    public static void write(List<CustomPacketPayload> packets) {
+        for (Map.Entry<Item, List<Holder<Enchantment>>> entry : CATALYSTS.entrySet())
+            packets.add(new ModPackets.InitializeEnchantPacket(entry.getKey(), entry.getValue()));
     }
 }

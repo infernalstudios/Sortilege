@@ -4,6 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
+import net.minecraft.core.particles.ColorParticleOption;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,7 +50,7 @@ public class WispParticle extends TextureSheetParticle {
     }
 
     @Environment(EnvType.CLIENT)
-    public static class Factory implements ParticleProvider<SimpleParticleType> {
+    public static class Factory implements ParticleProvider<ColorParticleOption> {
         private final SpriteSet sprites;
 
         public Factory(SpriteSet spriteProvider) {
@@ -57,8 +59,8 @@ public class WispParticle extends TextureSheetParticle {
 
         @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-            return new WispParticle(world, x, y, z, this.sprites, (float) velocityX, (float) velocityY, (float) velocityZ);
+        public Particle createParticle(ColorParticleOption parameters, ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+            return new WispParticle(world, x, y, z, this.sprites, parameters.getRed(), parameters.getGreen(), parameters.getBlue());
         }
     }
 }

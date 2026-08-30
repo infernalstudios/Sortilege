@@ -21,7 +21,10 @@ import java.util.List;
 
 @SuppressWarnings("all")
 @Mixin(MappedRegistry.class)
-public abstract class MappedRegistryMixin<T> {
+public abstract class MappedRegistryMixin<T> {/*
+    private static class BackedMap {
+
+    }
     @Shadow public abstract HolderOwner<T> holderOwner();
 
     @Unique private boolean sorti_isPotionRegistry() {
@@ -52,12 +55,13 @@ public abstract class MappedRegistryMixin<T> {
         if (id != null) cir.setReturnValue(id);
     }
 
-    @ModifyReturnValue(method = "holdersInOrder", at = @At("RETURN"))
+    @ModifyReturnValue(method = "holders", at = @At("RETURN"))
     public List<Holder.Reference<T>> getCustomEntries(List<Holder.Reference<T>> original) {
         if (!this.sorti_isPotionRegistry()) return original;
 
         List<Holder.Reference<T>> result = new ArrayList<>(original);
-        result.addAll(CustomPotionData.getRegistry(this.holderOwner()));
+        for (Holder.Reference<T> holder : CustomPotionData.getRegistry(this.holderOwner()))
+             result.add(holder);
         return result;
-    }
+    }*/
 }

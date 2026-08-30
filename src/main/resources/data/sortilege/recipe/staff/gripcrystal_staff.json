@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/gripcrystal",
+  "category": "equipment",
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "key": {
+    "M": {
+      "item": "unseen_world:gripcrystal"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "sortilege:gripcrystal_staff"
+  }
+}

@@ -1,116 +1,53 @@
 package net.lyof.sortilege.enchant;
 
+import com.mojang.serialization.MapCodec;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.armor.MagicProtectionEnchantment;
-import net.lyof.sortilege.enchant.common.SoulboundEnchantment;
-import net.lyof.sortilege.enchant.common.StorytellingEnchantment;
-import net.lyof.sortilege.enchant.staff.CurseStaffEnchantment;
-import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
-import net.lyof.sortilege.enchant.staff.StaffEnchantment;
-import net.lyof.sortilege.enchant.weapon.ArcaneEnchantment;
-import net.lyof.sortilege.setup.ModConfig;
+import net.lyof.sortilege.enchant.custom.StaffColorEnchant;
+import net.lyof.sortilege.enchant.custom.StaffStatsEnchant;
+import net.lyof.sortilege.enchant.effect.FreezeEnchantEffect;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
+import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 public class ModEnchants {
-    public static void register() {}
-    
-    public static Enchantment register(String name, Supplier<Enchantment> enchant) {
-        if (!isEnabled(name)) return null;
-        return Registry.register(BuiltInRegistries.ENCHANTMENT, Sortilege.MOD.makeID(name), enchant.get());
+    public static void register() {
+        register("freeze", FreezeEnchantEffect.CODEC);
     }
 
-    private static boolean isEnabled(String name) {
-        return !ModConfig.disabledEnchants.get().contains(name);
+    private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
+        return Registry.register(BuiltInRegistries.ENCHANTMENT_EFFECT_COMPONENT_TYPE, Sortilege.MOD.makeID(name), builder.apply(DataComponentType.builder()).build());
+    }
+
+    private static <T extends EnchantmentEntityEffect> MapCodec<T> register(String name, MapCodec<T> effect) {
+        return Registry.register(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Sortilege.MOD.makeID(name), effect);
+    }
+
+    private static ResourceKey<Enchantment> register(String name) {
+        return ResourceKey.create(Registries.ENCHANTMENT, Sortilege.MOD.makeID(name));
     }
 
 
-    // STAFF ENCHANTS
-    public static final Enchantment POTENCY = register("potency",
-            () -> new StaffEnchantment(Enchantment.Rarity.COMMON, 5));
-    public static final Enchantment STABILITY = register("stability",
-            () -> new StaffEnchantment(Enchantment.Rarity.COMMON, 5));
-    public static final Enchantment CHAINING = register("chaining",
-            () -> new StaffEnchantment(Enchantment.Rarity.COMMON, 3));
-    public static final Enchantment WISDOM = register("wisdom",
-            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 3,
-                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.focus")));
+    public static final DataComponentType<StaffStatsEnchant> CHANGE_STATS = register("staff_stats",
+            builder -> builder.persistent(StaffStatsEnchant.CODEC).networkSynchronized(StaffStatsEnchant.STREAM_CODEC));
+    public static final DataComponentType<StaffColorEnchant> BEAM_COLOR = register("staff_beam_colors",
+            builder -> builder.persistent(StaffColorEnchant.CODEC).networkSynchronized(StaffColorEnchant.STREAM_CODEC));
+    public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> POST_STAFF_HIT = register("post_staff_hit",
+            builder -> builder.persistent(TargetedConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
+    public static final DataComponentType<Unit> PREVENT_DEATHDROP = register("prevent_deathdrop",
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
+    public static final DataComponentType<Unit> PREVENT_DROP = register("prevent_drop",
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
 
-    public static final Enchantment PUSH = register("push",
-            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.pull")));
-    public static final Enchantment PULL = register("pull",
-            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.push")));
-
-    public static final Enchantment FOCUS = register("focus",
-            () -> new StaffEnchantment(Enchantment.Rarity.UNCOMMON, 5,
-                    null, candidate -> !candidate.getDescriptionId().equals("enchantment.sortilege.wisdom")));
-
-
-    public static final Enchantment BRAZIER = register("brazier",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new float[]{1f, 0.7f, 0f},
-                            new float[]{1f, 1f, 0f},
-                            new float[]{1f, 0.85f, 0f}),
-                    (target, level) -> target.setSecondsOnFire(level * 4)));
-    public static final Enchantment BLIZZARD = register("blizzard",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new float[]{0.7f, 0.7f, 1f},
-                            new float[]{0.8f, 0.9f, 1f}),
-                    (target, level) -> {
-                if (target.isOnFire()) {
-                    target.clearFire();
-                    target.addEffect(new MobEffectInstance(MobEffects.WITHER, 40, level));
-                }
-                target.setTicksFrozen(target.getTicksFrozen() + 160*level);
-            }));
-    public static final Enchantment BLAST = register("blast",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new float[]{0.5f, 0.25f, 0f},
-                            new float[]{0.8f, 0.2f, 0f},
-                            new float[]{1f, 0.4f, 0f}),
-                    null));
-    public static final Enchantment BLITZ = register("blitz",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new float[]{1f, 1f, 0f},
-                            new float[]{1f, 1f, 0.5f},
-                            new float[]{1f, 1f, 0.75f}),
-                    (target, level) -> {
-                target.setDeltaMovement(0, -1, 0);
-                target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40 * level, 0));
-                target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40 * level, 1));
-            }));
-    public static final Enchantment BLESSING = register("blessing",
-            () -> new ElementalStaffEnchantment(Enchantment.Rarity.UNCOMMON, 2,
-                    List.of(new float[]{1f, 0.75f, 0.75f},
-                            new float[]{1f, 0.5f, 0.5f},
-                            new float[]{1f, 0.25f, 0.25f}),
-                    null));
-
-    public static final Enchantment BONK = register("bonk",
-            () -> new StaffEnchantment(Enchantment.Rarity.RARE, 1));
-
-    public static final Enchantment IGNORANCE_CURSE = register("ignorance_curse",
-            () -> new CurseStaffEnchantment(Enchantment.Rarity.RARE));
-
-
-    // EXTRA ENCHANTS
-    public static final Enchantment MAGIC_PROTECTION = register("magic_protection",
-            () -> new MagicProtectionEnchantment(Enchantment.Rarity.COMMON));
-    public static final Enchantment ARCANE = register("arcane",
-            () -> new ArcaneEnchantment(Enchantment.Rarity.UNCOMMON));
-
-    public static final Enchantment SOULBOUND = register("soulbound",
-            () -> new SoulboundEnchantment());
-    public static final Enchantment STORYTELLING_CURSE = register("storytelling_curse",
-            () -> new StorytellingEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.VANISHABLE, EquipmentSlot.values()));
+    public static final ResourceKey<Enchantment> SOULBOUND = register("soulbound");
 }

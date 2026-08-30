@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/crystal",
+  "category": "equipment",
+  "pattern": [
+    " SV",
+    " SS",
+    "M  "
+  ],
+  "key": {
+	"V": {
+      "item": "phantasm:void_crystal_block"
+    },
+    "M": {
+      "item": "phantasm:crystal_block"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "sortilege:crystalline_staff"
+  }
+}

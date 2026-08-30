@@ -15,7 +15,6 @@ public class ItemBrewingRecipe extends BrewingRecipe {
     public Item output;
 
     public ItemBrewingRecipe(Item in, Item add, Item out, ResourceLocation id) {
-        super(id);
         this.input = in;
         this.ingredient = add;
         this.output = out;

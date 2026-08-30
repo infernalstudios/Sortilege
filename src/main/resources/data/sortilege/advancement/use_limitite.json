@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:adventure/trim_with_any_armor_pattern",
+  "criteria": {
+    "recipe_crafted": {
+      "conditions": {
+        "recipe_id": "sortilege:limit_break_instance"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.sortilege.use_limitite.desc"
+    },
+    "frame": "goal",
+    "hidden": false,
+    "icon": {
+      "id": "sortilege:limitite"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.sortilege.use_limitite"
+    }
+  },
+  "requirements": [
+    [
+      "recipe_crafted"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

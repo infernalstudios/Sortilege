@@ -1,0 +1,27 @@
+{
+  "conditions": [
+    {
+      "type": "aquaculture:neptunium_items_enabled",
+      "value": true
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/neptunium",
+  "category": "equipment",
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "key": {
+    "M": {
+      "tag": "forge:ingots/neptunium"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "sortilege:neptunium_staff"
+  }
+}

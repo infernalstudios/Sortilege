@@ -19,10 +19,10 @@ public abstract class DamageSourcesMixin {
 
     @ModifyReturnValue(method = "playerAttack", at = @At("RETURN"))
     public DamageSource arcaneDamage(DamageSource original, Player attacker) {
-        if ((ModEnchants.ARCANE != null && EnchantmentHelper.getEnchantmentLevel(ModEnchants.ARCANE, attacker) > 0)
+        /*if ((ModEnchants.ARCANE != null && EnchantmentHelper.getEnchantmentLevel(ModEnchants.ARCANE, attacker) > 0)
                 || attacker.getMainHandItem().getItem() instanceof AStaffItem) {
             return this.indirectMagic(attacker, attacker);
-        }
+        }*/
         return original;
     }
 }

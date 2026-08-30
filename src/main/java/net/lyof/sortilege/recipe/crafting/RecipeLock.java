@@ -2,15 +2,15 @@ package net.lyof.sortilege.recipe.crafting;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
@@ -96,15 +96,15 @@ public abstract class RecipeLock {
 
         @Override
         public boolean matches(ServerPlayer player) {
-            Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancements().getAdvancement(new ResourceLocation(this.id));
+            AdvancementHolder advc = Objects.requireNonNull(player.getServer()).getAdvancements().get(Identifier.of(this.id));
             return advc != null && !player.getAdvancements().getOrStartProgress(advc).isDone();
         }
 
         @Override
         public MutableComponent getFailMessage(ServerPlayer player) {
-            Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancements().getAdvancement(new ResourceLocation(this.id));
+            AdvancementHolder advc = Objects.requireNonNull(player.getServer()).getAdvancements().get(Identifier.of(this.id));
             if (advc == null) return Component.empty();
-            return Component.translatable("screen.sortilege.crafting.requires_advancement", advc.getChatComponent());
+            return Component.translatable("screen.sortilege.crafting.requires_advancement", Advancement.name(advc));
         }
 
         @Environment(EnvType.CLIENT)
@@ -125,34 +125,24 @@ public abstract class RecipeLock {
 
     private static final Map<String, MutableComponent> TITLES = new HashMap<>();
 
-    public static void read(FriendlyByteBuf packet) {
-        String id = packet.readUtf();
-        boolean isTranslatable = packet.readBoolean();
-        String title = packet.readUtf();
-
-        TITLES.putIfAbsent(id, Component.translatable("screen.sortilege.crafting.requires_advancement",
+    public static void read(ModPackets.InitializeLockPacket packet) {
+        TITLES.putIfAbsent(packet.advancement(), Component.translatable("screen.sortilege.crafting.requires_advancement",
                 Component.literal("[")
-                        .append(isTranslatable ? Component.translatable(title) : Component.literal(title))
+                        .append(packet.translatable() ? Component.translatable(packet.name()) : Component.literal(packet.name()))
                         .append("]").withStyle(ChatFormatting.GREEN)));
     }
 
-    public static void write(List<FriendlyByteBuf> packets, ServerPlayer player) {
+    public static void write(List<CustomPacketPayload> packets, ServerPlayer player) {
         for (RecipeLock lock : RECIPE_LOCKS.values()) {
             if (!(lock instanceof AdvancementLock advancementLock)) continue;
-            Advancement advc = Objects.requireNonNull(player.getServer()).getAdvancements()
-                    .getAdvancement(new ResourceLocation(advancementLock.id));
-            if (advc == null || advc.getDisplay() == null) continue;
+            AdvancementHolder advc = Objects.requireNonNull(player.getServer()).getAdvancements()
+                    .get(Identifier.of(advancementLock.id));
+            if (advc == null || advc.value().display().isEmpty()) continue;
 
-            FriendlyByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(ModPackets.INIT_LOCK);
-
-            packet.writeUtf(advancementLock.id);
-            Component title = advc.getDisplay().getTitle();
-            packet.writeBoolean(title.getContents() instanceof TranslatableContents);
-            packet.writeUtf(title.getContents() instanceof TranslatableContents content ?
-                    content.getKey() : title.getString());
-
-            packets.add(packet);
+            Component title = advc.value().display().get().getTitle();
+            packets.add(new ModPackets.InitializeLockPacket(advancementLock.id,
+                    title.getContents() instanceof TranslatableContents,
+                    title.getContents() instanceof TranslatableContents content ? content.getKey() : title.getString()));
         }
     }
 }

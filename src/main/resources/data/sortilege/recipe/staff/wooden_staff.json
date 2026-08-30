@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/wood",
+  "category": "equipment",
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "key": {
+    "M": {
+      "tag": "minecraft:planks"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "id": "sortilege:wooden_staff"
+  }
+}

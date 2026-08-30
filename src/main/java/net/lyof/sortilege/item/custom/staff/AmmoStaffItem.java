@@ -101,13 +101,13 @@ public class AmmoStaffItem extends AStaffItem {
 
     @Override
     public void consumeResource(ItemStack stack, Player player) {
-        float wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack) * 0.25f;
+        float wisdom = 0;// EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack) * 0.25f;
         RandomSource random = MathHelper.getRandom(player.level());
         if (random.nextFloat() < wisdom) return;
 
         int c = this.cost.getCount();
-        if (EnchantHelper.hasEnchant(ModEnchants.IGNORANCE_CURSE, stack) && random.nextFloat() < 0.25)
-            c *= 2;
+        /*if (EnchantHelper.hasEnchant(ModEnchants.IGNORANCE_CURSE, stack) && random.nextFloat() < 0.25)
+            c *= 2;*/
 
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack s = player.getInventory().getItem(i);

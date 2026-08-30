@@ -1,48 +1,34 @@
 package net.lyof.sortilege.recipe.smithing;
 
-import com.google.gson.JsonObject;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.level.Level;
 
 public class LimitBreakRecipe implements SmithingRecipe {
-    public final ResourceLocation id;
-
-    public LimitBreakRecipe(ResourceLocation id) {
-        this.id = id;
-    }
-
     @Override
-    public boolean matches(Container inventory, Level world) {
+    public boolean matches(SmithingRecipeInput inventory, Level world) {
         return this.isTemplateIngredient(inventory.getItem(0)) && this.isBaseIngredient(inventory.getItem(1))
                 && this.isAdditionIngredient(inventory.getItem(2));
     }
 
     @Override
-    public ItemStack assemble(Container inventory, RegistryAccess registryManager) {
+    public ItemStack assemble(SmithingRecipeInput inventory, HolderLookup.Provider lookup) {
         ItemStack stack = inventory.getItem(1).copyWithCount(1);
         EnchantHelper.addExtraEnchantSlot(stack);
         return stack;
     }
 
     @Override
-    public ItemStack getResultItem(RegistryAccess registryManager) {
+    public ItemStack getResultItem(HolderLookup.Provider lookup) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ResourceLocation getId() {
-        return this.id;
     }
 
     @Override
@@ -64,19 +50,5 @@ public class LimitBreakRecipe implements SmithingRecipe {
     @Override
     public RecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.LIMIT_BREAK_SERIALIZER;
-    }
-
-
-    public static class Serializer implements RecipeSerializer<LimitBreakRecipe> {
-        public LimitBreakRecipe fromJson(ResourceLocation id, JsonObject json) {
-            return new LimitBreakRecipe(id);
-        }
-
-        public LimitBreakRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packetByteBuf) {
-            return new LimitBreakRecipe(identifier);
-        }
-
-        @Override
-        public void toNetwork(FriendlyByteBuf packetByteBuf, LimitBreakRecipe recipe) {}
     }
 }

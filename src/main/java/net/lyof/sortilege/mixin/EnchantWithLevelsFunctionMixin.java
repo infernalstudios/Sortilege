@@ -1,7 +1,8 @@
 package net.lyof.sortilege.mixin;
 
-import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
@@ -15,6 +16,6 @@ public class EnchantWithLevelsFunctionMixin {
     @Inject(method = "run", at = @At("HEAD"))
     private void makeLearnable(ItemStack stack, LootContext context, CallbackInfoReturnable<ItemStack> cir) {
         if (ModConfig.knowledgeEnabled.get())
-            stack.getOrCreateTag().putBoolean(EnchantKnowledge.LEARNABLE_KEY, true);
+            stack.set(ModDataComponents.LEARNABLE, Unit.INSTANCE);
     }
 }

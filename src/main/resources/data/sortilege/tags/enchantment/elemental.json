@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "sortilege:brazier",
+      "required": false
+    },
+    {
+      "id": "sortilege:blizzard",
+      "required": false
+    }
+  ]
+}

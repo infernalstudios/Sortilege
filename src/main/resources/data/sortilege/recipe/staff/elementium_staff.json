@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "staff/elementium",
+  "category": "equipment",
+  "pattern": [
+    " SM",
+    " SS",
+    "M  "
+  ],
+  "key": {
+    "M": {
+      "item": "botania:elementium_ingot"
+    },
+    "S": {
+      "item": "botania:dreamwood_twig"
+    }
+  },
+  "result": {
+    "id": "sortilege:elementium_staff"
+  }
+}

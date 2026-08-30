@@ -1,0 +1,45 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.brazier"
+  },
+  "max_level": 2,
+  "weight": 3,
+  "supported_items": "#sortilege:enchantable/staff",
+  "exclusive_set": "#sortilege:elemental",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:post_staff_hit": [
+      {
+        "effect": {
+          "type": "minecraft:ignite",
+          "duration": {
+            "type": "minecraft:linear",
+            "base": 4,
+            "per_level_above_first": 4
+          }
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
+      }
+    ],
+    "sortilege:staff_beam_colors": {
+      "colors": [
+        "#ffbb00",
+        "#ffff00",
+        "#ffdd00"
+      ]
+    }
+  },
+
+  "anvil_cost": 4,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 45,
+    "per_level_above_first": 10
+  }
+}

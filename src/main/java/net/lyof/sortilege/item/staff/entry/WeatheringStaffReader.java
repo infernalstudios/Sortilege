@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
@@ -156,9 +155,7 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
             oxidized = new StaffEntry.Display();
 
             unaffected.read(json);
-            Sortilege.log().info(unaffected.getColors().stream().map(c -> c[0] + " " + c[1] + " " + c[2]).toList());
             unaffected.read(GsonHelper.getAsJsonObject(json, "unaffected", new JsonObject()));
-            Sortilege.log().info(unaffected.getColors().stream().map(c -> c[0] + " " + c[1] + " " + c[2]).toList());
             exposed.read(json).read(GsonHelper.getAsJsonObject(json, "exposed", new JsonObject()));
             weathered.read(json).read(GsonHelper.getAsJsonObject(json, "weathered", new JsonObject()));
             oxidized.read(json).read(GsonHelper.getAsJsonObject(json, "oxidized", new JsonObject()));

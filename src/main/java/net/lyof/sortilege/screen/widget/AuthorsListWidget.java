@@ -77,7 +77,7 @@ public class AuthorsListWidget extends AbstractScrollWidget {
     }
 
     @Override
-    public void render(GuiGraphics drawContext, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float partialTick) {
         if (this.visible) {
             //this.drawBox(drawContext);
             drawContext.enableScissor(this.getX() + 1, this.getY() + 1, this.getX() + this.width - 1, this.getY() + this.height - 1);
@@ -92,11 +92,6 @@ public class AuthorsListWidget extends AbstractScrollWidget {
         drawContext = new PlainDrawContext(drawContext);
         for (EditBox widget : this.widgets)
             widget.render(drawContext, mouseX, mouseY, partialTicks);
-    }
-
-    public void tick() {
-        for (EditBox widget : this.widgets)
-            widget.tick();
     }
 
     public boolean isActive() {

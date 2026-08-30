@@ -3,29 +3,29 @@ package net.lyof.sortilege.item.potion;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModConfig;
-import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public class CustomPotionData {
+public class CustomPotionData implements CustomPacketPayload {
     public ResourceLocation potion;
     public List<MobEffectInstance> effects;
     public int drinkingTime;
@@ -69,17 +69,21 @@ public class CustomPotionData {
             JsonObject o = e.getAsJsonObject();
             if (!o.has("effect") || !o.has("duration") || !o.has("amplifier")) continue;
 
-            MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(Identifier.of(o.get("effect").getAsString()));
-            if (effect == null) continue;
+            Optional<Holder.Reference<MobEffect>> effect = BuiltInRegistries.MOB_EFFECT.getHolder(Identifier.of(o.get("effect").getAsString()));
+            if (effect.isEmpty()) continue;
             int duration = o.get("duration").getAsInt();
             int amplifier = o.get("amplifier").getAsInt();
 
-            effects.add(new MobEffectInstance(effect, duration, amplifier));
+            effects.add(new MobEffectInstance(effect.get(), duration, amplifier));
         }
         return effects;
     }
 
-    public static void read(FriendlyByteBuf packet) {
+    public void read(ClientPlayNetworking.Context context) {
+        INSTANCES.add(this);
+    }
+
+    public static CustomPotionData read(FriendlyByteBuf packet) {
         ResourceLocation potion = packet.readResourceLocation();
         int stackSize = packet.readInt();
         int drinkingTime = packet.readInt();
@@ -91,58 +95,72 @@ public class CustomPotionData {
         if (size == -1)
             effects = null;
         else {
-            effects = new ArrayList<>();
+            effects = new ArrayList<>(size);
             for (int j = 0; j < size; j++) {
-                MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(packet.readResourceLocation());
+                Optional<Holder.Reference<MobEffect>> effect = BuiltInRegistries.MOB_EFFECT.getHolder(packet.readResourceLocation());
                 int duration = packet.readInt();
                 int amplifier = packet.readInt();
 
-                effects.add(new MobEffectInstance(effect, duration, amplifier));
+                effect.ifPresent(e -> effects.add(new MobEffectInstance(e, duration, amplifier)));
             }
         }
 
-        INSTANCES.add(new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, create));
+        return new CustomPotionData(potion, effects, drinkingTime, cooldown, stackSize, create);
     }
 
-    public static void write(List<FriendlyByteBuf> packets) {
-        for (CustomPotionData data : INSTANCES) {
-            FriendlyByteBuf packet = PacketByteBufs.create();
-            packet.writeInt(ModPackets.INIT_POTION);
+    public static void write(List<CustomPacketPayload> packets) {
+        packets.addAll(INSTANCES);
+    }
 
-            packet.writeResourceLocation(data.potion);
-            packet.writeInt(data.stackSize);
-            packet.writeInt(data.drinkingTime);
-            packet.writeInt(data.cooldown);
-            packet.writeBoolean(data.create);
+    public static void write(FriendlyByteBuf packet, CustomPotionData data) {
+        packet.writeResourceLocation(data.potion);
+        packet.writeInt(data.stackSize);
+        packet.writeInt(data.drinkingTime);
+        packet.writeInt(data.cooldown);
+        packet.writeBoolean(data.create);
 
-            if (data.effects == null)
-                packet.writeInt(-1);
-            else {
-                packet.writeInt(data.effects.size());
-                for (MobEffectInstance effect : data.effects) {
-                    packet.writeResourceLocation(BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect()));
-                    packet.writeInt(effect.getDuration());
-                    packet.writeInt(effect.getAmplifier());
-                }
+        if (data.effects == null)
+            packet.writeInt(-1);
+        else {
+            packet.writeInt(data.effects.size());
+            for (MobEffectInstance effect : data.effects) {
+                packet.writeResourceLocation(BuiltInRegistries.MOB_EFFECT.getKey(effect.getEffect().value()));
+                packet.writeInt(effect.getDuration());
+                packet.writeInt(effect.getAmplifier());
             }
-
-            packets.add(packet);
         }
+    }
+
+    public static final CustomPacketPayload.Type<CustomPotionData> TYPE = new Type<>(Sortilege.MOD.makeID("initialize_potion"));
+    public static final StreamCodec<FriendlyByteBuf, CustomPotionData> STREAM_CODEC =
+            StreamCodec.of(CustomPotionData::write, CustomPotionData::read);
+
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
 
     private static final List<CustomPotionData> INSTANCES = new ArrayList<>();
-    private static final Map<Potion, CustomPotionData> CACHE = new HashMap<>();
+    private static final Map<Holder<Potion>, CustomPotionData> CACHE = new HashMap<>();
 
     @Nullable
-    public static CustomPotionData get(Potion potion) {
+    public static CustomPotionData get(Holder<Potion> potion) {
+        if (potion == null) return null;
         if (!ModConfig.customPotionData.get()) return null;
 
         if (CACHE.containsKey(potion)) return CACHE.get(potion);
-        CustomPotionData result = INSTANCES.stream().filter(data -> data.potion.equals(BuiltInRegistries.POTION.getKey(potion)))
+        CustomPotionData result = INSTANCES.stream()
+                .filter(data -> data.potion.equals(potion.unwrapKey().map(ResourceKey::location).orElse(null)))
                 .findFirst().orElse(null);
         CACHE.put(potion, result);
         return result;
+    }
+
+    @Nullable
+    public static CustomPotionData get(PotionContents potion) {
+        if (potion == null) return null;
+        return get(potion.potion().orElse(null));
     }
 
     public static void clear() {
@@ -174,7 +192,7 @@ public class CustomPotionData {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<Holder.Reference<T>> getRegistry(HolderOwner<T> owner) {
+    public static <T> Collection<Holder.Reference<T>> getRegistry(HolderOwner<T> owner) {
         return REGISTRY.entrySet().stream().map(entry -> {
             Holder.Reference<T> ref = Holder.Reference.createStandAlone(owner,
                     (ResourceKey<T>) ResourceKey.create(Registries.POTION, entry.getKey()));

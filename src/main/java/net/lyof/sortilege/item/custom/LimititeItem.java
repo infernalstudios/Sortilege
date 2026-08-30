@@ -1,6 +1,5 @@
 package net.lyof.sortilege.item.custom;
 
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
@@ -9,13 +8,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public class LimititeItem extends Item {
-    public LimititeItem(FabricItemSettings properties) {
+    public LimititeItem(Properties properties) {
         super(properties);
     }
 
@@ -25,8 +22,8 @@ public class LimititeItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> list, TooltipFlag context) {
-        super.appendHoverText(stack, level, list, context);
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag flag) {
+        super.appendHoverText(stack, context, list, flag);
 
         if (Screen.hasShiftDown())
             for (String s : Component.translatable("item.sortilege.limitite.desc").getString().split("\n"))

@@ -1,9 +1,8 @@
 package net.lyof.sortilege.item.custom;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
@@ -13,7 +12,9 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.enchant.staff.ElementalStaffEnchantment;
+import net.lyof.sortilege.enchant.custom.StaffColorEnchant;
+import net.lyof.sortilege.enchant.custom.StaffStatsEnchant;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModConfig;
@@ -26,6 +27,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,37 +37,39 @@ import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class AStaffItem extends TieredItem implements DyeableLeatherItem, IAddedRenderItem, IAddedBarItem,
-                                                               IBuiltinEnchantsItem {
-    private static final float[] COLOR_NONE = new float[]{1f, 1f, 1f};
-    private static final float[] COLOR_ENCHANTED = new float[]{0.7f, 0f, 1f};
+public abstract class AStaffItem extends TieredItem implements IAddedRenderItem, IAddedBarItem, IBuiltinEnchantsItem {
+    private static final int COLOR_NONE = 0xffffff;
+    private static final int COLOR_ENCHANTED = 0x9900ff;
 
     private static final ResourceLocation COLOR_OVERLAY = Sortilege.MOD.makeID("textures/models/staff/glint.png");
-    private static final String OVERCHARGE_NBT = "sorti_Overcharge";
 
     protected final StaffEntry entry;
     protected String name;
     protected InteractionHand hand;
 
     public AStaffItem(StaffEntry entry, Properties properties) {
-        super(entry.getTier(), entry.applyProperties(properties));
+        super(entry.getTier(), entry.applyProperties(properties).component(ModDataComponents.OVERCHARGE, 0));
         this.entry = entry;
         this.setName(entry.getID());
     }
@@ -84,8 +88,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Rendering
     @Override
-    public boolean shouldAddRender(ItemStack stack) {
-        return this.hasCustomColor(stack) && !stack.is(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
+    public boolean shouldRender(ItemStack stack) {
+        return DyedItemColor.getOrDefault(stack, -1) != -1 && !stack.is(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
     }
 
     @Override
@@ -94,7 +98,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         matrices.translate(0, 0.995, 0.4975);
         matrices.mulPose(Axis.XP.rotationDegrees(180));
 
-        MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light, COLOR_OVERLAY, this.getColor(stack));
+        MockItemRenderer.renderTintedItem(matrices, vertexConsumers, light, COLOR_OVERLAY, DyedItemColor.getOrDefault(stack, -1));
     }
 
     @Override
@@ -116,7 +120,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Display
     @Override
-    public int getUseDuration(ItemStack stack) {
+    public int getUseDuration(ItemStack stack, LivingEntity user) {
         return this.getEntry().getTier().getChargeTime();
     }
 
@@ -127,10 +131,10 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         if (Screen.hasShiftDown()) {
             int i = tooltip.size();
-            super.appendHoverText(stack, world, tooltip, flag);
+            super.appendHoverText(stack, context, tooltip, flag);
 
             this.appendTooltipAbilities(stack, Minecraft.getInstance().player, tooltip);
             if (i < tooltip.size())
@@ -146,12 +150,11 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
     //#region Overcharge
     public int getOvercharge(ItemStack stack) {
-        if (!stack.hasTag()) return 0;
-        return stack.getOrCreateTag().getInt(OVERCHARGE_NBT);
+        return stack.get(ModDataComponents.OVERCHARGE);
     }
 
     public void setOvercharge(ItemStack stack, int value) {
-        stack.getOrCreateTag().putInt(OVERCHARGE_NBT, Math.max(0, Math.min(value, this.getMaxOvercharge(stack))));
+        stack.set(ModDataComponents.OVERCHARGE, Math.max(0, Math.min(value, this.getMaxOvercharge(stack))));
     }
 
     public int getMaxOvercharge(ItemStack stack) {
@@ -193,14 +196,14 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public int getCost(ItemStack stack, Player player, int original) {
-        int wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack);
-        int ignorance = EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack);
-
-        return (int) (original * (1 - 0.25f * wisdom) + (ignorance == 0 ? 0 : Math.min(1, original * 0.25f * ignorance)));
+        //int wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack);
+        //int ignorance = EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack);
+        return original;
+        //return (int) (original * (1 - 0.25f * wisdom) + (ignorance == 0 ? 0 : Math.min(1, original * 0.25f * ignorance)));
     }
 
     public float getDamage(ItemStack stack) {
-        return this.getEntry().getTier().getAttackDamageBonus() + EnchantHelper.getEnchantLevel(ModEnchants.POTENCY, stack);
+        return this.getEntry().getTier().getAttackDamageBonus() + StaffStatsEnchant.collect(stack.getEnchantments()).damage();
     }
 
     public float getDamage(ItemStack stack, LivingEntity player) {
@@ -208,7 +211,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public int getPiercing(ItemStack stack) {
-        return this.getEntry().getTier().getPiercing() + EnchantHelper.getEnchantLevel(ModEnchants.CHAINING, stack);
+        return this.getEntry().getTier().getPiercing() + StaffStatsEnchant.collect(stack.getEnchantments()).pierce();
     }
 
     public int getPiercing(ItemStack stack, LivingEntity player) {
@@ -216,7 +219,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public int getRange(ItemStack stack) {
-        return this.getEntry().getTier().getRange() + EnchantHelper.getEnchantLevel(ModEnchants.STABILITY, stack)*2;
+        return this.getEntry().getTier().getRange() + StaffStatsEnchant.collect(stack.getEnchantments()).range();
     }
 
     public int getRange(ItemStack stack, LivingEntity player) {
@@ -224,7 +227,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public int getCooldown(ItemStack stack, Player player) {
-        float multiplier = 1 - EnchantHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f;
+        float multiplier = 1/* - EnchantHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f*/;
 
         if (stack.is(ModTags.Items.XP_BOOSTED) && player != null)
             multiplier -= player.experienceLevel / 200f;
@@ -234,65 +237,53 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public double getBlastRadius(ItemStack stack, LivingEntity player) {
-        return EnchantHelper.getEnchantLevel(ModEnchants.BLAST, stack);
+        return 0;// EnchantHelper.getEnchantLevel(ModEnchants.BLAST, stack);
     }
 
-    public List<float[]> getBeamColors(ItemStack stack, Set<ElementalStaffEnchantment> elements) {
-        List<float[]> result = new ArrayList<>();
+    public List<Integer> getBeamColors(ItemStack stack) {
+        List<Integer> result = new ArrayList<>();
 
-        int rgb = this.getColor(stack);
-        float[] color = new float[]{FastColor.ARGB32.red(rgb) / 255f,
-                FastColor.ARGB32.green(rgb) / 255f,
-                FastColor.ARGB32.blue(rgb) / 255f};
+        int rgb = DyedItemColor.getOrDefault(stack, -1);
 
-        if (rgb == DyeableLeatherItem.DEFAULT_LEATHER_COLOR) {
+        if (rgb == -1) {
             if (!this.getEntry().getDisplay().getColors().isEmpty())
                 return this.getEntry().getDisplay().getColors();
 
-            for (ElementalStaffEnchantment element : elements)
-                result.addAll(element.colors);
-            if (result.isEmpty())
-                result.add(COLOR_NONE);
+            result = StaffColorEnchant.collect(stack.getEnchantments());
+            if (!result.isEmpty()) return result;
+
+            result.add(COLOR_NONE);
             if (stack.isEnchanted())
                 result.add(COLOR_ENCHANTED);
         }
         else {
+            float[] color = new float[]{FastColor.ARGB32.red(rgb) / 255f,
+                    FastColor.ARGB32.green(rgb) / 255f,
+                    FastColor.ARGB32.blue(rgb) / 255f};
+
             for (int i = 0 ; i < 5; i++) {
-                result.add(new float[]{(float) (color[0] + Math.random()*0.1 - 0.05),
+                result.add(FastColor.ARGB32.colorFromFloat(1, (float) (color[0] + Math.random()*0.1 - 0.05),
                         (float) (color[1] + Math.random()*0.1 - 0.05),
-                        (float) (color[2] + Math.random()*0.1 - 0.05)});
+                        (float) (color[2] + Math.random()*0.1 - 0.05)));
             }
         }
 
         return result;
     }
 
-    public Set<ElementalStaffEnchantment> getElements(ItemStack stack) {
-        Set<ElementalStaffEnchantment> elements = new HashSet<>();
-        for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet()) {
-            if (enchant instanceof ElementalStaffEnchantment element)
-                elements.add(element);
+    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
+        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+
+        if (this.canMelee(stack)) {
+            builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID,
+                    this.getDamage(stack)-1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+            builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID,
+                    -3, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
         }
-        return elements;
-    }
 
-    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        if (slot == EquipmentSlot.MAINHAND && this.getEntry().getTier().getPiercing() > 0) {
-            ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+        this.addAttributeModifiers(stack, builder);
 
-            if (this.canMelee(stack)) {
-                builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID,
-                        "Weapon modifier", this.getDamage(stack)-1, AttributeModifier.Operation.ADDITION));
-                builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID,
-                        "Weapon modifier", -3, AttributeModifier.Operation.ADDITION));
-            }
-
-            this.addAttributeModifiers(stack, builder);
-
-            return builder.build();
-        }
-        return super.getDefaultAttributeModifiers(slot);
+        return builder.build();
     }
     //#endregion
 
@@ -334,25 +325,23 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity entity) {
         if (!(entity instanceof Player player)) return stack;
 
-        Set<ElementalStaffEnchantment> elements = this.getElements(stack);
-        List<float[]> colors = this.getBeamColors(stack, elements);
         Vec3 look = player.getLookAngle();
 
         this.displayShot(stack, player);
         this.onShoot(stack, player);
         this.applyCost(stack, player);
 
-        this.shoot(stack, player, elements, colors, look, new ArrayList<>());
+        this.shoot(stack, player, look, new ArrayList<>());
         return stack;
     }
 
-    public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, Set<ElementalStaffEnchantment> elements) {
-        if (elements.contains((ElementalStaffEnchantment) ModEnchants.BLESSING)) {
+    public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target) {
+        /*if (elements.contains((Object) ModEnchants.BLESSING)) {
             if (target.getType().is(ModTags.Entities.UNDEAD))
                 damage *= 1 + EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
             else if (!ModConfig.altBlessing.get() || !(target instanceof Enemy))
                 damage *= EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
-        }
+        }*/
 
         // Undergarden compat
         if (target.getType().is(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.is(ModTags.Items.FORGOTTEN_ITEMS))
@@ -363,44 +352,38 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return damage;
     }
 
-    public void triggerAttack(ItemStack stack, LivingEntity player, LivingEntity target, Set<ElementalStaffEnchantment> elements,
+    public void triggerAttack(ItemStack stack, LivingEntity player, LivingEntity target,
                               Vec3 direction, boolean propagate, List<LivingEntity> targetsHit) {
-
         if (targetsHit.contains(target)) return;
 
         Level world = player.level();
-        float kinesis = EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
+        float kinesis = 0;//EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
         float d = this.getDamage(stack, player);
-        d = this.modifyDamageDealt(stack, d, player, target, elements);
+        d = this.modifyDamageDealt(stack, d, player, target);
 
         if (d > 0)
             target.hurt(player.damageSources().indirectMagic(player, player), d);
         else if (d < 0) {
             target.heal(-d);
             ModParticles.sendParticles(world, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(),
-                    10, new float[]{1, 0.5f, 0.5f});
+                    10, 0xff8888);
         }
+
+        this.onHit(stack, player, target);
+        if (target.isDeadOrDying()) this.onKill(stack, player, target);
 
         targetsHit.add(target);
 
-        if (target.isDeadOrDying()) this.onKill(stack, player, target);
-        this.onHit(stack, player, target);
+        /*if (kinesis != 0)
+            target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));*/
 
-        if (kinesis != 0)
-            target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));
-
-        for (ElementalStaffEnchantment element : elements) {
-            int elementLevel = EnchantHelper.getEnchantLevel(element, stack);
-
-            element.triggerAttack(target, elementLevel);
-        }
         if (propagate) {
-            this.triggerBlastAttack(stack, player, elements, direction,
+            this.triggerBlastAttack(stack, player, direction,
                     target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), targetsHit);
         }
     }
 
-    public void triggerBlastAttack(ItemStack stack, LivingEntity player, Set<ElementalStaffEnchantment> elements, Vec3 direction,
+    public void triggerBlastAttack(ItemStack stack, LivingEntity player, Vec3 direction,
                                    double x, double y, double z, List<LivingEntity> targetsHit) {
 
         double radius = this.getBlastRadius(stack, player);
@@ -414,14 +397,14 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
 
         for (Entity entity : player.level().getEntities(player, new AABB(pos.subtract(offset), pos.add(offset)))) {
             if (entity instanceof LivingEntity target && this.canHit(stack, player, target))
-                this.triggerAttack(stack, player, target, elements, direction, false, targetsHit);
+                this.triggerAttack(stack, player, target, direction, false, targetsHit);
         }
     }
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
         if (this.canMelee(stack)) {
-            this.triggerAttack(stack, player, target, this.getElements(stack), player.getLookAngle(),
+            this.triggerAttack(stack, player, target, player.getLookAngle(),
                     true, new ArrayList<>());
 
             if (player instanceof Player p)
@@ -446,7 +429,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         if (player.isCreative()) return;
 
         if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoresDurability())
-            stack.hurtAndBreak(1, player, e -> e.broadcastBreakEvent(this.hand));
+            stack.hurtAndBreak(1, player, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
         if (this.getOvercharge(stack) <= 0 || !this.getEntry().getCost().getOvercharge().ignoresCost())
             this.consumeResource(stack, player);
 
@@ -460,9 +443,8 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         this.runCommand(stack, player, this.getEntry().getEffects().onShoot());
     }
 
-    public void shoot(ItemStack stack, Player player, Set<ElementalStaffEnchantment> elements, List<float[]> colors,
-                      Vec3 direction, List<LivingEntity> targetsHit) {
-
+    public void shoot(ItemStack stack, Player player, Vec3 direction, List<LivingEntity> targetsHit) {
+        List<Integer> colors = this.getBeamColors(stack);
         int targetsLeft = this.getPiercing(stack, player);
         int index;
 
@@ -501,14 +483,14 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
                 if (entities.get(index) instanceof LivingEntity target
                         && !targetsHit.contains(target) && this.canHit(stack, player, target)) {
 
-                    this.triggerAttack(stack, player, target, elements, direction, true, targetsHit);
+                    this.triggerAttack(stack, player, target, direction, true, targetsHit);
                     targetsLeft--;
                 }
                 index++;
             }
         }
 
-        this.triggerBlastAttack(stack, player, elements, direction, x, y, z, targetsHit);
+        this.triggerBlastAttack(stack, player, direction, x, y, z, targetsHit);
     }
 
     public boolean canHit(ItemStack stack, LivingEntity player, LivingEntity target) {
@@ -516,6 +498,26 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target) {
+        if (player.level() instanceof ServerLevel serverWorld) {
+            for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
+                LootContext context = new LootContext.Builder(new LootParams.Builder(serverWorld)
+                        .withParameter(LootContextParams.THIS_ENTITY, target)
+                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
+                        .withParameter(LootContextParams.ORIGIN, target.position())
+                        .withParameter(LootContextParams.DAMAGE_SOURCE, player.damageSources().indirectMagic(player, player))
+                        .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
+                        .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
+                        .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
+
+                for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.POST_STAFF_HIT)) {
+                    if (effect.matches(context))
+                        effect.effect().apply(serverWorld, enchant.getIntValue(),
+                                new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
+                                target, target.position());
+                }
+            }
+        }
+
         this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
         this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());
     }
@@ -523,14 +525,14 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
     public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {}
 
     public boolean canMelee(ItemStack stack) {
-        return EnchantHelper.hasEnchant(ModEnchants.BONK, stack);
+        return false;// EnchantHelper.hasEnchant(ModEnchants.BONK, stack);
     }
 
     public boolean shouldDisplayAttributes(ItemStack stack, Player player) {
         return this.getRange(stack) > 0 || this.getDamage(stack) > 0 || this.getPiercing(stack) > 0;
     }
 
-    public void addAttributeModifiers(ItemStack stack, ImmutableMultimap.Builder<Attribute, AttributeModifier> builder) {}
+    public void addAttributeModifiers(ItemStack stack, ItemAttributeModifiers.Builder builder) {}
 
     public void displayShot(ItemStack stack, Player player) {
         if (this.hand != null) player.swing(this.hand, true);
@@ -544,7 +546,7 @@ public abstract class AStaffItem extends TieredItem implements DyeableLeatherIte
         return this.getEntry().getDisplay().getParticle();
     }
 
-    public void displayBeam(ItemStack stack, Player player, float x, float y, float z, List<float[]> colors) {
+    public void displayBeam(ItemStack stack, Player player, float x, float y, float z, List<Integer> colors) {
         ModParticles.sendParticles(player.level(), this.getParticle(stack), x, y, z, 1, MathHelper.randi(colors));
     }
 

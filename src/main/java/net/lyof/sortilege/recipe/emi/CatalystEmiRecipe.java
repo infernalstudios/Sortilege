@@ -5,6 +5,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.EmiCompat;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
@@ -18,7 +19,7 @@ public class CatalystEmiRecipe extends BasicEmiRecipe {
     protected final EmiStack item;
     protected final List<EmiStack> enchantedBooks;
 
-    public CatalystEmiRecipe(Item item, List<Enchantment> enchants) {
+    public CatalystEmiRecipe(Item item, List<Holder<Enchantment>> enchants) {
         super(EmiCompat.ENCHANTING_CATEGORY, Sortilege.MOD.makeID("/enchanting/catalyst/" + BuiltInRegistries.ITEM.getKey(item).getPath()),
                 120, 18);
 

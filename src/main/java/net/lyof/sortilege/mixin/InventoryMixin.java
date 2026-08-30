@@ -8,18 +8,19 @@ import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.List;
-import java.util.Map;
 
 @Mixin(value = Inventory.class, priority = 1001)
 public abstract class InventoryMixin {
@@ -40,11 +41,14 @@ public abstract class InventoryMixin {
         if (i < Inventory.getSelectionSize() && ModConfig.keepEquipped.get())
             return true;
 
-        if (EnchantHelper.hasEnchant(ModEnchants.SOULBOUND, stack)) {
-            if (ModConfig.consumeSoulbound.get() && ModEnchants.SOULBOUND != null) {
-                Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(stack);
-                enchants.remove(ModEnchants.SOULBOUND);
-                EnchantmentHelper.setEnchantments(enchants, stack);
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DEATHDROP, stack)) {
+            if (ModConfig.consumeSoulbound.get()) {
+                ItemEnchantments enchants = stack.getEnchantments();
+                Holder<Enchantment> soulbound = null;
+                for (Holder<Enchantment> enchant : stack.getEnchantments().keySet())
+                    if (enchant.value().effects().has(ModEnchants.PREVENT_DEATHDROP)) soulbound = enchant;
+                if (soulbound != null) enchants.keySet().remove(soulbound);
+                stack.set(DataComponents.ENCHANTMENTS, enchants);
             }
             return true;
         }
@@ -55,7 +59,7 @@ public abstract class InventoryMixin {
 
     @WrapMethod(method = "removeFromSelected")
     private ItemStack preventStorytoldDrop(boolean entireStack, Operation<ItemStack> original) {
-        if (EnchantHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, this.getSelected()))
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, this.getSelected()))
             return ItemStack.EMPTY;
         return original.call(entireStack);
     }

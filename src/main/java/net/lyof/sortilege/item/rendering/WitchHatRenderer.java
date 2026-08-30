@@ -29,8 +29,8 @@ public class WitchHatRenderer implements ArmorRenderer {
             contextModel.getHead().translateAndRotate(matrices);
             matrices.translate(0.0D, -1.75D, 0.0D);
             matrices.scale(1.19F, 1.19F, 1.19F);
-            VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumers, model.renderType(TEXTURE), false, stack.hasFoil());
-            model.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+            VertexConsumer vertexConsumer = ItemRenderer.getArmorFoilBuffer(vertexConsumers, model.renderType(TEXTURE), stack.hasFoil());
+            model.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
     }

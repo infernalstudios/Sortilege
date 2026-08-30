@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class SlotMixin {
     @WrapOperation(method = "safeInsert(Lnet/minecraft/world/item/ItemStack;I)Lnet/minecraft/world/item/ItemStack;", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;mayPlace(Lnet/minecraft/world/item/ItemStack;)Z"))
     private boolean preventStorytoldMove(Slot instance, ItemStack stack, Operation<Boolean> original) {
-        if (!(instance.container instanceof Inventory) && EnchantHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
+        if (!(instance.container instanceof Inventory) && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, stack))
             return false;
         return original.call(instance, stack);
     }

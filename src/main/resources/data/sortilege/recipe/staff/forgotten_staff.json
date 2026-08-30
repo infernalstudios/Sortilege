@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "category": "equipment",
+  "addition": {
+    "tag": "forge:ingots/forgotten_metal"
+  },
+  "base": {
+    "item": "sortilege:cloggrum_staff"
+  },
+  "result": {
+    "id": "sortilege:forgotten_staff"
+  },
+  "template": {
+    "item": "undergarden:forgotten_upgrade_smithing_template"
+  }
+}

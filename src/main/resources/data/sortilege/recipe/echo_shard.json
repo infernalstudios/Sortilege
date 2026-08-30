@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "minecraft:soul_sand"
+  },
+  "base": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "addition": {
+    "item": "sortilege:limitite"
+  },
+  "result": {
+    "id": "minecraft:echo_shard"
+  }
+}

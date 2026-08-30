@@ -1,0 +1,38 @@
+{
+  "parent": "sortilege:get_wooden_staff",
+  "criteria": {
+    "has_netherite_staff": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sortilege:netherite_staff"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.sortilege.get_netherite_staff.desc"
+    },
+    "frame": "goal",
+    "hidden": true,
+    "icon": {
+      "id": "sortilege:netherite_staff"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.sortilege.get_netherite_staff"
+    }
+  },
+  "requirements": [
+    [
+      "has_netherite_staff"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

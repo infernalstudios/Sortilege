@@ -1,0 +1,29 @@
+{
+  "values": [
+    {
+      "id": "sortilege:potency",
+      "required": false
+    },
+    {
+      "id": "sortilege:chaining",
+      "required": false
+    },
+    {
+      "id": "sortilege:stability",
+      "required": false
+    },
+    {
+      "id": "sortilege:brazier",
+      "required": false
+    },
+    {
+      "id": "sortilege:blizzard",
+      "required": false
+    },
+
+    {
+      "id": "sortilege:magic_protection",
+      "required": false
+    }
+  ]
+}

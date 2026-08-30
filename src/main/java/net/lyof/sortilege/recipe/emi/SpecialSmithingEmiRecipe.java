@@ -10,10 +10,11 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.SimpleContainer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.SmithingRecipe;
+import net.minecraft.world.item.crafting.SmithingRecipeInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +28,8 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
     protected EmiIngredient additions;
     protected SmithingRecipe recipe;
 
-    public SpecialSmithingEmiRecipe(SmithingRecipe recipe, EmiIngredient additions) {
-        super(VanillaEmiRecipeCategories.SMITHING, recipe.getId(), 112, 18);
+    public SpecialSmithingEmiRecipe(SmithingRecipe recipe, ResourceLocation id, EmiIngredient additions) {
+        super(VanillaEmiRecipeCategories.SMITHING, id, 112, 18);
         this.uniq = MathHelper.rnd.nextInt();
         this.bases = new ArrayList<>();
         this.additions = additions;
@@ -73,7 +74,7 @@ public class SpecialSmithingEmiRecipe extends BasicEmiRecipe {
         int i = random.nextInt(this.bases.size());
         EmiStack input = this.inputs.get(i).getEmiStacks().get(0);
 
-        return List.of(input, EmiStack.of(this.recipe.assemble(new SimpleContainer(
+        return List.of(input, EmiStack.of(this.recipe.assemble(new SmithingRecipeInput(
                 Items.LAPIS_LAZULI.getDefaultInstance(), input.getItemStack(), this.additions.getEmiStacks().get(0).getItemStack()),
                 Minecraft.getInstance().level.registryAccess())));
     }

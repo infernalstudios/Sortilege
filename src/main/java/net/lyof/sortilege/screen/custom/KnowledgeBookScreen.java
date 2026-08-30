@@ -1,9 +1,8 @@
 package net.lyof.sortilege.screen.custom;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.item.custom.KnowledgeBookItem;
+import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.widget.AuthorsListWidget;
@@ -14,13 +13,14 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.EnchantedBookItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -41,13 +41,13 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
     private int previousPageIndex;
     private List<FormattedCharSequence> pageCache;
     private ItemStack bookCache;
-    private Enchantment enchantCache;
+    private Holder<Enchantment> enchantCache;
 
     public KnowledgeBookScreen(KnowledgeBookScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
         this.imageHeight = 192;
         this.pageIndex = 0;
-        this.pageCount = KnowledgeBookItem.getKnowledge(handler.stack).getEntries().size();
+        this.pageCount = handler.stack.get(ModDataComponents.KNOWLEDGE).getEntries().size();
 
         this.previousPageIndex = -1;
     }
@@ -64,25 +64,17 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
         this.updatePageButtons();
 
         this.authorsList = new AuthorsListWidget(this.leftPos + this.xoffset + 36, this.topPos + 57, 104, 90,
-                this.font, KnowledgeBookItem.getAuthors(this.menu.stack));
+                this.font, this.menu.stack.get(ModDataComponents.KNOWLEDGE).getAuthors());
     }
 
     @Override
     public void onClose() {
         List<String> authors = this.authorsList.validate();
-        KnowledgeBookItem.setAuthors(this.menu.stack, authors);
+        this.menu.stack.get(ModDataComponents.KNOWLEDGE).setAuthors(authors);
 
-        FriendlyByteBuf buf = PacketByteBufs.create();
-        buf.writeItem(this.menu.stack);
-        ClientPlayNetworking.send(ModPackets.SET_KNOWLEDGE_AUTHORS, buf);
+        ClientPlayNetworking.send(new ModPackets.KnowledgeBook(authors));
 
         super.onClose();
-    }
-
-    @Override
-    protected void containerTick() {
-        super.containerTick();
-        this.authorsList.tick();
     }
 
     protected void goToPreviousPage() {
@@ -111,11 +103,9 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
             return true;
         } if (keyCode == 257 && this.pageIndex == 0) {  // Enter
             List<String> authors = this.authorsList.validate();
-            KnowledgeBookItem.setAuthors(this.menu.stack, authors);
+            this.menu.stack.get(ModDataComponents.KNOWLEDGE).setAuthors(authors);
 
-            FriendlyByteBuf buf = PacketByteBufs.create();
-            buf.writeItem(this.menu.stack);
-            ClientPlayNetworking.send(ModPackets.SET_KNOWLEDGE_AUTHORS, buf);
+            ClientPlayNetworking.send(new ModPackets.KnowledgeBook(authors));
             return true;
         }
 
@@ -155,8 +145,8 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
-        return this.authorsList.mouseScrolled(mouseX, mouseY, amount) || super.mouseScrolled(mouseX, mouseY, amount);
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        return this.authorsList.mouseScrolled(mouseX, mouseY, scrollX, scrollY) || super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
     }
 
     @Override
@@ -193,14 +183,20 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
     public void drawPage(GuiGraphics context, int mouseX, int mouseY, float delta) {
         // Build page cache if it changed
         if (this.pageIndex != this.previousPageIndex) {
-            EnchantKnowledge knowledge = KnowledgeBookItem.getKnowledge(this.menu.stack);
-            Map.Entry<Enchantment, Integer> current = (Map.Entry<Enchantment, Integer>) knowledge.getEntries().toArray()[this.pageIndex - 1];
+            EnchantKnowledge knowledge = this.menu.stack.get(ModDataComponents.KNOWLEDGE);
+            Map.Entry<Holder<Enchantment>, Integer> current = (Map.Entry<Holder<Enchantment>, Integer>) knowledge.getEntries().toArray()[this.pageIndex - 1];
 
             MutableComponent content = Component.empty()
-                    .append(((MutableComponent) current.getKey().getFullname(current.getValue())).withStyle(ChatFormatting.BLACK));
-            MutableComponent desc = Component.translatableWithFallback(current.getKey().getDescriptionId() + ".desc", "");
-            content.append("\n").append(desc.withStyle(ChatFormatting.GRAY));
-            if (!desc.getString().isEmpty()) content.append("\n");
+                    .append(((MutableComponent) Enchantment.getFullname(current.getKey(), current.getValue())).withStyle(ChatFormatting.BLACK))
+                    .append("\n");
+
+            String descKey = current.getKey().unwrapKey().map(key ->
+                    key.location().toLanguageKey("enchantment", "desc")).orElse("");
+            if (!descKey.isEmpty()) {
+                MutableComponent desc = Component.translatableWithFallback(descKey, "");
+                content.append(desc.withStyle(ChatFormatting.GRAY));
+                if (!desc.getString().isEmpty()) content.append("\n");
+            }
 
             this.pageCache = this.font.split(content, 114);
             this.bookCache = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(current.getKey(), current.getValue()));
@@ -225,11 +221,11 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
         context.pose().scale(scale, scale, 1);
 
         int i = 0; int j = 0;
-        for (ItemStack stack : EnchantHelper.getCompatibleStacks(this.enchantCache)) {
-            context.renderItem(stack, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
+        for (Holder<Item> item : EnchantHelper.getCompatibleStacks(this.enchantCache)) {
+            context.renderItem(item.value().getDefaultInstance(), (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
             if (this.isHovering((int) (this.xoffset + 41 + i*16*scale), (int) (40 + l*9 + j*16*scale),
                     (int) (16*scale), (int) (16*scale), mouseX, mouseY))
-                this.setFocused(stack);
+                this.setFocused(item.value().getDefaultInstance());
 
             i++;
             if (i > 114/scale/16 - 1) {

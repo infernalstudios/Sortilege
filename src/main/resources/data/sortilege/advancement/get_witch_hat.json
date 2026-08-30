@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:adventure/root",
+  "criteria": {
+    "has_witch_hat": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "sortilege:witch_hat"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancement.sortilege.get_witch_hat.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "id": "sortilege:witch_hat"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancement.sortilege.get_witch_hat"
+    }
+  },
+  "requirements": [
+    [
+      "has_witch_hat"
+    ]
+  ],
+  "sends_telemetry_event": false
+}

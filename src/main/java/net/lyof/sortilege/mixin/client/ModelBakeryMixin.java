@@ -5,6 +5,7 @@ import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.renderer.block.model.BlockModel;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
@@ -20,19 +21,20 @@ import java.util.Map;
 
 @Mixin(ModelBakery.class)
 public abstract class ModelBakeryMixin {
-    @Shadow protected abstract void loadTopLevel(ModelResourceLocation location);
+    @Shadow protected abstract void loadSpecialItemModelAndDependencies(ModelResourceLocation modelLocation);
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V",
-            ordinal = 3, shift = At.Shift.AFTER))
-    public void loadPotionTextures(BlockColors blockColors, ProfilerFiller profiler, Map<ResourceLocation, BlockModel> jsonUnbakedModels,
-                                   Map<ResourceLocation, List<ModelBakery.LoadedJson>> blockStates, CallbackInfo ci) {
+            ordinal = 1, shift = At.Shift.AFTER))
+    public void loadPotionTextures(BlockColors blockColors, ProfilerFiller profilerFiller,
+                                   Map<ResourceLocation, BlockModel> modelResources,
+                                   Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> blockStateResourcess, CallbackInfo ci) {
 
         if (!ModConfig.customPotionTextures.get()) return;
 
         for (ResourceLocation id : CustomPotionData.MODELS)
-            this.loadTopLevel(new ModelResourceLocation(id, "inventory"));
+            this.loadSpecialItemModelAndDependencies(new ModelResourceLocation(id, "inventory"));
 
         for (String name : List.of("long_lingering", "long", "long_splash", "strong_lingering", "strong", "strong_splash"))
-            this.loadTopLevel(new ModelResourceLocation(Identifier.of("minecraft", name + "_potion"), "inventory"));
+            this.loadSpecialItemModelAndDependencies(new ModelResourceLocation(Identifier.of("minecraft", name + "_potion"), "inventory"));
     }
 }

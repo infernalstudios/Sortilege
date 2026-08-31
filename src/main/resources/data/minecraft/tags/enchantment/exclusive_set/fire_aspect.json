@@ -1,0 +1,9 @@
+{
+  "values": [
+    "minecraft:fire_aspect",
+    {
+      "id": "sortilege:arcane",
+      "required": false
+    }
+  ]
+}

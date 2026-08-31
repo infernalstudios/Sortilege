@@ -1,0 +1,32 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.blessing"
+  },
+  "max_level": 2,
+  "weight": 3,
+  "supported_items": "#sortilege:enchantable/staff",
+  "exclusive_set": "#sortilege:elemental",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+
+    "sortilege:staff_colors": {
+      "colors": [
+        "#ffbfbf",
+        "#ff8080",
+        "#ff4040"
+      ]
+    }
+  },
+
+  "anvil_cost": 4,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 45,
+    "per_level_above_first": 10
+  }
+}

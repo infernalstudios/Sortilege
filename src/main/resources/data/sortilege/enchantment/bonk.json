@@ -1,0 +1,42 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.bonk"
+  },
+  "max_level": 1,
+  "weight": 2,
+  "supported_items": "#sortilege:enchantable/staff",
+  "slots": [
+    "mainhand"
+  ],
+  "effects": {
+    "minecraft:attributes": [
+      {
+        "amount": {
+          "type": "minecraft:linear",
+          "base": 5,
+          "per_level_above_first": 1
+        },
+        "attribute": "minecraft:generic.attack_damage",
+        "id": "minecraft:base_attack_damage",
+        "operation": "add_value"
+      },
+      {
+        "amount": -2,
+        "attribute": "minecraft:generic.attack_speed",
+        "id": "minecraft:base_attack_speed",
+        "operation": "add_value"
+      }
+    ],
+    "sortilege:damage_type": "minecraft:indirect_magic"
+  },
+
+  "anvil_cost": 4,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 8
+  },
+  "max_cost": {
+    "base": 18,
+    "per_level_above_first": 8
+  }
+}

@@ -5,7 +5,7 @@
   "max_level": 1,
   "weight": 2,
   "supported_items": "#minecraft:enchantable/weapon",
-  "exclusive_set": "#minecraft:exclusive_set/armor",
+  "exclusive_set": "#minecraft:exclusive_set/fire_aspect",
   "slots": [
     "mainhand"
   ],

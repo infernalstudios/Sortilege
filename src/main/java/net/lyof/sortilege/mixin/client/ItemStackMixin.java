@@ -37,9 +37,6 @@ import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    @Unique private static Player sorti_player;
-    @Unique private static ItemStack sorti_stack;
-
     @WrapOperation(method = "addAttributeTooltips", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/ItemStack;forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V"
@@ -129,9 +126,6 @@ public abstract class ItemStackMixin {
                 list.add(txt.withStyle(a >= m ? ChatFormatting.RED : ChatFormatting.WHITE));
             }
         }
-
-        sorti_player = player;
-        sorti_stack = self;
     }
 
     @WrapOperation(method = "getTooltipLines", at = @At(

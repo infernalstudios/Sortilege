@@ -1,0 +1,68 @@
+{
+  "values": [
+    {
+      "id": "sortilege:potency",
+      "required": false
+    },
+    {
+      "id": "sortilege:stability",
+      "required": false
+    },
+    {
+      "id": "sortilege:chaining",
+      "required": false
+    },
+    {
+      "id": "sortilege:wisdom",
+      "required": false
+    },
+    {
+      "id": "sortilege:focus",
+      "required": false
+    },
+
+    {
+      "id": "sortilege:push",
+      "required": false
+    },
+    {
+      "id": "sortilege:pull",
+      "required": false
+    },
+
+    {
+      "id": "sortilege:brazier",
+      "required": false
+    },
+    {
+      "id": "sortilege:blizzard",
+      "required": false
+    },
+    {
+      "id": "sortilege:blast",
+      "required": false
+    },
+    {
+      "id": "sortilege:blitz",
+      "required": false
+    },
+    {
+      "id": "sortilege:blessing",
+      "required": false
+    },
+
+    {
+      "id": "sortilege:bonk",
+      "required": false
+    },
+
+    {
+      "id": "sortilege:magic_protection",
+      "required": false
+    },
+    {
+      "id": "sortilege:arcane",
+      "required": false
+    }
+  ]
+}

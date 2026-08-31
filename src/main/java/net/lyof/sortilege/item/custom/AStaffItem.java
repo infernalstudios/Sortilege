@@ -36,6 +36,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -342,6 +344,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
             else if (!ModConfig.altBlessing.get() || !(target instanceof Enemy))
                 damage *= EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
         }*/
+        //EnchantmentHelper.modifyDamage()
 
         // Undergarden compat
         if (target.getType().is(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.is(ModTags.Items.FORGOTTEN_ITEMS))
@@ -352,39 +355,34 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         return damage;
     }
 
-    public void triggerAttack(ItemStack stack, LivingEntity player, LivingEntity target,
-                              Vec3 direction, boolean propagate, List<LivingEntity> targetsHit) {
+    public void triggerAttack(ItemStack stack, LivingEntity player, LivingEntity target, boolean propagate, List<LivingEntity> targetsHit) {
         if (targetsHit.contains(target)) return;
+        targetsHit.add(target);
 
-        Level world = player.level();
-        float kinesis = 0;//EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
+        DamageSource source = player.damageSources().indirectMagic(player, player);
+        Holder<DamageType> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
+        if (type != null) source = new DamageSource(type, source.getDirectEntity(), source.getEntity());
+
         float d = this.getDamage(stack, player);
         d = this.modifyDamageDealt(stack, d, player, target);
 
-        if (d > 0)
-            target.hurt(player.damageSources().indirectMagic(player, player), d);
-        else if (d < 0) {
+        if (d < 0) {
             target.heal(-d);
-            ModParticles.sendParticles(world, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(),
-                    10, 0xff8888);
-        }
+            ModParticles.sendParticles(player.level(), target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), 10, 0xff8888);
+        } else if (d > 0) target.hurt(source, d);
 
-        this.onHit(stack, player, target);
         if (target.isDeadOrDying()) this.onKill(stack, player, target);
+        this.onHit(stack, player, target, source);
 
-        targetsHit.add(target);
-
+        float kinesis = 0;//EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
         /*if (kinesis != 0)
             target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));*/
 
-        if (propagate) {
-            this.triggerBlastAttack(stack, player, direction,
-                    target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), targetsHit);
-        }
+        if (!propagate) return;
+        this.triggerBlastAttack(stack, player, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), targetsHit);
     }
 
-    public void triggerBlastAttack(ItemStack stack, LivingEntity player, Vec3 direction,
-                                   double x, double y, double z, List<LivingEntity> targetsHit) {
+    public void triggerBlastAttack(ItemStack stack, LivingEntity player, double x, double y, double z, List<LivingEntity> targetsHit) {
 
         double radius = this.getBlastRadius(stack, player);
         if (radius <= 0) return;
@@ -397,15 +395,14 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
         for (Entity entity : player.level().getEntities(player, new AABB(pos.subtract(offset), pos.add(offset)))) {
             if (entity instanceof LivingEntity target && this.canHit(stack, player, target))
-                this.triggerAttack(stack, player, target, direction, false, targetsHit);
+                this.triggerAttack(stack, player, target, false, targetsHit);
         }
     }
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
         if (this.canMelee(stack)) {
-            this.triggerAttack(stack, player, target, player.getLookAngle(),
-                    true, new ArrayList<>());
+            this.triggerAttack(stack, player, target, true, new ArrayList<>());
 
             if (player instanceof Player p)
                 p.getCooldowns().addCooldown(this, this.getCooldown(stack, p));
@@ -470,41 +467,40 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
             if (player.level().getBlockState(pos).getCollisionShape(player.level(), pos).toAabbs()
                     .stream().anyMatch(box -> box.contains(vec))) {
-                if (ModConfig.staffsPierceBlocks.get())
-                    targetsLeft--;
-                else
-                    break;
+
+                if (ModConfig.staffsPierceBlocks.get()) targetsLeft--;
+                else break;
             }
             if (targetsLeft <= 0)
                 break;
 
             index = 0;
             while (entities.size() > index && targetsLeft > 0) {
-                if (entities.get(index) instanceof LivingEntity target
-                        && !targetsHit.contains(target) && this.canHit(stack, player, target)) {
+                if (entities.get(index) instanceof LivingEntity target && !targetsHit.contains(target)
+                        && this.canHit(stack, player, target)) {
 
-                    this.triggerAttack(stack, player, target, direction, true, targetsHit);
+                    this.triggerAttack(stack, player, target, true, targetsHit);
                     targetsLeft--;
                 }
                 index++;
             }
         }
 
-        this.triggerBlastAttack(stack, player, direction, x, y, z, targetsHit);
+        this.triggerBlastAttack(stack, player, x, y, z, targetsHit);
     }
 
     public boolean canHit(ItemStack stack, LivingEntity player, LivingEntity target) {
         return !(target instanceof OwnableEntity tameable && tameable.getOwner() == player) && !target.getPassengers().contains(player);
     }
 
-    public void onHit(ItemStack stack, LivingEntity player, LivingEntity target) {
+    public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
         if (player.level() instanceof ServerLevel serverWorld) {
             for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
                 LootContext context = new LootContext.Builder(new LootParams.Builder(serverWorld)
                         .withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
                         .withParameter(LootContextParams.ORIGIN, target.position())
-                        .withParameter(LootContextParams.DAMAGE_SOURCE, player.damageSources().indirectMagic(player, player))
+                        .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
@@ -516,10 +512,10 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                                 target, target.position());
                 }
             }
-        }
 
-        this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
-        this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());
+            this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
+            this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());
+        }
     }
 
     public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {}

@@ -9,6 +9,7 @@ import net.lyof.sortilege.item.staff.entry.ValueCost;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -88,8 +89,8 @@ public class HealthStaffItem extends AStaffItem {
     }
 
     @Override
-    public void onHit(ItemStack stack, LivingEntity player, LivingEntity target) {
-        super.onHit(stack, player, target);
+    public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
+        super.onHit(stack, player, target, source);
 
         if (toConsume.contains(stack) && player instanceof Player p) {
             toConsume.remove(stack);

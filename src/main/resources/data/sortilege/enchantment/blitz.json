@@ -1,0 +1,86 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.blitz"
+  },
+  "max_level": 2,
+  "weight": 3,
+  "supported_items": "#sortilege:enchantable/staff",
+  "exclusive_set": "#sortilege:elemental",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:post_staff_hit": [
+
+      {
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "min_amplifier": {
+            "type": "minecraft:linear",
+            "base": 1,
+            "per_level_above_first": 1
+          },
+          "max_amplifier": {
+            "type": "minecraft:linear",
+            "base": 2,
+            "per_level_above_first": 1
+          },
+          "min_duration": 2,
+          "max_duration": 2,
+          "to_apply": "minecraft:weakness"
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
+      },
+      {
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "min_amplifier": {
+            "type": "minecraft:linear",
+            "base": 1,
+            "per_level_above_first": 1
+          },
+          "max_amplifier": {
+            "type": "minecraft:linear",
+            "base": 2,
+            "per_level_above_first": 1
+          },
+          "min_duration": 2,
+          "max_duration": 2,
+          "to_apply": "minecraft:slowness"
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
+      },
+      {
+        "effect": {
+          "type": "minecraft:apply_mob_effect",
+          "min_amplifier": 5,
+          "max_amplifier": 5,
+          "min_duration": 0.1,
+          "max_duration": 0.1,
+          "to_apply": "minecraft:slowness"
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
+      }
+    ],
+    "sortilege:staff_colors": {
+      "colors": [
+        "#ffff00",
+        "#ffff80",
+        "#ffffbf"
+      ]
+    }
+  },
+
+  "anvil_cost": 4,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 45,
+    "per_level_above_first": 10
+  }
+}

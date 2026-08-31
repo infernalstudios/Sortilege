@@ -33,7 +33,7 @@ public record StaffStatsEnchant(float damage, int range, int pierce) {
         float damage = 0;
         int range = 0, pierce = 0;
         for (Object2IntMap.Entry<Holder<Enchantment>> enchant : enchants.entrySet()) {
-            StaffStatsEnchant increase = enchant.getKey().value().effects().get(ModEnchants.CHANGE_STATS);
+            StaffStatsEnchant increase = enchant.getKey().value().effects().get(ModEnchants.STAFF_STATS);
             if (increase == null) continue;
 
             damage += increase.getDamage(enchant.getIntValue());

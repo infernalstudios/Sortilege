@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lcc.sollib.platform.Services;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItems;
@@ -13,8 +14,12 @@ import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.XPHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.stats.Stats;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -103,6 +108,14 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
         LapisShieldItem.onSuccessfulUse(stack, self, amount);
         if (!this.level().isClientSide())
             self.awardStat(Stats.ITEM_USED.get(ModItems.LAPIS_SHIELD));
+    }
+
+    @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSources;playerAttack(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/damagesource/DamageSource;"))
+    private DamageSource changeDamageType(DamageSources instance, Player player, Operation<DamageSource> original) {
+        DamageSource source = original.call(instance, player);
+        Holder<DamageType> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
+        if (type != null) source = new DamageSource(type, source.getDirectEntity(), source.getEntity());
+        return source;
     }
 
     @WrapMethod(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;")

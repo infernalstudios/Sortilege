@@ -81,10 +81,16 @@ public class EnchantHelper {
         return getEnchantLevel(enchant, stack) > 0;
     }
 
+    public static <T> T getEffect(DataComponentType<T> type, ItemStack stack) {
+        for (Holder<Enchantment> enchant : stack.getEnchantments().keySet()) {
+            T effect = enchant.value().effects().get(type);
+            if (effect != null) return effect;
+        }
+        return null;
+    }
+
     public static boolean hasEffect(DataComponentType<?> type, ItemStack stack) {
-        for (Holder<Enchantment> enchant : stack.getEnchantments().keySet())
-            if (enchant.value().effects().has(type)) return true;
-        return false;
+        return getEffect(type, stack) != null;
     }
 
 

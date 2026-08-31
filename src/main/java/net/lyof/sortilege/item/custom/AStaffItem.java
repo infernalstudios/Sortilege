@@ -12,7 +12,7 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.enchant.custom.StaffColorEnchant;
+import net.lyof.sortilege.enchant.custom.StaffColorsEnchant;
 import net.lyof.sortilege.enchant.custom.StaffStatsEnchant;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.staff.StaffEntry;
@@ -249,7 +249,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
             if (!this.getEntry().getDisplay().getColors().isEmpty())
                 return this.getEntry().getDisplay().getColors();
 
-            result = StaffColorEnchant.collect(stack.getEnchantments());
+            result = StaffColorsEnchant.collect(stack.getEnchantments());
             if (!result.isEmpty()) return result;
 
             result.add(COLOR_NONE);

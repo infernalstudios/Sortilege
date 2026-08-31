@@ -58,6 +58,7 @@ dependencies {
 
 	// ModMenu
 	modLocalRuntime "com.terraformersmc:modmenu:11.0.4"
+
 /*
 	// So many staff type dependencies ._.
 	// Botania

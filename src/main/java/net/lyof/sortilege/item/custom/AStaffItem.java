@@ -443,7 +443,8 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.THIS_ENTITY, player)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
                         .withParameter(LootContextParams.ORIGIN, player.position())
-                        .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
+                        .withParameter(LootContextParams.TOOL, stack)
+                        .create(LootContextParamSets.ENCHANTED_ITEM)).create(Optional.empty());
 
                 for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
                     if (effect.matches(context))
@@ -517,6 +518,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
                         .withParameter(LootContextParams.ORIGIN, target.position())
+                        .withParameter(LootContextParams.TOOL, stack)
                         .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)

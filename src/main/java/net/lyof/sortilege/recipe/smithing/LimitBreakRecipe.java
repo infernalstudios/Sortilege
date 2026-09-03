@@ -22,8 +22,7 @@ public class LimitBreakRecipe implements SmithingRecipe {
     @Override
     public ItemStack assemble(SmithingRecipeInput inventory, HolderLookup.Provider lookup) {
         ItemStack stack = inventory.getItem(1).copyWithCount(1);
-        EnchantHelper.addExtraEnchantSlot(stack);
-        return stack;
+        return EnchantHelper.addExtraEnchantSlot(stack);
     }
 
     @Override

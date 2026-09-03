@@ -158,15 +158,15 @@ public class EnchantHelper {
     }
 
     public static int getExtraEnchantSlots(ItemStack stack) {
-        return stack.has(ModDataComponents.LIMIT_BREAK) ? stack.get(ModDataComponents.LIMIT_BREAK) : 0;
+        return stack.getOrDefault(ModDataComponents.LIMIT_BREAK, 0);
     }
 
     public static ItemStack addExtraEnchantSlot(ItemStack stack) {
-        int current = getExtraEnchantSlots(stack);
+        int slots = getExtraEnchantSlots(stack);
 
-        if (current < ModConfig.maxLimitBreak.get())
-            current++;
-        stack.set(ModDataComponents.LIMIT_BREAK, current);
+        if (slots < ModConfig.maxLimitBreak.get())
+            slots++;
+        stack.set(ModDataComponents.LIMIT_BREAK, slots);
         return stack;
     }
 

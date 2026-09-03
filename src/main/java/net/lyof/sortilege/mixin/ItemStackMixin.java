@@ -45,7 +45,6 @@ import java.util.Map;
 public abstract class ItemStackMixin {
     @Shadow public abstract boolean is(TagKey<Item> tag);
     @Shadow public abstract Item getItem();
-
     @Shadow public abstract void enchant(Holder<Enchantment> enchantment, int level);
 
     @WrapOperation(method = "getTooltipLines", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/chat/MutableComponent;withStyle(Lnet/minecraft/ChatFormatting;)Lnet/minecraft/network/chat/MutableComponent;", ordinal = 0))

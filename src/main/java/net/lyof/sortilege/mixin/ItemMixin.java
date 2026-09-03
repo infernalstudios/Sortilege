@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
@@ -18,10 +19,19 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
 public class ItemMixin {
+    @Inject(method = "verifyComponentsAfterLoad", at = @At("TAIL"))
+    public void verifyEnchantments(ItemStack stack, CallbackInfo ci) {
+        int a = EnchantHelper.getUsedEnchantSlots(stack);
+        int m = EnchantHelper.getTotalEnchantSlots(stack);
+
+        if (a > m) EnchantmentHelper.setEnchantments(stack, stack.getEnchantments());
+    }
+
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)
     public void preventUselessEnchants(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         int a = EnchantHelper.getUsedEnchantSlots(stack);
@@ -32,15 +42,16 @@ public class ItemMixin {
 
     @Inject(method = "overrideStackedOnOther", at = @At("TAIL"), cancellable = true)
     public void inventoryEnchant(ItemStack stack, Slot slot, ClickAction clickType, Player player, CallbackInfoReturnable<Boolean> cir) {
-        if ((!ModConfig.allowInventoryEnchanting.get() && !player.isCreative()) || clickType == ClickAction.PRIMARY) return;
-        if (!(stack.getItem() instanceof EnchantedBookItem)) return;
+        if (clickType != ClickAction.SECONDARY) return;
+        if (!ModConfig.allowInventoryEnchanting.get() && !player.isCreative()) return;
+        if (!(stack.has(DataComponents.STORED_ENCHANTMENTS))) return;
 
-        ItemEnchantments enchants = stack.getEnchantments();
+        ItemEnchantments enchants = stack.get(DataComponents.STORED_ENCHANTMENTS);
         ItemStack other = slot.getItem();
         boolean used = false;
 
         for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchants.entrySet()) {
-            if (entry.getKey().value().canEnchant(other)
+            if (other.getItem().isEnchantable(other) && entry.getKey().value().canEnchant(other)
                     && EnchantmentHelper.isEnchantmentCompatible(other.getEnchantments().keySet(), entry.getKey())) {
                 other.enchant(entry.getKey(), entry.getIntValue());
                 used = true;

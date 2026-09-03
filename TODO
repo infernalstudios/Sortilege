@@ -2,12 +2,17 @@
 *- Add staffs to enchant tags
 - Make enchants
 *- Fix tags
-- inventory enchanting is broken
+*- inventory enchanting is broken
 *- Tag enchants
 *- fix overcharge
-- enchant limits are broken
+*- enchant limits are broken
 - fix storytelling not block shift clicks in chests
+- potion registry
+- knowledge book
+- builtin enchants
 
 missing enchants:
 - sortilege:blessing
 - sortilege:blast
+- sortilege:wisdom
+- sortilege:focus

@@ -437,7 +437,24 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
-        this.runCommand(stack, player, this.getEntry().getEffects().onShoot());
+        if (player.level() instanceof ServerLevel serverWorld) {
+            for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
+                LootContext context = new LootContext.Builder(new LootParams.Builder(serverWorld)
+                        .withParameter(LootContextParams.THIS_ENTITY, player)
+                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
+                        .withParameter(LootContextParams.ORIGIN, player.position())
+                        .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
+
+                for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
+                    if (effect.matches(context))
+                        effect.effect().apply(serverWorld, enchant.getIntValue(),
+                                new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
+                                player, player.position());
+                }
+            }
+
+            this.runCommand(stack, player, this.getEntry().getEffects().onShoot());
+        }
     }
 
     public void shoot(ItemStack stack, Player player, Vec3 direction, List<LivingEntity> targetsHit) {
@@ -505,7 +522,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
 
-                for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.POST_STAFF_HIT)) {
+                for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_HIT)) {
                     if (effect.matches(context))
                         effect.effect().apply(serverWorld, enchant.getIntValue(),
                                 new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),

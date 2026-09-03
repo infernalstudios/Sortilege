@@ -54,12 +54,10 @@
       },
       {
         "effect": {
-          "type": "minecraft:apply_mob_effect",
-          "min_amplifier": 5,
-          "max_amplifier": 5,
-          "min_duration": 0.1,
-          "max_duration": 0.1,
-          "to_apply": "minecraft:slowness"
+          "type": "sortilege:apply_velocity",
+          "vector": {
+            "y": -1
+          }
         },
         "affected": "victim",
         "enchanted": "attacker"

@@ -5,6 +5,7 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.custom.StaffColorsEnchant;
 import net.lyof.sortilege.enchant.custom.StaffStatsEnchant;
 import net.lyof.sortilege.enchant.effect.FreezeEnchantEffect;
+import net.lyof.sortilege.enchant.effect.VelocityEnchantEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
@@ -25,6 +26,7 @@ import java.util.function.UnaryOperator;
 public class ModEnchants {
     public static void register() {
         register("freeze", FreezeEnchantEffect.CODEC);
+        register("apply_velocity", VelocityEnchantEffect.CODEC);
     }
 
     private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builder) {
@@ -44,7 +46,9 @@ public class ModEnchants {
             builder -> builder.persistent(StaffStatsEnchant.CODEC).networkSynchronized(StaffStatsEnchant.STREAM_CODEC));
     public static final DataComponentType<StaffColorsEnchant> STAFF_COLORS = register("staff_colors",
             builder -> builder.persistent(StaffColorsEnchant.CODEC).networkSynchronized(StaffColorsEnchant.STREAM_CODEC));
-    public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> POST_STAFF_HIT = register("post_staff_hit",
+    public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_HIT = register("on_staff_hit",
+            builder -> builder.persistent(TargetedConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
+    public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_SHOOT = register("on_staff_shoot",
             builder -> builder.persistent(TargetedConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
     public static final DataComponentType<Unit> PREVENT_DEATHDROP = register("prevent_deathdrop",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));

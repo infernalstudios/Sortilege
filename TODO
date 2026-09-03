@@ -3,12 +3,11 @@
 - Make enchants
 *- Fix tags
 - inventory enchanting is broken
-- Tag enchants
-- fix overcharge
+*- Tag enchants
+*- fix overcharge
 - enchant limits are broken
 - fix storytelling not block shift clicks in chests
 
-Enchant types:
-- sortilege:blitz
+missing enchants:
 - sortilege:blessing
 - sortilege:blast

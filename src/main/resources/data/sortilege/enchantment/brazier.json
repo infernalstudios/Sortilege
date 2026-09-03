@@ -10,7 +10,7 @@
     "hand"
   ],
   "effects": {
-    "sortilege:post_staff_hit": [
+    "sortilege:on_staff_hit": [
       {
         "effect": {
           "type": "minecraft:ignite",

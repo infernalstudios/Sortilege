@@ -35,7 +35,7 @@ public class OverchargeEntry {
         this.color = parent.getColor();
         this.ignoreDurability = parent.ignoresDurability();
         this.ignoreCost = parent.ignoresCost();
-        this.ingredients = parent.ingredients;
+        this.ingredients = new HashMap<>(parent.getIngredients());
     }
 
     public static OverchargeEntry from(JsonObject json) {

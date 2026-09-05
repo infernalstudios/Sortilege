@@ -87,24 +87,22 @@ public class EnchantKnowledge {
             ByteBufCodecs.VAR_INT.encode(buf, entry.getValue());
         }
 
-        ByteBufCodecs.collection(ArrayList::new, ByteBufCodecs.STRING_UTF8).encode(buf, (ArrayList<String>) knowledge.authors);
+        buf.writeInt(knowledge.authors.size());
+        for (String author : knowledge.authors)
+            ByteBufCodecs.STRING_UTF8.encode(buf, author);
     }
 
     public static EnchantKnowledge fromNetwork(RegistryFriendlyByteBuf buf) {
         EnchantKnowledge self = new EnchantKnowledge();
 
-        Holder<Enchantment> enchant;
-        int level;
-
         int size = buf.readInt();
-        for (int i = 0; i < size; i++) {
-            enchant = Enchantment.STREAM_CODEC.decode(buf);
-            level = ByteBufCodecs.VAR_INT.decode(buf);
+        for (int i = 0; i < size; i++)
+            self.learn(Enchantment.STREAM_CODEC.decode(buf), ByteBufCodecs.VAR_INT.decode(buf));
 
-            self.learn(enchant, level);
-        }
-
-        self.authors = ByteBufCodecs.collection(ArrayList::new, ByteBufCodecs.STRING_UTF8).decode(buf);
+        size = buf.readInt();
+        self.authors = new ArrayList<>(size);
+        for (int i = 0; i < size; i++)
+            self.authors.add(ByteBufCodecs.STRING_UTF8.decode(buf));
 
         return self;
     }

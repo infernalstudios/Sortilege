@@ -49,7 +49,6 @@ public class ReloadListener implements IReloadListener {
 
     @Override
     public void preload(ResourceManager manager) {
-        EnchantHelper.clear();
         RecipeLock.clear();
         PotionHelper.clear();
         BetterBrewingRegistry.clear();
@@ -73,6 +72,8 @@ public class ReloadListener implements IReloadListener {
 
     @Environment(EnvType.CLIENT)
     public void reloadClient() {
+        EnchantHelper.setRegistry(() -> Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT));
+
         RecipeLock.clear();
         for (Map.Entry<String, RecipeLock> entry : ModConfig.recipeLocks.get().entrySet())
             RecipeLock.register(entry.getKey(), entry.getValue());
@@ -80,8 +81,6 @@ public class ReloadListener implements IReloadListener {
         EnchantingCatalyst.clear();
         CustomPotionData.clear();
 
-        EnchantHelper.clear();
-        EnchantHelper.setRegistry(() -> Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT));
         EnchantHelper.load();
 
         PotionHelper.clear();

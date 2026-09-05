@@ -1,7 +1,9 @@
 package net.lyof.sortilege.util;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
@@ -12,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -27,22 +30,18 @@ public class EnchantHelper {
     private static Supplier<Registry<Enchantment>> REGISTRY;
     private static int ENCHANT_COUNT;
 
-    public static void clear() {
-        ENCHANT_COUNT = 0;
-    }
-
     public static void setRegistry(Supplier<Registry<Enchantment>> registry) {
+        Sortilege.log().info("Set Enchantment registry on", FabricLoader.getInstance().getEnvironmentType());
         REGISTRY = registry;
     }
 
     public static void iterateRegistry(Consumer<Holder<Enchantment>> consumer) {
-        if (REGISTRY == null) return;
-
         Registry<Enchantment> registry = null;
         try {
             registry = REGISTRY.get();
         } catch (Exception ignored) {
-            return;
+            Sortilege.log().warn("Failed to find Enchantment registry", ignored);
+            Thread.dumpStack();
         }
         if (registry == null) return;
 
@@ -51,6 +50,7 @@ public class EnchantHelper {
 
     public static void load() {
         Thread enchantCaching = new Thread(() -> {
+            ENCHANT_COUNT = 0;
             iterateRegistry(enchant -> ENCHANT_COUNT += enchant.value().getMaxLevel());
         });
         enchantCaching.start();

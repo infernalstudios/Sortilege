@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -271,21 +272,6 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         }
 
         return result;
-    }
-
-    public ItemAttributeModifiers getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-
-        if (this.canMelee(stack)) {
-            builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID,
-                    this.getDamage(stack)-1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-            builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID,
-                    -3, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
-        }
-
-        this.addAttributeModifiers(stack, builder);
-
-        return builder.build();
     }
     //#endregion
 
@@ -546,8 +532,6 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public boolean shouldDisplayAttributes(ItemStack stack, Player player) {
         return this.getRange(stack) > 0 || this.getDamage(stack) > 0 || this.getPiercing(stack) > 0;
     }
-
-    public void addAttributeModifiers(ItemStack stack, ItemAttributeModifiers.Builder builder) {}
 
     public void displayShot(ItemStack stack, Player player) {
         if (this.hand != null) player.swing(this.hand, true);

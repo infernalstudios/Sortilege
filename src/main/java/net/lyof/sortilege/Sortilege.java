@@ -30,13 +30,15 @@ import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
+import net.lyof.sortilege.util.EnchantHelper;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sortilege implements ModInitializer, DedicatedServerModInitializer {
+public class Sortilege implements ModInitializer {
 	public static final SolModContainer MOD = new SolModContainer("Sortilege", "sortilege");
 	public static final String MOD_ID = MOD.getNamespace();
 
@@ -64,11 +66,6 @@ public class Sortilege implements ModInitializer, DedicatedServerModInitializer 
 		registerPackets();
 		registerModules();
 		registerEvents();
-	}
-
-	@Override
-	public void onInitializeServer() {
-
 	}
 
 	private static void registerPackets() {
@@ -103,6 +100,9 @@ public class Sortilege implements ModInitializer, DedicatedServerModInitializer 
 			RecipeLock.write(packets, player);
 
 			packets.forEach(p -> ServerPlayNetworking.send(player, p));
+		});
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+			EnchantHelper.setRegistry(() -> server.registries().compositeAccess().registryOrThrow(Registries.ENCHANTMENT));
 		});
 	}
 

@@ -18,9 +18,6 @@
 		"main": [
 			"net.lyof.sortilege.Sortilege"
 		],
-		"server": [
-			"net.lyof.sortilege.Sortilege"
-		],
 		"client": [
 			"net.lyof.sortilege.SortilegeClient"
 		],

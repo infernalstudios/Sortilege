@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.potion.CustomPotionData;
@@ -16,6 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
@@ -76,11 +78,15 @@ public abstract class ItemStackMixin {
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;I)V", at = @At("TAIL"))
     private void builtinEnchants(ItemLike item, int count, CallbackInfo ci) {
         if (item.asItem() instanceof IBuiltinEnchantsItem builtin) {
-            for (Map.Entry<ResourceLocation, Integer> entry : builtin.getBuiltinEnchantments().entrySet()) {
-                /* TODO Enchantment enchant = BuiltInRegistries.ENCHANTMENT.get(entry.getKey());
-                if (enchant != null)
-                    this.enchant(enchant, entry.getValue());*/
-            }
+            EnchantHelper.iterateRegistry(enchant -> {
+                ResourceLocation id = enchant.unwrapKey().map(ResourceKey::location).orElse(null);
+                if (id == null) return;
+
+                int level = builtin.getBuiltinEnchantments().getOrDefault(id, -1);
+                if (level == -1) return;
+
+                this.enchant(enchant, level);
+            });
         }
     }
 

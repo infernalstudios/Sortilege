@@ -6,7 +6,7 @@
 *- Tag enchants
 *- fix overcharge
 *- enchant limits are broken
-- fix storytelling not block shift clicks in chests
+- fix storytelling not blocking shift clicks in chests
 - potion registry
 - knowledge book
 - builtin enchants

@@ -2,11 +2,11 @@ package net.lyof.sortilege.util;
 
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.lcc.sollib.core.Identifier;
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -17,35 +17,41 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class EnchantHelper {
-    private static final Map<Enchantment, List<ItemStack>> ENCHANT_TARGETS = new HashMap<>();
+    private static Supplier<Registry<Enchantment>> REGISTRY;
     private static int ENCHANT_COUNT;
 
     public static void clear() {
-        ENCHANT_TARGETS.clear();
         ENCHANT_COUNT = 0;
+    }
+
+    public static void setRegistry(Supplier<Registry<Enchantment>> registry) {
+        REGISTRY = registry;
+    }
+
+    public static void iterateRegistry(Consumer<Holder<Enchantment>> consumer) {
+        if (REGISTRY == null) return;
+
+        Registry<Enchantment> registry = null;
+        try {
+            registry = REGISTRY.get();
+        } catch (Exception ignored) {
+            return;
+        }
+        if (registry == null) return;
+
+        registry.holders().forEach(consumer);
     }
 
     public static void load() {
         Thread enchantCaching = new Thread(() -> {
-            for (Enchantment enchant : Set.<Enchantment>of()) {
-                List<ItemStack> stacks = new ArrayList<>();
-                for (Item item : BuiltInRegistries.ITEM) {
-                    ItemStack stack = item.getDefaultInstance();
-                    if (enchant.canEnchant(stack)) stacks.add(stack);
-                }
-                ENCHANT_TARGETS.put(enchant, stacks);
-
-                ENCHANT_COUNT += enchant.getMaxLevel();
-            }
+            iterateRegistry(enchant -> ENCHANT_COUNT += enchant.value().getMaxLevel());
         });
         enchantCaching.start();
     }

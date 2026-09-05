@@ -1,6 +1,8 @@
 package net.lyof.sortilege.setup;
 
 import com.google.gson.JsonObject;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
@@ -13,6 +15,8 @@ import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -67,6 +71,7 @@ public class ReloadListener implements IReloadListener {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public void reloadClient() {
         RecipeLock.clear();
         for (Map.Entry<String, RecipeLock> entry : ModConfig.recipeLocks.get().entrySet())
@@ -76,6 +81,7 @@ public class ReloadListener implements IReloadListener {
         CustomPotionData.clear();
 
         EnchantHelper.clear();
+        EnchantHelper.setRegistry(() -> Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT));
         EnchantHelper.load();
 
         PotionHelper.clear();

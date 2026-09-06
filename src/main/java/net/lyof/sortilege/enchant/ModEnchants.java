@@ -44,12 +44,6 @@ public class ModEnchants {
         return ResourceKey.create(Registries.ENCHANTMENT, Sortilege.MOD.makeID(name));
     }
 
-    private static LootContextParamSet register(Consumer<LootContextParamSet.Builder> consumer) {
-        LootContextParamSet.Builder builder = new LootContextParamSet.Builder();
-        consumer.accept(builder);
-        return builder.build();
-    }
-
 
     public static final DataComponentType<StaffStatsEnchant> STAFF_STATS = register("staff_stats",
             builder -> builder.persistent(StaffStatsEnchant.CODEC).networkSynchronized(StaffStatsEnchant.STREAM_CODEC));
@@ -67,9 +61,4 @@ public class ModEnchants {
             builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 
     public static final ResourceKey<Enchantment> SOULBOUND = register("soulbound");
-
-    public static final LootContextParamSet STAFF_SHOOT = register(builder ->
-            builder.required(LootContextParams.THIS_ENTITY).required(LootContextParams.ENCHANTMENT_LEVEL).required(LootContextParams.ORIGIN).required(LootContextParams.TOOL));
-    public static final LootContextParamSet STAFF_DAMAGE = register(builder ->
-            builder.required(LootContextParams.THIS_ENTITY).required(LootContextParams.ENCHANTMENT_LEVEL).required(LootContextParams.ORIGIN).required(LootContextParams.DAMAGE_SOURCE).optional(LootContextParams.DIRECT_ATTACKING_ENTITY).optional(LootContextParams.ATTACKING_ENTITY).required(LootContextParams.TOOL));
 }

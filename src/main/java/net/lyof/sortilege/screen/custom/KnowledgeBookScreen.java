@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
     private int previousPageIndex;
     private List<FormattedCharSequence> pageCache;
     private ItemStack bookCache;
-    private Holder<Enchantment> enchantCache;
+    private List<ItemStack> stacksCache;
 
     public KnowledgeBookScreen(KnowledgeBookScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
@@ -200,7 +201,7 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
 
             this.pageCache = this.font.split(content, 114);
             this.bookCache = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(current.getKey(), current.getValue()));
-            this.enchantCache = current.getKey();
+            this.stacksCache = current.getKey().value().getSupportedItems().stream().map(item -> item.value().getDefaultInstance()).toList();
             this.previousPageIndex = this.pageIndex;
         }
 
@@ -221,11 +222,11 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
         context.pose().scale(scale, scale, 1);
 
         int i = 0; int j = 0;
-        for (Holder<Item> item : EnchantHelper.getCompatibleStacks(this.enchantCache)) {
-            context.renderItem(item.value().getDefaultInstance(), (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
+        for (ItemStack stack : this.stacksCache) {
+            context.renderItem(stack, (int) ((this.xoffset + 41)/scale) + i*16, (int) ((40 + l*9)/scale) + j*16);
             if (this.isHovering((int) (this.xoffset + 41 + i*16*scale), (int) (40 + l*9 + j*16*scale),
                     (int) (16*scale), (int) (16*scale), mouseX, mouseY))
-                this.setFocused(item.value().getDefaultInstance());
+                this.setFocused(stack);
 
             i++;
             if (i > 114/scale/16 - 1) {

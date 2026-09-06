@@ -17,6 +17,7 @@ import net.lyof.sortilege.enchant.custom.StaffStatsEnchant;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.particle.ModParticles;
+import net.lyof.sortilege.recipe.loot.ModLootContexts;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
@@ -426,7 +427,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
                         .withParameter(LootContextParams.ORIGIN, player.position())
                         .withParameter(LootContextParams.TOOL, stack)
-                        .create(ModEnchants.STAFF_SHOOT)).create(Optional.empty());
+                        .create(ModLootContexts.STAFF_SHOOT)).create(Optional.empty());
 
                 for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
                     if (effect.matches(context))
@@ -504,7 +505,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
-                        .create(ModEnchants.STAFF_DAMAGE)).create(Optional.empty());
+                        .create(ModLootContexts.STAFF_DAMAGE)).create(Optional.empty());
 
                 for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_HIT)) {
                     if (effect.matches(context))

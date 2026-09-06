@@ -67,21 +67,6 @@ public abstract class ItemStackMixin {
             ci.cancel();
         }
     }
-/*
-    @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;I)V", at = @At("TAIL"))
-    private void builtinEnchants(ItemLike item, int count, CallbackInfo ci) {
-        if (item.asItem() instanceof IBuiltinEnchantsItem builtin) {
-            EnchantHelper.iterateRegistry(enchant -> {
-                ResourceLocation id = enchant.unwrapKey().map(ResourceKey::location).orElse(null);
-                if (id == null) return;
-
-                int level = builtin.getBuiltinEnchantments().getOrDefault(id, -1);
-                if (level == -1) return;
-
-                this.enchant(enchant, level);
-            });
-        }
-    }*/
 
     @ModifyReturnValue(method = "is(Lnet/minecraft/tags/TagKey;)Z", at = @At("RETURN"))
     private boolean isInKinetic(boolean original, TagKey<Item> tag) {

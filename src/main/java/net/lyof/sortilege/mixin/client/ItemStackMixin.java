@@ -1,11 +1,14 @@
 package net.lyof.sortilege.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
+import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.ChatFormatting;
@@ -25,7 +28,6 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -141,6 +143,15 @@ public abstract class ItemStackMixin {
         if (self.getItem() instanceof AStaffItem staff)
             original.call(instance, Component.literal(" (" + staff.getEntry().getReader().getType() + ")").withStyle(ChatFormatting.DARK_GRAY));
         return true;
+    }
+
+    @WrapMethod(method = "getTooltipLines")
+    private List<Component> cacheKnowledge(Item.TooltipContext context, Player player, TooltipFlag flag, Operation<List<Component>> original) {
+        if (ModConfig.knowledgeTooltip.get() && Minecraft.getInstance().player instanceof EnchantLearner learner)
+            EnchantLearner.Cache.update((ItemStack) (Object) this, learner);
+        List<Component> result = original.call(context, player, flag);
+        EnchantLearner.Cache.update(null, null);
+        return result;
     }
 
 /* TODO: move to ItemEnchantmentsMixin

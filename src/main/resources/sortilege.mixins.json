@@ -54,6 +54,7 @@
     "client.EnchantmentScreenMixin",
     "client.GuiGraphicsMixin",
     "client.GuiMixin",
+    "client.ItemEnchantmentsMixin",
     "client.ItemModelShaperMixin",
     "client.ItemStackMixin",
     "client.ModelBakeryMixin",

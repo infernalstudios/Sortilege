@@ -110,7 +110,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
     @Inject(method = "slotsChanged", at = @At("HEAD"))
     public void updateLogics(Container inventory, CallbackInfo ci) {
         if (ModConfig.knowledgeEnabled.get()) {
-            this.sorti_knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge(null);
+            this.sorti_knowledge = ((EnchantLearner) this.sorti_player).sorti_getKnowledge();
 
             this.access.execute((world, pos) -> {
                 for (BlockPos p : EnchantingTableBlock.BOOKSHELF_OFFSETS) {

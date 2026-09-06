@@ -8,8 +8,10 @@
 *- enchant limits are broken
 - fix storytelling not blocking shift clicks in chests
 - potion registry
-- knowledge book
+*- knowledge book
 *- builtin enchants
+- enchant catalysts
+*- display learnable
 
 missing enchants:
 - sortilege:blessing

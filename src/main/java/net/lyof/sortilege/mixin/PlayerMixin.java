@@ -125,14 +125,8 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
         return original.call(stack, throwRandomly, retainOwnership);
     }
 
-    @Unique private ItemStack sorti_knowledgeCacher = null;
-    @Unique private EnchantKnowledge sorti_knowledge = null;
-
     @Override
-    public EnchantKnowledge sorti_getKnowledge(ItemStack cacher) {
-        if (cacher != null && this.sorti_knowledgeCacher == cacher)
-            return this.sorti_knowledge;
-
+    public EnchantKnowledge sorti_getKnowledge() {
         EnchantKnowledge knowledge = new EnchantKnowledge();
         Player self = (Player) (Object) this;
 
@@ -147,9 +141,6 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
                 knowledge.learn(accessory);
         }
 
-        this.sorti_knowledge = knowledge;
-        this.sorti_knowledgeCacher = cacher;
-
-        return this.sorti_knowledge;
+        return knowledge;
     }
 }

@@ -18,12 +18,9 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class ModEnchants {

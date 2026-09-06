@@ -2,7 +2,6 @@ package net.lyof.sortilege.recipe.enchanting.knowledge;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;

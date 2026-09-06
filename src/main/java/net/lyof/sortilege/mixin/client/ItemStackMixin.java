@@ -7,7 +7,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
-import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;

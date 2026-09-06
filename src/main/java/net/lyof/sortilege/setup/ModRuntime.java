@@ -8,7 +8,6 @@ import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.builder.JsonBuilder;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.minecraft.core.Holder;

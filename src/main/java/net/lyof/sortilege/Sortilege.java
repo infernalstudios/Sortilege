@@ -1,6 +1,5 @@
 package net.lyof.sortilege;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -11,7 +10,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.SolModContainer;
-import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.block.ModBlockEntities;
 import net.lyof.sortilege.block.ModBlocks;

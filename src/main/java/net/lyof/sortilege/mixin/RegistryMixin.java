@@ -2,7 +2,6 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.Sortilege;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import org.spongepowered.asm.mixin.Mixin;

@@ -2,7 +2,6 @@ package net.lyof.sortilege.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -11,7 +10,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ItemEnchantments.class)

@@ -10,7 +10,7 @@ import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
-import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
+import net.lyof.sortilege.enchant.BuiltInEnchantsItem;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.enchant.custom.StaffColorsEnchant;
 import net.lyof.sortilege.enchant.custom.StaffStatsEnchant;
@@ -28,7 +28,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -40,14 +39,11 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.*;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.Level;
@@ -61,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class AStaffItem extends TieredItem implements IAddedRenderItem, IAddedBarItem, IBuiltinEnchantsItem {
+public abstract class AStaffItem extends TieredItem implements IAddedRenderItem, IAddedBarItem, BuiltInEnchantsItem {
     private static final int COLOR_NONE = 0xffffff;
     private static final int COLOR_ENCHANTED = 0x9900ff;
 
@@ -430,7 +426,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
                         .withParameter(LootContextParams.ORIGIN, player.position())
                         .withParameter(LootContextParams.TOOL, stack)
-                        .create(LootContextParamSets.ENCHANTED_ITEM)).create(Optional.empty());
+                        .create(ModEnchants.STAFF_SHOOT)).create(Optional.empty());
 
                 for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
                     if (effect.matches(context))
@@ -508,7 +504,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
-                        .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
+                        .create(ModEnchants.STAFF_DAMAGE)).create(Optional.empty());
 
                 for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_HIT)) {
                     if (effect.matches(context))

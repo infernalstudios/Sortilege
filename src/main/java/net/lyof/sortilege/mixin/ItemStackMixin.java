@@ -4,8 +4,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.IBuiltinEnchantsItem;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.item.potion.PotionCooldownManager;
@@ -17,8 +15,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -31,7 +27,6 @@ import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,8 +35,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Map;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -74,7 +67,7 @@ public abstract class ItemStackMixin {
             ci.cancel();
         }
     }
-
+/*
     @Inject(method = "<init>(Lnet/minecraft/world/level/ItemLike;I)V", at = @At("TAIL"))
     private void builtinEnchants(ItemLike item, int count, CallbackInfo ci) {
         if (item.asItem() instanceof IBuiltinEnchantsItem builtin) {
@@ -88,7 +81,7 @@ public abstract class ItemStackMixin {
                 this.enchant(enchant, level);
             });
         }
-    }
+    }*/
 
     @ModifyReturnValue(method = "is(Lnet/minecraft/tags/TagKey;)Z", at = @At("RETURN"))
     private boolean isInKinetic(boolean original, TagKey<Item> tag) {

@@ -9,7 +9,7 @@
 - fix storytelling not blocking shift clicks in chests
 - potion registry
 - knowledge book
-- builtin enchants
+*- builtin enchants
 
 missing enchants:
 - sortilege:blessing

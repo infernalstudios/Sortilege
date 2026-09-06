@@ -17,10 +17,12 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -35,17 +37,15 @@ public class EnchantHelper {
         REGISTRY = registry;
     }
 
-    public static void iterateRegistry(Consumer<Holder<Enchantment>> consumer) {
+    public static boolean iterateRegistry(Consumer<Holder<Enchantment>> consumer) {
         Registry<Enchantment> registry = null;
         try {
             registry = REGISTRY.get();
-        } catch (Exception ignored) {
-            Sortilege.log().warn("Failed to find Enchantment registry", ignored);
-            Thread.dumpStack();
-        }
-        if (registry == null) return;
+        } catch (Exception ignored) {}
+        if (registry == null) return false;
 
         registry.holders().forEach(consumer);
+        return true;
     }
 
     public static void load() {

@@ -22,16 +22,14 @@ public class ModDataComponents {
 
     public static final DataComponentType<Integer> OVERCHARGE = register("overcharge",
             builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static final DataComponentType<Integer> LIMIT_BREAK = register("limit_break",
             builder -> builder.persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-
     public static final DataComponentType<Unit> LEARNABLE = register("learnable",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
-
     public static final DataComponentType<EnchantKnowledge> KNOWLEDGE = register("enchant_knowledge",
             builder -> builder.persistent(EnchantKnowledge.CODEC).networkSynchronized(EnchantKnowledge.STREAM_CODEC));
-
     public static final DataComponentType<Integer> LAPIS_SHIELD_COOLDOWN = register("lapis_shield_cooldown",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+    public static final DataComponentType<Unit> BUILT_IN_ENCHANTS = register("built_in_enchants",
+            builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
 }

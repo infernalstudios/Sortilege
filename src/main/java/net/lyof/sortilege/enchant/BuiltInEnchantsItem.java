@@ -4,6 +4,6 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.Map;
 
-public interface IBuiltinEnchantsItem {
+public interface BuiltInEnchantsItem {
     Map<ResourceLocation, Integer> getBuiltinEnchantments();
 }

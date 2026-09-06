@@ -12,17 +12,18 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
 public class ModEnchants {
@@ -43,6 +44,12 @@ public class ModEnchants {
         return ResourceKey.create(Registries.ENCHANTMENT, Sortilege.MOD.makeID(name));
     }
 
+    private static LootContextParamSet register(Consumer<LootContextParamSet.Builder> consumer) {
+        LootContextParamSet.Builder builder = new LootContextParamSet.Builder();
+        consumer.accept(builder);
+        return builder.build();
+    }
+
 
     public static final DataComponentType<StaffStatsEnchant> STAFF_STATS = register("staff_stats",
             builder -> builder.persistent(StaffStatsEnchant.CODEC).networkSynchronized(StaffStatsEnchant.STREAM_CODEC));
@@ -60,4 +67,9 @@ public class ModEnchants {
             builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 
     public static final ResourceKey<Enchantment> SOULBOUND = register("soulbound");
+
+    public static final LootContextParamSet STAFF_SHOOT = register(builder ->
+            builder.required(LootContextParams.THIS_ENTITY).required(LootContextParams.ENCHANTMENT_LEVEL).required(LootContextParams.ORIGIN).required(LootContextParams.TOOL));
+    public static final LootContextParamSet STAFF_DAMAGE = register(builder ->
+            builder.required(LootContextParams.THIS_ENTITY).required(LootContextParams.ENCHANTMENT_LEVEL).required(LootContextParams.ORIGIN).required(LootContextParams.DAMAGE_SOURCE).optional(LootContextParams.DIRECT_ATTACKING_ENTITY).optional(LootContextParams.ATTACKING_ENTITY).required(LootContextParams.TOOL));
 }

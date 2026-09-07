@@ -49,7 +49,6 @@ public class SortilegeClient implements ClientModInitializer {
 
     private static void registerPackets() {
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.InitializePacket.TYPE, ModPackets.InitializePacket::run);
-        ClientPlayNetworking.registerGlobalReceiver(ModPackets.InitializeEnchantPacket.TYPE, ModPackets.InitializeEnchantPacket::run);
         ClientPlayNetworking.registerGlobalReceiver(CustomPotionData.TYPE, CustomPotionData::read);
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.InitializeLockPacket.TYPE, ModPackets.InitializeLockPacket::run);
         ClientPlayNetworking.registerGlobalReceiver(ModPackets.ParticlePacket.TYPE, ModPackets.ParticlePacket::run);

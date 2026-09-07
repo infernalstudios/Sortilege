@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
@@ -132,10 +133,10 @@ public abstract class RecipeLock {
                         .append("]").withStyle(ChatFormatting.GREEN)));
     }
 
-    public static void write(List<CustomPacketPayload> packets, ServerPlayer player) {
+    public static void write(List<CustomPacketPayload> packets, MinecraftServer server) {
         for (RecipeLock lock : RECIPE_LOCKS.values()) {
             if (!(lock instanceof AdvancementLock advancementLock)) continue;
-            AdvancementHolder advc = Objects.requireNonNull(player.getServer()).getAdvancements()
+            AdvancementHolder advc = server.getAdvancements()
                     .get(Identifier.of(advancementLock.id));
             if (advc == null || advc.value().display().isEmpty()) continue;
 

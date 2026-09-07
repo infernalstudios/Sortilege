@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.item.custom.AStaffItem;
-import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
 import net.lyof.sortilege.util.EnchantHelper;
@@ -85,14 +85,14 @@ public abstract class ItemStackMixin {
     public void showCatalyst(Item.TooltipContext tooltipContext, Player player, TooltipFlag tooltipFlag, CallbackInfoReturnable<List<Component>> cir, @Local List<Component> list) {
         ItemStack self = (ItemStack) (Object) this;
 
-        if (ModConfig.catalystTooltip.get() && EnchantingCatalyst.isCatalyst(self) && !(self.getItem() instanceof EnchantedBookItem)) {
+        if (ModConfig.catalystTooltip.get() && player != null && CatalystRecipe.isCatalyst(self, player.level()) && !(self.getItem() instanceof EnchantedBookItem)) {
             if (Screen.hasShiftDown()) {
                 if (list.size() > 1 && !"".equals(list.get(list.size() - 1).getString()))
                     list.add(Component.empty());
 
                 list.add(Component.translatable("tooltip.sortilege.catalyst").withStyle(ChatFormatting.DARK_PURPLE));
 
-                for (Holder<Enchantment> e : EnchantingCatalyst.getEnchantments(self).keySet()) {
+                for (Holder<Enchantment> e : CatalystRecipe.getEnchantments(self, player.level()).keySet()) {
                     MutableComponent text = CommonComponents.space().append(e.value().description());
                     if (e.is(EnchantmentTags.CURSE))
                         text.withStyle(ChatFormatting.RED);
@@ -152,22 +152,4 @@ public abstract class ItemStackMixin {
         EnchantLearner.Cache.update(null, null);
         return result;
     }
-
-/* TODO: move to ItemEnchantmentsMixin
-
-    @WrapOperation(method = "appendEnchantmentNames", at = @At(value = "INVOKE", target = "Ljava/util/Optional;ifPresent(Ljava/util/function/Consumer;)V"))
-    private static void showLearnable(Optional<Enchantment> instance, Consumer<? super Enchantment> action, Operation<Void> original,
-                                      List<Component> tooltip) {
-        original.call(instance, (Consumer<? super Enchantment>) e -> {
-            action.accept(e);
-
-            if (ModConfig.knowledgeTooltip.get() && sorti_player instanceof EnchantLearner learner && sorti_stack != null
-                    && learner.sorti_getKnowledge(sorti_stack).isLearnable(sorti_stack, e, EnchantHelper.getEnchantLevel(e, sorti_stack))) {
-
-                Component text = Component.empty().append(tooltip.get(tooltip.size() - 1))
-                        .append(Component.translatable("tooltip.sortilege.learnable").withStyle(ChatFormatting.LIGHT_PURPLE));
-                tooltip.set(tooltip.size() - 1, text);
-            }
-        });
-    }*/
 }

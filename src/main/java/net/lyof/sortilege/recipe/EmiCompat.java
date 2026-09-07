@@ -14,7 +14,7 @@ import net.lyof.sortilege.recipe.emi.BetterBrewingEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CatalystEmiRecipe;
 import net.lyof.sortilege.recipe.emi.CauldronBrewingEmiRecipe;
 import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
-import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.lyof.sortilege.setup.ModTags;
@@ -24,8 +24,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.Enchantment;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @EmiEntrypoint
 public class EmiCompat implements EmiPlugin {
@@ -49,7 +48,15 @@ public class EmiCompat implements EmiPlugin {
         registry.addRecipe(new SpecialSmithingEmiRecipe(new LimitBreakRecipe(), Sortilege.MOD.makeID("limit_break_instance"),
                 EmiIngredient.of(ModTags.Items.LIMIT_BREAKER)));
 
-        for (Map.Entry<Item, List<Holder<Enchantment>>> entry : EnchantingCatalyst.CATALYSTS.entrySet())
+        Map<Item, List<Holder<Enchantment>>> catalysts = new HashMap<>();
+        for (RecipeHolder<CatalystRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CATALYST))
+            catalysts.merge(recipe.value().item(), recipe.value().enchants(), (old, self) -> {
+                Set<Holder<Enchantment>> enchants = new HashSet<>();
+                enchants.addAll(old);
+                enchants.addAll(self);
+                return new ArrayList<>(enchants);
+            });
+        for (Map.Entry<Item, List<Holder<Enchantment>>> entry : catalysts.entrySet())
             registry.addRecipe(new CatalystEmiRecipe(entry.getKey(), entry.getValue()));
 
         for (RecipeHolder<BrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.BREWING))

@@ -1,6 +1,7 @@
 package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -21,7 +22,7 @@ import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.recipe.loot.ModLootContexts;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.screen.ModScreenHandlers;
@@ -30,6 +31,7 @@ import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.util.EnchantHelper;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -70,7 +72,6 @@ public class Sortilege implements ModInitializer {
 
 	private static void registerPackets() {
 		PayloadTypeRegistry.playS2C().register(ModPackets.InitializePacket.TYPE, ModPackets.InitializePacket.STREAM_CODEC);
-		PayloadTypeRegistry.playS2C().register(ModPackets.InitializeEnchantPacket.TYPE, ModPackets.InitializeEnchantPacket.STREAM_CODEC);
 		PayloadTypeRegistry.playS2C().register(CustomPotionData.TYPE, CustomPotionData.STREAM_CODEC);
 		PayloadTypeRegistry.playS2C().register(ModPackets.InitializeLockPacket.TYPE, ModPackets.InitializeLockPacket.STREAM_CODEC);
 		PayloadTypeRegistry.playS2C().register(ModPackets.ParticlePacket.TYPE, ModPackets.ParticlePacket.STREAM_CODEC);
@@ -91,13 +92,13 @@ public class Sortilege implements ModInitializer {
 		SolRegistries.Data.RELOAD.register(ReloadListener.INSTANCE);
 
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
+			Sortilege.log().info("reloadevent", joined);
 			List<CustomPacketPayload> packets = new ArrayList<>();
 
 			packets.add(new ModPackets.InitializePacket());
 
-			EnchantingCatalyst.write(packets);
 			CustomPotionData.write(packets);
-			RecipeLock.write(packets, player);
+			RecipeLock.write(packets, player.getServer());
 
 			packets.forEach(p -> ServerPlayNetworking.send(player, p));
 		});

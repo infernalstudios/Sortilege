@@ -12,7 +12,7 @@ import net.lyof.sortilege.item.potion.PotionCooldownManager;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.recipe.emi.SpecialSmithingEmiRecipe;
-import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.client.Minecraft;
@@ -37,12 +37,6 @@ public class ReloadListener implements IReloadListener {
         EnchantHelper.load();
         PotionHelper.load();
 
-        for (Map.Entry<ResourceLocation, Resource> entry : FileToIdConverter.json("recipe").listMatchingResources(manager).entrySet()) {
-            JsonObject json = IReloadListener.open(entry);
-            if (json != null && json.has("type") && json.get("type").getAsString().equals(Sortilege.MOD_ID + ":enchanting_catalyst"))
-                EnchantingCatalyst.read(json);
-        }
-
         if (FabricLoader.getInstance().isModLoaded("emi"))
             SpecialSmithingEmiRecipe.INSTANCES.forEach(SpecialSmithingEmiRecipe::generateInputs);
     }
@@ -54,19 +48,17 @@ public class ReloadListener implements IReloadListener {
         BetterBrewingRegistry.clear();
         CustomPotionData.clear();
         PotionCooldownManager.clear();
-        EnchantingCatalyst.clear();
 
         if (ModConfig.customPotionTextures.get() && manager instanceof FabricLifecycledResourceManager fabricManager &&
                 fabricManager.fabric_getResourceType() == PackType.CLIENT_RESOURCES) {
             CustomPotionData.MODELS.clear();
-            for (ResourceLocation model : FileToIdConverter.json("models/item/potions").listMatchingResources(manager).keySet())
+            for (ResourceLocation model : FileToIdConverter.json("models/item/potion").listMatchingResources(manager).keySet())
                 CustomPotionData.MODELS.add(FileToIdConverter.json("models/item").fileToId(model));
         }
 
-        for (Map.Entry<ResourceLocation, Resource> entry : FileToIdConverter.json("potions").listMatchingResources(manager).entrySet()) {
+        for (Map.Entry<ResourceLocation, Resource> entry : FileToIdConverter.json("potion").listMatchingResources(manager).entrySet()) {
             JsonObject json = IReloadListener.open(entry);
-            if (json != null)
-                CustomPotionData.read(json.getAsJsonObject());
+            if (json != null) CustomPotionData.read(json);
         }
     }
 
@@ -78,7 +70,6 @@ public class ReloadListener implements IReloadListener {
         for (Map.Entry<String, RecipeLock> entry : ModConfig.recipeLocks.get().entrySet())
             RecipeLock.register(entry.getKey(), entry.getValue());
 
-        EnchantingCatalyst.clear();
         CustomPotionData.clear();
 
         EnchantHelper.load();

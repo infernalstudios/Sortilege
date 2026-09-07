@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ItemEnchantments.class)
 public class ItemEnchantmentsMixin {
     @WrapOperation(method = "addToTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/Enchantment;getFullname(Lnet/minecraft/core/Holder;I)Lnet/minecraft/network/chat/Component;"))
-    private Component cacheKnowledge(Holder<Enchantment> enchantment, int level, Operation<Component> original) {
+    private Component addLearnable(Holder<Enchantment> enchantment, int level, Operation<Component> original) {
         MutableComponent text = (MutableComponent) original.call(enchantment, level);
         if (EnchantLearner.Cache.isLearnable(enchantment))
             text = text.append(Component.translatable("tooltip.sortilege.learnable").withStyle(ChatFormatting.LIGHT_PURPLE));

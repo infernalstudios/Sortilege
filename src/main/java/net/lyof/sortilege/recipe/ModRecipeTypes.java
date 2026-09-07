@@ -5,6 +5,7 @@ import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.A2PBrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.custom.P2ABrewingRecipe;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.recipe.smithing.LimitBreakRecipe;
 import net.lyof.sortilege.recipe.smithing.SoulbindingRecipe;
 import net.minecraft.core.Registry;
@@ -36,8 +37,8 @@ public class ModRecipeTypes {
 
 
     public static RecipeType<CauldronBrewingRecipe> CAULDRON_BREWING = register("cauldron_brewing");
-
     public static RecipeType<BrewingRecipe> BREWING = register("brewing");
+    public static RecipeType<CatalystRecipe> CATALYST = register("catalyst");
 
 
     public static RecipeSerializer<SoulbindingRecipe> SOULBINDING_SERIALIZER
@@ -57,4 +58,7 @@ public class ModRecipeTypes {
 
     public static RecipeSerializer<BrewingRecipe> BREWING_SERIALIZER
             = register("brewing", new BrewingRecipe.Serializer());
+
+    public static RecipeSerializer<?> CATALYST_SERIALIZER
+            = register("enchanting_catalyst", new CatalystRecipe.Serializer());
 }

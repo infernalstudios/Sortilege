@@ -6,7 +6,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItems;
-import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantLearner;
 import net.lyof.sortilege.setup.ModConfig;
@@ -79,7 +79,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
     @Override
     public boolean sorti_hasEnchantableItem() {
         ItemStack stack = this.enchantSlots.getItem(0);
-        return !stack.isEmpty() && stack.isEnchantable() && !EnchantingCatalyst.isDisabled();
+        return !stack.isEmpty() && stack.isEnchantable() && !CatalystRecipe.isDisabled(sorti_player.level());
     }
 
     @Inject(method = "<init>(ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/inventory/ContainerLevelAccess;)V",
@@ -87,11 +87,11 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
     public void setupLogics(int syncId, Inventory inventory, ContainerLevelAccess context, CallbackInfo ci) {
         this.sorti_player = inventory.player;
 
-        if (!EnchantingCatalyst.isDisabled()) {
+        if (!CatalystRecipe.isDisabled(sorti_player.level())) {
             this.addSlot(new Slot(this.sorti_catalyst, 0, 25, 20) {
                 @Override
                 public boolean mayPlace(ItemStack stack) {
-                    return EnchantingCatalyst.isCatalyst(stack);
+                    return CatalystRecipe.isCatalyst(stack, sorti_player.level());
                 }
 
                 @Override
@@ -169,7 +169,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
         }
 
         // Catalyst logic
-        ItemEnchantments enchants = EnchantingCatalyst.getEnchantments(this.sorti_catalyst.getItem(0));
+        ItemEnchantments enchants = CatalystRecipe.getEnchantments(this.sorti_catalyst.getItem(0), sorti_player.level());
         if (!enchants.isEmpty()) {
             // Randomize seed
             for (int i = 0; i < slot; i++) this.random.nextDouble();
@@ -213,7 +213,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
     public boolean useCatalyst(Player player, int id, Operation<Boolean> original) {
         boolean result = original.call(player, id);
 
-        if (EnchantingCatalyst.isDisabled())
+        if (CatalystRecipe.isDisabled(player.level()))
             return result;
 
         if (result) {
@@ -228,7 +228,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
 
     @Inject(method = "quickMoveStack", at = @At("HEAD"), cancellable = true)
     public void moveCatalyst(Player player, int slotid, CallbackInfoReturnable<ItemStack> cir) {
-        if (EnchantingCatalyst.isDisabled())
+        if (CatalystRecipe.isDisabled(player.level()))
             return;
 
         Slot slot = this.getSlot(slotid);
@@ -239,7 +239,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
             this.sorti_catalyst.setChanged();
             cir.setReturnValue(ItemStack.EMPTY);
         }
-        else if (EnchantingCatalyst.isCatalyst(slot.getItem())
+        else if (CatalystRecipe.isCatalyst(slot.getItem(), player.level())
                 && !stack.isEmpty() && stack.isEnchantable() && !this.moveItemStackTo(slot.getItem(), 38, 39, true)) {
 
             slot.onTake(player, slot.getItem());

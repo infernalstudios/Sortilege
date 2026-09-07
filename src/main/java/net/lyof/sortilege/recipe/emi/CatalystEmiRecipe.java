@@ -5,6 +5,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.EmiCompat;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -25,7 +26,7 @@ public class CatalystEmiRecipe extends BasicEmiRecipe {
 
         this.item = EmiStack.of(item);
         this.enchantedBooks = enchants.stream().map(enchant ->
-                EmiStack.of(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, 1)))).toList();
+                EmiStack.of(EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchant, enchant.value().getMaxLevel())))).toList();
 
         this.inputs.add(this.item);
         this.outputs.add(EmiStack.of(Items.ENCHANTED_BOOK));

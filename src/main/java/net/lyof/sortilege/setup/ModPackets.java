@@ -10,7 +10,7 @@ import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.lyof.sortilege.recipe.enchanting.catalyst.EnchantingCatalyst;
+import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -50,34 +50,6 @@ public class ModPackets {
         @Environment(EnvType.CLIENT)
         public static void run(InitializePacket packet, ClientPlayNetworking.Context context) {
             ReloadListener.INSTANCE.reloadClient();
-        }
-    }
-
-    public record InitializeEnchantPacket(Item item, List<Holder<Enchantment>> enchants) implements CustomPacketPayload {
-        public static final CustomPacketPayload.Type<InitializeEnchantPacket> TYPE = new Type<>(Sortilege.MOD.makeID("initialize_enchant"));
-        public static final StreamCodec<RegistryFriendlyByteBuf, InitializeEnchantPacket> STREAM_CODEC =
-                StreamCodec.of((buf, packet) -> {
-                    buf.writeResourceLocation(buf.registryAccess().registryOrThrow(Registries.ITEM).getKey(packet.item()));
-                    buf.writeInt(packet.enchants().size());
-                    packet.enchants().forEach(e -> buf.writeUtf(e.getRegisteredName()));
-                }, buf -> {
-                    HolderLookup.RegistryLookup<Enchantment> registry = buf.registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-                    Item key = buf.registryAccess().registryOrThrow(Registries.ITEM).get(buf.readResourceLocation());
-                    int size = buf.readInt();
-                    List<Holder<Enchantment>> enchants = new ArrayList<>(size);
-                    for (int i = 0; i < size; i++)
-                        registry.get(ResourceKey.create(Registries.ENCHANTMENT, Identifier.of(buf.readUtf()))).ifPresent(enchants::add);
-                    return new InitializeEnchantPacket(key, enchants);
-                });
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-
-        @Environment(EnvType.CLIENT)
-        public static void run(InitializeEnchantPacket packet, ClientPlayNetworking.Context context) {
-            EnchantingCatalyst.register(packet.item(), packet.enchants());
         }
     }
 

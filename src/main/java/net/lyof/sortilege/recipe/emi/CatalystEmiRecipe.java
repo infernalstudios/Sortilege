@@ -5,7 +5,6 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.EmiCompat;
-import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.EnchantedBookItem;

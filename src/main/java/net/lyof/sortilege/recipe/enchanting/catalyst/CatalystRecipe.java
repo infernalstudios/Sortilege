@@ -3,7 +3,6 @@ package net.lyof.sortilege.recipe.enchanting.catalyst;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.lcc.sollib.core.Identifier;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.Holder;
@@ -19,7 +18,8 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public record CatalystRecipe(Item item, List<Holder<Enchantment>> enchants) implements Recipe<SingleRecipeInput> {
     public static boolean isDisabled(Level world) {
@@ -42,14 +42,6 @@ public record CatalystRecipe(Item item, List<Holder<Enchantment>> enchants) impl
                 || (item.is(Items.ENCHANTED_BOOK) && ModConfig.catalystBooks.get());
     }
 
-
-    @Override
-    public String toString() {
-        return "CatalystRecipe{" +
-                "item=" + item +
-                ", enchants=" + enchants.size() +
-                '}';
-    }
 
     @Override
     public boolean matches(SingleRecipeInput input, Level level) {

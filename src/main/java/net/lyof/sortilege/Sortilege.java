@@ -1,7 +1,6 @@
 package net.lyof.sortilege;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -22,7 +21,6 @@ import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
-import net.lyof.sortilege.recipe.enchanting.catalyst.CatalystRecipe;
 import net.lyof.sortilege.recipe.loot.ModLootContexts;
 import net.lyof.sortilege.recipe.loot.ModLootModifiers;
 import net.lyof.sortilege.screen.ModScreenHandlers;
@@ -31,7 +29,6 @@ import net.lyof.sortilege.setup.ModPackets;
 import net.lyof.sortilege.setup.ModRuntime;
 import net.lyof.sortilege.setup.ReloadListener;
 import net.lyof.sortilege.util.EnchantHelper;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;

@@ -45,6 +45,7 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
@@ -92,7 +93,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
     //#region Rendering
     @Override
-    public boolean shouldRender(ItemStack stack) {
+    public boolean shouldAddRender(ItemStack stack) {
         return DyedItemColor.getOrDefault(stack, -1) != -1 && !stack.is(ModTags.Items.NO_DYE_OVERLAY_STAFFS);
     }
 
@@ -433,7 +434,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withParameter(LootContextParams.TOOL, stack)
                         .create(ModLootContexts.STAFF_SHOOT)).create(Optional.empty());
 
-                for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
+                for (ConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
                     if (effect.matches(context))
                         effect.effect().apply(serverWorld, enchant.getIntValue(),
                                 new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),

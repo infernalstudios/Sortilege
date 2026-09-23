@@ -127,7 +127,7 @@ public class ModConfig {
                 .bind(altStorytelling)
                 .comment()
                 .comment("Set these to false to disable the corresponding enchantment from appearing in game (disables at registry level)")
-                .comment("  Only applies to Sortilege added enchantments")
+                .comment("  Only applies to Sortilege enchantments")
                 .addObject("enabled_enchants", enabled_enchants -> enabled_enchants
                         .add("potency", true)
                         .add("stability", true)
@@ -149,7 +149,6 @@ public class ModConfig {
                         .add("soulbound", true)
                         .add("storytelling_curse", true)
                 )
-                .bind(disabledEnchants)
         )
         .addObject("experience", experience -> experience
                 .addObject("witch_hat", witch_hat -> witch_hat
@@ -343,14 +342,6 @@ public class ModConfig {
     public static final ConfigEntry<Boolean> expandedBane = new ConfigEntry<>(true);
     public static final ConfigEntry<Boolean> altBlessing = new ConfigEntry<>(true);
     public static final ConfigEntry<Boolean> altStorytelling = new ConfigEntry<>(false);
-    public static final ConfigEntry<Set<String>> disabledEnchants = new ConfigEntry<Set<String>>(Set.of()).withProcessor(json -> {
-        Set<String> result = new HashSet<>();
-        JsonObject obj = json.getAsJsonObject();
-        for (String key : obj.keySet())
-            if (!obj.getAsJsonPrimitive(key).getAsBoolean())
-                result.add(key);
-        return result;
-    });
 
     // Experience
     public static final ConfigEntry<Boolean> witchHatEnabled = new ConfigEntry<>(true);

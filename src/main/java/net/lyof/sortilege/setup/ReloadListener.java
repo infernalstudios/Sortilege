@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.item.potion.PotionCooldownManager;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;

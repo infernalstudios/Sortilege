@@ -37,8 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sortilege implements ModInitializer {
-	public static final SolModContainer MOD = new SolModContainer("Sortilege", "sortilege");
-	public static final String MOD_ID = MOD.getNamespace();
+	public static final String MOD_ID = "sortilege";
+	public static final SolModContainer MOD = new SolModContainer("Sortilege", MOD_ID);
 
 	@Override
 	public void onInitialize() {

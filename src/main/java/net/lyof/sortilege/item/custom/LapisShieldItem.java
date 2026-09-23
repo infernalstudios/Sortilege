@@ -98,7 +98,7 @@ public class LapisShieldItem extends Item implements Equipable, IAddedRenderItem
     private static final ResourceLocation SHIELD_GLOW_LAYER = Sortilege.MOD.makeID("textures/models/lapis_shield_glow_layer.png");
 
     @Override
-    public boolean shouldRender(ItemStack stack) {
+    public boolean shouldAddRender(ItemStack stack) {
         return !LapisShieldItem.isOnCooldown(stack);
     }
 

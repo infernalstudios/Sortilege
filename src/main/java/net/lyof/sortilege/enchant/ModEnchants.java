@@ -15,6 +15,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
@@ -37,7 +38,7 @@ public class ModEnchants {
         return Registry.register(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, Sortilege.MOD.makeID(name), effect);
     }
 
-    private static ResourceKey<Enchantment> register(String name) {
+    private static ResourceKey<Enchantment> makeKey(String name) {
         return ResourceKey.create(Registries.ENCHANTMENT, Sortilege.MOD.makeID(name));
     }
 
@@ -48,8 +49,8 @@ public class ModEnchants {
             builder -> builder.persistent(StaffColorsEnchant.CODEC).networkSynchronized(StaffColorsEnchant.STREAM_CODEC));
     public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_HIT = register("on_staff_hit",
             builder -> builder.persistent(TargetedConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
-    public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_SHOOT = register("on_staff_shoot",
-            builder -> builder.persistent(TargetedConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
+    public static final DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_SHOOT = register("on_staff_shoot",
+            builder -> builder.persistent(ConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
     public static final DataComponentType<Unit> PREVENT_DEATHDROP = register("prevent_deathdrop",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     public static final DataComponentType<Unit> PREVENT_DROP = register("prevent_drop",
@@ -57,5 +58,5 @@ public class ModEnchants {
     public static final DataComponentType<Holder<DamageType>> DAMAGE_TYPE = register("damage_type",
             builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 
-    public static final ResourceKey<Enchantment> SOULBOUND = register("soulbound");
+    public static final ResourceKey<Enchantment> SOULBOUND = makeKey("soulbound");
 }

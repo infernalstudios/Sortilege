@@ -29,6 +29,7 @@ public class PotionHelper {
     }
 
     public static void load() {
+        Sortilege.log().info("starting potionhelper reload");
         for (Holder.Reference<Potion> potion : BuiltInRegistries.POTION.asLookup().listElements().toList()) {
             if (potion.value().getEffects().size() == 1 &&
                     !potion.value().hasInstantEffects() &&
@@ -49,6 +50,7 @@ public class PotionHelper {
             if (!ModConfig.swampHutBlacklist.get().contains(Identifier.of(potion.value().getEffects().get(0).getEffect().getRegisteredName())))
                 GEN_ALLOWED_POTIONS.add(potion);
         }
+        Sortilege.log().info("ended potionhelper reload");
     }
 
     public static Holder<Potion> getDefaultEffect(Holder<MobEffect> effect) {

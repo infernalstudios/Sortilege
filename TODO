@@ -12,6 +12,7 @@
 *- builtin enchants
 *- enchant catalysts
 *- display learnable
+- brewing recipes are apparently broken (ah forgot to register the custom recipes)
 
 missing enchants:
 - sortilege:blessing

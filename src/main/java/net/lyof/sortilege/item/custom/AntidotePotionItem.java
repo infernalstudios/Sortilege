@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModConfig;
@@ -35,8 +36,10 @@ public class AntidotePotionItem extends PotionItem {
     public static void fillItemGroup(FabricItemGroupEntries entries, Item antidote) {
         if (!ModConfig.antidoteEnabled.get()) return;
 
-        for (Holder<Potion> potion : PotionHelper.POTIONS.values())
+        for (Holder<Potion> potion : PotionHelper.POTIONS.values()) {
+            Sortilege.log().info(potion.getRegisteredName());
             entries.accept(PotionContents.createItemStack(antidote, potion));
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.lyof.sortilege.item.custom;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
@@ -242,7 +243,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public double getBlastRadius(ItemStack stack, LivingEntity player) {
-        return 0;// EnchantHelper.getEnchantLevel(ModEnchants.BLAST, stack);
+        return StaffStatsEnchant.collect(stack.getEnchantments()).blast();
     }
 
     public List<Integer> getBeamColors(ItemStack stack) {
@@ -348,8 +349,8 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         targetsHit.add(target);
 
         DamageSource source = player.damageSources().indirectMagic(player, player);
-        Holder<DamageType> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
-        if (type != null) source = new DamageSource(type, source.getDirectEntity(), source.getEntity());
+        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
+        if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
 
         float d = this.getDamage(stack, player);
         d = this.modifyDamageDealt(stack, d, player, target);

@@ -12,11 +12,13 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 
-public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, LevelBasedValue pierce) {
+public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, LevelBasedValue pierce,
+                                LevelBasedValue blast) {
     public static final Codec<StaffStatsEnchant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             LevelBasedValue.CODEC.optionalFieldOf("damage", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::damage),
             LevelBasedValue.CODEC.optionalFieldOf("range", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::range),
-            LevelBasedValue.CODEC.optionalFieldOf("pierce", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::pierce)
+            LevelBasedValue.CODEC.optionalFieldOf("pierce", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::pierce),
+            LevelBasedValue.CODEC.optionalFieldOf("blast", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::blast)
     ).apply(instance, StaffStatsEnchant::new));
 
     private static ItemEnchantments cacher = null;
@@ -25,7 +27,7 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
     public static StaffStatsEnchant.Result collect(ItemEnchantments enchants) {
         if (cacher == enchants) return cache;
 
-        float damage = 0;
+        float damage = 0, blast = 0;
         int range = 0, pierce = 0;
         for (Object2IntMap.Entry<Holder<Enchantment>> enchant : enchants.entrySet()) {
             StaffStatsEnchant increase = enchant.getKey().value().effects().get(ModEnchants.STAFF_STATS);
@@ -34,9 +36,10 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
             damage += increase.getDamage(enchant.getIntValue());
             range += increase.getRange(enchant.getIntValue());
             pierce += increase.getPierce(enchant.getIntValue());
+            blast += increase.getBlast(enchant.getIntValue());
         }
 
-        cache = new StaffStatsEnchant.Result(damage, range, pierce);
+        cache = new StaffStatsEnchant.Result(damage, range, pierce, blast);
         cacher = enchants;
         return cache;
     }
@@ -53,5 +56,9 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
         return Math.round(pierce().calculate(level));
     }
 
-    public record Result(float damage, int range, int pierce) {}
+    public float getBlast(int level) {
+        return Math.round(blast().calculate(level));
+    }
+
+    public record Result(float damage, int range, int pierce, float blast) {}
 }

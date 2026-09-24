@@ -2,6 +2,7 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.datafixers.util.Pair;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.Holder;
@@ -18,8 +19,8 @@ public class MobMixin {
     @WrapOperation(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSources;mobAttack(Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/damagesource/DamageSource;"))
     private DamageSource changeDamageType(DamageSources instance, LivingEntity mob, Operation<DamageSource> original) {
         DamageSource source = original.call(instance, mob);
-        Holder<DamageType> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, mob.getWeaponItem());
-        if (type != null) source = new DamageSource(type, source.getDirectEntity(), source.getEntity());
+        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, mob.getWeaponItem());
+        if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
         return source;
     }
 }

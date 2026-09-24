@@ -1,5 +1,6 @@
 package net.lyof.sortilege.enchant;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.custom.StaffColorsEnchant;
@@ -11,6 +12,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Unit;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
 import java.util.List;
@@ -55,6 +58,8 @@ public class ModEnchants {
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     public static final DataComponentType<Unit> PREVENT_DROP = register("prevent_drop",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
+    public static final DataComponentType<Integer> PREVENT_DURABILITY = register("prevent_durability",
+            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
     public static final DataComponentType<Holder<DamageType>> DAMAGE_TYPE = register("damage_type",
             builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 

@@ -3,6 +3,7 @@ package net.lyof.sortilege.mixin;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.datafixers.util.Pair;
 import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModDataComponents;
@@ -111,8 +112,8 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSources;playerAttack(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/damagesource/DamageSource;"))
     private DamageSource changeDamageType(DamageSources instance, Player player, Operation<DamageSource> original) {
         DamageSource source = original.call(instance, player);
-        Holder<DamageType> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
-        if (type != null) source = new DamageSource(type, source.getDirectEntity(), source.getEntity());
+        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
+        if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
         return source;
     }
 

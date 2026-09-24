@@ -4,6 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.mojang.datafixers.util.Pair;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.item.potion.PotionCooldownManager;
@@ -77,9 +79,10 @@ public abstract class ItemStackMixin {
 
     @Inject(method = "isDamageableItem", at = @At("HEAD"), cancellable = true)
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
-        if (this.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (ModConfig.expandedUnbreaking.get() > 0 &&
-                EnchantHelper.getEnchantLevel(Enchantments.UNBREAKING, (ItemStack) (Object) this) >= ModConfig.expandedUnbreaking.get())
+        ItemStack self = (ItemStack) (Object) this;
+        if (self.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
+        Pair<Integer, Integer> unbreakable = EnchantHelper.getEffect(ModEnchants.PREVENT_DURABILITY, self);
+        if (unbreakable != null && unbreakable.getFirst() >= unbreakable.getSecond())
             cir.setReturnValue(false);
     }
 

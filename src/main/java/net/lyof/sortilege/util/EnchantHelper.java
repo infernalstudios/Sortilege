@@ -1,5 +1,6 @@
 package net.lyof.sortilege.util;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
@@ -83,10 +84,10 @@ public class EnchantHelper {
         return getEnchantLevel(enchant, stack) > 0;
     }
 
-    public static <T> T getEffect(DataComponentType<T> type, ItemStack stack) {
-        for (Holder<Enchantment> enchant : stack.getEnchantments().keySet()) {
-            T effect = enchant.value().effects().get(type);
-            if (effect != null) return effect;
+    public static <T> Pair<T, Integer> getEffect(DataComponentType<T> type, ItemStack stack) {
+        for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
+            T effect = enchant.getKey().value().effects().get(type);
+            if (effect != null) return new Pair<>(effect, enchant.getIntValue());
         }
         return null;
     }

@@ -7,7 +7,7 @@
 *- fix overcharge
 *- enchant limits are broken
 - fix storytelling not blocking shift clicks in chests
-- potion registry
+*- potion registry
 *- knowledge book
 *- builtin enchants
 *- enchant catalysts

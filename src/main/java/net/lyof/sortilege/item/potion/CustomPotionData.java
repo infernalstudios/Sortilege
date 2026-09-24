@@ -1,5 +1,7 @@
 package net.lyof.sortilege.item.potion;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -10,6 +12,7 @@ import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,8 +45,10 @@ public class CustomPotionData implements CustomPacketPayload {
         this.stackSize = stackSize;
         this.create = create;
 
-        if (this.create && !BuiltInRegistries.POTION.containsKey(potion))
-            REGISTRY.putIfAbsent(potion, new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
+        if (this.create && !BuiltInRegistries.POTION.containsKey(potion)) {
+            Registry.register(BuiltInRegistries.POTION, potion,
+                    new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
+        }
     }
 
 
@@ -141,6 +146,7 @@ public class CustomPotionData implements CustomPacketPayload {
     }
 
 
+    public static final List<ResourceLocation> MODELS = new ArrayList<>();
     private static final List<CustomPotionData> INSTANCES = new ArrayList<>();
     private static final Map<Holder<Potion>, CustomPotionData> CACHE = new HashMap<>();
 
@@ -169,35 +175,9 @@ public class CustomPotionData implements CustomPacketPayload {
 
         for (Potion potion : BuiltInRegistries.POTION)
             ((PotionShenanigans) potion).sorti_resetPotionCache();
-
-        REGISTRY.clear();
     }
 
     public static boolean isEmpty() {
         return INSTANCES.isEmpty();
-    }
-
-
-    private static final Map<ResourceLocation, Potion> REGISTRY = new HashMap<>();
-    public static final List<ResourceLocation> MODELS = new ArrayList<>();
-
-    public static Potion get(ResourceLocation id) {
-        return REGISTRY.get(id);
-    }
-
-    public static ResourceLocation getId(Potion potion) {
-        for (Map.Entry<ResourceLocation, Potion> entry : REGISTRY.entrySet())
-            if (entry.getValue() == potion) return entry.getKey();
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> Collection<Holder.Reference<T>> getRegistry(HolderOwner<T> owner) {
-        return REGISTRY.entrySet().stream().map(entry -> {
-            Holder.Reference<T> ref = Holder.Reference.createStandAlone(owner,
-                    (ResourceKey<T>) ResourceKey.create(Registries.POTION, entry.getKey()));
-            ((HolderReferenceAccessor<T>) ref).setValue((T) entry.getValue());
-            return ref;
-        }).toList();
     }
 }

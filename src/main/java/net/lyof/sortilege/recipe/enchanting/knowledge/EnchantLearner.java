@@ -22,7 +22,7 @@ public interface EnchantLearner {
         }
 
         public static boolean isLearnable(Holder<Enchantment> enchantment) {
-            return knowledge != null && knowledge.isLearnable(stack, enchantment, EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack));
+            return knowledge != null && stack != null && knowledge.isLearnable(stack, enchantment, EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack));
         }
     }
 }

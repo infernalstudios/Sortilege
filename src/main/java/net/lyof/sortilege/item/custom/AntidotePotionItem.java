@@ -36,10 +36,8 @@ public class AntidotePotionItem extends PotionItem {
     public static void fillItemGroup(FabricItemGroupEntries entries, Item antidote) {
         if (!ModConfig.antidoteEnabled.get()) return;
 
-        for (Holder<Potion> potion : PotionHelper.POTIONS.values()) {
-            Sortilege.log().info(potion.getRegisteredName());
+        for (Holder<Potion> potion : PotionHelper.POTIONS.values())
             entries.accept(PotionContents.createItemStack(antidote, potion));
-        }
     }
 
     @Override

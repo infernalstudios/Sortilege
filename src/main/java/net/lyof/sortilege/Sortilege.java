@@ -89,7 +89,6 @@ public class Sortilege implements ModInitializer {
 		SolRegistries.Data.RELOAD.register(ReloadListener.INSTANCE);
 
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-			Sortilege.log().info("reloadevent", joined);
 			List<CustomPacketPayload> packets = new ArrayList<>();
 
 			packets.add(new ModPackets.InitializePacket());

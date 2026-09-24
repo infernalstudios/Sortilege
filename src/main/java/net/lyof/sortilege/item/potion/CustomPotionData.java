@@ -10,6 +10,7 @@ import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModConfig;
+import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
@@ -46,13 +47,12 @@ public class CustomPotionData implements CustomPacketPayload {
         this.create = create;
 
         if (this.create) tryRegister(this.potion);
-
     }
 
     public static void tryRegister(ResourceLocation potion) {
         if (!BuiltInRegistries.POTION.containsKey(potion)) {
             Registry.register(BuiltInRegistries.POTION, potion,
-                    new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
+                    new Potion("data." + potion.getNamespace() + "." + potion.getPath()));
         }
     }
 
@@ -90,6 +90,7 @@ public class CustomPotionData implements CustomPacketPayload {
 
     public void read(ClientPlayNetworking.Context context) {
         INSTANCES.add(this);
+        if (this.create) PotionHelper.tryLoad(BuiltInRegistries.POTION.getHolder(this.potion).orElse(null));
     }
 
     public static CustomPotionData read(FriendlyByteBuf packet) {

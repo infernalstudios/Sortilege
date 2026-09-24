@@ -42,19 +42,19 @@ public class ModRecipeTypes {
 
 
     public static RecipeSerializer<SoulbindingRecipe> SOULBINDING_SERIALIZER
-            = register("soulbind_smithing", new UnitRecipeSerializer<>(SoulbindingRecipe::new));
+            = register("soulbind_smithing", UnitRecipeSerializer.of(SoulbindingRecipe::new));
 
     public static RecipeSerializer<LimitBreakRecipe> LIMIT_BREAK_SERIALIZER
-            = register("limitbreak_smithing", new UnitRecipeSerializer<>(LimitBreakRecipe::new));
+            = register("limitbreak_smithing", UnitRecipeSerializer.of(LimitBreakRecipe::new));
 
     public static RecipeSerializer<CauldronBrewingRecipe> CAULDRON_BREWING_SERIALIZER
             = register("cauldron_brewing", new CauldronBrewingRecipe.Serializer());
 
     public static RecipeSerializer<A2PBrewingRecipe> POTION_BREWING_SERIALIZER
-            = register("antidote_to_potion_brewing", new UnitRecipeSerializer<>(A2PBrewingRecipe::new));
+            = register("antidote_to_potion_brewing", UnitRecipeSerializer.ofPotion(A2PBrewingRecipe::new));
 
     public static RecipeSerializer<P2ABrewingRecipe> ANTIDOTE_BREWING_SERIALIZER
-            = register("potion_to_antidote_brewing", new UnitRecipeSerializer<>(P2ABrewingRecipe::new));
+            = register("potion_to_antidote_brewing", UnitRecipeSerializer.ofPotion(P2ABrewingRecipe::new));
 
     public static RecipeSerializer<BrewingRecipe> BREWING_SERIALIZER
             = register("brewing", new BrewingRecipe.Serializer());

@@ -28,29 +28,33 @@ public class PotionHelper {
         GEN_ALLOWED_POTIONS.clear();
     }
 
+    public static void tryLoad(Holder<Potion> potion) {
+        if (potion == null) return;
+
+        if (potion.value().getEffects().size() == 1 &&
+                !potion.value().hasInstantEffects() &&
+                potion.value().getEffects().get(0).getAmplifier() == 0 &&
+                !ModConfig.antidoteBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.value().getEffects().get(0).getEffect().value()))) {
+
+            Holder<MobEffect> effect = potion.value().getEffects().get(0).getEffect();
+            int duration = potion.value().getEffects().get(0).getDuration();
+
+            if (!POTIONS.containsKey(effect))
+                POTIONS.put(effect, potion);
+            else if (POTIONS.get(effect).value().getEffects().get(0).getDuration() > duration)
+                POTIONS.replace(effect, potion);
+        }
+    }
+
     public static void load() {
-        Sortilege.log().info("starting potionhelper reload");
         for (Holder.Reference<Potion> potion : BuiltInRegistries.POTION.asLookup().listElements().toList()) {
-            if (potion.value().getEffects().size() == 1 &&
-                    !potion.value().hasInstantEffects() &&
-                    potion.value().getEffects().get(0).getAmplifier() == 0 &&
-                    !ModConfig.antidoteBlacklist.get().contains(BuiltInRegistries.MOB_EFFECT.getKey(potion.value().getEffects().get(0).getEffect().value()))) {
-
-                Holder<MobEffect> effect = potion.value().getEffects().get(0).getEffect();
-                int duration = potion.value().getEffects().get(0).getDuration();
-
-                if (!POTIONS.containsKey(effect))
-                    POTIONS.put(effect, potion);
-                else if (POTIONS.get(effect).value().getEffects().get(0).getDuration() > duration)
-                    POTIONS.replace(effect, potion);
-            }
+            tryLoad(potion);
         }
 
         for (Holder<Potion> potion : POTIONS.values()) {
             if (!ModConfig.swampHutBlacklist.get().contains(Identifier.of(potion.value().getEffects().get(0).getEffect().getRegisteredName())))
                 GEN_ALLOWED_POTIONS.add(potion);
         }
-        Sortilege.log().info("ended potionhelper reload");
     }
 
     public static Holder<Potion> getDefaultEffect(Holder<MobEffect> effect) {

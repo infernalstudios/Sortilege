@@ -44,7 +44,7 @@ public class ModEnchants {
 
 
     public static final DataComponentType<StaffStatsEnchant> STAFF_STATS = register("staff_stats",
-            builder -> builder.persistent(StaffStatsEnchant.CODEC).networkSynchronized(StaffStatsEnchant.STREAM_CODEC));
+            builder -> builder.persistent(StaffStatsEnchant.CODEC));
     public static final DataComponentType<StaffColorsEnchant> STAFF_COLORS = register("staff_colors",
             builder -> builder.persistent(StaffColorsEnchant.CODEC).networkSynchronized(StaffColorsEnchant.STREAM_CODEC));
     public static final DataComponentType<List<TargetedConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_HIT = register("on_staff_hit",

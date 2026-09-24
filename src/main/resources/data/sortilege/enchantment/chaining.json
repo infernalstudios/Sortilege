@@ -10,7 +10,11 @@
   ],
   "effects": {
     "sortilege:staff_stats": {
-      "pierce": 1
+      "pierce": {
+        "type": "minecraft:linear",
+        "base": 1,
+        "per_level_above_first": 1
+      }
     }
   },
 

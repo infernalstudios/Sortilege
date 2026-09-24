@@ -1,6 +1,7 @@
 package net.lyof.sortilege.util;
 
 import net.lcc.sollib.core.Identifier;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;

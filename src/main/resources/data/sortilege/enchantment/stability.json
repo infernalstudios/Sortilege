@@ -10,7 +10,11 @@
   ],
   "effects": {
     "sortilege:staff_stats": {
-      "range": 2
+      "range": {
+        "type": "minecraft:linear",
+        "base": 2,
+        "per_level_above_first": 2
+      }
     }
   },
 

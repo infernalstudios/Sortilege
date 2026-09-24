@@ -45,12 +45,16 @@ public class CustomPotionData implements CustomPacketPayload {
         this.stackSize = stackSize;
         this.create = create;
 
-        if (this.create && !BuiltInRegistries.POTION.containsKey(potion)) {
+        if (this.create) tryRegister(this.potion);
+
+    }
+
+    public static void tryRegister(ResourceLocation potion) {
+        if (!BuiltInRegistries.POTION.containsKey(potion)) {
             Registry.register(BuiltInRegistries.POTION, potion,
                     new Potion("custom." + potion.getNamespace() + "." + potion.getPath()));
         }
     }
-
 
     public static void read(JsonObject json) {
         if (json.has("potion")) {

@@ -10,24 +10,19 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
 
-public record StaffStatsEnchant(float damage, int range, int pierce) {
+public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, LevelBasedValue pierce) {
     public static final Codec<StaffStatsEnchant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.FLOAT.optionalFieldOf("damage", 0f).forGetter(StaffStatsEnchant::damage),
-            Codec.INT.optionalFieldOf("range", 0).forGetter(StaffStatsEnchant::range),
-            Codec.INT.optionalFieldOf("pierce", 0).forGetter(StaffStatsEnchant::pierce)
+            LevelBasedValue.CODEC.optionalFieldOf("damage", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::damage),
+            LevelBasedValue.CODEC.optionalFieldOf("range", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::range),
+            LevelBasedValue.CODEC.optionalFieldOf("pierce", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::pierce)
     ).apply(instance, StaffStatsEnchant::new));
-    public static final StreamCodec<FriendlyByteBuf, StaffStatsEnchant> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.FLOAT, StaffStatsEnchant::damage,
-            ByteBufCodecs.INT, StaffStatsEnchant::range,
-            ByteBufCodecs.INT, StaffStatsEnchant::pierce,
-            StaffStatsEnchant::new
-    );
 
     private static ItemEnchantments cacher = null;
-    private static StaffStatsEnchant cache = null;
+    private static StaffStatsEnchant.Result cache = null;
 
-    public static StaffStatsEnchant collect(ItemEnchantments enchants) {
+    public static StaffStatsEnchant.Result collect(ItemEnchantments enchants) {
         if (cacher == enchants) return cache;
 
         float damage = 0;
@@ -41,20 +36,22 @@ public record StaffStatsEnchant(float damage, int range, int pierce) {
             pierce += increase.getPierce(enchant.getIntValue());
         }
 
-        cache = new StaffStatsEnchant(damage, range, pierce);
+        cache = new StaffStatsEnchant.Result(damage, range, pierce);
         cacher = enchants;
         return cache;
     }
 
     public float getDamage(int level) {
-        return damage() * level;
+        return damage().calculate(level);
     }
 
     public int getRange(int level) {
-        return range() * level;
+        return Math.round(range().calculate(level));
     }
 
     public int getPierce(int level) {
-        return pierce() * level;
+        return Math.round(pierce().calculate(level));
     }
+
+    public record Result(float damage, int range, int pierce) {}
 }

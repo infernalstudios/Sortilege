@@ -79,7 +79,6 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Shadow public abstract boolean hurt(DamageSource source, float amount);
     @Shadow @Nullable protected Player lastHurtByPlayer;
     @Shadow public abstract ItemStack getOffhandItem();
-    @Shadow public abstract ItemStack getItemBySlot(EquipmentSlot slot);
 
     public LivingEntityMixin(EntityType<?> type, Level world) {
         super(type, world);

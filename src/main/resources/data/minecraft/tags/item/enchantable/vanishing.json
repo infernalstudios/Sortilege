@@ -1,5 +1,9 @@
 {
   "values": [
-    "#sortilege:staffs"
+    "#sortilege:staffs",
+    {
+      "id": "sortilege:witch_hat",
+      "required": false
+    }
   ]
 }

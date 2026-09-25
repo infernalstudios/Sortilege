@@ -1,6 +1,8 @@
 package net.lyof.sortilege.recipe.brewing;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -70,7 +72,9 @@ public abstract class BrewingRecipe implements Recipe<RecipeInput> {
     }
 
 
-    public static class Serializer implements RecipeSerializer<BrewingRecipe> {/*
+    public static class Serializer implements RecipeSerializer<BrewingRecipe> {
+        //private static final MapCodec<BrewingRecipe> codec = MapCodec.MapCodecCodec.
+        /*
         public BrewingRecipe fromJson(ResourceLocation id, JsonObject json) {
             if (!json.has("input") || !json.has("ingredient") || !json.has("output"))
                 return null;

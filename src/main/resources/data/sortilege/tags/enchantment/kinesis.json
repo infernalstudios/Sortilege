@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "sortilege:pull",
+      "required": false
+    },
+    {
+      "id": "sortilege:push",
+      "required": false
+    }
+  ]
+}

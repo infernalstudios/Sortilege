@@ -19,6 +19,7 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
@@ -57,6 +58,8 @@ public class ModEnchants {
 
     public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> DODGE_CHANCE = register("dodge_chance",
             builder -> builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
+    public static final DataComponentType<Holder<DamageType>> DAMAGE_TYPE = register("damage_type",
+            builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 
     public static final DataComponentType<Unit> PREVENT_DEATHDROP = register("prevent_deathdrop",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
@@ -66,9 +69,6 @@ public class ModEnchants {
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
     public static final DataComponentType<Integer> TRUE_FIRE_PROTECTION = register("true_fire_protection",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
-
-    public static final DataComponentType<Holder<DamageType>> DAMAGE_TYPE = register("damage_type",
-            builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 
     public static final ResourceKey<Enchantment> SOULBOUND = makeKey("soulbound");
 }

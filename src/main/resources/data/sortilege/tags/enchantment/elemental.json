@@ -7,6 +7,18 @@
     {
       "id": "sortilege:blizzard",
       "required": false
+    },
+    {
+      "id": "sortilege:blessing",
+      "required": false
+    },
+    {
+      "id": "sortilege:blitz",
+      "required": false
+    },
+    {
+      "id": "sortilege:blast",
+      "required": false
     }
   ]
 }

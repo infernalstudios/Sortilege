@@ -16,6 +16,13 @@
         "base": 0.75,
         "per_level_above_first": 0.75
       }
+    },
+    "sortilege:staff_colors": {
+      "colors": [
+        "#7fbfc0",
+        "#cc3300",
+        "#ff6600"
+      ]
     }
   },
 

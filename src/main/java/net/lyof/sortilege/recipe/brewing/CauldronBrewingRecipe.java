@@ -54,8 +54,7 @@ public class CauldronBrewingRecipe implements Recipe<RecipeInput> {
     }
 
     public static class Serializer implements RecipeSerializer<CauldronBrewingRecipe> {
-        private static final MapCodec<CauldronBrewingRecipe> codec =
-        RecordCodecBuilder.mapCodec(instance ->
+        private static final MapCodec<CauldronBrewingRecipe> codec = RecordCodecBuilder.mapCodec(instance ->
                 instance.group(Ingredient.CODEC.fieldOf("input").forGetter(recipe -> recipe.input),
                         Potion.CODEC.fieldOf("output").forGetter(recipe -> recipe.output))
                 .apply(instance, CauldronBrewingRecipe::new)

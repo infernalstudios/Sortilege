@@ -363,9 +363,9 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         if (target.isDeadOrDying()) this.onKill(stack, player, target);
         this.onHit(stack, player, target, source);
 
-        float kinesis = 0;//EnchantHelper.getEnchantLevel(ModEnchants.PUSH, stack) - EnchantHelper.getEnchantLevel(ModEnchants.PULL, stack);
-        /*if (kinesis != 0)
-            target.setDeltaMovement(direction.add(0, 0.07, 0).normalize().scale(kinesis * 0.55));*/
+        float kinesis = StaffStatsEnchant.collect(stack.getEnchantments()).kinesis();
+        if (kinesis != 0)
+            target.setDeltaMovement(player.getLookAngle().add(0, 0.1, 0).normalize().scale(kinesis));
 
         if (!propagate) return;
         this.triggerBlastAttack(stack, player, target.getX(), target.getY() + target.getEyeHeight() / 2, target.getZ(), targetsHit);

@@ -1,0 +1,31 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.pull"
+  },
+  "max_level": 2,
+  "weight": 4,
+  "supported_items": "#sortilege:enchantable/staff",
+  "exclusive_set": "#sortilege:kinesis",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:staff_stats": {
+      "kinesis": {
+        "type": "minecraft:linear",
+        "base": -0.65,
+        "per_level_above_first": -0.55
+      }
+    }
+  },
+
+  "anvil_cost": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 20
+  }
+}

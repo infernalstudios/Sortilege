@@ -5,20 +5,18 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.minecraft.core.Holder;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.enchantment.LevelBasedValue;
 
 public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, LevelBasedValue pierce,
-                                LevelBasedValue blast) {
+                                LevelBasedValue blast, LevelBasedValue kinesis) {
     public static final Codec<StaffStatsEnchant> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             LevelBasedValue.CODEC.optionalFieldOf("damage", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::damage),
             LevelBasedValue.CODEC.optionalFieldOf("range", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::range),
             LevelBasedValue.CODEC.optionalFieldOf("pierce", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::pierce),
-            LevelBasedValue.CODEC.optionalFieldOf("blast", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::blast)
+            LevelBasedValue.CODEC.optionalFieldOf("blast", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::blast),
+            LevelBasedValue.CODEC.optionalFieldOf("kinesis", LevelBasedValue.constant(0)).forGetter(StaffStatsEnchant::kinesis)
     ).apply(instance, StaffStatsEnchant::new));
 
     private static ItemEnchantments cacher = null;
@@ -27,7 +25,7 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
     public static StaffStatsEnchant.Result collect(ItemEnchantments enchants) {
         if (cacher == enchants) return cache;
 
-        float damage = 0, blast = 0;
+        float damage = 0, blast = 0, kinesis = 0;
         int range = 0, pierce = 0;
         for (Object2IntMap.Entry<Holder<Enchantment>> enchant : enchants.entrySet()) {
             StaffStatsEnchant increase = enchant.getKey().value().effects().get(ModEnchants.STAFF_STATS);
@@ -37,9 +35,10 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
             range += increase.getRange(enchant.getIntValue());
             pierce += increase.getPierce(enchant.getIntValue());
             blast += increase.getBlast(enchant.getIntValue());
+            kinesis += increase.getKinesis(enchant.getIntValue());
         }
 
-        cache = new StaffStatsEnchant.Result(damage, range, pierce, blast);
+        cache = new StaffStatsEnchant.Result(damage, range, pierce, blast, kinesis);
         cacher = enchants;
         return cache;
     }
@@ -60,5 +59,9 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
         return Math.round(blast().calculate(level));
     }
 
-    public record Result(float damage, int range, int pierce, float blast) {}
+    public float getKinesis(int level) {
+        return Math.round(kinesis().calculate(level));
+    }
+
+    public record Result(float damage, int range, int pierce, float blast, float kinesis) {}
 }

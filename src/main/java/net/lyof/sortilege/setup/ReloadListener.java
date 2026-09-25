@@ -62,7 +62,7 @@ public class ReloadListener implements IReloadListener {
     }
 
     @Environment(EnvType.CLIENT)
-    public void reloadClient() {
+    public void preloadClient() {
         EnchantHelper.setRegistry(() -> Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT));
 
         RecipeLock.clear();
@@ -70,10 +70,12 @@ public class ReloadListener implements IReloadListener {
             RecipeLock.register(entry.getKey(), entry.getValue());
 
         CustomPotionData.clear();
-
-        EnchantHelper.load();
-
         PotionHelper.clear();
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void reloadClient() {
+        EnchantHelper.load();
         PotionHelper.load();
 
         if (FabricLoader.getInstance().isModLoaded("emi"))

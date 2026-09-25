@@ -90,12 +90,12 @@ public class Sortilege implements ModInitializer {
 
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
 			List<CustomPacketPayload> packets = new ArrayList<>();
-
-			packets.add(new ModPackets.InitializePacket());
+			packets.add(new ModPackets.InitializePacket(true));
 
 			CustomPotionData.write(packets);
 			RecipeLock.write(packets, player.getServer());
 
+			packets.add(new ModPackets.InitializePacket(false));
 			packets.forEach(p -> ServerPlayNetworking.send(player, p));
 		});
 		ServerLifecycleEvents.SERVER_STARTING.register(server -> {

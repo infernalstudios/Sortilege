@@ -39,7 +39,7 @@ public class ModItems {
             () -> new AntidotePotionItem(new Item.Properties().stacksTo(ModConfig.antidoteStackSize.get())));
 
     public static final Item WITCH_HAT = register(ModConfig.witchHatEnabled.get(), "witch_hat",
-            () -> new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new Item.Properties()));
+            () -> new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new Item.Properties().durability(94)));
 
     public static final Item LAPIS_SHIELD = register(ModConfig.lapisShieldEnabled.get(), "lapis_shield",
             () -> new LapisShieldItem(new Item.Properties().durability(ModConfig.lapisShieldDurability.get())));

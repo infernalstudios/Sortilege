@@ -90,7 +90,6 @@ public class CustomPotionData implements CustomPacketPayload {
 
     public void read(ClientPlayNetworking.Context context) {
         INSTANCES.add(this);
-        if (this.create) PotionHelper.tryLoad(BuiltInRegistries.POTION.getHolder(this.potion).orElse(null));
     }
 
     public static CustomPotionData read(FriendlyByteBuf packet) {

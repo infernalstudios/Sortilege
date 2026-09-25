@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModPackets {
-    public record InitializePacket() implements CustomPacketPayload {
+    public record InitializePacket(boolean start) implements CustomPacketPayload {
         public static final CustomPacketPayload.Type<InitializePacket> TYPE = new Type<>(Sortilege.MOD.makeID("initialize"));
         public static final StreamCodec<FriendlyByteBuf, InitializePacket> STREAM_CODEC =
-                StreamCodec.unit(new InitializePacket());
+                StreamCodec.composite(ByteBufCodecs.BOOL, InitializePacket::start, InitializePacket::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
@@ -40,7 +40,10 @@ public class ModPackets {
 
         @Environment(EnvType.CLIENT)
         public static void run(InitializePacket packet, ClientPlayNetworking.Context context) {
-            ReloadListener.INSTANCE.reloadClient();
+            if (packet.start())
+                ReloadListener.INSTANCE.preloadClient();
+            else
+                ReloadListener.INSTANCE.reloadClient();
         }
     }
 

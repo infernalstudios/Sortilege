@@ -10,7 +10,42 @@
     "hand"
   ],
   "effects": {
-
+    "sortilege:staff_damage": [
+      {
+        "effect": {
+          "type": "minecraft:multiply",
+          "factor": {
+            "type": "minecraft:linear",
+            "base": 1.5,
+            "per_level_above_first": 0.5
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type": "#minecraft:sensitive_to_smite"
+          }
+        }
+      },
+      {
+        "effect": {
+          "type": "minecraft:multiply",
+          "factor": {
+            "type": "minecraft:linear",
+            "base": -0.75,
+            "per_level_above_first": -0.75
+          }
+        },
+        "requirements": {
+          "condition": "minecraft:entity_properties",
+          "entity": "this",
+          "predicate": {
+            "type": "#sollib:generated/friendly"
+          }
+        }
+      }
+    ],
     "sortilege:staff_colors": {
       "colors": [
         "#ffbfbf",

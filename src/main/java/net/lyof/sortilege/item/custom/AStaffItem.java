@@ -6,6 +6,7 @@ import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
@@ -35,6 +36,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -51,18 +53,17 @@ import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
 import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AStaffItem extends TieredItem implements IAddedRenderItem, IAddedBarItem, BuiltInEnchantsItem {
     private static final int COLOR_NONE = 0xffffff;
@@ -326,14 +327,35 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         return stack;
     }
 
-    public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target) {
-        /*if (elements.contains((Object) ModEnchants.BLESSING)) {
-            if (target.getType().is(ModTags.Entities.UNDEAD))
-                damage *= 1 + EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * 0.5f;
-            else if (!ModConfig.altBlessing.get() || !(target instanceof Enemy))
-                damage *= EnchantHelper.getEnchantLevel(ModEnchants.BLESSING, stack) * -0.75f;
-        }*/
-        //EnchantmentHelper.modifyDamage()
+    public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, DamageSource source) {
+        if (player.level() instanceof ServerLevel server) {
+            ItemStack s;
+            for (EquipmentSlot slot : EquipmentSlot.values()) {
+                s = player.getItemBySlot(slot);
+                if (s.isEmpty())
+                    continue;
+
+                for (Object2IntMap.Entry<Holder<Enchantment>> enchant : s.getEnchantments().entrySet()) {
+                    if (!enchant.getKey().value().isSupportedItem(s))
+                        continue;
+                    if (!enchant.getKey().value().matchingSlot(slot))
+                        continue;
+
+                    LootContext context = new LootContext.Builder(new LootParams.Builder(server)
+                            .withParameter(LootContextParams.ATTACKING_ENTITY, player)
+                            .withParameter(LootContextParams.THIS_ENTITY, target)
+                            .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
+                            .withParameter(LootContextParams.ORIGIN, player.position())
+                            .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                            .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
+
+                    for (ConditionalEffect<EnchantmentValueEffect> effect : enchant.getKey().value().getEffects(ModEnchants.STAFF_DAMAGE)) {
+                        if (effect.matches(context))
+                            damage = effect.effect().process(enchant.getIntValue(), player.getRandom(), damage);
+                    }
+                }
+            }
+        }
 
         // Undergarden compat
         if (target.getType().is(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.is(ModTags.Items.FORGOTTEN_ITEMS))
@@ -353,7 +375,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
 
         float d = this.getDamage(stack, player);
-        d = this.modifyDamageDealt(stack, d, player, target);
+        d = this.modifyDamageDealt(stack, d, player, target, source);
 
         if (d < 0) {
             target.heal(-d);

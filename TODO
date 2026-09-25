@@ -13,6 +13,7 @@
 *- enchant catalysts
 *- display learnable
 *- brewing recipes are apparently broken (ah forgot to register the custom recipes)
+- tag witch hat to enchantable
 
 missing enchants:
 - sortilege:blessing

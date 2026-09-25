@@ -4,7 +4,10 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
+import net.lyof.sortilege.enchant.ModEnchants;
+import net.lyof.sortilege.enchant.custom.DodgeChanceEnchant;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.potion.PotionCooldownManager;
@@ -29,7 +32,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +44,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -150,31 +153,20 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     }
 
     @Inject(method = "dropEquipment", at = @At("HEAD"), cancellable = true)
-    public void cancelCuriosDrop(CallbackInfo ci) {
+    public void cancelAccessoryDrop(CallbackInfo ci) {
         if (ModConfig.keepEquipped.get() && ((LivingEntity) (Object) this) instanceof Player) ci.cancel();
     }
 
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     public void cancelDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        if (ModConfig.expandedFeatherFalling.get() > 0 && source.is(DamageTypeTags.IS_FALL) &&
-                EnchantHelper.getEnchantLevel(Enchantments.FEATHER_FALLING,
-                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.expandedFeatherFalling.get())
+        LivingEntity self = (LivingEntity) (Object) this;
+
+        if (source.is(DamageTypeTags.IS_FIRE) && Arrays.stream(EquipmentSlot.values()).allMatch(slot ->
+                EnchantHelper.hasEffect(ModEnchants.TRUE_FIRE_PROTECTION, self.getItemBySlot(slot), (effect, level) -> effect <= level)))
             cir.setReturnValue(false);
 
-        if (ModConfig.expandedFireProt.get() > 0 && source.is(DamageTypeTags.IS_FIRE) &&
-                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.FEET)) >= ModConfig.expandedFireProt.get() &&
-                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.LEGS)) >= ModConfig.expandedFireProt.get() &&
-                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.CHEST)) >= ModConfig.expandedFireProt.get() &&
-                EnchantHelper.getEnchantLevel(Enchantments.FIRE_PROTECTION,
-                        this.getItemBySlot(EquipmentSlot.HEAD)) >= ModConfig.expandedFireProt.get())
+        if (self.getRandom().nextFloat() <= DodgeChanceEnchant.get(self, source))
             cir.setReturnValue(false);
-
-        /*if (ModEnchants.MAGIC_PROTECTION != null && ModConfig.expandedMagicProt.get() && Math.random() <=
-                0.05 * EnchantmentHelper.getEnchantmentLevel(ModEnchants.MAGIC_PROTECTION, (LivingEntity) (Object) this))
-            cir.setReturnValue(false);*/
     }
 
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)

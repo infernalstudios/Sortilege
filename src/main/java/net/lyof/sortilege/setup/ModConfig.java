@@ -149,6 +149,7 @@ public class ModConfig {
                         .add("soulbound", true)
                         .add("storytelling_curse", true)
                 )
+                .bind(enabledEnchants)
         )
         .addObject("experience", experience -> experience
                 .addObject("witch_hat", witch_hat -> witch_hat
@@ -342,6 +343,18 @@ public class ModConfig {
     public static final ConfigEntry<Boolean> expandedBane = new ConfigEntry<>(true);
     public static final ConfigEntry<Boolean> altBlessing = new ConfigEntry<>(true);
     public static final ConfigEntry<Boolean> altStorytelling = new ConfigEntry<>(false);
+    public static final ConfigEntry<Set<String>> enabledEnchants = new ConfigEntry<Set<String>>(Set.of()).withProcessor(json -> {
+        Set<String> result = new HashSet<>();
+
+        JsonObject obj = json.getAsJsonObject();
+        for (String key : obj.keySet()) {
+            JsonElement elm = obj.get(key);
+
+            if (elm.isJsonPrimitive() && elm.getAsJsonPrimitive().isBoolean() && elm.getAsJsonPrimitive().getAsBoolean())
+                result.add(elm.getAsString());
+        }
+        return result;
+    });
 
     // Experience
     public static final ConfigEntry<Boolean> witchHatEnabled = new ConfigEntry<>(true);

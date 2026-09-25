@@ -28,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ThrowablePotionItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,6 +36,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.function.Function;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
@@ -81,8 +82,7 @@ public abstract class ItemStackMixin {
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
         ItemStack self = (ItemStack) (Object) this;
         if (self.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        Pair<Integer, Integer> unbreakable = EnchantHelper.getEffect(ModEnchants.PREVENT_DURABILITY, self);
-        if (unbreakable != null && unbreakable.getFirst() >= unbreakable.getSecond())
+        if (EnchantHelper.hasEffect(ModEnchants.TRUE_UNBREAKING, self, (effect, level) -> effect <= level))
             cir.setReturnValue(false);
     }
 

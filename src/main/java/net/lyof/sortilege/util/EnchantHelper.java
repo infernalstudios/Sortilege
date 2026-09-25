@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
@@ -17,12 +18,15 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
+import java.util.function.BiPredicate;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class EnchantHelper {
@@ -76,14 +80,6 @@ public class EnchantHelper {
         return EnchantmentHelper.getItemEnchantmentLevel(enchant, stack);
     }
 
-    public static boolean hasEnchant(ResourceKey<Enchantment> enchant, ItemStack stack) {
-        return getEnchantLevel(enchant, stack) > 0;
-    }
-
-    public static boolean hasEnchant(Holder<Enchantment> enchant, ItemStack stack) {
-        return getEnchantLevel(enchant, stack) > 0;
-    }
-
     public static <T> Pair<T, Integer> getEffect(DataComponentType<T> type, ItemStack stack) {
         for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
             T effect = enchant.getKey().value().effects().get(type);
@@ -94,6 +90,11 @@ public class EnchantHelper {
 
     public static boolean hasEffect(DataComponentType<?> type, ItemStack stack) {
         return getEffect(type, stack) != null;
+    }
+
+    public static <T> boolean hasEffect(DataComponentType<T> type, ItemStack stack, BiPredicate<T, Integer> condition) {
+        Pair<T, Integer> effect = getEffect(type, stack);
+        return effect != null && condition.test(effect.getFirst(), effect.getSecond());
     }
 
 

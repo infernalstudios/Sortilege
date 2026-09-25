@@ -54,12 +54,19 @@ public class ModEnchants {
             builder -> builder.persistent(TargetedConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
     public static final DataComponentType<List<ConditionalEffect<EnchantmentEntityEffect>>> ON_STAFF_SHOOT = register("on_staff_shoot",
             builder -> builder.persistent(ConditionalEffect.codec(EnchantmentEntityEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
+
+    public static final DataComponentType<List<ConditionalEffect<EnchantmentValueEffect>>> DODGE_CHANCE = register("dodge_chance",
+            builder -> builder.persistent(ConditionalEffect.codec(EnchantmentValueEffect.CODEC, LootContextParamSets.ENCHANTED_DAMAGE).listOf()));
+
     public static final DataComponentType<Unit> PREVENT_DEATHDROP = register("prevent_deathdrop",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     public static final DataComponentType<Unit> PREVENT_DROP = register("prevent_drop",
             builder -> builder.persistent(Unit.CODEC).networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
-    public static final DataComponentType<Integer> PREVENT_DURABILITY = register("prevent_durability",
+    public static final DataComponentType<Integer> TRUE_UNBREAKING = register("true_unbreaking",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
+    public static final DataComponentType<Integer> TRUE_FIRE_PROTECTION = register("true_fire_protection",
+            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.INT));
+
     public static final DataComponentType<Holder<DamageType>> DAMAGE_TYPE = register("damage_type",
             builder -> builder.persistent(DamageType.CODEC).networkSynchronized(DamageType.STREAM_CODEC));
 

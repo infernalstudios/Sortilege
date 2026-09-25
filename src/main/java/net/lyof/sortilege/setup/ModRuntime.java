@@ -11,37 +11,125 @@ import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.minecraft.core.Holder;
+import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.storage.loot.predicates.LootItemConditions;
 
 public class ModRuntime {
-    protected static void addMiningMaster(String gem, Holder<Enchantment> enchant) {
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("miningmaster", "recipes/smithing/" + gem + "_smithing.json"),
-                json -> ModRuntime.Common.changeMiningMasterGem(json, enchant.getRegisteredName()),
-                () -> enchant != null && ModConfig.miningMasterIntegration.get());
+    protected static void addMiningMaster(String gem, String enchant) {
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("miningmaster:recipes/smithing/" + gem + "_smithing.json"),
+                json -> ModRuntime.Common.changeMiningMasterGem(json, Sortilege.MOD_ID + ":" + enchant),
+                () -> ModConfig.enabledEnchants.get().contains(enchant) && ModConfig.miningMasterIntegration.get());
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("recipes/gems/" + gem + ".json"),
-                json -> ModRuntime.Common.changeMiningMasterGem(json, enchant.getRegisteredName()),
-                () -> enchant != null && ModConfig.miningMasterIntegration.get());
+                json -> ModRuntime.Common.changeMiningMasterGem(json, Sortilege.MOD_ID + ":" + enchant),
+                () -> ModConfig.enabledEnchants.get().contains(enchant) && ModConfig.miningMasterIntegration.get());
     }
 
 
     public static void load() {
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/item/staffs.json"),
-                ModRuntime.Common::generateStaffTag);
+                Common::generateStaffTag);
 
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/adventure/voluntary_exile.json"),
-                json -> ModRuntime.Common.changeParent(json, "sortilege:get_witch_hat"), ModConfig.witchHatEnabled);
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft", "advancements/story/enchant_item.json"),
-                json -> ModRuntime.Common.changeParent(json, "sortilege:get_knowledge_book"), ModConfig.knowledgeEnabled);
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:advancements/adventure/voluntary_exile.json"),
+                json -> Common.changeParent(json, "sortilege:get_witch_hat"), ModConfig.witchHatEnabled);
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:advancements/story/enchant_item.json"),
+                json -> Common.changeParent(json, "sortilege:get_knowledge_book"), ModConfig.knowledgeEnabled);
 
-        if (FabricLoader.getInstance().isModLoaded("miningmaster")) {/*
-            addMiningMaster("power_pyrite", ModEnchants.POTENCY);
-            addMiningMaster("kinetic_opal", ModEnchants.BLAST);
-            addMiningMaster("ice_sapphire", ModEnchants.BLIZZARD);
-            addMiningMaster("fire_ruby", ModEnchants.BRAZIER);
-            addMiningMaster("air_malachite", ModEnchants.BLITZ);
-            addMiningMaster("spirit_garnet", ModEnchants.WISDOM);
-            addMiningMaster("haste_peridot", ModEnchants.FOCUS);
-            addMiningMaster("divine_beryl", ModEnchants.BLESSING);*/
+        //#region Expanded Enchantments
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:enchantment/unbreaking.json"),
+                json -> Common.changeEffects(json, new JsonBuilder()
+                        .add("sortilege:true_unbreaking", ModConfig.expandedUnbreaking.get())
+                        .toJson()),
+                () -> ModConfig.expandedUnbreaking.get() > -1);
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:enchantment/feather_falling.json"),
+                json -> Common.changeEffects(json, new JsonBuilder()
+                        .addArray("sortilege:dodge_chance", dodge -> dodge.addObject(main -> main
+                            .addObject("effect", effect -> effect
+                                .add("type", "minecraft:add")
+                                .add("value", 1)
+                            ).addObject("requirements", requirements -> requirements
+                                .add("condition", "minecraft:all_of")
+                                .addArray("terms", terms -> terms
+                                    .addObject(level -> level
+                                        .add("condition", "minecraft:value_check")
+                                        .addObject("value", value -> value
+                                            .add("type", "minecraft:enchantment_level")
+                                            .addObject("amount", amount -> amount
+                                                .add("type", "minecraft:linear")
+                                                .add("base", 1)
+                                                .add("per_level_above_first", 1)
+                                            )
+                                        ).addObject("range", range -> range
+                                            .add("min", ModConfig.expandedFeatherFalling.get())
+                                        )
+                                    ).addObject(source -> source
+                                        .add("condition", "minecraft:damage_source_properties")
+                                        .addObject("predicate", predicate -> predicate
+                                            .addArray("tags", tags -> tags
+                                                .addObject(tag -> tag
+                                                    .add("expected", true)
+                                                    .add("id", "minecraft:is_fall")
+                                                ).addObject(tag -> tag
+                                                    .add("expected", false)
+                                                    .add("id", "minecraft:bypasses_invulnerability")
+                                                )
+                                            )
+                                        )
+                                    )
+                                )
+                            )
+                        )).toJson()),
+                () -> ModConfig.expandedFeatherFalling.get() > -1);
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:enchantment/fire_protection.json"),
+                json -> Common.changeEffects(json, new JsonBuilder()
+                        .add("sortilege:true_fire_protection", ModConfig.expandedFireProt.get())
+                        .toJson()),
+                () -> ModConfig.expandedFireProt.get() > -1);
+        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("enchantment/magic_protection.json"),
+                json -> Common.changeEffects(json, new JsonBuilder()
+                        .addArray("sortilege:dodge_chance", dodge -> dodge.addObject(main -> main
+                            .addObject("effect", effect -> effect
+                                .add("type", "minecraft:add")
+                                .addObject("value", value -> value
+                                    .add("type", "minecraft:linear")
+                                    .add("base", 0.05)
+                                    .add("per_level_above_first", 0.05)
+                                )
+                            )
+                        )).toJson()),
+                ModConfig.expandedMagicProt);
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:enchantment/bane_of_arthropods.json"),
+                json -> Common.changeEffects(json, new JsonBuilder()
+                        .addArray("minecraft:post_attack", hurt -> hurt.addObject(main -> main
+                            .add("affected","victim")
+                            .add("enchanted", "attacker")
+                            .addObject("effect", effect -> effect
+                                .add("type", "minecraft:apply_mob_effect")
+                                .addObject("min_duration", value -> value
+                                    .add("type", "minecraft:linear")
+                                    .add("base", 0.75)
+                                    .add("per_level_above_first", 0.75)
+                                ).addObject("max_duration", value -> value
+                                    .add("type", "minecraft:linear")
+                                    .add("base", 0.75)
+                                    .add("per_level_above_first", 0.75)
+                                ).add("min_amplifier", 1)
+                                .add("max_amplifier", 1)
+                                .add("to_apply", "minecraft:slowness")
+                            )
+                        )).toJson()),
+                ModConfig.expandedBane);
+        //#endregion
+
+        if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
+            addMiningMaster("power_pyrite", "potency");
+            addMiningMaster("kinetic_opal", "blast");
+            addMiningMaster("ice_sapphire", "blizzard");
+            addMiningMaster("fire_ruby", "brazier");
+            addMiningMaster("air_malachite", "blitz");
+            addMiningMaster("spirit_garnet", "wisdom");
+            addMiningMaster("haste_peridot", "focus");
+            addMiningMaster("divine_beryl", "blessing");
         }
     }
 
@@ -50,14 +138,14 @@ public class ModRuntime {
             SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + staff.getName() + ".json"),
                     json -> Client.generateDefaultModel(json, staff.getEntry().getID()));
 
-        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), ModRuntime.Client::generateTranslations);
+        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), Client::generateTranslations);
 
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("enchdesc", "lang/en_us.json"),
-                ModRuntime.Client::changeEnchantmentDescriptions,
+                Client::changeEnchantmentDescriptions,
                 () -> FabricLoader.getInstance().isModLoaded("enchdesc"));
 
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("quark", "attribute_tooltips.json"),
-                ModRuntime.Client::changeQuarkAttributeDisplay,
+                Client::changeQuarkAttributeDisplay,
                 () -> FabricLoader.getInstance().isModLoaded("quark"));
     }
 
@@ -83,6 +171,18 @@ public class ModRuntime {
             if (!json.has("enchantments") || !json.get("enchantments").isJsonArray()) return json;
 
             json.getAsJsonArray("enchantments").add(addedEnchant);
+            return json;
+        }
+
+        public static JsonObject changeEffects(JsonObject json, JsonObject effects) {
+            JsonObject e = GsonHelper.getAsJsonObject(json, "effects", new JsonObject());
+            for (String key : effects.keySet()) {
+                if (e.has(key) && e.get(key).isJsonArray()) {
+                    effects.getAsJsonArray(key).forEach(e.getAsJsonArray(key)::add);
+                } else e.add(key, effects.get(key));
+            }
+
+            json.add("effects", e);
             return json;
         }
     }

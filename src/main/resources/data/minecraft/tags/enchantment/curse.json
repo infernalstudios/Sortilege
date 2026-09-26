@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "sortilege:ignorance_curse",
+      "required": false
+    },
+    {
+      "id": "sortilege:storytelling_curse",
+      "required": false
+    }
+  ]
+}

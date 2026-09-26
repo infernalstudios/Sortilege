@@ -18,16 +18,14 @@ public class BetterBrewingRegistry {
 
 
     public static boolean isIngredient(ItemStack stack) {
-        for (BrewingRecipe recipe : RECIPES) {
+        for (BrewingRecipe recipe : RECIPES)
             if (recipe.isIngredient(stack)) return true;
-        }
         return false;
     }
 
     public static boolean isInput(ItemStack stack) {
-        for (BrewingRecipe recipe : RECIPES) {
+        for (BrewingRecipe recipe : RECIPES)
             if (recipe.isInput(stack)) return true;
-        }
         return false;
     }
 
@@ -36,9 +34,8 @@ public class BetterBrewingRegistry {
     }
 
     public static BrewingRecipe findRecipe(ItemStack input, ItemStack ingredient) {
-        for (BrewingRecipe recipe : RECIPES) {
+        for (BrewingRecipe recipe : RECIPES)
             if (recipe.isIngredient(ingredient) && recipe.isInput(input)) return recipe;
-        }
         return null;
     }
 }

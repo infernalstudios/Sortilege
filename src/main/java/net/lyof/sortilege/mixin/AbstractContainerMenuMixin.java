@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.util.EnchantHelper;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
@@ -18,8 +19,8 @@ public abstract class AbstractContainerMenuMixin {
 
     @WrapOperation(method = "moveItemStackTo", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;mayPlace(Lnet/minecraft/world/item/ItemStack;)Z"))
     private boolean preventStorytoldMove(Slot instance, ItemStack stack, Operation<Boolean> original) {
-        /*if (!(instance.container instanceof Inventory) && EnchantHelper.hasEnchant(ModEnchants.STORYTELLING_CURSE, stack))
-            return false;*/
+        if (!(instance.container instanceof Inventory) && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, stack))
+            return false;
         return original.call(instance, stack);
     }
 

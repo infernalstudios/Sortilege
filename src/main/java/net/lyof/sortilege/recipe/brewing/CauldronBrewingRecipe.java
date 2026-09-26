@@ -60,7 +60,9 @@ public class CauldronBrewingRecipe implements Recipe<RecipeInput> {
                 .apply(instance, CauldronBrewingRecipe::new)
         );
         private static final StreamCodec<RegistryFriendlyByteBuf, CauldronBrewingRecipe> streamCodec =
-                StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
+                StreamCodec.composite(Ingredient.CONTENTS_STREAM_CODEC, recipe -> recipe.input,
+                        Potion.STREAM_CODEC, recipe -> recipe.output,
+                        CauldronBrewingRecipe::new);
 
 
         @Override
@@ -71,17 +73,6 @@ public class CauldronBrewingRecipe implements Recipe<RecipeInput> {
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, CauldronBrewingRecipe> streamCodec() {
             return streamCodec;
-        }
-
-        public static void toNetwork(RegistryFriendlyByteBuf buf, CauldronBrewingRecipe recipe) {
-            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.input);
-            Potion.STREAM_CODEC.encode(buf, recipe.output);
-        }
-
-        public static CauldronBrewingRecipe fromNetwork(RegistryFriendlyByteBuf buf) {
-            Ingredient input = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
-            Holder<Potion> output = Potion.STREAM_CODEC.decode(buf);
-            return new CauldronBrewingRecipe(input, output);
         }
     }
 }

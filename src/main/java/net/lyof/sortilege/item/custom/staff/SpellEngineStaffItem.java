@@ -3,11 +3,13 @@ package net.lyof.sortilege.item.custom.staff;
 import com.cleannrooster.rpgmana.Rpgmana;
 import com.cleannrooster.rpgmana.api.ManaInstance;
 import com.cleannrooster.rpgmana.api.ManaInterface;
+import com.cleannrooster.rpgmana.internals.ManaCosts;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
@@ -15,11 +17,13 @@ import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
@@ -27,11 +31,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.spell_engine.SpellEngineMod;
 import net.spell_power.api.SpellPower;
 import net.spell_power.api.SpellSchool;
 import net.spell_power.api.SpellSchools;
@@ -131,6 +139,9 @@ public class SpellEngineStaffItem extends AStaffItem {
     }
 
 
+    public static final ResourceLocation SPELL_INFINITY = Identifier.of("spell_engine", "spell_infinity");
+    public static final ResourceLocation SCHOOL_ATTRIBUTE = Sortilege.MOD.makeID("staff.spell_engine_school");
+
     protected final Cost cost;
     protected final Effects effects;
 
@@ -154,11 +165,11 @@ public class SpellEngineStaffItem extends AStaffItem {
             } catch (Throwable ignored) {}
         }
 
-/*
-        player.getAttributes().addTransientAttributeModifiers(ImmutableMultimap.of(
-                effects.getSchool().attribute, new AttributeModifier(((CustomEntityAttribute) effects.getSchool().attribute).nameUUID,
-                "School modifier", 1, AttributeModifier.Operation.ADDITION))
-        );*/
+        if (effects.getSchool().ownsAttribute())
+            player.getAttributes().addTransientAttributeModifiers(ImmutableMultimap.of(
+                    effects.getSchool().getAttributeEntry(),
+                    new AttributeModifier(SCHOOL_ATTRIBUTE, 1, AttributeModifier.Operation.ADD_VALUE)
+            ));
         SpellPower.Result spellPower = SpellPower.getSpellPower(effects.getSchool(), player);
         float s = (float) spellPower.randomValue(SpellPower.getVulnerability(target, effects.getSchool()));
 
@@ -168,15 +179,12 @@ public class SpellEngineStaffItem extends AStaffItem {
     @Override
     public int getCost(ItemStack stack, Player player, int original) {
         int o = super.getCost(stack, player, original);
-/*
+
         if (cost.isManaEnabled()) {
             try {
-                double m = 1 + Rpgmana.config.inspiration * 0.01 * SpellPowerEnchanting.getEnchantmentLevel(Rpgmana.ARCHMAGE, player, null)
-                        - Rpgmana.config.manastabilized * 0.01 * SpellPowerEnchanting.getEnchantmentLevel(Rpgmana.MANASTABILIZED, player, null)
-                        + player.getAttributeValue(Rpgmana.MANACOST) * 0.001;
-                return (int) (m * o);
+                return (int) (o * player.getAttributeValue(Rpgmana.MANA_ATTRIBUTE) * 0.01);
             } catch (Throwable ignored) {}
-        }*/
+        }
 
         return o;
     }
@@ -187,21 +195,38 @@ public class SpellEngineStaffItem extends AStaffItem {
         return (int) (super.getCooldown(stack, player) / multiplier);
     }
 
-    public boolean hasItem(ItemStack stack, Player player) {/*
+    public boolean hasItem(ItemStack stack, Player player) {
+        /*Registry<Enchantment> registry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+
         if (cost.getRune().test(Items.ARROW.getDefaultInstance())) {
-            if (EnchantHelper.hasEnchant(Enchantments.INFINITY_ARROWS, stack))
+            if (EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(Enchantments.INFINITY).get(), stack) > 0)
                 return true;
         }
-        else if (EnchantHelper.hasEnchant(Enchantments_SpellEngine.INFINITY, stack))
-            return true;
-*/
-        return player.getInventory().hasAnyMatching(cost.getRune());
+        else if (EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(SPELL_INFINITY).get(), stack) > 0)
+            return true;*/
+
+        for (ItemStack ammo : this.cost.getRune().getItems()) {
+            int c = player.level() instanceof ServerLevel server
+                    ? EnchantmentHelper.processAmmoUse(server, stack, ammo, this.getCost(stack, player, 1))
+                    : this.getCost(stack, player, 1);
+
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                ItemStack s = player.getInventory().getItem(i);
+                if (s.is(ammo.getItem()) && s != stack) {
+                    int k = Math.min(c, s.getCount());
+                    s.shrink(k);
+                    c -= k;
+                }
+                if (c <= 0) return true;
+            }
+        }
+        return false;
     }
 
     public boolean hasMana(ItemStack stack, Player player) {
         if (cost.isManaEnabled()) {
             try {
-                return player instanceof ManaInterface mana && mana.getMana() > 0.1;
+                return ManaCosts.canAfford(player, this.getCost(stack, player, cost.getMana()));
             } catch (Throwable ignored) {}
         }
         return false;
@@ -213,30 +238,40 @@ public class SpellEngineStaffItem extends AStaffItem {
     }
 
     @Override
-    public void consumeResource(ItemStack stack, Player player) {/*
-        if (cost.getRune().test(Items.ARROW.getDefaultInstance())) {
-            if (EnchantHelper.hasEnchant(Enchantments.INFINITY_ARROWS, stack))
-                return;
-        }
-        else if (EnchantHelper.hasEnchant(Enchantments_SpellEngine.INFINITY, stack))
-            return;
+    public void consumeResource(ItemStack stack, Player player) {
+        int count = -1;
+        ItemStack ammo = ItemStack.EMPTY;
+        for (ItemStack a : this.cost.getRune().getItems()) {
+            int c = player.level() instanceof ServerLevel server
+                    ? EnchantmentHelper.processAmmoUse(server, stack, a, this.getCost(stack, player, 1))
+                    : this.getCost(stack, player, 1);
+            int total = c;
+            if (count >= 0 && total > count) continue;
 
-        float wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack) * 0.25f;
-        RandomSource random = MathHelper.getRandom(player.level());
-        if (random.nextFloat() < wisdom) return;
-*/
-        int c = 1;
-        /*if (EnchantHelper.hasEnchant(ModEnchants.IGNORANCE_CURSE, stack) && random.nextFloat() < 0.25)
-            c *= 2;*/
-
-        for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-            ItemStack s = player.getInventory().getItem(i);
-            if (this.cost.getRune().test(s) && s != stack) {
-                int k = Math.min(c, s.getCount());
-                s.shrink(k);
-                c -= k;
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                ItemStack s = player.getInventory().getItem(i);
+                if (s.is(a.getItem()) && s != stack) {
+                    int k = Math.min(c, s.getCount());
+                    s.shrink(k);
+                    c -= k;
+                }
+                if (c <= 0) {
+                    count = total;
+                    ammo = a;
+                };
             }
-            if (c <= 0) return;
+        }
+
+        if (!ammo.isEmpty()) {
+            for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+                ItemStack s = player.getInventory().getItem(i);
+                if (s.is(ammo.getItem()) && s != stack) {
+                    int k = Math.min(count, s.getCount());
+                    s.shrink(k);
+                    count -= k;
+                }
+                if (count <= 0) return;
+            }
         }
 
         if (cost.isManaEnabled()) {

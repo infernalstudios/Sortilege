@@ -5,23 +5,33 @@ import com.Polarice3.Goety.api.items.magic.ITotem;
 import com.Polarice3.Goety.api.magic.ISpell;
 import com.Polarice3.Goety.api.magic.SpellType;
 import com.Polarice3.Goety.common.events.spell.GoetyEventFactory;
+import com.Polarice3.Goety.config.ItemConfig;
 import com.Polarice3.Goety.utils.SEHelper;
 import com.Polarice3.Goety.utils.TotemFinder;
 import com.google.gson.JsonObject;
 import net.lcc.sollib.platform.Dependency;
+import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.entry.ValueCost;
+import net.lyof.sortilege.util.EnchantHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -70,6 +80,12 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
         }
     }
 
+    protected static final ResourceLocation BRAZIER = Sortilege.MOD.makeID("brazier");
+    protected static final ResourceLocation BLIZZARD = Sortilege.MOD.makeID("blizzard");
+    protected static final ResourceLocation BLAST = Sortilege.MOD.makeID("blast");
+    protected static final ResourceLocation BLITZ = Sortilege.MOD.makeID("blitz");
+    protected static final ResourceLocation BLESSING = Sortilege.MOD.makeID("blessing");
+
     protected final ValueCost cost;
     protected final Effects effects;
 
@@ -91,22 +107,30 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
             public int defaultSpellCooldown() { return 0; }
 
             @Override
-            public SpellType getSpellType() { return GoetyStaffItem.this.getSpellType(stack); }
+            public SpellType getSpellType() { return GoetyStaffItem.this.getSpellType(stack, player); }
 
             @Override
             public List<ResourceKey<Enchantment>> acceptedEnchantments() { return List.of(); }
         };
     }
 
-    public SpellType getSpellType(ItemStack stack) {
+    public SpellType getSpellType(ItemStack stack, Player player) {
         SpellType base = effects.getSpellType();
         if (base != SpellType.NONE) return base;
-/*
-        if (EnchantHelper.hasEnchant(ModEnchants.BRAZIER, stack)) return SpellType.NETHER;
-        if (EnchantHelper.hasEnchant(ModEnchants.BLIZZARD, stack)) return SpellType.FROST;
-        if (EnchantHelper.hasEnchant(ModEnchants.BLAST, stack)) return SpellType.GEOMANCY;
-        if (EnchantHelper.hasEnchant(ModEnchants.BLITZ, stack)) return SpellType.STORM;
-        if (EnchantHelper.hasEnchant(ModEnchants.BLESSING, stack)) return SpellType.NECROMANCY;*/
+
+        Registry<Enchantment> registry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
+
+        if (registry.getHolder(BRAZIER).isPresent() && EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(BRAZIER).get(), stack) > 0)
+            return SpellType.NETHER;
+        if (registry.getHolder(BLIZZARD).isPresent() && EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(BLIZZARD).get(), stack) > 0)
+            return SpellType.FROST;
+        if (registry.getHolder(BLAST).isPresent() && EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(BLAST).get(), stack) > 0)
+            return SpellType.GEOMANCY;
+        if (registry.getHolder(BLITZ).isPresent() && EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(BLITZ).get(), stack) > 0)
+            return SpellType.STORM;
+        if (registry.getHolder(BLESSING).isPresent() && EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(BLESSING).get(), stack) > 0)
+            return SpellType.NECROMANCY;
+
         return base;
     }
 
@@ -138,17 +162,17 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
                 ITotem.decreaseSouls(foundStack, cost);
         }
     }
-/*
+
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         if (effects.persists() && this.isBroken(stack))
             tooltip.add(Component.translatable("info.goety.armor.broken").withStyle(ChatFormatting.DARK_RED));
-        else super.appendHoverText(stack, world, tooltip, flag);
-    }*/
+        else super.appendHoverText(stack, context, tooltip, flag);
+    }
 
     @Override
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
-        tooltip.add(Component.translatable("info.goety.focus.spellType", this.getSpellType(stack).getName()));
+        tooltip.add(Component.translatable("info.goety.focus.spellType", this.getSpellType(stack, player).getName()));
 
         super.appendTooltipAbilities(stack, player, tooltip);
     }
@@ -172,6 +196,11 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
     }
 
     @Override
+    public boolean canMelee(ItemStack stack) {
+        return !isBroken(stack) && super.canMelee(stack);
+    }
+
+    @Override
     public int getBarColor(ItemStack stack) {
         if (this.isBroken(stack))
             return 0x800000;
@@ -184,11 +213,6 @@ public class GoetyStaffItem extends AStaffItem implements IPersist {
             return 13;
         return super.getBarWidth(stack);
     }
-
-/*    @Override
-    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        return this.isBroken(stack) ? ImmutableMultimap.of() : super.getAttributeModifiers(stack, slot);
-    }*/
 
     @Override
     public boolean shouldDisplayAttributes(ItemStack stack, Player player) {

@@ -5,7 +5,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
@@ -15,7 +14,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
@@ -24,11 +22,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.*;
-import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,20 +62,14 @@ public class EnchantHelper {
     }
 
 
-    @FunctionalInterface
-    public interface LootContextBuilder {
+    @FunctionalInterface public interface LootContextBuilder {
         LootParams build(LootParams.Builder params, int level, ItemStack stack);
     }
-
-    @FunctionalInterface
-    public interface EnchantConsumer<T> {
-        void run(T effect, int level, ItemStack stack, ServerLevel server);
+    @FunctionalInterface public interface EnchantConsumer<T> {
+        void run(T effect, int level, ItemStack stack);
     }
 
-    public static <T> void iterateEffects(DataComponentType<List<T>> type, LivingEntity entity,
-                                          LootContextBuilder contextBuilder, EnchantConsumer<T> enchantConsumer) {
-        if (!(entity.level() instanceof ServerLevel server)) return;
-
+    public static <T> void iterateEffects(DataComponentType<List<T>> type, LivingEntity entity, EnchantConsumer<T> enchantConsumer) {
         ItemStack stack;
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             stack = entity.getItemBySlot(slot);
@@ -93,15 +82,21 @@ public class EnchantHelper {
                 if (!enchant.getKey().value().matchingSlot(slot))
                     continue;
 
-                LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server),
-                        enchant.getIntValue(), stack)).create(Optional.empty());
-
                 for (T effect : enchant.getKey().value().getEffects(type)) {
-                    if (!(effect instanceof ConditionalEffect<?> conditional) || conditional.matches(context))
-                        enchantConsumer.run(effect, enchant.getIntValue(), stack, server);
+                    enchantConsumer.run(effect, enchant.getIntValue(), stack);
                 }
             }
         }
+    }
+
+    public static <T> void iterateConditionalEffects(DataComponentType<List<ConditionalEffect<T>>> type, LivingEntity entity,
+                                                     LootContextBuilder contextBuilder, EnchantConsumer<T> enchantConsumer) {
+        if (!(entity.level() instanceof ServerLevel server)) return;
+        iterateEffects(type, entity, (effect, level, stack) -> {
+            LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server), level, stack))
+                    .create(Optional.empty());
+            if (effect.matches(context)) enchantConsumer.run(effect.effect(), level, stack);
+        });
     }
 
     public static <T> Pair<T, Integer> getEffect(DataComponentType<T> type, ItemStack stack) {

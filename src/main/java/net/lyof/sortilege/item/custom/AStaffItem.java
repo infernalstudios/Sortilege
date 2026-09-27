@@ -3,10 +3,8 @@ package net.lyof.sortilege.item.custom;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalEntityTypeTags;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
@@ -36,7 +34,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -48,16 +45,8 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.minecraft.world.item.enchantment.ConditionalEffect;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.TargetedConditionalEffect;
-import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
-import net.minecraft.world.item.enchantment.effects.EnchantmentValueEffect;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.loot.LootContext;
-import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -330,7 +319,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
     public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, DamageSource source) {
         MutableFloat mutable = new MutableFloat(damage);
-        EnchantHelper.iterateEffects(ModEnchants.STAFF_DAMAGE, player,
+        EnchantHelper.iterateConditionalEffects(ModEnchants.STAFF_DAMAGE, player,
                 (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
@@ -339,7 +328,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(ModLootContexts.STAFF_DAMAGE),
-                (effect, level, s, server) -> mutable.setValue(effect.effect().process(level, player.getRandom(), mutable.floatValue())));
+                (effect, level, s) -> mutable.setValue(effect.process(level, player.getRandom(), mutable.floatValue())));
         damage = mutable.floatValue();
 
         // Undergarden compat
@@ -433,13 +422,13 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
-        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_SHOOT, player,
+        EnchantHelper.iterateConditionalEffects(ModEnchants.ON_STAFF_SHOOT, player,
                 (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, player)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, player.position())
                         .withParameter(LootContextParams.TOOL, stack)
                         .create(ModLootContexts.STAFF_SHOOT),
-                (effect, level, s, server) -> effect.effect().apply(server, level,
+                (effect, level, s) -> effect.apply((ServerLevel) player.level(), level,
                         new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
                         player, player.position()));
 
@@ -496,11 +485,12 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public boolean canHit(ItemStack stack, LivingEntity player, LivingEntity target) {
-        return !(target instanceof OwnableEntity tameable && tameable.getOwner() == player) && !target.getPassengers().contains(player);
+        return !(target instanceof OwnableEntity tameable && tameable.getOwner() == player)
+                && !target.getPassengers().contains(player);
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
-        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT, player,
+        EnchantHelper.iterateConditionalEffects(ModEnchants.ON_STAFF_HIT, player,
                 (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
@@ -509,7 +499,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(ModLootContexts.STAFF_DAMAGE),
-                (effect, level, s, server) -> effect.effect().apply(server, level,
+                (effect, level, s) -> effect.apply((ServerLevel) player.level(), level,
                         new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
                         target, target.position()));
 

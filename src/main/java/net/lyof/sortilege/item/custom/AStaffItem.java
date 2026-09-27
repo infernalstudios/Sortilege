@@ -320,7 +320,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, DamageSource source) {
         MutableFloat mutable = new MutableFloat(damage);
         EnchantHelper.iterateEffects(ModEnchants.STAFF_DAMAGE, player,
-                (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
+                (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
                         .withParameter(LootContextParams.TOOL, stack)
@@ -328,7 +328,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(ModLootContexts.STAFF_DAMAGE),
-                (effect, level, s, server) -> mutable.setValue(effect.process(level, player.getRandom(), mutable.floatValue())));
+                (effect, level, server) -> mutable.setValue(effect.process(level, player.getRandom(), mutable.floatValue())));
         damage = mutable.floatValue();
 
         // Undergarden compat
@@ -423,12 +423,12 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
     public void onShoot(ItemStack stack, Player player) {
         EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_SHOOT, player,
-                (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, player)
+                (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, player)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, player.position())
                         .withParameter(LootContextParams.TOOL, stack)
                         .create(ModLootContexts.STAFF_SHOOT),
-                (effect, level, s, server) -> effect.apply(server, level,
+                (effect, level, server) -> effect.apply(server, level,
                         new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
                         player, player.position()));
 
@@ -490,8 +490,8 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
-        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT, player,
-                (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT, player, target,
+                (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
                         .withParameter(LootContextParams.TOOL, stack)
@@ -499,9 +499,9 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(ModLootContexts.STAFF_DAMAGE),
-                (effect, level, s, server) -> effect.apply(server, level,
+                (effect, level, t, server) -> effect.apply(server, level,
                         new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
-                        target, target.position()));
+                        t, t.position()));
 
         this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
         this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());

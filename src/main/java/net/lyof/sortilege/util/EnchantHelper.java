@@ -63,10 +63,13 @@ public class EnchantHelper {
 
 
     @FunctionalInterface public interface LootContextBuilder {
-        LootParams build(LootParams.Builder params, int level, ItemStack stack);
+        LootParams build(LootParams.Builder params, int level);
     }
     @FunctionalInterface public interface EnchantConsumer<T> {
-        void run(T effect, int level, ItemStack stack, ServerLevel server);
+        void run(T effect, int level, ServerLevel server);
+    }
+    @FunctionalInterface public interface TargetedEnchantConsumer<T> {
+        void run(T effect, int level, LivingEntity target, ServerLevel server);
     }
 
     public static <T> void iterateEffects(DataComponentType<List<ConditionalEffect<T>>> type, LivingEntity entity,
@@ -86,11 +89,41 @@ public class EnchantHelper {
                     continue;
 
                 LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server),
-                        enchant.getIntValue(), stack)).create(Optional.empty());
+                        enchant.getIntValue())).create(Optional.empty());
 
                 for (ConditionalEffect<T> effect : enchant.getKey().value().getEffects(type)) {
                     if (effect.matches(context))
-                        enchantConsumer.run(effect.effect(), enchant.getIntValue(), stack, server);
+                        enchantConsumer.run(effect.effect(), enchant.getIntValue(), server);
+                }
+            }
+        }
+    }
+
+    public static <T> void iterateEffects(DataComponentType<List<TargetedConditionalEffect<T>>> type,
+                                          LivingEntity user, LivingEntity target,
+                                          LootContextBuilder contextBuilder, TargetedEnchantConsumer<T> enchantConsumer) {
+        if (!(user.level() instanceof ServerLevel server)) return;
+
+        ItemStack stack;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            stack = user.getItemBySlot(slot);
+            if (stack.isEmpty())
+                continue;
+
+            for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
+                if (!enchant.getKey().value().isSupportedItem(stack))
+                    continue;
+                if (!enchant.getKey().value().matchingSlot(slot))
+                    continue;
+
+                LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server),
+                        enchant.getIntValue())).create(Optional.empty());
+
+                for (TargetedConditionalEffect<T> effect : enchant.getKey().value().getEffects(type)) {
+                    if (effect.matches(context))
+                        enchantConsumer.run(effect.effect(), enchant.getIntValue(),
+                                effect.affected() == EnchantmentTarget.VICTIM ? target : user,
+                                server);
                 }
             }
         }

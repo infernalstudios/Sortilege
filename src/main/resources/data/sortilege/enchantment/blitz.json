@@ -27,7 +27,9 @@
           "min_duration": 2,
           "max_duration": 2,
           "to_apply": "minecraft:weakness"
-        }
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
       },
       {
         "effect": {
@@ -45,7 +47,9 @@
           "min_duration": 2,
           "max_duration": 2,
           "to_apply": "minecraft:slowness"
-        }
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
       },
       {
         "effect": {
@@ -53,7 +57,9 @@
           "vector": {
             "y": -1
           }
-        }
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
       }
     ],
     "sortilege:staff_colors": {

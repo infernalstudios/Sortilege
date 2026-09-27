@@ -164,12 +164,12 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
         List<Float> values = new ArrayList<>();
         EnchantHelper.iterateEffects(ModEnchants.DODGE_CHANCE, self,
-                (params, level, stack) -> params.withParameter(LootContextParams.THIS_ENTITY, self)
+                (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, self)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, self.position())
                         .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                         .create(LootContextParamSets.ENCHANTED_DAMAGE),
-                (effect, level, stack, server) -> values.add(effect.process(level, self.getRandom(), 0)));
+                (effect, level, server) -> values.add(effect.process(level, self.getRandom(), 0)));
         if (self.getRandom().nextFloat() <= (values.isEmpty() ? 0 : Collections.max(values)))
             cir.setReturnValue(false);
     }

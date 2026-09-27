@@ -19,7 +19,9 @@
             "base": 4,
             "per_level_above_first": 4
           }
-        }
+        },
+        "affected": "victim",
+        "enchanted": "attacker"
       }
     ],
     "sortilege:staff_colors": {

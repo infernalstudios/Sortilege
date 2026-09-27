@@ -4,10 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.attribute.ModAttributes;
 import net.lyof.sortilege.enchant.ModEnchants;
-import net.lyof.sortilege.enchant.custom.DodgeChanceEnchant;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.item.potion.PotionCooldownManager;
@@ -33,6 +31,8 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,9 +44,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements PotionShenanigans, BountyHolder {
@@ -164,7 +162,15 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
                 EnchantHelper.hasEffect(ModEnchants.TRUE_FIRE_PROTECTION, self.getItemBySlot(slot), (effect, level) -> effect <= level)))
             cir.setReturnValue(false);
 
-        if (self.getRandom().nextFloat() <= DodgeChanceEnchant.get(self, source))
+        List<Float> values = new ArrayList<>();
+        EnchantHelper.iterateEffects(ModEnchants.DODGE_CHANCE, self,
+                (params, level, stack) -> params.withParameter(LootContextParams.THIS_ENTITY, self)
+                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
+                        .withParameter(LootContextParams.ORIGIN, self.position())
+                        .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                        .create(LootContextParamSets.ENCHANTED_DAMAGE),
+                (effect, level, stack, server) -> values.add(effect.effect().process(level, self.getRandom(), 0)));
+        if (self.getRandom().nextFloat() <= (values.isEmpty() ? 0 : Collections.max(values)))
             cir.setReturnValue(false);
     }
 

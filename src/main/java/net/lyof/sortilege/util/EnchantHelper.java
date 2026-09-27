@@ -16,18 +16,23 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.*;
+import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.*;
 
 public class EnchantHelper {
     private static Supplier<Registry<Enchantment>> REGISTRY;
@@ -57,27 +62,46 @@ public class EnchantHelper {
         enchantCaching.start();
     }
 
-
-    public static Iterable<Holder<Item>> getCompatibleStacks(Holder<Enchantment> enchant) {
-        return enchant.value().getSupportedItems();
-    }
-
     public static int getEnchantCount() {
         return ENCHANT_COUNT;
     }
 
 
-    public static int getEnchantLevel(ResourceKey<Enchantment> enchant, ItemStack stack) {
-        if (enchant == null) return 0;
-        for (Object2IntMap.Entry<Holder<Enchantment>> entry : stack.getEnchantments().entrySet())
-            if (enchant.equals(entry.getKey().unwrapKey().orElse(null)))
-                return entry.getIntValue();
-        return 0;
+    @FunctionalInterface
+    public interface LootContextBuilder {
+        LootParams build(LootParams.Builder params, int level, ItemStack stack);
     }
 
-    public static int getEnchantLevel(Holder<Enchantment> enchant, ItemStack stack) {
-        if (enchant == null) return 0;
-        return EnchantmentHelper.getItemEnchantmentLevel(enchant, stack);
+    @FunctionalInterface
+    public interface EnchantConsumer<T> {
+        void run(T effect, int level, ItemStack stack, ServerLevel server);
+    }
+
+    public static <T> void iterateEffects(DataComponentType<List<T>> type, LivingEntity entity,
+                                          LootContextBuilder contextBuilder, EnchantConsumer<T> enchantConsumer) {
+        if (!(entity.level() instanceof ServerLevel server)) return;
+
+        ItemStack stack;
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            stack = entity.getItemBySlot(slot);
+            if (stack.isEmpty())
+                continue;
+
+            for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
+                if (!enchant.getKey().value().isSupportedItem(stack))
+                    continue;
+                if (!enchant.getKey().value().matchingSlot(slot))
+                    continue;
+
+                LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server),
+                        enchant.getIntValue(), stack)).create(Optional.empty());
+
+                for (T effect : enchant.getKey().value().getEffects(type)) {
+                    if (!(effect instanceof ConditionalEffect<?> conditional) || conditional.matches(context))
+                        enchantConsumer.run(effect, enchant.getIntValue(), stack, server);
+                }
+            }
+        }
     }
 
     public static <T> Pair<T, Integer> getEffect(DataComponentType<T> type, ItemStack stack) {

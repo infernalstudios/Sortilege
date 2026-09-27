@@ -61,6 +61,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.mutable.MutableFloat;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -157,7 +158,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
     //#region Overcharge
     public int getOvercharge(ItemStack stack) {
-        return stack.get(ModDataComponents.OVERCHARGE);
+        return stack.getOrDefault(ModDataComponents.OVERCHARGE, 0);
     }
 
     public void setOvercharge(ItemStack stack, int value) {
@@ -328,34 +329,18 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, DamageSource source) {
-        if (player.level() instanceof ServerLevel server) {
-            ItemStack s;
-            for (EquipmentSlot slot : EquipmentSlot.values()) {
-                s = player.getItemBySlot(slot);
-                if (s.isEmpty())
-                    continue;
-
-                for (Object2IntMap.Entry<Holder<Enchantment>> enchant : s.getEnchantments().entrySet()) {
-                    if (!enchant.getKey().value().isSupportedItem(s))
-                        continue;
-                    if (!enchant.getKey().value().matchingSlot(slot))
-                        continue;
-
-                    LootContext context = new LootContext.Builder(new LootParams.Builder(server)
-                            .withParameter(LootContextParams.ATTACKING_ENTITY, player)
-                            .withParameter(LootContextParams.THIS_ENTITY, target)
-                            .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
-                            .withParameter(LootContextParams.ORIGIN, player.position())
-                            .withParameter(LootContextParams.DAMAGE_SOURCE, source)
-                            .create(LootContextParamSets.ENCHANTED_DAMAGE)).create(Optional.empty());
-
-                    for (ConditionalEffect<EnchantmentValueEffect> effect : enchant.getKey().value().getEffects(ModEnchants.STAFF_DAMAGE)) {
-                        if (effect.matches(context))
-                            damage = effect.effect().process(enchant.getIntValue(), player.getRandom(), damage);
-                    }
-                }
-            }
-        }
+        MutableFloat mutable = new MutableFloat(damage);
+        EnchantHelper.iterateEffects(ModEnchants.STAFF_DAMAGE, player,
+                (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
+                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
+                        .withParameter(LootContextParams.ORIGIN, target.position())
+                        .withParameter(LootContextParams.TOOL, stack)
+                        .withParameter(LootContextParams.DAMAGE_SOURCE, source)
+                        .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
+                        .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
+                        .create(ModLootContexts.STAFF_DAMAGE),
+                (effect, level, s, server) -> mutable.setValue(effect.effect().process(level, player.getRandom(), mutable.floatValue())));
+        damage = mutable.floatValue();
 
         // Undergarden compat
         if (target.getType().is(ModTags.Entities.UNDERGARDEN_ENTITIES) && stack.is(ModTags.Items.FORGOTTEN_ITEMS))
@@ -448,25 +433,17 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
-        if (player.level() instanceof ServerLevel serverWorld) {
-            for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
-                LootContext context = new LootContext.Builder(new LootParams.Builder(serverWorld)
-                        .withParameter(LootContextParams.THIS_ENTITY, player)
-                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_SHOOT, player,
+                (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, player)
+                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, player.position())
                         .withParameter(LootContextParams.TOOL, stack)
-                        .create(ModLootContexts.STAFF_SHOOT)).create(Optional.empty());
+                        .create(ModLootContexts.STAFF_SHOOT),
+                (effect, level, s, server) -> effect.effect().apply(server, level,
+                        new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
+                        player, player.position()));
 
-                for (ConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_SHOOT)) {
-                    if (effect.matches(context))
-                        effect.effect().apply(serverWorld, enchant.getIntValue(),
-                                new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
-                                player, player.position());
-                }
-            }
-
-            this.runCommand(stack, player, this.getEntry().getEffects().onShoot());
-        }
+        this.runCommand(stack, player, this.getEntry().getEffects().onShoot());
     }
 
     public void shoot(ItemStack stack, Player player, Vec3 direction, List<LivingEntity> targetsHit) {
@@ -523,29 +500,21 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
-        if (player.level() instanceof ServerLevel serverWorld) {
-            for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
-                LootContext context = new LootContext.Builder(new LootParams.Builder(serverWorld)
-                        .withParameter(LootContextParams.THIS_ENTITY, target)
-                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, enchant.getIntValue())
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT, player,
+                (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
+                        .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
                         .withParameter(LootContextParams.TOOL, stack)
                         .withParameter(LootContextParams.DAMAGE_SOURCE, source)
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
-                        .create(ModLootContexts.STAFF_DAMAGE)).create(Optional.empty());
+                        .create(ModLootContexts.STAFF_DAMAGE),
+                (effect, level, s, server) -> effect.effect().apply(server, level,
+                        new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
+                        target, target.position()));
 
-                for (TargetedConditionalEffect<EnchantmentEntityEffect> effect : enchant.getKey().value().getEffects(ModEnchants.ON_STAFF_HIT)) {
-                    if (effect.matches(context))
-                        effect.effect().apply(serverWorld, enchant.getIntValue(),
-                                new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
-                                target, target.position());
-                }
-            }
-
-            this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
-            this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());
-        }
+        this.runCommand(stack, player, this.getEntry().getEffects().onHitSelf());
+        this.runCommand(stack, target, this.getEntry().getEffects().onHitTarget());
     }
 
     public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {}

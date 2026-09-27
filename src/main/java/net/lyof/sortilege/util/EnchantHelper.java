@@ -66,10 +66,13 @@ public class EnchantHelper {
         LootParams build(LootParams.Builder params, int level, ItemStack stack);
     }
     @FunctionalInterface public interface EnchantConsumer<T> {
-        void run(T effect, int level, ItemStack stack);
+        void run(T effect, int level, ItemStack stack, ServerLevel server);
     }
 
-    public static <T> void iterateEffects(DataComponentType<List<T>> type, LivingEntity entity, EnchantConsumer<T> enchantConsumer) {
+    public static <T> void iterateEffects(DataComponentType<List<ConditionalEffect<T>>> type, LivingEntity entity,
+                                          LootContextBuilder contextBuilder, EnchantConsumer<T> enchantConsumer) {
+        if (!(entity.level() instanceof ServerLevel server)) return;
+
         ItemStack stack;
         for (EquipmentSlot slot : EquipmentSlot.values()) {
             stack = entity.getItemBySlot(slot);
@@ -82,21 +85,15 @@ public class EnchantHelper {
                 if (!enchant.getKey().value().matchingSlot(slot))
                     continue;
 
-                for (T effect : enchant.getKey().value().getEffects(type)) {
-                    enchantConsumer.run(effect, enchant.getIntValue(), stack);
+                LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server),
+                        enchant.getIntValue(), stack)).create(Optional.empty());
+
+                for (ConditionalEffect<T> effect : enchant.getKey().value().getEffects(type)) {
+                    if (effect.matches(context))
+                        enchantConsumer.run(effect.effect(), enchant.getIntValue(), stack, server);
                 }
             }
         }
-    }
-
-    public static <T> void iterateConditionalEffects(DataComponentType<List<ConditionalEffect<T>>> type, LivingEntity entity,
-                                                     LootContextBuilder contextBuilder, EnchantConsumer<T> enchantConsumer) {
-        if (!(entity.level() instanceof ServerLevel server)) return;
-        iterateEffects(type, entity, (effect, level, stack) -> {
-            LootContext context = new LootContext.Builder(contextBuilder.build(new LootParams.Builder(server), level, stack))
-                    .create(Optional.empty());
-            if (effect.matches(context)) enchantConsumer.run(effect.effect(), level, stack);
-        });
     }
 
     public static <T> Pair<T, Integer> getEffect(DataComponentType<T> type, ItemStack stack) {

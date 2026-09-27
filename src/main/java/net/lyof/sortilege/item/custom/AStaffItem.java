@@ -319,7 +319,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
     public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, DamageSource source) {
         MutableFloat mutable = new MutableFloat(damage);
-        EnchantHelper.iterateConditionalEffects(ModEnchants.STAFF_DAMAGE, player,
+        EnchantHelper.iterateEffects(ModEnchants.STAFF_DAMAGE, player,
                 (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
@@ -328,7 +328,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(ModLootContexts.STAFF_DAMAGE),
-                (effect, level, s) -> mutable.setValue(effect.process(level, player.getRandom(), mutable.floatValue())));
+                (effect, level, s, server) -> mutable.setValue(effect.process(level, player.getRandom(), mutable.floatValue())));
         damage = mutable.floatValue();
 
         // Undergarden compat
@@ -422,13 +422,13 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
-        EnchantHelper.iterateConditionalEffects(ModEnchants.ON_STAFF_SHOOT, player,
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_SHOOT, player,
                 (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, player)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, player.position())
                         .withParameter(LootContextParams.TOOL, stack)
                         .create(ModLootContexts.STAFF_SHOOT),
-                (effect, level, s) -> effect.apply((ServerLevel) player.level(), level,
+                (effect, level, s, server) -> effect.apply(server, level,
                         new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
                         player, player.position()));
 
@@ -490,7 +490,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
-        EnchantHelper.iterateConditionalEffects(ModEnchants.ON_STAFF_HIT, player,
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT, player,
                 (params, level, s) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
@@ -499,7 +499,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
                         .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, player)
                         .withOptionalParameter(LootContextParams.DIRECT_ATTACKING_ENTITY, player)
                         .create(ModLootContexts.STAFF_DAMAGE),
-                (effect, level, s) -> effect.apply((ServerLevel) player.level(), level,
+                (effect, level, s, server) -> effect.apply(server, level,
                         new EnchantedItemInUse(stack, this.hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, player),
                         target, target.position()));
 

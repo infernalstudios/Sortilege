@@ -71,8 +71,8 @@ public class StaffTier implements Tier {
             this.range = GsonHelper.getAsInt(json, "range");
         if (json.has("charge_time"))
             this.chargeTime = GsonHelper.getAsInt(json, "charge_time");
-        if (json.has("cooldownMultiplier"))
-            this.cooldown = GsonHelper.getAsInt(json, "cooldownMultiplier");
+        if (json.has("cooldown"))
+            this.cooldown = GsonHelper.getAsInt(json, "cooldown");
 
         return this;
     }

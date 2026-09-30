@@ -2,7 +2,6 @@ package net.lyof.sortilege.item.custom.staff;
 
 import com.google.gson.JsonObject;
 import io.github.apace100.apoli.component.PowerHolderComponent;
-import io.github.apace100.apoli.power.type.PowerType;
 import io.github.apace100.apoli.power.type.VariableIntPowerType;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;

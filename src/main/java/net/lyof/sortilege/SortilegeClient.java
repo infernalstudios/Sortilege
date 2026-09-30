@@ -41,7 +41,7 @@ public class SortilegeClient implements ClientModInitializer {
         if (ModConfig.witchHatEnabled.get()) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);
 
         if (ModConfig.lapisShieldEnabled.get())
-            ItemProperties.register(ModItems.LAPIS_SHIELD, Sortilege.MOD.makeID("cooldownMultiplier"),
+            ItemProperties.register(ModItems.LAPIS_SHIELD, Sortilege.MOD.makeID("cooldown"),
                     (stack, world, entity, seed) -> LapisShieldItem.isOnCooldown(stack) ? 1f : 0f);
 
         registerPackets();

@@ -164,7 +164,7 @@ public class ModConfig {
                         .bind(witchHatBonus)
                 )
                 .comment()
-                .comment("Should enchanting in an enchanting table costMultiplier more xp than the default 1 2 3 levels")
+                .comment("Should enchanting in an enchanting table cost more xp than the default 1 2 3 levels")
                 .add("increased_enchants_cost", true)
                 .bind(doIncreasedEnchantCosts)
                 .comment("If the above is true, defines the new costs to replace 1 2 3")
@@ -174,7 +174,7 @@ public class ModConfig {
                 .addArray("needs", List.of(5, 10, 15))
                 .bind(increasedEnchantNeeds)
                 .comment()
-                .comment("Should Anvils never costMultiplier experience")
+                .comment("Should Anvils never cost experience")
                 .add("no_xp_anvil", true)
                 .bind(noXPAnvil)
                 .comment("Maximum experience level a player can have before it can't increase anymore. Set to -1 to disable the limit, and to 0 to disable experience")
@@ -266,7 +266,7 @@ public class ModConfig {
                         .comment("How many ticks should drinking a potion take. 20t = 1s")
                         .add("default_use_time", 20)
                         .bind(potionDrinkingTime)
-                        .comment("How many ticks of cooldownMultiplier potions get after being drunk or thrown")
+                        .comment("How many ticks of cooldown potions get after being drunk or thrown")
                         .add("default_cooldown", 200)
                         .bind(potionCooldown)
                         .comment("Value to multiply all potions effects length by.")
@@ -274,7 +274,7 @@ public class ModConfig {
                         .comment("  This has no effect on potions whose effects were overridden by datapack")
                         .add("duration_multiplier", 1.5)
                         .bind(potionDurationMultiplier)
-                        .comment("Should extra information like drinking time and cooldownMultiplier be shown in a potion's tooltip")
+                        .comment("Should extra information like drinking time and cooldown be shown in a potion's tooltip")
                         .add("show_tooltip", true)
                         .bind(potionTooltip)
                 )
@@ -305,7 +305,7 @@ public class ModConfig {
                         .add("durability", 152)
                         .bind(lapisShieldDurability)
                         .comment("How many ticks between each Lapis Shield dodge, in ticks (20t = 1s)")
-                        .add("cooldownMultiplier", 80)
+                        .add("cooldown", 80)
                         .bind(lapisShieldCooldown)
                 )
         );
@@ -441,15 +441,15 @@ public class ModConfig {
     public static void buildStaffs(IJsonBuilder builder) {
         builder.addObject("overcharge", overcharge -> overcharge
                 .comment("Default overcharge configs, unless custom behavior is set for a staff")
-                .comment("  by following the same structure in `costMultiplier.overcharge`")
+                .comment("  by following the same structure in `cost.overcharge`")
                 .comment()
                 .comment("Maximal overcharge a staff can hold at any given time")
                 .add("max", 20)
                 .comment("Color for the overcharge bar. Hexadecimal format")
                 .add("bar_color", "0x0000ff")
-                .comment("Should overcharged staffs ignore durability costMultiplier when firing")
+                .comment("Should overcharged staffs ignore durability cost when firing")
                 .add("ignore_durability", true)
-                .comment("Should overcharged staffs ignore resource costMultiplier when firing")
+                .comment("Should overcharged staffs ignore resource cost when firing")
                 .add("ignore_cost", true)
                 .comment("If true, staffs can't be fired unless they have overcharge")
                 .add("required", false)
@@ -487,10 +487,10 @@ public class ModConfig {
                                 .add("piercing", 2)
                                 .add("range", 12)
                                 .add("charge_time", 1)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                         )
                         .comment()
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .addObject("overcharge", overcharge -> {})
                                 .add("value", 3)
                         )
@@ -526,9 +526,9 @@ public class ModConfig {
                                 .add("piercing", 1)
                                 .add("range", 0)
                                 .add("charge_time", 20)
-                                .add("cooldownMultiplier", 60)
+                                .add("cooldown", 60)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .addObject("overcharge", overcharge -> overcharge
                                         .add("max", 8)
                                         .add("bar_color", "#ff9900")
@@ -560,9 +560,9 @@ public class ModConfig {
                                 .add("damage", 3)
                                 .add("piercing", 2)
                                 .add("range", 6)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 1)
                         )
                         .addArray("recipes", List.of("sortilege:staff/wooden_staff"))
@@ -576,9 +576,9 @@ public class ModConfig {
                                 .add("damage", 4)
                                 .add("piercing", 1)
                                 .add("range", 8)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 2)
                                 .add("mana", 300)
                                 .add("mana_per_durability", 60)
@@ -594,9 +594,9 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 1)
                                 .add("range", 10)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addArray("recipes", List.of("sortilege:staff/iron_staff"))
@@ -610,9 +610,9 @@ public class ModConfig {
                                 .add("damage", 2)
                                 .add("piercing", 2)
                                 .add("range", 14)
-                                .add("cooldownMultiplier", 15)
+                                .add("cooldown", 15)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 2)
                         )
                         .addArray("recipes", List.of("sortilege:staff/golden_staff"))
@@ -626,9 +626,9 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 2)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addArray("recipes", List.of("sortilege:staff/diamond_staff"))
@@ -642,10 +642,10 @@ public class ModConfig {
                                 .add("damage", 6)
                                 .add("piercing", 3)
                                 .add("range", 16)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("fireproof", true)
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 4)
                         )
                         .addArray("recipes", List.of("sortilege:staff/netherite_staff"))
@@ -662,11 +662,11 @@ public class ModConfig {
                                 .add("damage", 4)
                                 .add("piercing", 3)
                                 .add("range", 10)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                                 .add("durability", 612)
                                 .add("repair_material", "phantasm:crystal_shard")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addArray("recipes", List.of("sortilege:staff/crystalline_staff"))
@@ -683,10 +683,10 @@ public class ModConfig {
                                 .add("damage", 4)
                                 .add("piercing", 3)
                                 .add("range", 14)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("repair_material", "dungeonnowloading:spawner_blade")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
@@ -716,10 +716,10 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 3)
                                 .add("range", 14)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("repair_material", "miningmaster:divine_beryl")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
@@ -745,10 +745,10 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 3)
                                 .add("range", 14)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("repair_material", "miningmaster:heart_rhodonite")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
@@ -774,10 +774,10 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 3)
                                 .add("range", 14)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("repair_material", "miningmaster:spider_kunzite")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
@@ -803,10 +803,10 @@ public class ModConfig {
                                 .add("damage", 6)
                                 .add("piercing", 4)
                                 .add("range", 16)
-                                .add("cooldownMultiplier", 30)
+                                .add("cooldown", 30)
                                 .add("repair_material", "minecraft:diamond")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 4)
                         )
                         .addObject("effects", effects -> effects
@@ -845,10 +845,10 @@ public class ModConfig {
                                 .add("damage", 2)
                                 .add("piercing", 2)
                                 .add("range", 16)
-                                .add("cooldownMultiplier", 15)
+                                .add("cooldown", 15)
                                 .add("repair_material", "oreganized:electrum_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
@@ -873,10 +873,10 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 1)
                                 .add("range", 10)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                                 .add("repair_material", "botania:manasteel_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("mana", 120)
                                 .add("mana_per_durability", 60)
                         )
@@ -896,10 +896,10 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 2)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                                 .add("repair_material", "botania:elementium_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("mana", 120)
                                 .add("mana_per_durability", 60)
                         )
@@ -920,10 +920,10 @@ public class ModConfig {
                                 .add("damage", 7)
                                 .add("piercing", 3)
                                 .add("range", 18)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("repair_material", "botania:terrasteel_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("mana", 500)
                                 .add("mana_per_durability", 100)
                         )
@@ -951,19 +951,19 @@ public class ModConfig {
                                 .add("durability", 3191)
                                 .add("repair_material", "#forge:ingots/copper")
                                 .addObject("unaffected", it -> it
-                                        .add("cooldownMultiplier", 20)
+                                        .add("cooldown", 20)
                                 )
                                 .addObject("exposed", it -> it
-                                        .add("cooldownMultiplier", 27)
+                                        .add("cooldown", 27)
                                 )
                                 .addObject("weathered", it -> it
-                                        .add("cooldownMultiplier", 33)
+                                        .add("cooldown", 33)
                                 )
                                 .addObject("oxidized", it -> it
-                                        .add("cooldownMultiplier", 40)
+                                        .add("cooldown", 40)
                                 )
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .addObject("unaffected", it -> it
                                         .add("value", 3)
                                 )
@@ -1011,11 +1011,11 @@ public class ModConfig {
                                 .add("damage", 4)
                                 .add("piercing", 2)
                                 .add("range", 15)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                                 .add("durability", 157)
                                 .add("repair_material", "#forge:ingots/silver")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .addObject("overcharge", overcharge -> overcharge
                                         .add("max", 100)
                                         .add("ignore_durability", true)
@@ -1041,11 +1041,11 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 2)
                                 .add("range", 16)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("durability", 2031)
                                 .add("repair_material", "#forge:ingots/necromium")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .addObject("overcharge", overcharge -> overcharge
                                         .add("ignore_durability", true)
                                         .add("ignore_cost", true)
@@ -1074,11 +1074,11 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 2)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 15)
+                                .add("cooldown", 15)
                                 .add("durability", 157)
                                 .add("repair_material", "unseen_world:gripcrystal")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 1)
                         )
                         .addObject("effects", effects -> {}
@@ -1103,11 +1103,11 @@ public class ModConfig {
                                 .add("damage", 7)
                                 .add("piercing", 1)
                                 .add("range", 20)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("durability", 1000)
                                 .add("repair_material", "unusualend:pearlescent_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 4)
                         )
                         .addObject("effects", effects -> effects
@@ -1136,11 +1136,11 @@ public class ModConfig {
                                 .add("damage", 7)
                                 .add("piercing", 3)
                                 .add("range", 16)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("durability", 4096)
                                 .add("repair_material", "enderitemod:enderite_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 5)
                         )
                         .addObject("effects", effects -> effects
@@ -1162,11 +1162,11 @@ public class ModConfig {
                                 .add("damage", 6)
                                 .add("piercing", 1)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                                 .add("durability", 4096)
                                 .add("repair_material", "aquaculture:neptunium_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addObject("effects", effects -> effects
@@ -1195,11 +1195,11 @@ public class ModConfig {
                                 .add("damage", 7)
                                 .add("piercing", 1)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 30)
+                                .add("cooldown", 30)
                                 .add("durability", 286)
                                 .add("repair_material", "#forge:ingots/cloggrum")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("item", "undergarden:depthrock_pebble")
                                 .add("count", 1)
                         )
@@ -1215,11 +1215,11 @@ public class ModConfig {
                                 .add("damage", 5)
                                 .add("piercing", 1)
                                 .add("range", 10)
-                                .add("cooldownMultiplier", 20)
+                                .add("cooldown", 20)
                                 .add("durability", 575)
                                 .add("repair_material", "#forge:ingots/froststeel")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 2)
                         )
                         .addObject("effects", effects -> effects
@@ -1239,11 +1239,11 @@ public class ModConfig {
                                 .add("damage", 5.5)
                                 .add("piercing", 2)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("durability", 1279)
                                 .add("repair_material", "#forge:ingots/utherium")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addArray("recipes", List.of("sortilege:staff/utherium_staff"))
@@ -1258,11 +1258,11 @@ public class ModConfig {
                                 .add("damage", 6)
                                 .add("piercing", 4)
                                 .add("range", 14)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("durability", 1279)
                                 .add("repair_material", "#forge:ingots/forgotten_metal")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
                         .addArray("recipes", List.of("sortilege:staff/forgotten_staff"))
@@ -1279,11 +1279,11 @@ public class ModConfig {
                                 .add("damage", 4.5)
                                 .add("piercing", 4)
                                 .add("range", 12)
-                                .add("cooldownMultiplier", 25)
+                                .add("cooldown", 25)
                                 .add("durability", 166)
                                 .add("repair_material", "goety:dark_ingot")
                         )
-                        .addObject("costMultiplier", cost -> cost
+                        .addObject("cost", cost -> cost
                                 .add("value", 6)
                         )
                         .addObject("effects", effects -> effects

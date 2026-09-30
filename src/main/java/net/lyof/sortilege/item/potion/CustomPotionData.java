@@ -1,21 +1,15 @@
 package net.lyof.sortilege.item.potion;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.mixin.accessor.HolderReferenceAccessor;
 import net.lyof.sortilege.setup.ModConfig;
-import net.lyof.sortilege.util.PotionHelper;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -63,8 +57,8 @@ public class CustomPotionData implements CustomPacketPayload {
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
                             json.get("drinking_time").getAsInt() : ModConfig.potionDrinkingTime.get(),
-                    json.has("cooldownMultiplier") ?
-                            json.get("cooldownMultiplier").getAsInt() : ModConfig.potionCooldown.get(),
+                    json.has("cooldown") ?
+                            json.get("cooldown").getAsInt() : ModConfig.potionCooldown.get(),
                     json.has("stack_size") ?
                             json.get("stack_size").getAsInt() : ModConfig.potionStackSize.get(),
                     json.has("create") && json.get("create").getAsBoolean()));

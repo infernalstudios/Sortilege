@@ -10,14 +10,10 @@ import com.google.gson.JsonObject;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.enchant.ModEnchants;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
-import net.lyof.sortilege.util.EnchantHelper;
-import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -26,27 +22,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.spell_engine.SpellEngineMod;
 import net.spell_power.api.SpellPower;
 import net.spell_power.api.SpellSchool;
 import net.spell_power.api.SpellSchools;
-import net.spell_power.internals.CustomEntityAttribute;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -198,7 +186,7 @@ public class SpellEngineStaffItem extends AStaffItem {
     public boolean hasItem(ItemStack stack, Player player) {
         /*Registry<Enchantment> registry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 
-        if (costMultiplier.getRune().test(Items.ARROW.getDefaultInstance())) {
+        if (cost.getRune().test(Items.ARROW.getDefaultInstance())) {
             if (EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(Enchantments.INFINITY).get(), stack) > 0)
                 return true;
         }

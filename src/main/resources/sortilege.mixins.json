@@ -10,6 +10,7 @@
     "ChiseledBookshelfBlockMixin",
     "CraftingMenuMixin",
     "DataComponentHolderMixin",
+    "DataComponentPredicateMixin",
     "DispenserBlockMixin",
     "EnchantmentAttributeEffectMixin",
     "EnchantmentHelperMixin",

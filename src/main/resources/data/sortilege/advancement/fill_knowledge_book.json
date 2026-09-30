@@ -10,7 +10,8 @@
             ],
             "components": {
               "sortilege:enchant_knowledge": {
-                "completion": 0
+                "enchantments": {},
+                "authors": [ "sortilege:isFull" ]
               }
             }
           }

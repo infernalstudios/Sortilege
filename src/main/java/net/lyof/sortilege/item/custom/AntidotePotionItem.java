@@ -1,7 +1,6 @@
 package net.lyof.sortilege.item.custom;
 
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModConfig;

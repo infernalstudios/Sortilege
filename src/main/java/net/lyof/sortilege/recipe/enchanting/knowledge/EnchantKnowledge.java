@@ -2,10 +2,12 @@ package net.lyof.sortilege.recipe.enchanting.knowledge;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -22,10 +24,10 @@ public class EnchantKnowledge {
     protected List<String> authors;
 
     public EnchantKnowledge() {
-        this(new HashMap<>(), EnchantHelper.getEnchantCount(), new ArrayList<>());
+        this(new HashMap<>(), new ArrayList<>());
     }
 
-    public EnchantKnowledge(Map<Holder<Enchantment>, Integer> known, int completion, List<String> authors) {
+    public EnchantKnowledge(Map<Holder<Enchantment>, Integer> known, List<String> authors) {
         this.known = known;
         this.authors = authors;
     }
@@ -35,9 +37,9 @@ public class EnchantKnowledge {
     }
 
     public int getCompletion() {
-        int i = 0;
+        int i = EnchantHelper.getEnchantCount();
         for (Map.Entry<Holder<Enchantment>, Integer> entry : this.known.entrySet())
-            i += entry.getValue();
+            i -= entry.getValue();
         return i;
     }
 
@@ -109,11 +111,10 @@ public class EnchantKnowledge {
 
     public static final Codec<EnchantKnowledge> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
-                    Codec.unboundedMap(Enchantment.CODEC, Codec.intRange(0, 255))
-                            .fieldOf("enchantments").forGetter(it -> it.known),
-                    ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("completion").xmap(it -> it.orElse(-1), Optional::of).forGetter(EnchantKnowledge::getCompletion),
+                    Codec.unboundedMap(Enchantment.CODEC, Codec.intRange(0, 255)).fieldOf("enchantments").forGetter(it -> it.known),
+                    ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("completion", -1).forGetter(EnchantKnowledge::getCompletion),
                     ExtraCodecs.NON_EMPTY_STRING.listOf().fieldOf("authors").forGetter(it -> it.authors)
-            ).apply(instance, EnchantKnowledge::new));
+            ).apply(instance, (enchants, i, authors) -> new EnchantKnowledge(enchants, authors)));
     public static final StreamCodec<RegistryFriendlyByteBuf, EnchantKnowledge> STREAM_CODEC =
             StreamCodec.of(EnchantKnowledge::toNetwork, EnchantKnowledge::fromNetwork);
 }

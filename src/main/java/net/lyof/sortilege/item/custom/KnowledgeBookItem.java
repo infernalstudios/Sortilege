@@ -66,7 +66,7 @@ public class KnowledgeBookItem extends Item {
         if (!stack.get(ModDataComponents.KNOWLEDGE).getAuthors().isEmpty())
             list.add(Component.translatable("book.byAuthor", String.join(", ", stack.get(ModDataComponents.KNOWLEDGE).getAuthors())).withStyle(ChatFormatting.GRAY));
 
-        float completion = 100f * stack.get(ModDataComponents.KNOWLEDGE).getCompletion() / EnchantHelper.getEnchantCount();
+        float completion = 100 - 100f * stack.get(ModDataComponents.KNOWLEDGE).getCompletion() / EnchantHelper.getEnchantCount();
         String c = completion == (int) completion ? (int) completion + "%" : String.format("%.1f", completion) + "%";
         list.add(Component.translatable("tooltip.sortilege.knowledge_book.completion", c).withStyle(ChatFormatting.GRAY));
     }

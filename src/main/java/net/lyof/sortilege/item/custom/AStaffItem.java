@@ -29,6 +29,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -46,10 +47,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.jetbrains.annotations.Nullable;
 
@@ -193,14 +196,14 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public int getCost(ItemStack stack, Player player, int original) {
-        //int wisdom = EnchantHelper.getEnchantLevel(ModEnchants.WISDOM, stack);
-        //int ignorance = EnchantHelper.getEnchantLevel(ModEnchants.IGNORANCE_CURSE, stack);
-        return original;
-        //return (int) (original * (1 - 0.25f * wisdom) + (ignorance == 0 ? 0 : Math.min(1, original * 0.25f * ignorance)));
+        float m = 1 + StaffStatsEnchant.collect(stack).cost();
+        int o = (int) (original * m);
+        if (m > 1 && o == original) o += 1;
+        return o;
     }
 
     public float getDamage(ItemStack stack) {
-        return this.getEntry().getTier().getAttackDamageBonus() + StaffStatsEnchant.collect(stack.getEnchantments()).damage();
+        return this.getEntry().getTier().getAttackDamageBonus() + StaffStatsEnchant.collect(stack).damage();
     }
 
     public float getDamage(ItemStack stack, LivingEntity player) {
@@ -208,7 +211,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public int getPiercing(ItemStack stack) {
-        return this.getEntry().getTier().getPiercing() + StaffStatsEnchant.collect(stack.getEnchantments()).pierce();
+        return this.getEntry().getTier().getPiercing() + StaffStatsEnchant.collect(stack).pierce();
     }
 
     public int getPiercing(ItemStack stack, LivingEntity player) {
@@ -216,7 +219,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public int getRange(ItemStack stack) {
-        return this.getEntry().getTier().getRange() + StaffStatsEnchant.collect(stack.getEnchantments()).range();
+        return this.getEntry().getTier().getRange() + StaffStatsEnchant.collect(stack).range();
     }
 
     public int getRange(ItemStack stack, LivingEntity player) {
@@ -224,7 +227,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public int getCooldown(ItemStack stack, Player player) {
-        float multiplier = 1/* - EnchantHelper.getEnchantLevel(ModEnchants.FOCUS, stack) * 0.05f*/;
+        float multiplier = 1 + StaffStatsEnchant.collect(stack).cooldown();
 
         if (stack.is(ModTags.Items.XP_BOOSTED) && player != null)
             multiplier -= player.experienceLevel / 200f;
@@ -234,7 +237,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public double getBlastRadius(ItemStack stack, LivingEntity player) {
-        return StaffStatsEnchant.collect(stack.getEnchantments()).blast();
+        return StaffStatsEnchant.collect(stack).blast();
     }
 
     public List<Integer> getBeamColors(ItemStack stack) {
@@ -359,7 +362,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         if (target.isDeadOrDying()) this.onKill(stack, player, target);
         this.onHit(stack, player, target, source);
 
-        float kinesis = StaffStatsEnchant.collect(stack.getEnchantments()).kinesis();
+        float kinesis = StaffStatsEnchant.collect(stack).kinesis();
         if (kinesis != 0)
             target.setDeltaMovement(player.getLookAngle().add(0, 0.1, 0).normalize().scale(kinesis));
 
@@ -510,7 +513,12 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public void onKill(ItemStack stack, LivingEntity player, LivingEntity target) {}
 
     public boolean canMelee(ItemStack stack) {
-        return false;// EnchantHelper.hasEnchant(ModEnchants.BONK, stack);
+        MutableBoolean flag = new MutableBoolean(false);
+        EnchantmentHelper.forEachModifier(stack, EquipmentSlot.MAINHAND, (attribute, modifier) -> {
+            if (modifier.is(Item.BASE_ATTACK_DAMAGE_ID))
+                flag.setValue(true);
+        });
+        return flag.getValue();
     }
 
     public boolean shouldDisplayAttributes(ItemStack stack, Player player) {

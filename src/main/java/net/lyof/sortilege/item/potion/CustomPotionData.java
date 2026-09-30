@@ -63,8 +63,8 @@ public class CustomPotionData implements CustomPacketPayload {
                             readEffectList(json.get("effects").getAsJsonArray()) : null,
                     json.has("drinking_time") ?
                             json.get("drinking_time").getAsInt() : ModConfig.potionDrinkingTime.get(),
-                    json.has("cooldown") ?
-                            json.get("cooldown").getAsInt() : ModConfig.potionCooldown.get(),
+                    json.has("cooldownMultiplier") ?
+                            json.get("cooldownMultiplier").getAsInt() : ModConfig.potionCooldown.get(),
                     json.has("stack_size") ?
                             json.get("stack_size").getAsInt() : ModConfig.potionStackSize.get(),
                     json.has("create") && json.get("create").getAsBoolean()));

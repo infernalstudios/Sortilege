@@ -49,7 +49,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
         Sortilege.log().info("Found reader", reader.getClass().getName(), "for", id);
 
         StaffTier tier = reader.readTier(GsonHelper.getAsJsonObject(json, "properties"));
-        Cost cost = reader.readCost(GsonHelper.getAsJsonObject(json, "cost", new JsonObject()));
+        Cost cost = reader.readCost(GsonHelper.getAsJsonObject(json, "costMultiplier", new JsonObject()));
         Effects effects = reader.readEffects(GsonHelper.getAsJsonObject(json, "effects", new JsonObject()));
         Display display = reader.readDisplay(GsonHelper.getAsJsonObject(json, "display", new JsonObject()));
 

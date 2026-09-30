@@ -198,7 +198,7 @@ public class SpellEngineStaffItem extends AStaffItem {
     public boolean hasItem(ItemStack stack, Player player) {
         /*Registry<Enchantment> registry = player.level().registryAccess().registryOrThrow(Registries.ENCHANTMENT);
 
-        if (cost.getRune().test(Items.ARROW.getDefaultInstance())) {
+        if (costMultiplier.getRune().test(Items.ARROW.getDefaultInstance())) {
             if (EnchantmentHelper.getItemEnchantmentLevel(registry.getHolder(Enchantments.INFINITY).get(), stack) > 0)
                 return true;
         }

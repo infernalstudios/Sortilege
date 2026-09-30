@@ -1,0 +1,31 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.focus"
+  },
+  "max_level": 5,
+  "weight": 4,
+  "supported_items": "#sortilege:enchantable/staff",
+  "exclusive_set": "#sortilege:exclusive_set/wisdom",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:staff_stats": {
+      "cooldown": {
+        "type": "minecraft:linear",
+        "base": -0.05,
+        "per_level_above_first": -0.05
+      }
+    }
+  },
+
+  "anvil_cost": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 20
+  }
+}

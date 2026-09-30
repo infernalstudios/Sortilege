@@ -1,0 +1,30 @@
+{
+  "description": {
+    "translate": "enchantment.sortilege.ignorance_curse"
+  },
+  "max_level": 1,
+  "weight": 2,
+  "supported_items": "#sortilege:enchantable/staff",
+  "slots": [
+    "hand"
+  ],
+  "effects": {
+    "sortilege:staff_stats": {
+      "cost": {
+        "type": "minecraft:linear",
+        "base": 0.25,
+        "per_level_above_first": 0.25
+      }
+    }
+  },
+
+  "anvil_cost": 3,
+  "min_cost": {
+    "base": 10,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 25,
+    "per_level_above_first": 20
+  }
+}

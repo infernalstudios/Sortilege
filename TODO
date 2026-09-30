@@ -1,6 +1,6 @@
     - Fix recipes
     - Add staffs to enchant tags
-- Make enchants
+    - Make enchants
     - Fix tags
     - inventory enchanting is broken
     - Tag enchants
@@ -15,9 +15,5 @@
     - brewing recipes are apparently broken (ah forgot to register the custom recipes)
     - tag witch hat to enchantable
     - brewing recipes
-- mod compat staff types
+    - mod compat staff types
 - fix knowledge book advancement
-
-missing enchants:
-- sortilege:wisdom
-- sortilege:focus

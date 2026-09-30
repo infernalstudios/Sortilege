@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "sortilege:wisdom",
+      "required": false
+    },
+    {
+      "id": "sortilege:focus",
+      "required": false
+    }
+  ]
+}

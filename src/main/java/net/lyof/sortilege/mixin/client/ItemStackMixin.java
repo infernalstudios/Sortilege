@@ -48,6 +48,8 @@ public abstract class ItemStackMixin {
         ItemStack self = (ItemStack) (Object) this;
         Player player = Minecraft.getInstance().player;
 
+        if (player == null) return;
+
         if (self.getItem() instanceof AStaffItem staff && staff.shouldDisplayAttributes(self, player) && slot == EquipmentSlotGroup.HAND) {
             tooltip.accept(CommonComponents.EMPTY);
             tooltip.accept(Component.translatable("item.modifiers." + slot.getSerializedName()).withStyle(ChatFormatting.GRAY));

@@ -26,7 +26,7 @@
       "translate": "advancement.sortilege.fill_knowledge_book.desc"
     },
     "frame": "challenge",
-    "hidden": "false",
+    "hidden": false,
     "icon": {
       "id": "sortilege:knowledge_book"
     },

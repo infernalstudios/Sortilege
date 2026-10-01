@@ -34,9 +34,9 @@ public class ModRuntime {
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("tags/item/staffs.json"),
                 Common::generateStaffTag);
 
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:advancements/adventure/voluntary_exile.json"),
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:advancement/adventure/voluntary_exile.json"),
                 json -> Common.changeParent(json, "sortilege:get_witch_hat"), ModConfig.witchHatEnabled);
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:advancements/story/enchant_item.json"),
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("minecraft:advancement/story/enchant_item.json"),
                 json -> Common.changeParent(json, "sortilege:get_knowledge_book"), ModConfig.knowledgeEnabled);
 
         //#region Expanded Enchantments

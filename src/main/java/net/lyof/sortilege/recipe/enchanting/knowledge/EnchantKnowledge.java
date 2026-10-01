@@ -112,7 +112,7 @@ public class EnchantKnowledge {
     public static final Codec<EnchantKnowledge> CODEC = RecordCodecBuilder.create((instance) ->
             instance.group(
                     Codec.unboundedMap(Enchantment.CODEC, Codec.intRange(0, 255)).fieldOf("enchantments").forGetter(it -> it.known),
-                    ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("completion", -1).forGetter(EnchantKnowledge::getCompletion),
+                    Codec.INT.optionalFieldOf("completion", -1).forGetter(EnchantKnowledge::getCompletion),
                     ExtraCodecs.NON_EMPTY_STRING.listOf().fieldOf("authors").forGetter(it -> it.authors)
             ).apply(instance, (enchants, i, authors) -> new EnchantKnowledge(enchants, authors)));
     public static final StreamCodec<RegistryFriendlyByteBuf, EnchantKnowledge> STREAM_CODEC =

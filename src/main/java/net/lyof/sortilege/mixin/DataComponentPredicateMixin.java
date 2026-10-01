@@ -14,9 +14,7 @@ public class DataComponentPredicateMixin {
             at = @At(value = "INVOKE", target = "Ljava/util/Objects;equals(Ljava/lang/Object;Ljava/lang/Object;)Z"))
     private boolean testKnowledgeCompletion(Object a, Object b, Operation<Boolean> original) {
         boolean r = original.call(a, b);
-        Sortilege.log().info(a, b);
         if (a instanceof EnchantKnowledge ak && b instanceof EnchantKnowledge bk) {
-            Sortilege.log().info(ak.getAuthors(), bk.getCompletion());
             if (ak.getAuthors().contains("sortilege:isFull"))
                 r |= bk.getCompletion() == 0;
         }

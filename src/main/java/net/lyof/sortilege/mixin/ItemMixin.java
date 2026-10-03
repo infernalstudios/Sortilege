@@ -12,6 +12,7 @@ import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -28,7 +29,8 @@ public class ItemMixin {
         int a = EnchantHelper.getUsedEnchantSlots(stack);
         int m = EnchantHelper.getTotalEnchantSlots(stack);
 
-        if (a > m) EnchantmentHelper.setEnchantments(stack, stack.getEnchantments());
+        if (!stack.is(Items.ENCHANTED_BOOK) && m >= 0 && a > m)
+            EnchantmentHelper.setEnchantments(stack, stack.getEnchantments());
     }
 
     @Inject(method = "isEnchantable", at = @At("HEAD"), cancellable = true)

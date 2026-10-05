@@ -21,10 +21,10 @@ public class ModAttributes {
         return holder;
     }
 
-    public static final Holder<Attribute> STAFF_DAMAGE = register("generic.staff_damage", true,
-            new RangedAttribute("attribute.name.generic.staff_damage", 0f, 0f, 512f));
-    public static final Holder<Attribute> STAFF_PIERCE = register("generic.staff_pierce", true,
-            new RangedAttribute("attribute.name.generic.staff_pierce", 0f, 0f, 512f));
-    public static final Holder<Attribute> STAFF_RANGE = register("generic.staff_range", true,
-            new RangedAttribute("attribute.name.generic.staff_range", 0f, 0f, 512f));
+    public static final Holder<Attribute> STAFF_DAMAGE = register("staff.damage", true,
+            new RangedAttribute("attribute.sortilege.name.staff_damage", 0f, 0f, 512f));
+    public static final Holder<Attribute> STAFF_PIERCE = register("staff.pierce", true,
+            new RangedAttribute("attribute.sortilege.name.staff_pierce", 0f, 0f, 512f));
+    public static final Holder<Attribute> STAFF_RANGE = register("staff.range", true,
+            new RangedAttribute("attribute.sortilege.name.staff_range", 0f, 0f, 512f));
 }

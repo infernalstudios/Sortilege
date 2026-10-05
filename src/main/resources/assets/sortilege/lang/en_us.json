@@ -69,9 +69,9 @@
   "tooltip.sortilege.catalyst": "When used to Enchant:",
   "tooltip.sortilege.learnable": " [Learnable]",
 
-  "attribute.name.generic.staff_damage": "Magic Damage",
-  "attribute.name.generic.staff_pierce": "Pierce",
-  "attribute.name.generic.staff_range": "Range",
+  "attribute.sortilege.name.staff_damage": "Magic Damage",
+  "attribute.sortilege.name.staff_pierce": "Pierce",
+  "attribute.sortilege.name.staff_range": "Range",
 
   "enchantment.sortilege.potency": "Potency",
   "enchantment.sortilege.potency.desc": "Increases Staff damage.",

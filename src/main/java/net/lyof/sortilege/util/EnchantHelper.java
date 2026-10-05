@@ -185,6 +185,7 @@ public class EnchantHelper {
         String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 
         int defaultLimit = ModConfig.enchantLimiterDefault.get();
+        if (defaultLimit == -1) return -1;
         boolean sum = ModConfig.enchantLimiterMode.get().equals("relative");
 
         if (ModConfig.enchantLimiterOverrides.get().containsKey(id)) {

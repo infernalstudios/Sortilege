@@ -69,7 +69,7 @@ public class PotionCauldronBlock extends LayeredCauldronBlock implements EntityB
 
     public static int getBlockColor(BlockState state, BlockAndTintGetter world, BlockPos pos, int tintIndex) {
         if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron && tintIndex == 0)
-            return (int) cauldron.getRenderData();
+            return cauldron.getRenderData();
         return 16253176;
     }
 

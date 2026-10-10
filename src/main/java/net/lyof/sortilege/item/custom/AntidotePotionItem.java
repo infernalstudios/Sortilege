@@ -1,6 +1,5 @@
 package net.lyof.sortilege.item.custom;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.lyof.sortilege.item.potion.PotionShenanigans;
 import net.lyof.sortilege.particle.ModParticles;
 import net.lyof.sortilege.setup.ModConfig;
@@ -24,6 +23,7 @@ import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class AntidotePotionItem extends PotionItem {
         super(settings);
     }
 
-    public static void fillItemGroup(FabricItemGroupEntries entries, Item antidote) {
+    public static void fillItemGroup(BuildCreativeModeTabContentsEvent entries, Item antidote) {
         if (!ModConfig.antidoteEnabled.get()) return;
 
         for (Holder<Potion> potion : PotionHelper.POTIONS.values())

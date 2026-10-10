@@ -1,11 +1,8 @@
 package net.lyof.sortilege.particle;
 
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModPackets;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleType;
@@ -14,8 +11,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3f;
 
 public class ModParticles {
@@ -27,8 +24,7 @@ public class ModParticles {
         if (!world.isClientSide()) {
             ModPackets.ParticlePacket packet = new ModPackets.ParticlePacket(particle, new Vector3f((float) x, (float) y, (float) z), color, amount);
 
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, new BlockPos((int) x, (int) y, (int) z)))
-                ServerPlayNetworking.send(player, packet);
+            PacketDistributor.sendToPlayersNear((ServerLevel) world, null, x, y, z, 256, packet);
         }
     }
 

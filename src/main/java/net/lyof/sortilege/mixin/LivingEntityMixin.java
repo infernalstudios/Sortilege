@@ -94,7 +94,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @ModifyArg(method = "dropExperience", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ExperienceOrb;award(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/phys/Vec3;I)V"))
     public int xpDropBonus(int amount) {
-        if (ModConfig.witchHatEnabled.get() && this.lastHurtByPlayer != null && this.lastHurtByPlayer.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.WITCH_HAT))
+        if (ModConfig.witchHatEnabled.get() && this.lastHurtByPlayer != null && this.lastHurtByPlayer.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.WITCH_HAT.get()))
             amount += ModConfig.witchHatBonus.get();
         if (this.getType().is(ModTags.Entities.UNEXPERIENCED))
             amount = 0;
@@ -110,7 +110,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
             if (!ModConfig.witchHatEnabled.get() || Math.random() > ModConfig.witchHatDropChance.get()) return;
 
-            ItemStack hat = ModItems.WITCH_HAT.getDefaultInstance();
+            ItemStack hat = ModItems.WITCH_HAT.get().getDefaultInstance();
             hat.setDamageValue((int) Math.round(Math.random() * (hat.getMaxDamage() - 10)) + 10);
             world.addFreshEntity(new ItemEntity(world, this.getX(), this.getY(), this.getZ(), hat));
         }
@@ -177,7 +177,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getOffhandItem();
-        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD.get())) return;
 
         if (!LapisShieldItem.isOnCooldown(stack))
             cir.setReturnValue(true);
@@ -186,7 +186,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @WrapOperation(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;dot(Lnet/minecraft/world/phys/Vec3;)D"))
     public double blockedByLapisShield(Vec3 a, Vec3 b, Operation<Double> original) {
         double v = original.call(a, b);
-        if (!ModConfig.lapisShieldEnabled.get() || !this.getOffhandItem().is(ModItems.LAPIS_SHIELD)) return v;
+        if (!ModConfig.lapisShieldEnabled.get() || !this.getOffhandItem().is(ModItems.LAPIS_SHIELD.get())) return v;
 
         if (v <= -0.5 * Math.cos(90 * Math.PI / 360d))
             return -1;
@@ -196,7 +196,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "tick", at = @At("HEAD"))
     public void tickLapisShield(CallbackInfo ci) {
         ItemStack stack = this.getOffhandItem();
-        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD) || !LapisShieldItem.isOnCooldown(stack)
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD.get()) || !LapisShieldItem.isOnCooldown(stack)
                 || this.level().isClientSide()) return;
 
         if (LapisShieldItem.getCooldownEnd(stack) <= this.tickCount
@@ -209,7 +209,7 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "hurtCurrentlyUsedShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
         ItemStack stack = this.getOffhandItem();
-        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD.get())) return;
 
         LivingEntity self = (LivingEntity) (Object) this;
         LapisShieldItem.onSuccessfulUse(stack, self, amount);

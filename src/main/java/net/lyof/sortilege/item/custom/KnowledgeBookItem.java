@@ -1,7 +1,7 @@
 package net.lyof.sortilege.item.custom;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.lyof.sortilege.item.ModDataComponents;
+import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
@@ -13,23 +13,25 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 
 import java.util.List;
 
 public class KnowledgeBookItem extends Item {
-    public static void fillItemGroup(FabricItemGroupEntries entries, Item previous) {
+    public static void fillItemGroup(BuildCreativeModeTabContentsEvent entries, Item previous) {
         if (!ModConfig.knowledgeEnabled.get()) return;
 
         EnchantKnowledge knowledge = new EnchantKnowledge();
         EnchantHelper.iterateRegistry(enchant -> knowledge.learn(enchant, enchant.value().getMaxLevel()));
-        ItemStack full = ModItems.KNOWLEDGE_BOOK.getDefaultInstance();
+        ItemStack full = ModItems.KNOWLEDGE_BOOK.get().getDefaultInstance();
         full.set(ModDataComponents.KNOWLEDGE, knowledge);
-        entries.addAfter(previous, full);
-        entries.addAfter(previous, ModItems.KNOWLEDGE_BOOK);
+        entries.insertAfter(previous.getDefaultInstance(), full, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        ModItemGroups.addAfter(entries, previous, ModItems.KNOWLEDGE_BOOK.get());
     }
 
     public KnowledgeBookItem(Properties settings) {
@@ -49,7 +51,7 @@ public class KnowledgeBookItem extends Item {
             return InteractionResultHolder.success(stack);
         }
         if (!world.isClientSide())
-            user.openMenu(KnowledgeBookScreenHandler.getFactory(stack));
+            user.openMenu(KnowledgeBookScreenHandler.encode(stack));
         return InteractionResultHolder.sidedSuccess(stack, world.isClientSide());
     }
 

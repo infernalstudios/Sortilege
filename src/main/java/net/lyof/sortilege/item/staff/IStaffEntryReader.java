@@ -1,9 +1,9 @@
 package net.lyof.sortilege.item.staff;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
 import net.lcc.sollib.platform.Dependency;
+import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public interface IStaffEntryReader {
     default StaffTier readTier(JsonObject json) {
@@ -25,7 +26,7 @@ public interface IStaffEntryReader {
     default StaffEntry.Display readDisplay(JsonObject json) {
         return new StaffEntry.Display().read(json);
     }
-    void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar);
+    void register(StaffEntry entry, BiConsumer<String, Supplier<AStaffItem>> registrar);
 
 
     default ResourceLocation getType() {
@@ -41,7 +42,7 @@ public interface IStaffEntryReader {
 
                 ResourceLocation id = loadedService.getType();
                 if (id == null) continue;
-                if (FabricLoader.getInstance().isModLoaded(id.getNamespace()) && type.equals(id.toString()))
+                if (Services.PLATFORM.isModLoaded(id.getNamespace()) && type.equals(id.toString()))
                     return loadedService;
 
             } catch (Throwable ignored) {}

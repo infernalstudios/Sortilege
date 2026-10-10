@@ -58,7 +58,7 @@ public abstract class ItemStackMixin {
             String key = "attribute.modifier.equals." + AttributeModifier.Operation.ADD_VALUE.id();
             DecimalFormat format = ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT;
 
-            float damage = staff.getDamage(self, player);
+            float damage = staff.getStaffDamage(self, player);
             float piercing = staff.getPiercing(self, player);
             float range = staff.getRange(self, player);
 

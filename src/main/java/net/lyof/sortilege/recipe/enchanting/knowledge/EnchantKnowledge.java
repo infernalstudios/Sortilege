@@ -2,12 +2,10 @@ package net.lyof.sortilege.recipe.enchanting.knowledge;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.custom.KnowledgeBookItem;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;

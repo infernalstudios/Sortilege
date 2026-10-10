@@ -1,150 +1,131 @@
 plugins {
-	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
-	id 'maven-publish'
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.1.39'
 }
 
-version = project.mod_version
-group = project.maven_group
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+sourceSets.main.resources {
+    srcDir('src/generated/resources')
+
+    exclude("src/generated/**/.cache")
+}
 
 repositories {
-	maven {
-		name = 'ParchmentMC'
-		url 'https://maven.parchmentmc.org'
-	}
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "TerraformersMC"
+                url "https://maven.terraformersmc.com/"
+            }
+        }
+        filter {
+            includeGroup "dev.emi"
+            includeGroup "com.terraformersmc"
+        }
+    }
 
-	exclusiveContent {
-		forRepository {
-			maven {
-				name = "TerraformersMC"
-				url "https://maven.terraformersmc.com/"
-			}
-		}
-		filter {
-			includeGroup "dev.emi"
-			includeGroup "com.terraformersmc"
-		}
-	}
+    maven {
+        name = "Modrinth"
+        url "https://api.modrinth.com/maven"
+    }
+    maven {
+        name = "Curseforge"
+        url "https://cursemaven.com"
+    }
+}
 
-	maven {
-		name = "JitpackASM"
-		url 'https://jitpack.io'
-	}
-	// owo
-	maven {
-		name = 'WispForest'
-		url 'https://maven.wispforest.io/releases/'
-	}
-	// Botania needs these
-	maven {
-		name = "BlameJared"
-		url 'https://maven.blamejared.com'
-	}
-	maven {
-		name = "JamiesWhiteShirt"
-		url "https://maven.jamieswhiteshirt.com/libs-release"
-	}
-	maven {
-		name = "Ladysnake Libs"
-		url 'https://maven.ladysnake.org/releases'
-	}
-	// ClothConfig (for Origins)
-	maven {
-		name = "Shedaniel"
-		url "https://maven.shedaniel.me/"
-	}
-	maven {
-		name = "QuiltMC"
-		url "https://maven.quiltmc.org/repository/release"
-	}
-	// Reborn Core (Energy)
-	maven {
-		name = "RebornEnergy"
-		url "https://mvnrepository.com/artifact/teamreborn/energy"
-		//implementation("teamreborn:energy:4.0.0")
-	}
+base {
+    archivesName = 'Sortilege-Neo-1.21.1'
+}
 
-	maven {
-		name = "Modrinth"
-		url "https://api.modrinth.com/maven"
-	}
-	maven {
-		name = "Curseforge"
-		url "https://cursemaven.com"
-	}
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+runs {
+    configureEach {
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
+
+        systemProperty 'forge.logging.console.level', 'debug'
+
+        workingDirectory project.layout.projectDirectory.dir('run').dir(name)
+
+        modSource project.sourceSets.main
+    }
+
+    client {
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    server {
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        argument '--nogui'
+    }
+
+    gameTestServer {
+        systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+    }
+
+    data {
+        arguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+    }
+}
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings loom.layered {
-		officialMojangMappings()
-		parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-	}
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    implementation "net.neoforged:neoforge:${neo_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	modImplementation "maven.modrinth:sollib:${sollib_version}"
-
-	modImplementation "maven.modrinth:emi:${emi_version}"
-	modLocalRuntime "com.terraformersmc:modmenu:11.0.4"
-
-	// So many staff type dependencies ._.
-	// Botania
-	//modCompileOnly "vazkii.botania:Botania:1.20.1-453-FABRIC"
-	// Feathers
-	//modCompileOnly "curse.maven:feathers-699933:4814309"
-	// Electroblob
-	//modCompileOnly "maven.modrinth:electroblobs-wizardry-redux:0.8.5.1-fabric"
-	// Affinity
-	modCompileOnly "maven.modrinth:affinity:0.1.13+1.21.1"
-	modCompileOnly "org.ladysnake.cardinal-components-api:cardinal-components-base:6.1.2"
-	modCompileOnly "org.ladysnake.cardinal-components-api:cardinal-components-entity:6.1.2"
-	modCompileOnly "org.ladysnake.cardinal-components-api:cardinal-components-chunk:6.1.2"
-	modCompileOnly "org.ladysnake.cardinal-components-api:cardinal-components-item:6.1.2"
-	// Spell Engine
-	modCompileOnly "maven.modrinth:spell-engine:1.10.8+1.21.1-fabric"
-	modCompileOnly "maven.modrinth:spell-power:1.6.0+1.21.1-fabric"
-	modCompileOnly "curse.maven:rpgmana-1021902:8831226"
-	// Origins
-	modCompileOnly "maven.modrinth:origins:1.13.0-pre.3+mc.1.21.1"
-	modCompileOnly "io.github.apace100:apoli:2.12.0-pre.3+mc.1.21.1"
-	// Goety
-	modCompileOnly "maven.modrinth:goety:3.1.5.1"
-	// Caverns & Chasms
-	modCompileOnly "maven.modrinth:caverns-and-chasms:3.0.1"
-	// RebornCore (Fabric Energy)
-	modCompileOnly "teamreborn:energy:4.0.0"
-	modCompileOnly "maven.modrinth:reborncore:5.11.19"
+    implementation "maven.modrinth:sollib:${sollib_version}"
+    implementation "maven.modrinth:emi:${emi_version}"
 }
 
-processResources {
-	def version = project.version
-	inputs.property "version", version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": version
-	}
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+    options.encoding = 'UTF-8' 
 }
 
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
-}
-
-jar {
-	def projectName = project.name
-	inputs.property "projectName", projectName
-
-	from("LICENSE") {
-		rename { "${it}_$projectName"}
-	}
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
 }

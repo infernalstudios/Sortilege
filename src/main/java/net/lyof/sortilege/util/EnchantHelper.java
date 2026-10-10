@@ -2,9 +2,7 @@ package net.lyof.sortilege.util;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.ChatFormatting;
@@ -39,7 +37,6 @@ public class EnchantHelper {
     private static int ENCHANT_COUNT;
 
     public static void setRegistry(Supplier<Registry<Enchantment>> registry) {
-        Sortilege.log().info("Set Enchantment registry on", FabricLoader.getInstance().getEnvironmentType());
         REGISTRY = registry;
     }
 

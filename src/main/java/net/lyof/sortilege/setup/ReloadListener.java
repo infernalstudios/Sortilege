@@ -1,11 +1,8 @@
 package net.lyof.sortilege.setup;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.impl.resource.loader.FabricLifecycledResourceManager;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.data.reload.IReloadListener;
+import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.item.potion.CustomPotionData;
 import net.lyof.sortilege.item.potion.PotionCooldownManager;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
@@ -17,9 +14,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Map;
 
@@ -35,7 +33,7 @@ public class ReloadListener implements IReloadListener {
         EnchantHelper.load();
         PotionHelper.load();
 
-        if (FabricLoader.getInstance().isModLoaded("emi"))
+        if (Services.PLATFORM.isModLoaded("emi"))
             SpecialSmithingEmiRecipe.INSTANCES.forEach(SpecialSmithingEmiRecipe::generateInputs);
     }
 
@@ -47,8 +45,7 @@ public class ReloadListener implements IReloadListener {
         CustomPotionData.clear();
         PotionCooldownManager.clear();
 
-        if (ModConfig.customPotionTextures.get() && manager instanceof FabricLifecycledResourceManager fabricManager &&
-                fabricManager.fabric_getResourceType() == PackType.CLIENT_RESOURCES) {
+        if (ModConfig.customPotionTextures.get()) {
             CustomPotionData.MODELS.clear();
             for (ResourceLocation model : FileToIdConverter.json("models/item/potion").listMatchingResources(manager).keySet())
                 CustomPotionData.MODELS.add(FileToIdConverter.json("models/item").fileToId(model));
@@ -60,7 +57,7 @@ public class ReloadListener implements IReloadListener {
         }
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void preloadClient() {
         EnchantHelper.setRegistry(() -> Minecraft.getInstance().level.registryAccess().registryOrThrow(Registries.ENCHANTMENT));
 
@@ -72,12 +69,12 @@ public class ReloadListener implements IReloadListener {
         PotionHelper.clear();
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void reloadClient() {
         EnchantHelper.load();
         PotionHelper.load();
 
-        if (FabricLoader.getInstance().isModLoaded("emi"))
+        if (Services.PLATFORM.isModLoaded("emi"))
             SpecialSmithingEmiRecipe.INSTANCES.forEach(SpecialSmithingEmiRecipe::generateInputs);
     }
 }

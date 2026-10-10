@@ -1,7 +1,5 @@
 package net.lyof.sortilege.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,14 +19,14 @@ public abstract class ExperienceOrbMixin extends Entity {
     public ExperienceOrbMixin(EntityType<?> type, Level world) {
         super(type, world);
     }
-
+/*TODO: EVENT
     @WrapOperation(method = "scanForEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getNearestPlayer(Lnet/minecraft/world/entity/Entity;D)Lnet/minecraft/world/entity/player/Player;"))
     public Player ignoreCappedPlayers(Level instance, Entity entity, double v, Operation<Player> original) {
         if (ModConfig.xpLevelCap.get() > -1 && instance.players().size() > 1)
             return instance.getNearestPlayer(entity.getX(), entity.getY(), entity.getZ(), v,
                     e -> e instanceof Player p && !p.isSpectator() && !p.isCreative() && p.experienceLevel < ModConfig.xpLevelCap.get());
         return original.call(instance, entity, v);
-    }
+    }*/
 
     @Inject(method = "playerTouch", at = @At("HEAD"), cancellable = true)
     public void cancelCappedPlayerCollision(Player player, CallbackInfo ci) {

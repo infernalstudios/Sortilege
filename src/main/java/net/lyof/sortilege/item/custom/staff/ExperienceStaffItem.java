@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class ExperienceStaffItem extends AStaffItem {
     @Dependency(mod = "sortilege:experience")
@@ -24,8 +25,8 @@ public class ExperienceStaffItem extends AStaffItem {
         }
 
         @Override
-        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
-            registrar.accept(entry.getID(), new ExperienceStaffItem(entry, new Properties()));
+        public void register(StaffEntry entry, BiConsumer<String, Supplier<AStaffItem>> registrar) {
+            registrar.accept(entry.getID(), () -> new ExperienceStaffItem(entry, new Properties()));
         }
     }
 

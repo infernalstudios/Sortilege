@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @SuppressWarnings("unchecked")
 @Mixin(MappedRegistry.class)
 public abstract class MappedRegistryMixin<T> {
-    @WrapWithCondition(method = "register", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/MappedRegistry;validateWrite(Lnet/minecraft/resources/ResourceKey;)V"))
+    @WrapWithCondition(method = "register(ILnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/MappedRegistry;validateWrite(Lnet/minecraft/resources/ResourceKey;)V"))
     private boolean unfreezePotion(MappedRegistry<T> instance, ResourceKey<T> key) {
         return ((MappedRegistry<T>) (Object) this) != BuiltInRegistries.POTION;
     }

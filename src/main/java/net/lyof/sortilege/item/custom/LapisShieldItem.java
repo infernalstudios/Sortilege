@@ -2,8 +2,6 @@ package net.lyof.sortilege.item.custom;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
 import net.lyof.sortilege.Sortilege;
@@ -16,13 +14,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -72,7 +69,7 @@ public class LapisShieldItem extends Item implements Equipable, IAddedRenderItem
         sendCooldownUpdate(entity, entity.tickCount);
 
         if (entity instanceof Player player)
-            player.getCooldowns().addCooldown(ModItems.LAPIS_SHIELD, ModConfig.lapisShieldCooldown.get());
+            player.getCooldowns().addCooldown(ModItems.LAPIS_SHIELD.get(), ModConfig.lapisShieldCooldown.get());
 
         ModParticles.sendParticles(entity.level(), entity.getX(), entity.getY() + entity.getEyeHeight(entity.getPose()) / 2, entity.getZ(),
                 16, 0x5555ff);
@@ -85,13 +82,8 @@ public class LapisShieldItem extends Item implements Equipable, IAddedRenderItem
     }
 
     public static void sendCooldownUpdate(LivingEntity entity, int cooldown) {
-        if (!entity.level().isClientSide()) {
-            ModPackets.LapisShieldPacket packet = new ModPackets.LapisShieldPacket(entity.getId(), cooldown);
-
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) entity.level(), entity.blockPosition())) {
-                ServerPlayNetworking.send(player, packet);
-            }
-        }
+        if (!entity.level().isClientSide())
+            PacketDistributor.sendToPlayersTrackingEntity(entity, new ModPackets.LapisShieldPacket(entity.getId(), cooldown));
     }
 
 

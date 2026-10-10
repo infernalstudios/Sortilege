@@ -3,8 +3,6 @@ package net.lyof.sortilege.item.custom;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.lcc.sollib.api.client.render.MockItemRenderer;
 import net.lcc.sollib.api.client.render.item.IAddedBarItem;
 import net.lcc.sollib.api.client.render.item.IAddedRenderItem;
@@ -23,8 +21,6 @@ import net.lyof.sortilege.setup.ModTags;
 import net.lyof.sortilege.util.EnchantHelper;
 import net.lyof.sortilege.util.MathHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -53,7 +49,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.jetbrains.annotations.Nullable;
@@ -134,7 +131,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         if (Screen.hasShiftDown()) {
             int i = tooltip.size();
@@ -173,7 +170,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         if (this.getEntry().getCost().getOvercharge().getIngredients().containsKey(id)
                 && this.getOvercharge(stack) < this.getMaxOvercharge(stack)) {
 
-            ItemStack remainder = other.getRecipeRemainder();
+            ItemStack remainder = other.getCraftingRemainingItem();
             if (!remainder.isEmpty()) {
                 if (other.getCount() == 1)
                     cursorStackReference.set(remainder);
@@ -206,12 +203,12 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         return o;
     }
 
-    public float getDamage(ItemStack stack) {
+    public float getStaffDamage(ItemStack stack) {
         return this.getEntry().getTier().getAttackDamageBonus() + StaffStatsEnchant.collect(stack).damage();
     }
 
-    public float getDamage(ItemStack stack, LivingEntity player) {
-        return this.getDamage(stack) + (float) player.getAttributeValue(ModAttributes.STAFF_DAMAGE);
+    public float getStaffDamage(ItemStack stack, LivingEntity player) {
+        return this.getStaffDamage(stack) + (float) player.getAttributeValue(ModAttributes.STAFF_DAMAGE);
     }
 
     public int getPiercing(ItemStack stack) {
@@ -355,7 +352,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
         if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
 
-        float d = this.getDamage(stack, player);
+        float d = this.getStaffDamage(stack, player);
         d = this.modifyDamageDealt(stack, d, player, target, source);
 
         if (d < 0) {
@@ -526,7 +523,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public boolean shouldDisplayAttributes(ItemStack stack, Player player) {
-        return this.getRange(stack) > 0 || this.getDamage(stack) > 0 || this.getPiercing(stack) > 0;
+        return this.getRange(stack) > 0 || this.getStaffDamage(stack) > 0 || this.getPiercing(stack) > 0;
     }
 
     public void displayShot(ItemStack stack, Player player) {
@@ -545,7 +542,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         ModParticles.sendParticles(player.level(), this.getParticle(stack), x, y, z, 1, MathHelper.randi(colors));
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void appendTooltipAbilities(ItemStack stack, Player player, List<Component> tooltip) {
         Component desc = Component.translatableWithFallback(this.getDescriptionId() + ".desc", "");
         if (!desc.getString().isEmpty()) {
@@ -562,7 +559,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
             tooltip.add(Component.translatable("tooltip.forgotten_sword").withStyle(ChatFormatting.GREEN));
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public void appendTooltipCosts(ItemStack stack, Player player, List<Component> tooltip) {
         tooltip.add(Component.translatable("tooltip.sortilege.staff.cooldown", this.getCooldown(stack, Minecraft.getInstance().player) / 20f).withStyle(ChatFormatting.GRAY));
     }

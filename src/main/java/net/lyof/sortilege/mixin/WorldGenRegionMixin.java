@@ -34,7 +34,7 @@ public abstract class WorldGenRegionMixin {
                 && this.currentlyGenerating.get().equals("ResourceKey[minecraft:worldgen/structure / minecraft:swamp_hut]")
                 && !PotionHelper.GEN_ALLOWED_POTIONS.isEmpty()) {
 
-            this.setBlock(pos, ModBlocks.POTION_CAULDRON.defaultBlockState().setValue(LayeredCauldronBlock.LEVEL,
+            this.setBlock(pos, ModBlocks.POTION_CAULDRON.get().defaultBlockState().setValue(LayeredCauldronBlock.LEVEL,
                             MathHelper.randint(LayeredCauldronBlock.MIN_FILL_LEVEL, LayeredCauldronBlock.MAX_FILL_LEVEL)),
                     Block.UPDATE_IMMEDIATE, 1);
             if (this.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)

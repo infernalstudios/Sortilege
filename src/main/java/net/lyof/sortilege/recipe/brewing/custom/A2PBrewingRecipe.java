@@ -41,13 +41,13 @@ public class A2PBrewingRecipe extends BrewingRecipe {
 
     @Override
     public ItemStack getInput() {
-        return ModItems.ANTIDOTE.getDefaultInstance();
+        return ModItems.ANTIDOTE.get().getDefaultInstance();
     }
 
     @Override
     public ItemStack getInput(Random random) {
         int i = random.nextInt(PotionHelper.POTIONS.size());
-        return PotionContents.createItemStack(ModItems.ANTIDOTE, (Holder<Potion>) PotionHelper.POTIONS.values().toArray()[i]);
+        return PotionContents.createItemStack(ModItems.ANTIDOTE.get(), (Holder<Potion>) PotionHelper.POTIONS.values().toArray()[i]);
     }
 
     @Override

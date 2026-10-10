@@ -2,7 +2,6 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.enchanting.knowledge.EnchantKnowledge;
 import net.minecraft.core.component.DataComponentPredicate;
 import org.spongepowered.asm.mixin.Mixin;

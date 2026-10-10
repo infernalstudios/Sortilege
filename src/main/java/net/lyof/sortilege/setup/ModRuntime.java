@@ -3,11 +3,11 @@ package net.lyof.sortilege.setup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.SolLib;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.config.builder.JsonBuilder;
 import net.lcc.sollib.core.Identifier;
+import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.AStaffItem;
@@ -15,6 +15,8 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+
+import java.util.function.Supplier;
 
 public class ModRuntime {
     protected static void addMiningMaster(String gem, String enchant) {
@@ -125,7 +127,7 @@ public class ModRuntime {
                 ModConfig.expandedBane);
         //#endregion
 
-        if (FabricLoader.getInstance().isModLoaded("miningmaster")) {
+        if (Services.PLATFORM.isModLoaded("miningmaster")) {
             addMiningMaster("power_pyrite", "potency");
             addMiningMaster("kinetic_opal", "blast");
             addMiningMaster("ice_sapphire", "blizzard");
@@ -138,19 +140,19 @@ public class ModRuntime {
     }
 
     public static void loadClient() {
-        for (AStaffItem staff : ModItems.STAFFS)
-            SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + staff.getName() + ".json"),
-                    json -> Client.generateDefaultModel(json, staff.getEntry().getID()));
+        for (Supplier<AStaffItem> staff : ModItems.STAFFS)
+            SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + staff.get().getName() + ".json"),
+                    json -> Client.generateDefaultModel(json, staff.get().getEntry().getID()));
 
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), Client::generateTranslations);
 
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("enchdesc", "lang/en_us.json"),
                 Client::changeEnchantmentDescriptions,
-                () -> FabricLoader.getInstance().isModLoaded("enchdesc"));
+                () -> Services.PLATFORM.isModLoaded("enchdesc"));
 
         SolRegistries.Data.RUNTIME.addJson(Identifier.of("quark", "attribute_tooltips.json"),
                 Client::changeQuarkAttributeDisplay,
-                () -> FabricLoader.getInstance().isModLoaded("quark"));
+                () -> Services.PLATFORM.isModLoaded("quark"));
     }
 
 
@@ -167,8 +169,8 @@ public class ModRuntime {
             if (json == null) json = new JsonObject();
             json.add("values", new JsonArray());
 
-            for (AStaffItem staff : ModItems.STAFFS)
-                json.get("values").getAsJsonArray().add(Sortilege.MOD.makeID(staff.getName()).toString());
+            for (Supplier<AStaffItem> staff : ModItems.STAFFS)
+                json.get("values").getAsJsonArray().add(Sortilege.MOD.makeID(staff.get().getName()).toString());
             return json;
         }
 
@@ -213,8 +215,8 @@ public class ModRuntime {
         public static JsonObject generateTranslations(JsonObject json) {
             if (json == null) json = new JsonObject();
 
-            for (AStaffItem staff : ModItems.STAFFS) {
-                String id = staff.getName();
+            for (Supplier<AStaffItem> staff : ModItems.STAFFS) {
+                String id = staff.get().getName();
                 if (json.has("item." + Sortilege.MOD_ID + "." + id)) continue;
 
                 StringBuilder translation = new StringBuilder(id.toUpperCase().charAt(0) + "");

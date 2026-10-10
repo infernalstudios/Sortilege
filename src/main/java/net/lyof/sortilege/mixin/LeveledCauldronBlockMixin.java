@@ -42,7 +42,7 @@ public abstract class LeveledCauldronBlockMixin {
                     new SingleRecipeInput(item.getItem()), world);
 
             if (optional.isPresent() && item.getItem().getCount() >= state.getValue(LEVEL)) {
-                world.setBlockAndUpdate(pos, ModBlocks.POTION_CAULDRON.defaultBlockState().setValue(LEVEL, state.getValue(LEVEL)));
+                world.setBlockAndUpdate(pos, ModBlocks.POTION_CAULDRON.get().defaultBlockState().setValue(LEVEL, state.getValue(LEVEL)));
                 if (world.getBlockEntity(pos) instanceof PotionCauldronBlockEntity cauldron)
                     cauldron.potion = optional.get().value().output;
 

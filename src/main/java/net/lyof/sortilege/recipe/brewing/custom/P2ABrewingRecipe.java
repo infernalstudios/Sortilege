@@ -42,7 +42,7 @@ public class P2ABrewingRecipe extends BrewingRecipe {
         }
 
         if (potion == Potions.WATER) return input;
-        return PotionContents.createItemStack(ModItems.ANTIDOTE, potion);
+        return PotionContents.createItemStack(ModItems.ANTIDOTE.get(), potion);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class P2ABrewingRecipe extends BrewingRecipe {
 
     @Override
     public ItemStack getOutput() {
-        return ModItems.ANTIDOTE.getDefaultInstance();
+        return ModItems.ANTIDOTE.get().getDefaultInstance();
     }
 
 

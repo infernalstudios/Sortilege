@@ -1,6 +1,5 @@
 package net.lyof.sortilege.screen.custom;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.mixin.accessor.ScreenAccessor;
@@ -22,6 +21,7 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 import java.util.Map;
@@ -70,7 +70,7 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
         List<String> authors = this.authorsList.validate();
         this.menu.stack.get(ModDataComponents.KNOWLEDGE).setAuthors(authors);
 
-        ClientPlayNetworking.send(new ModPackets.KnowledgeBook(authors));
+        PacketDistributor.sendToServer(new ModPackets.KnowledgeBook(authors));
 
         super.onClose();
     }
@@ -103,7 +103,7 @@ public class KnowledgeBookScreen extends AbstractContainerScreen<KnowledgeBookSc
             List<String> authors = this.authorsList.validate();
             this.menu.stack.get(ModDataComponents.KNOWLEDGE).setAuthors(authors);
 
-            ClientPlayNetworking.send(new ModPackets.KnowledgeBook(authors));
+            PacketDistributor.sendToServer(new ModPackets.KnowledgeBook(authors));
             return true;
         }
 

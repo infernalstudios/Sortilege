@@ -100,13 +100,13 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
     @Inject(method = "hurtCurrentlyUsedShield", at = @At("HEAD"))
     public void damageLapisShield(float amount, CallbackInfo ci) {
         ItemStack stack = this.getOffhandItem();
-        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD.get())) return;
 
         Player self = (Player) (Object) this;
 
         LapisShieldItem.onSuccessfulUse(stack, self, amount);
         if (!this.level().isClientSide())
-            self.awardStat(Stats.ITEM_USED.get(ModItems.LAPIS_SHIELD));
+            self.awardStat(Stats.ITEM_USED.get(ModItems.LAPIS_SHIELD.get()));
     }
 
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSources;playerAttack(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/damagesource/DamageSource;"))

@@ -1,7 +1,5 @@
 package net.lyof.sortilege.recipe.crafting;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.setup.ModPackets;
 import net.minecraft.ChatFormatting;
@@ -13,6 +11,8 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.Objects;
 public abstract class RecipeLock {
     public abstract boolean matches(ServerPlayer player);
     public abstract MutableComponent getFailMessage(ServerPlayer player);
-    @Environment(EnvType.CLIENT) public abstract MutableComponent getFailMessage();
+    @OnlyIn(Dist.CLIENT) public abstract MutableComponent getFailMessage();
 
     public static RecipeLock NONE = new RecipeLock() {
         @Override
@@ -35,7 +35,7 @@ public abstract class RecipeLock {
             return Component.empty();
         }
 
-        @Environment(EnvType.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         @Override
         public MutableComponent getFailMessage() {
             return Component.empty();
@@ -76,7 +76,7 @@ public abstract class RecipeLock {
             return Component.translatable("screen.sortilege.crafting.requires_level", this.lvl);
         }
 
-        @Environment(EnvType.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         @Override
         public MutableComponent getFailMessage() {
             return Component.translatable("screen.sortilege.crafting.requires_level",
@@ -108,7 +108,7 @@ public abstract class RecipeLock {
             return Component.translatable("screen.sortilege.crafting.requires_advancement", Advancement.name(advc));
         }
 
-        @Environment(EnvType.CLIENT)
+        @OnlyIn(Dist.CLIENT)
         @Override
         public MutableComponent getFailMessage() {
             if (!TITLES.containsKey(this.id)) return Component.empty();

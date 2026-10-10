@@ -1,8 +1,11 @@
 package net.lyof.sortilege.util;
 
-import net.fabricmc.fabric.api.entity.FakePlayer;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.neoforge.common.util.FakePlayerFactory;
+
+import java.util.UUID;
 
 public class XPHelper {
     public static boolean hasXP(Player player, int amount) {
@@ -27,7 +30,7 @@ public class XPHelper {
     }
 
     public static int getTotalXP(int level, float progress, ServerLevel server) {
-        Player dummy = FakePlayer.get(server);
+        Player dummy = FakePlayerFactory.get(server, new GameProfile(UUID.randomUUID(), "sorti_dummy"));
         int total = 0;
 
         for (int i = 0; i <= level; i++) {

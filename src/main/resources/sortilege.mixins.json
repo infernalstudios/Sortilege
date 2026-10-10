@@ -37,12 +37,10 @@
     "SetEnchantmentsFunctionMixin",
     "ShieldItemMixin",
     "SlotMixin",
-    "SmithingTransformRecipeMixin",
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",
-    "accessor.MobEffectInstanceAccessor",
-    "client.RegistrySyncManagerMixin"
+    "accessor.MobEffectInstanceAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

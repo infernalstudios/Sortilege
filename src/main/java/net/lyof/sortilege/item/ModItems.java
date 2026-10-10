@@ -15,35 +15,39 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class ModItems {
-    public static List<AStaffItem> STAFFS = new ArrayList<>();
+    public static List<Supplier<AStaffItem>> STAFFS = new ArrayList<>();
 
     public static void register() {
         for (StaffEntry entry : ModConfig.staffs.get()) {
             entry.getReader().register(entry, (id, staff) -> {
-                staff.setName(id);
-                register(true, id, () -> staff);
-                STAFFS.add(staff);
+                Supplier<AStaffItem> s = () -> {
+                    AStaffItem it = staff.get();
+                    it.setName(id);
+                    return it;
+                };
+                register(true, id, (Supplier<Item>) (Object) s);
+                STAFFS.add(s);
             });
         }
     }
 
-    public static Item register(boolean config, String name, Supplier<Item> item) {
-        return config ? Sortilege.MOD.register(ItemHolder.class, name, item).get() : Items.AIR;
+    public static Supplier<Item> register(boolean config, String name, Supplier<Item> item) {
+        return config ? Sortilege.MOD.register(ItemHolder.class, name, item) : () -> Items.AIR;
     }
 
 
-    public static final Item LIMITITE = register(true, "limitite",
+    public static final Supplier<Item> LIMITITE = register(true, "limitite",
             () -> new LimititeItem(new Item.Properties()));
 
-    public static final Item ANTIDOTE = register(true, "antidote",
+    public static final Supplier<Item> ANTIDOTE = register(true, "antidote",
             () -> new AntidotePotionItem(new Item.Properties().stacksTo(ModConfig.antidoteStackSize.get())));
 
-    public static final Item WITCH_HAT = register(ModConfig.witchHatEnabled.get(), "witch_hat",
+    public static final Supplier<Item> WITCH_HAT = register(ModConfig.witchHatEnabled.get(), "witch_hat",
             () -> new ArmorItem(ModArmorMaterials.WITCH, ArmorItem.Type.HELMET, new Item.Properties().durability(94)));
 
-    public static final Item LAPIS_SHIELD = register(ModConfig.lapisShieldEnabled.get(), "lapis_shield",
+    public static final Supplier<Item> LAPIS_SHIELD = register(ModConfig.lapisShieldEnabled.get(), "lapis_shield",
             () -> new LapisShieldItem(new Item.Properties().durability(ModConfig.lapisShieldDurability.get())));
 
-    public static final Item KNOWLEDGE_BOOK = register(ModConfig.knowledgeEnabled.get(), "knowledge_book",
+    public static final Supplier<Item> KNOWLEDGE_BOOK = register(ModConfig.knowledgeEnabled.get(), "knowledge_book",
             () -> new KnowledgeBookItem(new Item.Properties().stacksTo(1)));
 }

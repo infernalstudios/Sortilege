@@ -1,20 +1,6 @@
 package net.lyof.sortilege.item.rendering;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
-import net.lyof.sortilege.Sortilege;
-import net.lyof.sortilege.item.ModItems;
-import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-
-public class WitchHatRenderer implements ArmorRenderer {
+public class WitchHatRenderer {/*TODOimplements ArmorRenderer {
     private static WitchHatModel<?> model = null;
     private static final ResourceLocation TEXTURE = Sortilege.MOD.makeID("textures/models/armor/witch_hat.png");
 
@@ -33,5 +19,5 @@ public class WitchHatRenderer implements ArmorRenderer {
             model.renderToBuffer(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
             matrices.popPose();
         }
-    }
+    }*/
 }

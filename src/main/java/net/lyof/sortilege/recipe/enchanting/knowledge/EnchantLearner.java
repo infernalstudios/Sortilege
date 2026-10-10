@@ -1,17 +1,17 @@
 package net.lyof.sortilege.recipe.enchanting.knowledge;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 public interface EnchantLearner {
     EnchantKnowledge sorti_getKnowledge();
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     class Cache {
         public static ItemStack stack = null;
         public static EnchantKnowledge knowledge = null;
@@ -22,7 +22,7 @@ public interface EnchantLearner {
         }
 
         public static boolean isLearnable(Holder<Enchantment> enchantment) {
-            return knowledge != null && stack != null && knowledge.isLearnable(stack, enchantment, EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack));
+            return knowledge != null && stack != null && knowledge.isLearnable(stack, enchantment, EnchantmentHelper.getTagEnchantmentLevel(enchantment, stack));
         }
     }
 }

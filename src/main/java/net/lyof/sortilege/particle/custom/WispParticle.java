@@ -1,10 +1,10 @@
 package net.lyof.sortilege.particle.custom;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.ColorParticleOption;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 public class WispParticle extends TextureSheetParticle {
@@ -47,7 +47,7 @@ public class WispParticle extends TextureSheetParticle {
         return 15728880;
     }
 
-    @Environment(EnvType.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<ColorParticleOption> {
         private final SpriteSet sprites;
 

@@ -1,12 +1,5 @@
 package net.lyof.sortilege;
 
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.api.common.SolRegistries;
 import net.lcc.sollib.api.common.logger.SolLogger;
 import net.lcc.sollib.api.common.registry.SolModContainer;
@@ -32,16 +25,29 @@ import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sortilege implements ModInitializer {
+@Mod(Sortilege.MOD_ID)
+public class Sortilege {
 	public static final String MOD_ID = "sortilege";
 	public static final SolModContainer MOD = new SolModContainer("Sortilege", MOD_ID);
 
-	@Override
-	public void onInitialize() {
+	public Sortilege(IEventBus eventBus, ModContainer container) {
 		MOD.createConfig("sortilege", 9, ModConfig::build);
 		MOD.createConfig("sortilege-staffs", 9, ModConfig::buildStaffs);
 		ModRuntime.load();
@@ -52,56 +58,55 @@ public class Sortilege implements ModInitializer {
 		ModAttributes.register();
 		ModDataComponents.register();
 		ModItems.register();
-		ModItemGroups.register();
+		eventBus.addListener(ModItemGroups::register);
 
 		ModEnchants.register();
 		ModParticles.register();
 		ModScreenHandlers.register();
 
-		ModLootModifiers.register();
+		eventBus.addListener(ModLootModifiers::register);
 		ModLootContexts.register();
 		ModRecipeTypes.register();
 
-		registerPackets();
-		registerModules();
-		registerEvents();
-	}
-
-	private static void registerPackets() {
-		PayloadTypeRegistry.playS2C().register(ModPackets.InitializePacket.TYPE, ModPackets.InitializePacket.STREAM_CODEC);
-		PayloadTypeRegistry.playS2C().register(CustomPotionData.TYPE, CustomPotionData.STREAM_CODEC);
-		PayloadTypeRegistry.playS2C().register(ModPackets.InitializeLockPacket.TYPE, ModPackets.InitializeLockPacket.STREAM_CODEC);
-		PayloadTypeRegistry.playS2C().register(ModPackets.ParticlePacket.TYPE, ModPackets.ParticlePacket.STREAM_CODEC);
-		PayloadTypeRegistry.playS2C().register(ModPackets.LapisShieldPacket.TYPE, ModPackets.LapisShieldPacket.STREAM_CODEC);
-		PayloadTypeRegistry.playC2S().register(ModPackets.KnowledgeBook.TYPE, ModPackets.KnowledgeBook.STREAM_CODEC);
-
-		ServerPlayNetworking.registerGlobalReceiver(ModPackets.KnowledgeBook.TYPE, ModPackets.KnowledgeBook::run);
-	}
-
-	private static void registerModules() {
-		FabricLoader.getInstance().getModContainer(MOD_ID).ifPresent(container -> {
-			ResourceManagerHelper.registerBuiltinResourcePack(MOD.makeID("hd_particles"), container,
-					Component.literal("HD Particles"), ResourcePackActivationType.NORMAL);
-		});
-	}
-
-	private static void registerEvents() {
 		SolRegistries.Data.RELOAD.register(ReloadListener.INSTANCE);
-
-		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> {
-			List<CustomPacketPayload> packets = new ArrayList<>();
-			packets.add(new ModPackets.InitializePacket(true));
-
-			CustomPotionData.write(packets);
-			RecipeLock.write(packets, player.getServer());
-
-			packets.add(new ModPackets.InitializePacket(false));
-			packets.forEach(p -> ServerPlayNetworking.send(player, p));
-		});
-		ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-			EnchantHelper.setRegistry(() -> server.registries().compositeAccess().registryOrThrow(Registries.ENCHANTMENT));
-		});
 	}
+
+	@SubscribeEvent
+	private static void onEvent(RegisterPayloadHandlersEvent event) {
+		PayloadRegistrar registrar = event.registrar("1");
+
+		registrar.playToClient(ModPackets.InitializePacket.TYPE, ModPackets.InitializePacket.STREAM_CODEC, ModPackets.InitializePacket::run);
+		registrar.playToClient(CustomPotionData.TYPE, CustomPotionData.STREAM_CODEC, CustomPotionData::read);
+		registrar.playToClient(ModPackets.InitializeLockPacket.TYPE, ModPackets.InitializeLockPacket.STREAM_CODEC, ModPackets.InitializeLockPacket::run);
+		registrar.playToClient(ModPackets.ParticlePacket.TYPE, ModPackets.ParticlePacket.STREAM_CODEC, ModPackets.ParticlePacket::run);
+		registrar.playToClient(ModPackets.LapisShieldPacket.TYPE, ModPackets.LapisShieldPacket.STREAM_CODEC, ModPackets.LapisShieldPacket::run);
+
+		registrar.playToServer(ModPackets.KnowledgeBook.TYPE, ModPackets.KnowledgeBook.STREAM_CODEC, ModPackets.KnowledgeBook::run);
+	}
+
+	@SubscribeEvent
+	public static void onEvent(AddPackFindersEvent event) {
+		event.addPackFinders(MOD.makeID("hd_particles"), PackType.CLIENT_RESOURCES,
+				Component.literal("HD Particles"), PackSource.BUILT_IN, false, Pack.Position.TOP);
+	}
+
+	@SubscribeEvent
+	public static void onEvent(OnDatapackSyncEvent event) {
+		List<CustomPacketPayload> packets = new ArrayList<>();
+		packets.add(new ModPackets.InitializePacket(true));
+
+		CustomPotionData.write(packets);
+		RecipeLock.write(packets, event.getPlayer().getServer());
+
+		packets.add(new ModPackets.InitializePacket(false));
+		packets.forEach(p -> PacketDistributor.sendToPlayer(event.getPlayer(), p));
+	}
+
+	@SubscribeEvent
+	public static void onEvent(ServerStartingEvent event) {
+		EnchantHelper.setRegistry(() -> event.getServer().registries().compositeAccess().registryOrThrow(Registries.ENCHANTMENT));
+	}
+
 
 	public static SolLogger log() {
 		return MOD.getLogger();

@@ -16,13 +16,12 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 
 public class PotionCauldronBlockEntity extends BlockEntity {
     public Holder<Potion> potion = Potions.WATER;
 
     public PotionCauldronBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.POTION_CAULDRON, pos, state);
+        super(ModBlockEntities.POTION_CAULDRON.get(), pos, state);
     }
 
     @Override
@@ -41,8 +40,7 @@ public class PotionCauldronBlockEntity extends BlockEntity {
         });
     }
 
-    @Override
-    public @Nullable Object getRenderData() {
+    public int getRenderData() {
         return PotionContents.getColor(this.potion);
     }
 

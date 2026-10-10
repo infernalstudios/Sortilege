@@ -14,6 +14,6 @@ public class GrindingSlot extends Slot {
     }
 
     public boolean mayPlace(ItemStack stack) {
-        return this.parent.mayPlace(stack) || (ModConfig.knowledgeEnabled.get() && stack.is(ModItems.KNOWLEDGE_BOOK));
+        return this.parent.mayPlace(stack) || (ModConfig.knowledgeEnabled.get() && stack.is(ModItems.KNOWLEDGE_BOOK.get()));
     }
 }

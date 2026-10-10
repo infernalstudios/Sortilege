@@ -7,9 +7,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
+import java.util.function.Supplier;
+
 public class ModBlocks {
     public static void register() {}
 
-    public static final Block POTION_CAULDRON = Sortilege.MOD.register(BlockHolder.class, "potion_cauldron",
-            () -> new PotionCauldronBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WATER_CAULDRON))).get();
+    public static final Supplier<Block> POTION_CAULDRON = Sortilege.MOD.register(BlockHolder.class, "potion_cauldron",
+            () -> new PotionCauldronBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WATER_CAULDRON)));
 }

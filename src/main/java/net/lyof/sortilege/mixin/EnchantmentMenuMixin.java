@@ -119,7 +119,7 @@ public abstract class EnchantmentMenuMixin extends AbstractContainerMenu impleme
                     ItemStack stack;
                     for (int i = 0; i < ChiseledBookShelfBlockEntity.MAX_BOOKS_IN_STORAGE; i++) {
                         stack = bookshelf.getItem(i);
-                        if (stack.is(ModItems.KNOWLEDGE_BOOK) && stack.get(ModDataComponents.KNOWLEDGE).isAuthor(sorti_player))
+                        if (stack.is(ModItems.KNOWLEDGE_BOOK.get()) && stack.get(ModDataComponents.KNOWLEDGE).isAuthor(sorti_player))
                             this.sorti_knowledge.learn(stack);
                     }
                 }

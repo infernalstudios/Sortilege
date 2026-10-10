@@ -10,10 +10,10 @@ import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.StaffTier;
 import net.minecraft.util.GsonHelper;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.WeatheringCopper;
 
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public abstract class WeatheringStaffReader implements IStaffEntryReader {
     @Override
@@ -36,11 +36,11 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
         return new Display().read(json);
     }
 
-    public abstract AStaffItem make(StaffEntry entry, WeatheringCopper.WeatherState state, boolean waxed);
+    public abstract Supplier<AStaffItem> make(StaffEntry entry, WeatheringCopper.WeatherState state, boolean waxed);
 
     // I'm not proud of this but welp. That or Java is even more verbose than I thought and it's not really my fault
     @Override
-    public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
+    public void register(StaffEntry entry, BiConsumer<String, Supplier<AStaffItem>> registrar) {
         Tier tier = ((Tier) entry.getTier());
         Cost cost = ((Cost) entry.getCost());
         Effects effects = ((Effects) entry.getEffects());
@@ -55,14 +55,14 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
         StaffEntry oxidizedEntry = new StaffEntry("oxidized_" + entry.getID(), entry.getSortIndex() + 3, entry.getReader(),
                 tier.oxidized, cost.oxidized, effects.oxidized, display.oxidized);
 
-        AStaffItem unaffected = this.make(unaffectedEntry, WeatheringCopper.WeatherState.UNAFFECTED, false);
-        AStaffItem unaffectedWaxed = this.make(unaffectedEntry, WeatheringCopper.WeatherState.UNAFFECTED, true);
-        AStaffItem exposed = this.make(exposedEntry, WeatheringCopper.WeatherState.EXPOSED, false);
-        AStaffItem exposedWaxed = this.make(exposedEntry, WeatheringCopper.WeatherState.EXPOSED, true);
-        AStaffItem weathered = this.make(weatheredEntry, WeatheringCopper.WeatherState.WEATHERED, false);
-        AStaffItem weatheredWaxed = this.make(weatheredEntry, WeatheringCopper.WeatherState.WEATHERED, true);
-        AStaffItem oxidized = this.make(oxidizedEntry, WeatheringCopper.WeatherState.OXIDIZED, false);
-        AStaffItem oxidizedWaxed = this.make(oxidizedEntry, WeatheringCopper.WeatherState.OXIDIZED, true);
+        Supplier<AStaffItem> unaffected = this.make(unaffectedEntry, WeatheringCopper.WeatherState.UNAFFECTED, false);
+        Supplier<AStaffItem> unaffectedWaxed = this.make(unaffectedEntry, WeatheringCopper.WeatherState.UNAFFECTED, true);
+        Supplier<AStaffItem> exposed = this.make(exposedEntry, WeatheringCopper.WeatherState.EXPOSED, false);
+        Supplier<AStaffItem> exposedWaxed = this.make(exposedEntry, WeatheringCopper.WeatherState.EXPOSED, true);
+        Supplier<AStaffItem> weathered = this.make(weatheredEntry, WeatheringCopper.WeatherState.WEATHERED, false);
+        Supplier<AStaffItem> weatheredWaxed = this.make(weatheredEntry, WeatheringCopper.WeatherState.WEATHERED, true);
+        Supplier<AStaffItem> oxidized = this.make(oxidizedEntry, WeatheringCopper.WeatherState.OXIDIZED, false);
+        Supplier<AStaffItem> oxidizedWaxed = this.make(oxidizedEntry, WeatheringCopper.WeatherState.OXIDIZED, true);
 
         registrar.accept(unaffectedEntry.getID(), unaffected);
         registrar.accept("waxed_" + unaffectedEntry.getID(), unaffectedWaxed);
@@ -73,21 +73,21 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
         registrar.accept(oxidizedEntry.getID(), oxidized);
         registrar.accept("waxed_" + oxidizedEntry.getID(), oxidizedWaxed);
 
-        ModItemGroups.STAFF_BLACKLIST.add(unaffectedWaxed);
-        ModItemGroups.STAFF_BLACKLIST.add(exposed);
-        ModItemGroups.STAFF_BLACKLIST.add(exposedWaxed);
-        ModItemGroups.STAFF_BLACKLIST.add(weathered);
-        ModItemGroups.STAFF_BLACKLIST.add(weatheredWaxed);
-        ModItemGroups.STAFF_BLACKLIST.add(oxidized);
-        ModItemGroups.STAFF_BLACKLIST.add(oxidizedWaxed);
+        ModItemGroups.STAFF_BLACKLIST.add("waxed_" + unaffectedEntry.getID());
+        ModItemGroups.STAFF_BLACKLIST.add(exposedEntry.getID());
+        ModItemGroups.STAFF_BLACKLIST.add("waxed_" + exposedEntry.getID());
+        ModItemGroups.STAFF_BLACKLIST.add(weatheredEntry.getID());
+        ModItemGroups.STAFF_BLACKLIST.add("waxed_" + weatheredEntry.getID());
+        ModItemGroups.STAFF_BLACKLIST.add(oxidizedEntry.getID());
+        ModItemGroups.STAFF_BLACKLIST.add("waxed_" + oxidizedEntry.getID());
 
-        NEXT_BY_ITEM.put(unaffected, exposed);
-        NEXT_BY_ITEM.put(exposed, weathered);
-        NEXT_BY_ITEM.put(weathered, oxidized);
-        WAX_ON_BY_ITEM.put(unaffected, unaffectedWaxed);
-        WAX_ON_BY_ITEM.put(exposed, exposedWaxed);
-        WAX_ON_BY_ITEM.put(weathered, weatheredWaxed);
-        WAX_ON_BY_ITEM.put(oxidized, oxidizedWaxed);
+        NEXT_BY_ITEM.put(unaffectedEntry.getID(), exposedEntry.getID());
+        NEXT_BY_ITEM.put(exposedEntry.getID(), weatheredEntry.getID());
+        NEXT_BY_ITEM.put(weatheredEntry.getID(), oxidizedEntry.getID());
+        WAX_ON_BY_ITEM.put(unaffectedEntry.getID(), "waxed_" + unaffectedEntry.getID());
+        WAX_ON_BY_ITEM.put(exposedEntry.getID(), "waxed_" + exposedEntry.getID());
+        WAX_ON_BY_ITEM.put(weatheredEntry.getID(), "waxed_" + weatheredEntry.getID());
+        WAX_ON_BY_ITEM.put(oxidizedEntry.getID(), "waxed_" + oxidizedEntry.getID());
     }
 
     protected static class Tier extends StaffTier {
@@ -163,8 +163,8 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
         }
     }
 
-    public static final HashBiMap<Item, Item> NEXT_BY_ITEM = HashBiMap.create();
-    public static final BiMap<Item, Item> PREVIOUS_BY_ITEM = NEXT_BY_ITEM.inverse();
-    public static final HashBiMap<Item, Item> WAX_ON_BY_ITEM = HashBiMap.create();
-    public static final BiMap<Item, Item> WAX_OFF_BY_ITEM = WAX_ON_BY_ITEM.inverse();
+    public static final BiMap<String, String> NEXT_BY_ITEM = HashBiMap.create();
+    public static final BiMap<String, String> PREVIOUS_BY_ITEM = NEXT_BY_ITEM.inverse();
+    public static final BiMap<String, String> WAX_ON_BY_ITEM = HashBiMap.create();
+    public static final BiMap<String, String> WAX_OFF_BY_ITEM = WAX_ON_BY_ITEM.inverse();
 }

@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.fabricmc.loader.api.FabricLoader;
 import net.lcc.sollib.core.Identifier;
+import net.lcc.sollib.platform.Services;
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ public record StaffEntry(String getID, int getSortIndex, IStaffEntryReader getRe
             recipes.add(Identifier.of(elm.getAsString()));
 
         String dependency = GsonHelper.getAsString(json, "dependency", "minecraft");
-        if (!FabricLoader.getInstance().isModLoaded(dependency))
+        if (!Services.PLATFORM.isModLoaded(dependency))
             return null;
 
         List<ResourceLocation> type = new ArrayList<>();

@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class HealthStaffItem extends AStaffItem {
     @Dependency(mod = "sortilege:health")
@@ -28,8 +29,8 @@ public class HealthStaffItem extends AStaffItem {
         }
 
         @Override
-        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
-            registrar.accept(entry.getID(), new HealthStaffItem(entry, new Properties()));
+        public void register(StaffEntry entry, BiConsumer<String, Supplier<AStaffItem>> registrar) {
+            registrar.accept(entry.getID(), () -> new HealthStaffItem(entry, new Properties()));
         }
     }
 

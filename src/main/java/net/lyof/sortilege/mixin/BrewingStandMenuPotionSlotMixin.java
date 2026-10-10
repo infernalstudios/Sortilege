@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(targets = "net.minecraft.world.inventory.BrewingStandMenu$PotionSlot")
 public class BrewingStandMenuPotionSlotMixin {
-    @Inject(method = "mayPlaceItem", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mayPlaceItem(Lnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
     private static void matches(ItemStack stack, CallbackInfoReturnable<Boolean> cir){
         if (BetterBrewingRegistry.isInput(stack)) cir.setReturnValue(true);
     }

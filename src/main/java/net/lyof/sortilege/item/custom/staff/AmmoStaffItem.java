@@ -35,8 +35,8 @@ public class AmmoStaffItem extends AStaffItem {
         }
 
         @Override
-        public void register(StaffEntry entry, BiConsumer<String, AStaffItem> registrar) {
-            registrar.accept(entry.getID(), new AmmoStaffItem(entry, new Properties()));
+        public void register(StaffEntry entry, BiConsumer<String, Supplier<AStaffItem>> registrar) {
+            registrar.accept(entry.getID(), () -> new AmmoStaffItem(entry, new Properties()));
         }
     }
 

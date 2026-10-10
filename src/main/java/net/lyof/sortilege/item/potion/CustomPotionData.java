@@ -3,7 +3,6 @@ package net.lyof.sortilege.item.potion;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.setup.ModConfig;
@@ -19,6 +18,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -82,7 +82,7 @@ public class CustomPotionData implements CustomPacketPayload {
         return effects;
     }
 
-    public void read(ClientPlayNetworking.Context context) {
+    public void read(IPayloadContext context) {
         INSTANCES.add(this);
     }
 

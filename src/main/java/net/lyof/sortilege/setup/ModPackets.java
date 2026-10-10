@@ -1,15 +1,12 @@
 package net.lyof.sortilege.setup;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.item.ModDataComponents;
 import net.lyof.sortilege.item.ModItems;
 import net.lyof.sortilege.item.custom.LapisShieldItem;
 import net.lyof.sortilege.recipe.crafting.RecipeLock;
 import net.lyof.sortilege.screen.custom.KnowledgeBookScreenHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -22,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -38,8 +36,7 @@ public class ModPackets {
             return TYPE;
         }
 
-        @Environment(EnvType.CLIENT)
-        public static void run(InitializePacket packet, ClientPlayNetworking.Context context) {
+        public static void run(InitializePacket packet, IPayloadContext context) {
             if (packet.start())
                 ReloadListener.INSTANCE.preloadClient();
             else
@@ -60,8 +57,7 @@ public class ModPackets {
             return TYPE;
         }
 
-        @Environment(EnvType.CLIENT)
-        public static void run(InitializeLockPacket packet, ClientPlayNetworking.Context context) {
+        public static void run(InitializeLockPacket packet, IPayloadContext context) {
             RecipeLock.read(packet);
         }
     }
@@ -81,8 +77,7 @@ public class ModPackets {
             return TYPE;
         }
 
-        @Environment(EnvType.CLIENT)
-        public static void run(ParticlePacket packet, ClientPlayNetworking.Context context) {
+        public static void run(ParticlePacket packet, IPayloadContext context) {
             int spread = packet.amount() == 1 ? 0 : 2;
             ParticleType<?> particle = BuiltInRegistries.PARTICLE_TYPE.get(packet.particle());
     /*
@@ -117,7 +112,7 @@ public class ModPackets {
             } catch (Throwable ignored) {}*/
 
             for (int i = 0; i < packet.amount(); i++) {
-                context.client().level.addAlwaysVisibleParticle(particle instanceof ParticleOptions options
+                Minecraft.getInstance().level.addAlwaysVisibleParticle(particle instanceof ParticleOptions options
                                 ? options
                                 : ColorParticleOption.create((ParticleType<ColorParticleOption>) particle, packet.color()),
                         packet.pos().x() + (0.5 - Math.random()) * spread,
@@ -140,14 +135,13 @@ public class ModPackets {
             return TYPE;
         }
 
-        @Environment(EnvType.CLIENT)
-        public static void run(LapisShieldPacket packet, ClientPlayNetworking.Context context) {
-            Entity e = context.client().level.getEntity(packet.id());
+        public static void run(LapisShieldPacket packet, IPayloadContext context) {
+            Entity e = Minecraft.getInstance().level.getEntity(packet.id());
             if (!(e instanceof LivingEntity entity))
                 return;
 
             ItemStack stack = entity.getOffhandItem();
-            if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
+            if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD.get())) return;
 
             if (packet.cooldown() == 0)
                 LapisShieldItem.removeCooldown(stack);
@@ -175,7 +169,7 @@ public class ModPackets {
             return TYPE;
         }
 
-        public static void run(KnowledgeBook packet, ServerPlayNetworking.Context context) {
+        public static void run(KnowledgeBook packet, IPayloadContext context) {
             if (context.player().containerMenu instanceof KnowledgeBookScreenHandler screen)
                 screen.stack.get(ModDataComponents.KNOWLEDGE).setAuthors(packet.authors());
         }

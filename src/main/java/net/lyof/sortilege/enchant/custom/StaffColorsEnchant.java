@@ -47,7 +47,7 @@ public record StaffColorsEnchant(List<Integer> colors) {
 
         cache = new ArrayList<>();
         for (Object2IntMap.Entry<Holder<Enchantment>> enchant : enchants.entrySet()) {
-            StaffColorsEnchant colors = enchant.getKey().value().effects().get(ModEnchants.STAFF_COLORS);
+            StaffColorsEnchant colors = enchant.getKey().value().effects().get(ModEnchants.STAFF_COLORS.get());
             if (colors == null) continue;
 
             cache.addAll(colors.colors());

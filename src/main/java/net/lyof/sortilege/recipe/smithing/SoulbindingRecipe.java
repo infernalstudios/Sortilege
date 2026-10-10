@@ -48,6 +48,6 @@ public class SoulbindingRecipe implements SmithingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.SOULBINDING_SERIALIZER;
+        return ModRecipeTypes.SOULBINDING_SERIALIZER.get();
     }
 }

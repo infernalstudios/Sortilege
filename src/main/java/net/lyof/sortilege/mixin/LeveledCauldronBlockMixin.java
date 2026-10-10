@@ -38,7 +38,7 @@ public abstract class LeveledCauldronBlockMixin {
         if (ModConfig.cauldronBrewingEnabled.get() && entity instanceof ItemEntity item && world.getBlockState(pos.below()).is(BlockTags.CAMPFIRES)
                 && PotionCauldronBlock.isLit(world.getBlockState(pos.below())) && state.is(Blocks.WATER_CAULDRON)) {
 
-            Optional<RecipeHolder<CauldronBrewingRecipe>> optional = world.getRecipeManager().getRecipeFor(ModRecipeTypes.CAULDRON_BREWING,
+            Optional<RecipeHolder<CauldronBrewingRecipe>> optional = world.getRecipeManager().getRecipeFor(ModRecipeTypes.CAULDRON_BREWING.get(),
                     new SingleRecipeInput(item.getItem()), world);
 
             if (optional.isPresent() && item.getItem().getCount() >= state.getValue(LEVEL)) {

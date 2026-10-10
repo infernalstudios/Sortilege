@@ -115,4 +115,15 @@ public class EnchantKnowledge {
             ).apply(instance, (enchants, i, authors) -> new EnchantKnowledge(enchants, authors)));
     public static final StreamCodec<RegistryFriendlyByteBuf, EnchantKnowledge> STREAM_CODEC =
             StreamCodec.of(EnchantKnowledge::toNetwork, EnchantKnowledge::fromNetwork);
+
+    // I love Neo
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

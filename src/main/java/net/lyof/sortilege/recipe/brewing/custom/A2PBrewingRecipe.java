@@ -58,6 +58,6 @@ public class A2PBrewingRecipe extends BrewingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.POTION_BREWING_SERIALIZER;
+        return ModRecipeTypes.POTION_BREWING_SERIALIZER.get();
     }
 }

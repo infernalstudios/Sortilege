@@ -79,7 +79,7 @@ public abstract class ItemStackMixin {
     public void unbreakableTag(CallbackInfoReturnable<Boolean> cir) {
         ItemStack self = (ItemStack) (Object) this;
         if (self.is(ModTags.Items.UNBREAKABLE)) cir.setReturnValue(false);
-        if (EnchantHelper.hasEffect(ModEnchants.TRUE_UNBREAKING, self, (effect, level) -> effect <= level))
+        if (EnchantHelper.hasEffect(ModEnchants.TRUE_UNBREAKING.get(), self, (effect, level) -> effect <= level))
             cir.setReturnValue(false);
     }
 

@@ -1,5 +1,7 @@
 package net.lyof.sortilege.recipe;
 
+import net.lcc.sollib.api.common.registry.SHolder;
+import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.lyof.sortilege.recipe.brewing.CauldronBrewingRecipe;
@@ -15,15 +17,40 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 
+import java.util.function.Supplier;
+
 public class ModRecipeTypes {
+    public static class RecipeHolder<T extends Recipe<?>> extends SHolder<RecipeType<T>> {
+        public RecipeHolder(SolModContainer mod, String name, Supplier<RecipeType<T>> entrySupplier) {
+            super(mod, name, entrySupplier);
+        }
+
+        @Override
+        public Registry<RecipeType<T>> getRegistry() {
+            return (Registry<RecipeType<T>>) (Object) BuiltInRegistries.RECIPE_TYPE;
+        }
+    }
+
+    public static class SerializerHolder<T extends Recipe<?>> extends SHolder<RecipeSerializer<T>> {
+        public SerializerHolder(SolModContainer mod, String name, Supplier<RecipeSerializer<T>> entrySupplier) {
+            super(mod, name, entrySupplier);
+        }
+
+        @Override
+        public Registry<RecipeSerializer<T>> getRegistry() {
+            return (Registry<RecipeSerializer<T>>) (Object) BuiltInRegistries.RECIPE_SERIALIZER;
+        }
+    }
+
+
     public static void register() {
         try {
             //register("botania_staff_lens", BotaniaStaffLensRecipe.SERIALIZER);
         } catch (Throwable ignored) {}
     }
 
-    private static <T extends RecipeInput, R extends Recipe<T>> RecipeType<R> register(String name) {
-        return Registry.register(BuiltInRegistries.RECIPE_TYPE, Sortilege.MOD.makeID(name), new RecipeType<>() {
+    private static <T extends RecipeInput, R extends Recipe<T>> RecipeHolder<R> register(String name) {
+        return Sortilege.MOD.register(RecipeHolder.class, name, () -> new RecipeType<>() {
             @Override
             public String toString() {
                 return Sortilege.MOD_ID + ':' + name;
@@ -31,34 +58,34 @@ public class ModRecipeTypes {
         });
     }
 
-    private static <S extends RecipeSerializer<T>, T extends Recipe<?>> S register(String name, S serializer) {
-        return Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, Sortilege.MOD.makeID(name), serializer);
+    private static <T extends Recipe<?>> SerializerHolder<T> register(String name, RecipeSerializer<T> serializer) {
+        return Sortilege.MOD.register(SerializerHolder.class, name, () -> serializer);
     }
 
 
-    public static RecipeType<CauldronBrewingRecipe> CAULDRON_BREWING = register("cauldron_brewing");
-    public static RecipeType<BrewingRecipe> BREWING = register("brewing");
-    public static RecipeType<CatalystRecipe> CATALYST = register("catalyst");
+    public static RecipeHolder<CauldronBrewingRecipe> CAULDRON_BREWING = register("cauldron_brewing");
+    public static RecipeHolder<BrewingRecipe> BREWING = register("brewing");
+    public static RecipeHolder<CatalystRecipe> CATALYST = register("catalyst");
 
 
-    public static RecipeSerializer<SoulbindingRecipe> SOULBINDING_SERIALIZER
+    public static SerializerHolder<SoulbindingRecipe> SOULBINDING_SERIALIZER
             = register("soulbind_smithing", UnitRecipeSerializer.of(SoulbindingRecipe::new));
 
-    public static RecipeSerializer<LimitBreakRecipe> LIMIT_BREAK_SERIALIZER
+    public static SerializerHolder<LimitBreakRecipe> LIMIT_BREAK_SERIALIZER
             = register("limitbreak_smithing", UnitRecipeSerializer.of(LimitBreakRecipe::new));
 
-    public static RecipeSerializer<CauldronBrewingRecipe> CAULDRON_BREWING_SERIALIZER
+    public static SerializerHolder<CauldronBrewingRecipe> CAULDRON_BREWING_SERIALIZER
             = register("cauldron_brewing", new CauldronBrewingRecipe.Serializer());
 
-    public static RecipeSerializer<A2PBrewingRecipe> POTION_BREWING_SERIALIZER
+    public static SerializerHolder<A2PBrewingRecipe> POTION_BREWING_SERIALIZER
             = register("antidote_to_potion_brewing", UnitRecipeSerializer.ofPotion(A2PBrewingRecipe::new));
 
-    public static RecipeSerializer<P2ABrewingRecipe> ANTIDOTE_BREWING_SERIALIZER
+    public static SerializerHolder<P2ABrewingRecipe> ANTIDOTE_BREWING_SERIALIZER
             = register("potion_to_antidote_brewing", UnitRecipeSerializer.ofPotion(P2ABrewingRecipe::new));
 
-    public static RecipeSerializer<BrewingRecipe> BREWING_SERIALIZER
+    public static SerializerHolder<BrewingRecipe> BREWING_SERIALIZER
             = register("brewing", new BrewingRecipe.Serializer());
 
-    public static RecipeSerializer<?> CATALYST_SERIALIZER
+    public static SerializerHolder<?> CATALYST_SERIALIZER
             = register("enchanting_catalyst", new CatalystRecipe.Serializer());
 }

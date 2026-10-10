@@ -31,7 +31,7 @@ public record StaffStatsEnchant(LevelBasedValue damage, LevelBasedValue range, L
         float damage = 0, blast = 0, kinesis = 0, cost = 0, cooldown = 0;
         int range = 0, pierce = 0;
         for (Object2IntMap.Entry<Holder<Enchantment>> enchant : stack.getEnchantments().entrySet()) {
-            StaffStatsEnchant increase = enchant.getKey().value().effects().get(ModEnchants.STAFF_STATS);
+            StaffStatsEnchant increase = enchant.getKey().value().effects().get(ModEnchants.STAFF_STATS.get());
             if (increase == null) continue;
 
             damage += increase.damage().calculate(enchant.getIntValue());

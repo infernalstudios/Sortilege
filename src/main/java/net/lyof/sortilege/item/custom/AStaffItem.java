@@ -208,7 +208,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public float getStaffDamage(ItemStack stack, LivingEntity player) {
-        return this.getStaffDamage(stack) + (float) player.getAttributeValue(ModAttributes.STAFF_DAMAGE);
+        return this.getStaffDamage(stack) + (float) player.getAttributeValue(ModAttributes.STAFF_DAMAGE.getAsHolder());
     }
 
     public int getPiercing(ItemStack stack) {
@@ -216,7 +216,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public int getPiercing(ItemStack stack, LivingEntity player) {
-        return this.getPiercing(stack) + (int) player.getAttributeValue(ModAttributes.STAFF_PIERCE);
+        return this.getPiercing(stack) + (int) player.getAttributeValue(ModAttributes.STAFF_PIERCE.getAsHolder());
     }
 
     public int getRange(ItemStack stack) {
@@ -224,7 +224,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public int getRange(ItemStack stack, LivingEntity player) {
-        return this.getRange(stack) + (int) player.getAttributeValue(ModAttributes.STAFF_RANGE);
+        return this.getRange(stack) + (int) player.getAttributeValue(ModAttributes.STAFF_RANGE.getAsHolder());
     }
 
     public int getCooldown(ItemStack stack, Player player) {
@@ -323,7 +323,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
 
     public float modifyDamageDealt(ItemStack stack, float damage, LivingEntity player, LivingEntity target, DamageSource source) {
         MutableFloat mutable = new MutableFloat(damage);
-        EnchantHelper.iterateEffects(ModEnchants.STAFF_DAMAGE, player,
+        EnchantHelper.iterateEffects(ModEnchants.STAFF_DAMAGE.get(), player,
                 (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())
@@ -349,7 +349,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
         targetsHit.add(target);
 
         DamageSource source = player.damageSources().indirectMagic(player, player);
-        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
+        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE.get(), player.getWeaponItem());
         if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
 
         float d = this.getStaffDamage(stack, player);
@@ -426,7 +426,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     public abstract void consumeResource(ItemStack stack, Player player);
 
     public void onShoot(ItemStack stack, Player player) {
-        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_SHOOT, player,
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_SHOOT.get(), player,
                 (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, player)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, player.position())
@@ -494,7 +494,7 @@ public abstract class AStaffItem extends TieredItem implements IAddedRenderItem,
     }
 
     public void onHit(ItemStack stack, LivingEntity player, LivingEntity target, DamageSource source) {
-        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT, player, target,
+        EnchantHelper.iterateEffects(ModEnchants.ON_STAFF_HIT.get(), player, target,
                 (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, target)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, target.position())

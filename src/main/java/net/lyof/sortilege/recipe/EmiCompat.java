@@ -49,7 +49,7 @@ public class EmiCompat implements EmiPlugin {
                 EmiIngredient.of(ModTags.Items.LIMIT_BREAKER)));
 
         Map<Item, List<Holder<Enchantment>>> catalysts = new HashMap<>();
-        for (RecipeHolder<CatalystRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CATALYST))
+        for (RecipeHolder<CatalystRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CATALYST.get()))
             catalysts.merge(recipe.value().item(), recipe.value().enchants(), (old, self) -> {
                 Set<Holder<Enchantment>> enchants = new HashSet<>();
                 enchants.addAll(old);
@@ -59,10 +59,10 @@ public class EmiCompat implements EmiPlugin {
         for (Map.Entry<Item, List<Holder<Enchantment>>> entry : catalysts.entrySet())
             registry.addRecipe(new CatalystEmiRecipe(entry.getKey(), entry.getValue()));
 
-        for (RecipeHolder<BrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.BREWING))
+        for (RecipeHolder<BrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.BREWING.get()))
             registry.addRecipe(new BetterBrewingEmiRecipe(recipe));
 
-        for (RecipeHolder<CauldronBrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CAULDRON_BREWING))
+        for (RecipeHolder<CauldronBrewingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CAULDRON_BREWING.get()))
             registry.addRecipe(new CauldronBrewingEmiRecipe(recipe));
     }
 }

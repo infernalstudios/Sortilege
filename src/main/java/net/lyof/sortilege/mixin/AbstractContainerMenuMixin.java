@@ -19,28 +19,28 @@ public abstract class AbstractContainerMenuMixin {
 
     @WrapOperation(method = "moveItemStackTo", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/Slot;mayPlace(Lnet/minecraft/world/item/ItemStack;)Z"))
     private boolean preventStorytoldMove(Slot instance, ItemStack stack, Operation<Boolean> original) {
-        if (!(instance.container instanceof Inventory) && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, stack))
+        if (!(instance.container instanceof Inventory) && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP.get(), stack))
             return false;
         return original.call(instance, stack);
     }
 
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/world/inventory/Slot;safeTake(IILnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack preventStorytoldDrop(Slot instance, int min, int max, Player player, Operation<ItemStack> original) {
-        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, instance.getItem()))
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP.get(), instance.getItem()))
             return ItemStack.EMPTY;
         return original.call(instance, min, max, player);
     }
 
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", ordinal = 1, target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setCarried(Lnet/minecraft/world/item/ItemStack;)V"))
     private void preventStorytoldDrop(AbstractContainerMenu instance, ItemStack stack, Operation<Void> original) {
-        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, this.getCarried()))
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP.get(), this.getCarried()))
             return;
         original.call(instance, stack);
     }
 
     @WrapOperation(method = "doClick", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/world/item/ItemStack;split(I)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack preventStorytoldDrop(ItemStack instance, int amount, Operation<ItemStack> original) {
-        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, this.getCarried()))
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP.get(), this.getCarried()))
             return instance;
         return original.call(instance, amount);
     }

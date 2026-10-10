@@ -32,10 +32,10 @@ public class SortilegeClient {
 
         /*TODO
         if (ModConfig.witchHatEnabled.get()) ArmorRenderer.register(new WitchHatRenderer(), ModItems.WITCH_HAT);*/
-
+/*
         if (ModConfig.lapisShieldEnabled.get())
             ItemProperties.register(ModItems.LAPIS_SHIELD.get(), Sortilege.MOD.makeID("cooldown"),
-                    (stack, world, entity, seed) -> LapisShieldItem.isOnCooldown(stack) ? 1f : 0f);
+                    (stack, world, entity, seed) -> LapisShieldItem.isOnCooldown(stack) ? 1f : 0f);*/
     }
 
     @SubscribeEvent
@@ -50,11 +50,11 @@ public class SortilegeClient {
 
     @SubscribeEvent
     public static void onEvent(RegisterParticleProvidersEvent event) {
-        event.registerSpriteSet(ModParticles.WISP, WispParticle.Factory::new);
+        event.registerSpriteSet(ModParticles.WISP.get(), WispParticle.Factory::new);
     }
 
     @SubscribeEvent
     public static void onEvent(RegisterMenuScreensEvent event) {
-        event.register(ModScreenHandlers.KNOWLEDGE_BOOK, KnowledgeBookScreen::new);
+        event.register(ModScreenHandlers.KNOWLEDGE_BOOK.get(), KnowledgeBookScreen::new);
     }
 }

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 public class ModItems {
     public static List<Supplier<AStaffItem>> STAFFS = new ArrayList<>();
 
-    public static void register() {
+    public static void register() {/*
         for (StaffEntry entry : ModConfig.staffs.get()) {
             entry.getReader().register(entry, (id, staff) -> {
                 Supplier<AStaffItem> s = () -> {
@@ -28,7 +28,7 @@ public class ModItems {
                 register(true, id, (Supplier<Item>) (Object) s);
                 STAFFS.add(s);
             });
-        }
+        }*/
     }
 
     public static Supplier<Item> register(boolean config, String name, Supplier<Item> item) {

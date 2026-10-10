@@ -45,12 +45,12 @@ public class CauldronBrewingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.CAULDRON_BREWING_SERIALIZER;
+        return ModRecipeTypes.CAULDRON_BREWING_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return ModRecipeTypes.CAULDRON_BREWING;
+        return ModRecipeTypes.CAULDRON_BREWING.get();
     }
 
     public static class Serializer implements RecipeSerializer<CauldronBrewingRecipe> {

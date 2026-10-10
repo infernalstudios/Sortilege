@@ -71,7 +71,7 @@ public abstract class BrewingRecipe implements Recipe<RecipeInput> {
 
     @Override
     public RecipeType<?> getType() {
-        return ModRecipeTypes.BREWING;
+        return ModRecipeTypes.BREWING.get();
     }
 
 

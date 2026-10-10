@@ -8,9 +8,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.LootTableLoadEvent;
 
+@EventBusSubscriber
 public class ModLootModifiers {
+    @SubscribeEvent
     public static void register(LootTableLoadEvent event) {
         if (event.getName().getPath().startsWith("chests/") && ModConfig.limititeLootWeight.get() > 0) {
             LootPool.Builder poolBuilder = LootPool.lootPool()

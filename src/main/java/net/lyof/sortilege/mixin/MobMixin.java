@@ -19,7 +19,7 @@ public class MobMixin {
     @WrapOperation(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSources;mobAttack(Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/damagesource/DamageSource;"))
     private DamageSource changeDamageType(DamageSources instance, LivingEntity mob, Operation<DamageSource> original) {
         DamageSource source = original.call(instance, mob);
-        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, mob.getWeaponItem());
+        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE.get(), mob.getWeaponItem());
         if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
         return source;
     }

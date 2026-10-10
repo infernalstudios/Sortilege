@@ -42,7 +42,7 @@ public class KnowledgeBookScreenHandler extends AbstractContainerMenu {
     public final Container inventory;
 
     public KnowledgeBookScreenHandler(int syncId, Inventory inventory, ItemStack stack) {
-        super(ModScreenHandlers.KNOWLEDGE_BOOK, syncId);
+        super(ModScreenHandlers.KNOWLEDGE_BOOK.get(), syncId);
         this.stack = stack;
         this.inventory = new SimpleContainer(1);
 

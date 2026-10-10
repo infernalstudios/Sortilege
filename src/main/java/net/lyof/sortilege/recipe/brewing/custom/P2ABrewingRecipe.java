@@ -69,6 +69,6 @@ public class P2ABrewingRecipe extends BrewingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.ANTIDOTE_BREWING_SERIALIZER;
+        return ModRecipeTypes.ANTIDOTE_BREWING_SERIALIZER.get();
     }
 }

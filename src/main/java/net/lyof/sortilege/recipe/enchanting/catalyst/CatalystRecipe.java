@@ -23,7 +23,7 @@ import java.util.List;
 
 public record CatalystRecipe(Item item, List<Holder<Enchantment>> enchants) implements Recipe<SingleRecipeInput> {
     public static boolean isDisabled(Level world) {
-        return !ModConfig.catalystBooks.get() && world.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CATALYST).isEmpty();
+        return !ModConfig.catalystBooks.get() && world.getRecipeManager().getAllRecipesFor(ModRecipeTypes.CATALYST.get()).isEmpty();
     }
 
     public static ItemEnchantments getEnchantments(ItemStack catalyst, Level world) {
@@ -31,14 +31,14 @@ public record CatalystRecipe(Item item, List<Holder<Enchantment>> enchants) impl
             return catalyst.getEnchantments();
 
         ItemEnchantments.Mutable result = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
-        for (RecipeHolder<CatalystRecipe> recipe : world.getRecipeManager().getRecipesFor(ModRecipeTypes.CATALYST, new SingleRecipeInput(catalyst), world))
+        for (RecipeHolder<CatalystRecipe> recipe : world.getRecipeManager().getRecipesFor(ModRecipeTypes.CATALYST.get(), new SingleRecipeInput(catalyst), world))
             for (Holder<Enchantment> enchant : recipe.value().enchants())
                 result.set(enchant, 1);
         return result.toImmutable();
     }
 
     public static boolean isCatalyst(ItemStack item, Level world) {
-        return world.getRecipeManager().getRecipeFor(ModRecipeTypes.CATALYST, new SingleRecipeInput(item), world).isPresent()
+        return world.getRecipeManager().getRecipeFor(ModRecipeTypes.CATALYST.get(), new SingleRecipeInput(item), world).isPresent()
                 || (item.is(Items.ENCHANTED_BOOK) && ModConfig.catalystBooks.get());
     }
 
@@ -65,12 +65,12 @@ public record CatalystRecipe(Item item, List<Holder<Enchantment>> enchants) impl
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.CATALYST_SERIALIZER;
+        return ModRecipeTypes.CATALYST_SERIALIZER.get();
     }
 
     @Override
     public RecipeType<?> getType() {
-        return ModRecipeTypes.CATALYST;
+        return ModRecipeTypes.CATALYST.get();
     }
 
 

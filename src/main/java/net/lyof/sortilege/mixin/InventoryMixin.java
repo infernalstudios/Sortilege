@@ -41,12 +41,12 @@ public abstract class InventoryMixin {
         if (i < Inventory.getSelectionSize() && ModConfig.keepEquipped.get())
             return true;
 
-        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DEATHDROP, stack)) {
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DEATHDROP.get(), stack)) {
             if (ModConfig.consumeSoulbound.get()) {
                 ItemEnchantments enchants = stack.getEnchantments();
                 Holder<Enchantment> soulbound = null;
                 for (Holder<Enchantment> enchant : stack.getEnchantments().keySet())
-                    if (enchant.value().effects().has(ModEnchants.PREVENT_DEATHDROP)) soulbound = enchant;
+                    if (enchant.value().effects().has(ModEnchants.PREVENT_DEATHDROP.get())) soulbound = enchant;
                 if (soulbound != null) enchants.keySet().remove(soulbound);
                 stack.set(DataComponents.ENCHANTMENTS, enchants);
             }
@@ -59,7 +59,7 @@ public abstract class InventoryMixin {
 
     @WrapMethod(method = "removeFromSelected")
     private ItemStack preventStorytoldDrop(boolean entireStack, Operation<ItemStack> original) {
-        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, this.getSelected()))
+        if (EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP.get(), this.getSelected()))
             return ItemStack.EMPTY;
         return original.call(entireStack);
     }

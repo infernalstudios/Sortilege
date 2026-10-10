@@ -64,16 +64,16 @@ public abstract class ItemStackMixin {
 
             if (damage > 0)
                 tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(damage),
-                        Component.translatable(ModAttributes.STAFF_DAMAGE.value().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
+                        Component.translatable(ModAttributes.STAFF_DAMAGE.getAsHolder().value().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
             if (piercing > 0)
                 tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(piercing),
-                        Component.translatable(ModAttributes.STAFF_PIERCE.value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+                        Component.translatable(ModAttributes.STAFF_PIERCE.getAsHolder().value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
             if (range > 0)
                 tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(range),
-                        Component.translatable(ModAttributes.STAFF_RANGE.value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+                        Component.translatable(ModAttributes.STAFF_RANGE.getAsHolder().value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
 
             original.call(instance, slot, (BiConsumer<Holder<Attribute>, AttributeModifier>) (attribute, modifier) -> {
-                if (attribute == ModAttributes.STAFF_DAMAGE || attribute == ModAttributes.STAFF_PIERCE || attribute == ModAttributes.STAFF_RANGE)
+                if (attribute == ModAttributes.STAFF_DAMAGE.getAsHolder() || attribute == ModAttributes.STAFF_PIERCE.getAsHolder() || attribute == ModAttributes.STAFF_RANGE.getAsHolder())
                     return;
                 action.accept(attribute, modifier);
             });

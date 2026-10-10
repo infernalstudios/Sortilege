@@ -112,14 +112,14 @@ public abstract class PlayerMixin extends LivingEntity implements EnchantLearner
     @WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/DamageSources;playerAttack(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/damagesource/DamageSource;"))
     private DamageSource changeDamageType(DamageSources instance, Player player, Operation<DamageSource> original) {
         DamageSource source = original.call(instance, player);
-        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE, player.getWeaponItem());
+        Pair<Holder<DamageType>, Integer> type = EnchantHelper.getEffect(ModEnchants.DAMAGE_TYPE.get(), player.getWeaponItem());
         if (type != null) source = new DamageSource(type.getFirst(), source.getDirectEntity(), source.getEntity());
         return source;
     }
 
     @WrapMethod(method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;")
     private ItemEntity preventStorytoldDrop(ItemStack stack, boolean throwRandomly, boolean retainOwnership, Operation<ItemEntity> original) {
-        if (!throwRandomly && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP, stack))
+        if (!throwRandomly && EnchantHelper.hasEffect(ModEnchants.PREVENT_DROP.get(), stack))
             return null;
         return original.call(stack, throwRandomly, retainOwnership);
     }

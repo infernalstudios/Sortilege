@@ -77,6 +77,6 @@ public class PotionBrewingRecipe extends BrewingRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.BREWING_SERIALIZER;
+        return ModRecipeTypes.BREWING_SERIALIZER.get();
     }
 }

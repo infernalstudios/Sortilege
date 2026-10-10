@@ -159,11 +159,11 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
         LivingEntity self = (LivingEntity) (Object) this;
 
         if (source.is(DamageTypeTags.IS_FIRE) && Arrays.stream(EquipmentSlot.values()).allMatch(slot ->
-                EnchantHelper.hasEffect(ModEnchants.TRUE_FIRE_PROTECTION, self.getItemBySlot(slot), (effect, level) -> effect <= level)))
+                EnchantHelper.hasEffect(ModEnchants.TRUE_FIRE_PROTECTION.get(), self.getItemBySlot(slot), (effect, level) -> effect <= level)))
             cir.setReturnValue(false);
 
         List<Float> values = new ArrayList<>();
-        EnchantHelper.iterateEffects(ModEnchants.DODGE_CHANCE, self,
+        EnchantHelper.iterateEffects(ModEnchants.DODGE_CHANCE.get(), self,
                 (params, level) -> params.withParameter(LootContextParams.THIS_ENTITY, self)
                         .withParameter(LootContextParams.ENCHANTMENT_LEVEL, level)
                         .withParameter(LootContextParams.ORIGIN, self.position())
@@ -229,8 +229,8 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
 
     @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"))
     private static AttributeSupplier.Builder addGlobalAttributes(AttributeSupplier.Builder original) {
-        for (Holder<Attribute> attribute : ModAttributes.GLOBALS)
-            original.add(attribute);
+        for (ModAttributes.AttributeHolder attribute : ModAttributes.GLOBALS)
+            original.add(attribute.getAsHolder());
         return original;
     }
 }

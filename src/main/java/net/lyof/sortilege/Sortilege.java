@@ -32,6 +32,7 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mod(Sortilege.MOD_ID)
+@EventBusSubscriber
 public class Sortilege {
 	public static final String MOD_ID = "sortilege";
 	public static final SolModContainer MOD = new SolModContainer("Sortilege", MOD_ID);
@@ -87,7 +89,7 @@ public class Sortilege {
 
 	@SubscribeEvent
 	public static void onEvent(AddPackFindersEvent event) {
-		event.addPackFinders(MOD.makeID("hd_particles"), PackType.CLIENT_RESOURCES,
+		event.addPackFinders(MOD.makeID("resourcepacks/hd_particles"), PackType.CLIENT_RESOURCES,
 				Component.literal("HD Particles"), PackSource.BUILT_IN, false, Pack.Position.TOP);
 	}
 

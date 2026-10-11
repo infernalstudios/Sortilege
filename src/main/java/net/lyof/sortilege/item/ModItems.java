@@ -17,18 +17,19 @@ import java.util.function.Supplier;
 public class ModItems {
     public static List<Supplier<AStaffItem>> STAFFS = new ArrayList<>();
 
-    public static void register() {/*
+    public static void register() {
         for (StaffEntry entry : ModConfig.staffs.get()) {
             entry.getReader().register(entry, (id, staff) -> {
                 Supplier<AStaffItem> s = () -> {
+                    Sortilege.log().info("AAREGISTERED " + id);
                     AStaffItem it = staff.get();
                     it.setName(id);
                     return it;
                 };
-                register(true, id, (Supplier<Item>) (Object) s);
+                s = (Supplier<AStaffItem>) (Object) register(true, id, (Supplier<Item>) (Object) s);
                 STAFFS.add(s);
             });
-        }*/
+        }
     }
 
     public static Supplier<Item> register(boolean config, String name, Supplier<Item> item) {

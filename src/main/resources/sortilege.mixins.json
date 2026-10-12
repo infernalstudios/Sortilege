@@ -38,6 +38,7 @@
     "ShieldItemMixin",
     "SlotMixin",
     "SmithingTransformRecipeMixin",
+    "WeatheringCopperItemMixin",
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",

@@ -52,7 +52,7 @@ public class ModParticles {
     public static final ResourceLocation WISP_ID = Sortilege.MOD.makeID("wisp");
     public static final ParticleHolder<ColorParticleOption> WISP = Sortilege.MOD.register(
             ParticleHolder.class,
-            WISP_ID.getNamespace(),
+            WISP_ID.getPath(),
             () -> new ParticleType<ColorParticleOption>(false) {
                 public MapCodec<ColorParticleOption> codec() {
                     return ColorParticleOption.codec(this);

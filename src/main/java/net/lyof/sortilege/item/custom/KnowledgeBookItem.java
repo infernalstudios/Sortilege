@@ -35,7 +35,7 @@ public class KnowledgeBookItem extends Item {
     }
 
     public KnowledgeBookItem(Properties settings) {
-        super(settings.component(ModDataComponents.KNOWLEDGE, new EnchantKnowledge()));
+        super(settings);
     }
 
     @Override
@@ -46,6 +46,7 @@ public class KnowledgeBookItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack stack = user.getItemInHand(hand);
+
         if (!stack.get(ModDataComponents.KNOWLEDGE).isAuthor(user)) {
             user.displayClientMessage(Component.translatable("screen.sortilege.knowledge_book.invalid").withStyle(ChatFormatting.YELLOW), true);
             return InteractionResultHolder.success(stack);
@@ -58,6 +59,9 @@ public class KnowledgeBookItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> list, TooltipFlag flag) {
         super.appendHoverText(stack, context, list, flag);
+
+        if (!stack.has(ModDataComponents.KNOWLEDGE))
+            stack.set(ModDataComponents.KNOWLEDGE, new EnchantKnowledge());
 
         if (Screen.hasShiftDown()) {
             for (String s : Component.translatable("item.sortilege.knowledge_book.desc").getString().split("\n"))
@@ -76,6 +80,8 @@ public class KnowledgeBookItem extends Item {
     @Override
     public void onCraftedBy(ItemStack stack, Level world, Player player) {
         super.onCraftedBy(stack, world, player);
+        if (!stack.has(ModDataComponents.KNOWLEDGE))
+            stack.set(ModDataComponents.KNOWLEDGE, new EnchantKnowledge());
         stack.get(ModDataComponents.KNOWLEDGE).setAuthors(List.of(player.getScoreboardName()));
     }
 }

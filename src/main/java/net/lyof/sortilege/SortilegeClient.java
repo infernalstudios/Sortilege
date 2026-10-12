@@ -18,6 +18,7 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.javafmlmod.FMLModContainer;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
@@ -25,6 +26,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 
 @Mod(value = Sortilege.MOD_ID, dist = Dist.CLIENT)
+@EventBusSubscriber
 public class SortilegeClient {
     public SortilegeClient(FMLModContainer container, IEventBus modBus, Dist dist) {
         ModRuntime.loadClient();

@@ -4,14 +4,20 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import net.lcc.sollib.api.common.SolRegistries;
+import net.lcc.sollib.api.common.registry.holder.ItemHolder;
+import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.StaffTier;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.WeatheringCopper;
 
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
@@ -81,13 +87,13 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
         ModItemGroups.STAFF_BLACKLIST.add(oxidizedEntry.getID());
         ModItemGroups.STAFF_BLACKLIST.add("waxed_" + oxidizedEntry.getID());
 
-        NEXT_BY_ITEM.put(unaffectedEntry.getID(), exposedEntry.getID());
-        NEXT_BY_ITEM.put(exposedEntry.getID(), weatheredEntry.getID());
-        NEXT_BY_ITEM.put(weatheredEntry.getID(), oxidizedEntry.getID());
-        WAX_ON_BY_ITEM.put(unaffectedEntry.getID(), "waxed_" + unaffectedEntry.getID());
-        WAX_ON_BY_ITEM.put(exposedEntry.getID(), "waxed_" + exposedEntry.getID());
-        WAX_ON_BY_ITEM.put(weatheredEntry.getID(), "waxed_" + weatheredEntry.getID());
-        WAX_ON_BY_ITEM.put(oxidizedEntry.getID(), "waxed_" + oxidizedEntry.getID());
+        NEXT_BY_ID.put(unaffectedEntry.getID(), exposedEntry.getID());
+        NEXT_BY_ID.put(exposedEntry.getID(), weatheredEntry.getID());
+        NEXT_BY_ID.put(weatheredEntry.getID(), oxidizedEntry.getID());
+        WAX_ON_BY_ID.put(unaffectedEntry.getID(), "waxed_" + unaffectedEntry.getID());
+        WAX_ON_BY_ID.put(exposedEntry.getID(), "waxed_" + exposedEntry.getID());
+        WAX_ON_BY_ID.put(weatheredEntry.getID(), "waxed_" + weatheredEntry.getID());
+        WAX_ON_BY_ID.put(oxidizedEntry.getID(), "waxed_" + oxidizedEntry.getID());
     }
 
     protected static class Tier extends StaffTier {
@@ -163,8 +169,29 @@ public abstract class WeatheringStaffReader implements IStaffEntryReader {
         }
     }
 
-    public static final BiMap<String, String> NEXT_BY_ITEM = HashBiMap.create();
-    public static final BiMap<String, String> PREVIOUS_BY_ITEM = NEXT_BY_ITEM.inverse();
-    public static final BiMap<String, String> WAX_ON_BY_ITEM = HashBiMap.create();
-    public static final BiMap<String, String> WAX_OFF_BY_ITEM = WAX_ON_BY_ITEM.inverse();
+    protected static final BiMap<String, String> NEXT_BY_ID = HashBiMap.create();
+    protected static final BiMap<String, String> PREVIOUS_BY_ID = NEXT_BY_ID.inverse();
+    protected static final BiMap<String, String> WAX_ON_BY_ID = HashBiMap.create();
+    protected static final BiMap<String, String> WAX_OFF_BY_ID = WAX_ON_BY_ID.inverse();
+
+    public static final BiMap<Item, Item> NEXT_BY_ITEM = HashBiMap.create();
+    public static final BiMap<Item, Item> PREVIOUS_BY_ITEM = NEXT_BY_ITEM.inverse();
+    public static final BiMap<Item, Item> WAX_ON_BY_ITEM = HashBiMap.create();
+    public static final BiMap<Item, Item> WAX_OFF_BY_ITEM = WAX_ON_BY_ITEM.inverse();
+
+    private static boolean ready = false;
+
+    public static void bootstrap() {
+        if (ready) return;
+        ready = true;
+
+        for (Map.Entry<String, String> entry : NEXT_BY_ID.entrySet()) {
+            NEXT_BY_ITEM.put(BuiltInRegistries.ITEM.get(Identifier.of(entry.getKey())),
+                    BuiltInRegistries.ITEM.get(Identifier.of(entry.getValue())));
+        }
+        for (Map.Entry<String, String> entry : WAX_ON_BY_ID.entrySet()) {
+            WAX_ON_BY_ITEM.put(BuiltInRegistries.ITEM.get(Identifier.of(entry.getKey())),
+                    BuiltInRegistries.ITEM.get(Identifier.of(entry.getValue())));
+        }
+    }
 }

@@ -37,6 +37,7 @@
     "SetEnchantmentsFunctionMixin",
     "ShieldItemMixin",
     "SlotMixin",
+    "WeatheringCopperItemMixin",
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",

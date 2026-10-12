@@ -53,7 +53,7 @@ runs {
 
         systemProperty 'forge.logging.console.level', 'debug'
 
-        workingDirectory project.layout.projectDirectory.dir('run').dir(name)
+        workingDirectory project.layout.projectDirectory.dir('run')
 
         modSource project.sourceSets.main
     }
@@ -85,6 +85,18 @@ dependencies {
 
     implementation "maven.modrinth:sollib:${sollib_version}"
     implementation "maven.modrinth:emi:${emi_version}"
+
+    // Staff dependencies
+    // Spell Engine
+    compileOnly "maven.modrinth:spell-engine:1.10.9+1.21.1-neoforge"
+    compileOnly "maven.modrinth:spell-power:1.6.0+1.21.1-neoforge"
+    compileOnly "curse.maven:rpgmana-1021902:8831226"
+    // Goety
+    compileOnly "maven.modrinth:goety:3.2.0"
+    // Caverns & Chasms
+    compileOnly "maven.modrinth:caverns-and-chasms:3.0.1"
+    // Iron's Spells
+    compileOnly "maven.modrinth:irons-spells-n-spellbooks:1.21.1-3.16.3"
 }
 
 

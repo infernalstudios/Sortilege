@@ -23,7 +23,6 @@ public abstract class PotionBrewingMixin {
 
     @WrapMethod(method = "hasMix")
     private boolean hasRecipe(ItemStack input, ItemStack ingredient, Operation<Boolean> original) {
-        //Sortilege.log().info(BetterBrewingRegistry.isRecipe(input, ingredient), "input:", input, "ingredient", ingredient);
         return original.call(input, ingredient) || BetterBrewingRegistry.isRecipe(input, ingredient);
     }
 

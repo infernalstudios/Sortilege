@@ -99,10 +99,10 @@ public class Sortilege {
 		packets.add(new ModPackets.InitializePacket(true));
 
 		CustomPotionData.write(packets);
-		RecipeLock.write(packets, event.getPlayer().getServer());
+		RecipeLock.write(packets, event.getPlayerList().getServer());
 
 		packets.add(new ModPackets.InitializePacket(false));
-		packets.forEach(p -> PacketDistributor.sendToPlayer(event.getPlayer(), p));
+		packets.forEach(p -> event.getRelevantPlayers().forEach(e -> PacketDistributor.sendToPlayer(e, p)));
 	}
 
 	@SubscribeEvent

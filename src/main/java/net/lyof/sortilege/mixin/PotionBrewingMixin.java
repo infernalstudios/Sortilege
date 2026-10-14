@@ -1,31 +1,37 @@
 package net.lyof.sortilege.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionBrewing;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PotionBrewing.class)
 public abstract class PotionBrewingMixin {
-    @Inject(method = "isIngredient", at = @At("HEAD"), cancellable = true)
-    private static void isIngredient(ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (BetterBrewingRegistry.isIngredient(stack)) cir.setReturnValue(true);
+    @WrapMethod(method = "isIngredient")
+    private boolean isIngredient(ItemStack stack, Operation<Boolean> original) {
+        return original.call(stack) || BetterBrewingRegistry.isIngredient(stack);
     }
 
-    @Inject(method = "hasMix", at = @At("HEAD"), cancellable = true)
-    private static void hasRecipe(ItemStack input, ItemStack ingredient, CallbackInfoReturnable<Boolean> cir) {
-        if (BetterBrewingRegistry.isRecipe(input, ingredient)) cir.setReturnValue(true);
+    @WrapMethod(method = "isInput")
+    private boolean isInput(ItemStack stack, Operation<Boolean> original) {
+        return original.call(stack) || BetterBrewingRegistry.isInput(stack);
     }
 
-    @Inject(method = "mix", at = @At("HEAD"), cancellable = true)
-    private static void craft(ItemStack ingredient, ItemStack input, CallbackInfoReturnable<ItemStack> cir) {
+    @WrapMethod(method = "hasMix")
+    private boolean hasRecipe(ItemStack input, ItemStack ingredient, Operation<Boolean> original) {
+        //Sortilege.log().info(BetterBrewingRegistry.isRecipe(input, ingredient), "input:", input, "ingredient", ingredient);
+        return original.call(input, ingredient) || BetterBrewingRegistry.isRecipe(input, ingredient);
+    }
+
+    @WrapMethod(method = "mix")
+    private ItemStack craft(ItemStack ingredient, ItemStack input, Operation<ItemStack> original) {
         BrewingRecipe recipe = BetterBrewingRegistry.findRecipe(input, ingredient);
-        if (recipe == null) return;
+        if (recipe != null) return recipe.craft(input, ingredient);
 
-        cir.setReturnValue(recipe.craft(input, ingredient));
+        return original.call(ingredient, input);
     }
 }

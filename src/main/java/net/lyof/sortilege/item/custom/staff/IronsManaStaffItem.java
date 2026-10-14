@@ -94,7 +94,7 @@ public class IronsManaStaffItem extends AStaffItem {
 
     @Override
     public boolean hasResource(ItemStack stack, Player player) {
-        return MagicData.getPlayerMagicData(player).getMana() < this.getCost(stack, player, cost.getMana());
+        return MagicData.getPlayerMagicData(player).getMana() >= this.getCost(stack, player, cost.getMana());
     }
 
     @Override

@@ -142,6 +142,8 @@ public class ModRuntime {
     }
 
     public static void loadClient() {
+        Sortilege.log().info("SEARCH");
+
         Iterator<StaffEntry> entries = ModConfig.staffs.get().iterator();
         Iterator<Supplier<AStaffItem>> staffs = ModItems.STAFFS.iterator();
         while (entries.hasNext()) {

@@ -6,7 +6,6 @@
     "AbstractContainerMenuMixin",
     "AnvilMenuMixin",
     "BrewingStandBlockEntityMixin",
-    "BrewingStandMenuPotionSlotMixin",
     "ChiseledBookshelfBlockMixin",
     "CraftingMenuMixin",
     "DataComponentHolderMixin",

@@ -22,10 +22,10 @@ import java.util.function.Supplier;
 
 public class ModRuntime {
     protected static void addMiningMaster(String gem, String enchant) {
-        SolRegistries.Data.RUNTIME.addJson(Identifier.of("miningmaster:recipes/smithing/" + gem + "_smithing.json"),
+        SolRegistries.Data.RUNTIME.addJson(Identifier.of("miningmaster:recipe/smithing/" + gem + "_smithing.json"),
                 json -> ModRuntime.Common.changeMiningMasterGem(json, Sortilege.MOD_ID + ":" + enchant),
                 () -> ModConfig.enabledEnchants.get().contains(enchant) && ModConfig.miningMasterIntegration.get());
-        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("recipes/gems/" + gem + ".json"),
+        SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("recipe/gems/" + gem + ".json"),
                 json -> ModRuntime.Common.changeMiningMasterGem(json, Sortilege.MOD_ID + ":" + enchant),
                 () -> ModConfig.enabledEnchants.get().contains(enchant) && ModConfig.miningMasterIntegration.get());
     }

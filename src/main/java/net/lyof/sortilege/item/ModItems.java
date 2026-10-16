@@ -21,7 +21,6 @@ public class ModItems {
         for (StaffEntry entry : ModConfig.staffs.get()) {
             entry.getReader().register(entry, (id, staff) -> {
                 Supplier<AStaffItem> s = () -> {
-                    Sortilege.log().info("AAREGISTERED " + id);
                     AStaffItem it = staff.get();
                     it.setName(id);
                     return it;

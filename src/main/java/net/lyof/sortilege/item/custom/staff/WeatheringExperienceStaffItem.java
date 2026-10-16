@@ -17,8 +17,8 @@ public class WeatheringExperienceStaffItem extends ExperienceStaffItem implement
     @Dependency(mod = "caverns_and_chasms:weathering_experience")
     public static class Reader extends WeatheringStaffReader {
         @Override
-        public Supplier<AStaffItem> make(StaffEntry entry, WeatheringCopper.WeatherState state, boolean waxed) {
-            return () -> new WeatheringExperienceStaffItem(entry, state, waxed, new Properties());
+        public AStaffItem make(StaffEntry entry, WeatheringCopper.WeatherState state, boolean waxed) {
+            return new WeatheringExperienceStaffItem(entry, state, waxed, new Properties());
         }
     }
 

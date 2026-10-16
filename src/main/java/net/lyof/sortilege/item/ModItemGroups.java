@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 public class ModItemGroups {
-    public static final Set<String> STAFF_BLACKLIST = new HashSet<>();
+    public static final Set<AStaffItem> STAFF_BLACKLIST = new HashSet<>();
 
     public static void addAfter(BuildCreativeModeTabContentsEvent event, ItemLike target, ItemLike item) {
         event.insertAfter(target.asItem().getDefaultInstance(), item.asItem().getDefaultInstance(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
@@ -33,7 +33,7 @@ public class ModItemGroups {
         } else if (event.getTabKey().equals(CreativeModeTabs.COMBAT)) {
             if (ModConfig.lapisShieldEnabled.get()) addAfter(event, Items.SHIELD, ModItems.LAPIS_SHIELD.get());
             for (Supplier<AStaffItem> staff : ModItems.STAFFS)
-                if (!STAFF_BLACKLIST.contains(staff.get().getName())) addBefore(event, Items.TRIDENT, staff.get());
+                if (!STAFF_BLACKLIST.contains(staff.get())) addBefore(event, Items.TRIDENT, staff.get());
             if (ModConfig.witchHatEnabled.get()) addAfter(event, Items.TURTLE_HELMET, ModItems.WITCH_HAT.get());
             AntidotePotionItem.fillItemGroup(event, ModItems.ANTIDOTE.get());
         } else if (event.getTabKey().equals(CreativeModeTabs.FOOD_AND_DRINKS)) {

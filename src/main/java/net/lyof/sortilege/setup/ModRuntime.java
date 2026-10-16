@@ -16,6 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.Item;
 
 import java.util.Iterator;
 import java.util.function.Supplier;
@@ -142,15 +143,11 @@ public class ModRuntime {
     }
 
     public static void loadClient() {
-        Sortilege.log().info("SEARCH");
-
-        Iterator<StaffEntry> entries = ModConfig.staffs.get().iterator();
-        Iterator<Supplier<AStaffItem>> staffs = ModItems.STAFFS.iterator();
-        while (entries.hasNext()) {
-            StaffEntry entry = entries.next();
-            Supplier<AStaffItem> staff = staffs.next();
-            SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + entry.getID() + ".json"),
-                    json -> Client.generateDefaultModel(json, staff.get().getEntry().getID()));
+        for (StaffEntry entry : ModConfig.staffs.get()) {
+            entry.getReader().register(entry, (id, staff) -> {
+                SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("models/item/" + id + ".json"),
+                        json -> Client.generateDefaultModel(json, id));
+            });
         }
 
         SolRegistries.Data.RUNTIME.addJson(Sortilege.MOD.makeID("lang/en_us.json"), Client::generateTranslations);

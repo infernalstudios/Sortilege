@@ -949,7 +949,7 @@ public class ModConfig {
                                 .add("piercing", 1)
                                 .add("range", 8)
                                 .add("durability", 3191)
-                                .add("repair_material", "#forge:ingots/copper")
+                                .add("repair_material", "#c:storage_blocks/all_copper")
                                 .addObject("unaffected", it -> it
                                         .add("cooldown", 20)
                                 )

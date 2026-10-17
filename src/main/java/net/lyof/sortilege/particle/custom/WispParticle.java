@@ -7,6 +7,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
+@OnlyIn(Dist.CLIENT)
 public class WispParticle extends TextureSheetParticle {
     public WispParticle(ClientLevel clientWorld, double x, double y, double z) {
         super(clientWorld, x, y, z);
@@ -47,7 +48,6 @@ public class WispParticle extends TextureSheetParticle {
         return 15728880;
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Factory implements ParticleProvider<ColorParticleOption> {
         private final SpriteSet sprites;
 

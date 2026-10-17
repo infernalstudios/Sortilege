@@ -40,7 +40,8 @@
     "WitchMixin",
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",
-    "accessor.MobEffectInstanceAccessor"
+    "accessor.MobEffectInstanceAccessor",
+    "client.RegistryManagerMixin",
   ],
   "injectors": {
     "defaultRequire": 1

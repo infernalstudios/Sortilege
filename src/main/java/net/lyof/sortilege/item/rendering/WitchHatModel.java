@@ -4,19 +4,25 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.lyof.sortilege.Sortilege;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 
-public class WitchHatModel<T extends Entity> extends EntityModel<T> {
+public class WitchHatModel extends EntityModel<Entity> {
+	private static final float rad = 180F / (float) Math.PI;
+
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
 	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(Sortilege.MOD.makeID("witch_hat"), "main");
 	public final ModelPart hat;
 
 	public WitchHatModel(ModelPart root) {
 		this.hat = root.getChild("hat");
+		this.hat.setInitialPose(hat.storePose());
 	}
 
 	public static LayerDefinition getTexturedModelData() {
@@ -32,13 +38,19 @@ public class WitchHatModel<T extends Entity> extends EntityModel<T> {
 	}
 
 	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.hat.yRot = netHeadYaw / (180F / (float) Math.PI);
-		this.hat.xRot = headPitch / (180F / (float) Math.PI);
+	public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.hat.resetPose();
+
+		this.hat.yRot = netHeadYaw / rad;
+		this.hat.xRot = headPitch / rad;
 	}
 
 	@Override
-	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
-		hat.render(poseStack, buffer, packedLight, packedOverlay);
+	public void renderToBuffer(PoseStack matrices, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+		matrices.pushPose();
+		matrices.translate(0.0D, -1.75D, 0.0D);
+		matrices.scale(1.19F, 1.19F, 1.19F);
+		this.hat.render(matrices, vertexConsumer, packedLight, packedOverlay);
+		matrices.popPose();
 	}
 }

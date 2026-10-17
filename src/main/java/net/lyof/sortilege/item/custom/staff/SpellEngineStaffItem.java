@@ -1,9 +1,7 @@
 package net.lyof.sortilege.item.custom.staff;
 
-import com.cleannrooster.rpgmana.Rpgmana;
 import com.cleannrooster.rpgmana.api.ManaInstance;
 import com.cleannrooster.rpgmana.api.ManaInterface;
-import com.cleannrooster.rpgmana.internals.ManaCosts;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.gson.JsonObject;

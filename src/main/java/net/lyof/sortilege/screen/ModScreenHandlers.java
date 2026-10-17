@@ -1,6 +1,5 @@
 package net.lyof.sortilege.screen;
 
-import com.mojang.serialization.MapCodec;
 import net.lcc.sollib.api.common.registry.SHolder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.Sortilege;

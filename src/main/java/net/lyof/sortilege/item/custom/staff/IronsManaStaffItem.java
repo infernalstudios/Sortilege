@@ -1,6 +1,5 @@
 package net.lyof.sortilege.item.custom.staff;
 
-import com.google.common.base.Suppliers;
 import com.google.gson.JsonObject;
 import io.redspace.ironsspellbooks.api.magic.MagicData;
 import io.redspace.ironsspellbooks.api.registry.AttributeRegistry;
@@ -11,24 +10,13 @@ import net.lcc.sollib.platform.Dependency;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
-import net.lyof.sortilege.item.staff.entry.ValueCost;
-import net.lyof.sortilege.util.XPHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.spell_power.api.SpellSchool;
-import net.spell_power.api.SpellSchools;
 
 import java.util.List;
 import java.util.function.BiConsumer;

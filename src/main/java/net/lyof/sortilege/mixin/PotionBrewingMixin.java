@@ -2,7 +2,6 @@ package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import net.lyof.sortilege.Sortilege;
 import net.lyof.sortilege.recipe.brewing.BetterBrewingRegistry;
 import net.lyof.sortilege.recipe.brewing.BrewingRecipe;
 import net.minecraft.world.item.ItemStack;

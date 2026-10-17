@@ -11,8 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.WeatheringCopper;
 
-import java.util.function.Supplier;
-
 public class WeatheringExperienceStaffItem extends ExperienceStaffItem implements WeatheringCopperItem {
     @Dependency(mod = "caverns_and_chasms:weathering_experience")
     public static class Reader extends WeatheringStaffReader {

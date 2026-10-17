@@ -3,12 +3,10 @@ package net.lyof.sortilege.attribute;
 import net.lcc.sollib.api.common.registry.SHolder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.Sortilege;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
-import org.w3c.dom.Attr;
 
 import java.util.ArrayList;
 import java.util.List;

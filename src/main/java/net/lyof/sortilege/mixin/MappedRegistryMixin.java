@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import it.unimi.dsi.fastutil.objects.ObjectList;
-import net.lyof.sortilege.Sortilege;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,9 +20,6 @@ import javax.annotation.Nullable;
 @Mixin(MappedRegistry.class)
 public abstract class MappedRegistryMixin<T> {
     @Shadow @Final private ObjectList<Holder.Reference<T>> byId;
-
-    @Shadow @Nullable public abstract T byId(int id);
-
     @Shadow @Nullable public abstract ResourceLocation getKey(T value);
 
     @WrapWithCondition(method = "register(ILnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;", at = @At(value = "INVOKE", target = "Lnet/minecraft/core/MappedRegistry;validateWrite(Lnet/minecraft/resources/ResourceKey;)V"))

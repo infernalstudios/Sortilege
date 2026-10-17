@@ -3,14 +3,11 @@ package net.lyof.sortilege.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.lyof.sortilege.item.potion.CustomPotionData;
-import net.minecraft.core.IdMap;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.neoforge.registries.BaseMappedRegistry;
 import net.neoforged.neoforge.registries.RegistryManager;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(RegistryManager.class)

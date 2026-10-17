@@ -5,24 +5,17 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.common.registry.holder.ItemHolder;
-import net.lcc.sollib.core.Identifier;
 import net.lyof.sortilege.item.ModItemGroups;
 import net.lyof.sortilege.item.custom.AStaffItem;
 import net.lyof.sortilege.item.staff.IStaffEntryReader;
 import net.lyof.sortilege.item.staff.StaffEntry;
 import net.lyof.sortilege.item.staff.StaffTier;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.WeatheringCopper;
 
-import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public abstract class WeatheringStaffReader implements IStaffEntryReader {
     @Override

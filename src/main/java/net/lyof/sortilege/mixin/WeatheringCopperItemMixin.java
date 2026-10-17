@@ -1,8 +1,6 @@
 package net.lyof.sortilege.mixin;
 
 import com.teamabnormals.caverns_and_chasms.common.item.copper.WeatheringCopperItem;
-import net.lcc.sollib.api.common.SolRegistries;
-import net.lcc.sollib.api.common.registry.holder.ItemHolder;
 import net.lyof.sortilege.item.staff.entry.WeatheringStaffReader;
 import net.minecraft.world.item.Item;
 import org.spongepowered.asm.mixin.Mixin;

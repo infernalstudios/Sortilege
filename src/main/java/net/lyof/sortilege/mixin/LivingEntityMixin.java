@@ -177,7 +177,8 @@ public abstract class LivingEntityMixin extends Entity implements PotionShenanig
     @Inject(method = "isBlocking", at = @At("HEAD"), cancellable = true)
     public void isBlockingWithLapisShield(CallbackInfoReturnable<Boolean> cir) {
         ItemStack stack = this.getOffhandItem();
-        if (!ModConfig.lapisShieldEnabled.get() || !stack.is(ModItems.LAPIS_SHIELD)) return;
+        if ((ModConfig.lapisShieldEnabled.get() != null && !ModConfig.lapisShieldEnabled.get())
+                || !stack.is(ModItems.LAPIS_SHIELD)) return;
 
         if (!LapisShieldItem.isOnCooldown(stack))
             cir.setReturnValue(true);

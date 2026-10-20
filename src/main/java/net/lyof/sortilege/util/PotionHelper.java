@@ -85,7 +85,8 @@ public class PotionHelper {
 
     public static String getPotionItemType(ItemStack stack) {
         if (!stack.has(DataComponents.POTION_CONTENTS)) return "";
-        ResourceLocation id = Identifier.of(stack.get(DataComponents.POTION_CONTENTS).potion().get().getRegisteredName());
+        if (stack.get(DataComponents.POTION_CONTENTS).potion().isEmpty()) return "";
+        String id = stack.get(DataComponents.POTION_CONTENTS).potion().get().getRegisteredName();
 
         String base = "";
         if (stack.is(Items.SPLASH_POTION)) base = "/splash";

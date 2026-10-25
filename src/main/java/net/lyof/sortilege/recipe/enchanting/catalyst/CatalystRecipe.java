@@ -7,6 +7,7 @@ import net.lyof.sortilege.recipe.ModRecipeTypes;
 import net.lyof.sortilege.setup.ModConfig;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -28,7 +29,7 @@ public record CatalystRecipe(Item item, List<Holder<Enchantment>> enchants) impl
 
     public static ItemEnchantments getEnchantments(ItemStack catalyst, Level world) {
         if (catalyst.is(Items.ENCHANTED_BOOK) && ModConfig.catalystBooks.get())
-            return catalyst.getEnchantments();
+            return catalyst.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
 
         ItemEnchantments.Mutable result = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
         for (RecipeHolder<CatalystRecipe> recipe : world.getRecipeManager().getRecipesFor(ModRecipeTypes.CATALYST.get(), new SingleRecipeInput(catalyst), world))

@@ -41,7 +41,8 @@
     "WorldGenRegionMixin",
     "accessor.HolderReferenceAccessor",
     "accessor.MobEffectInstanceAccessor",
-    "client.RegistryManagerMixin",
+    "client.AttributeUtilMixin",
+    "client.RegistryManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

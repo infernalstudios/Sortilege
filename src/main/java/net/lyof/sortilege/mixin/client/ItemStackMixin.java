@@ -38,48 +38,6 @@ import java.util.function.Consumer;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin {
-    @WrapOperation(method = "addAttributeTooltips", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;forEachModifier(Lnet/minecraft/world/entity/EquipmentSlotGroup;Ljava/util/function/BiConsumer;)V"
-    ))
-    private void showStaffAttributes(ItemStack instance, EquipmentSlotGroup slot,
-                                     BiConsumer<Holder<Attribute>, AttributeModifier> action, Operation<Void> original,
-                                     Consumer<Component> tooltip, @Local MutableBoolean flag) {
-        ItemStack self = (ItemStack) (Object) this;
-        Player player = Minecraft.getInstance().player;
-
-        if (player == null) return;
-
-        if (self.getItem() instanceof AStaffItem staff && staff.shouldDisplayAttributes(self, player) && slot == EquipmentSlotGroup.HAND) {
-            tooltip.accept(CommonComponents.EMPTY);
-            tooltip.accept(Component.translatable("item.modifiers." + slot.getSerializedName()).withStyle(ChatFormatting.GRAY));
-            flag.setFalse();
-
-            String key = "attribute.modifier.equals." + AttributeModifier.Operation.ADD_VALUE.id();
-            DecimalFormat format = ItemAttributeModifiers.ATTRIBUTE_MODIFIER_FORMAT;
-
-            float damage = staff.getStaffDamage(self, player);
-            float piercing = staff.getPiercing(self, player);
-            float range = staff.getRange(self, player);
-
-            if (damage > 0)
-                tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(damage),
-                        Component.translatable(ModAttributes.STAFF_DAMAGE.getAsHolder().value().getDescriptionId()))).withStyle(ChatFormatting.DARK_GREEN));
-            if (piercing > 0)
-                tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(piercing),
-                        Component.translatable(ModAttributes.STAFF_PIERCE.getAsHolder().value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
-            if (range > 0)
-                tooltip.accept(CommonComponents.space().append(Component.translatable(key, format.format(range),
-                        Component.translatable(ModAttributes.STAFF_RANGE.getAsHolder().value().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
-
-            original.call(instance, slot, (BiConsumer<Holder<Attribute>, AttributeModifier>) (attribute, modifier) -> {
-                if (attribute == ModAttributes.STAFF_DAMAGE.getAsHolder() || attribute == ModAttributes.STAFF_PIERCE.getAsHolder() || attribute == ModAttributes.STAFF_RANGE.getAsHolder())
-                    return;
-                action.accept(attribute, modifier);
-            });
-        } else original.call(instance, slot, action);
-    }
-
     @Inject(method = "getTooltipLines", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/Item;appendHoverText(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/Item$TooltipContext;Ljava/util/List;Lnet/minecraft/world/item/TooltipFlag;)V"

@@ -3,6 +3,8 @@ package net.lyof.sortilege.attribute;
 import net.lcc.sollib.api.common.registry.SHolder;
 import net.lcc.sollib.api.common.registry.SolModContainer;
 import net.lyof.sortilege.Sortilege;
+import net.lyof.sortilege.attribute.custom.StaffAttribute;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -35,9 +37,9 @@ public class ModAttributes {
     }
 
     public static final AttributeHolder STAFF_DAMAGE = register("staff.damage", true,
-            () -> new RangedAttribute("attribute.sortilege.name.staff_damage", 0f, 0f, 512f));
+            () -> new StaffAttribute("attribute.sortilege.name.staff_damage", 0f, 0f, 512f, ChatFormatting.DARK_GREEN));
     public static final AttributeHolder STAFF_PIERCE = register("staff.pierce", true,
-            () ->  new RangedAttribute("attribute.sortilege.name.staff_pierce", 0f, 0f, 512f));
+            () ->  new StaffAttribute("attribute.sortilege.name.staff_pierce", 0f, 0f, 512f, ChatFormatting.BLUE));
     public static final AttributeHolder STAFF_RANGE = register("staff.range", true,
-            () -> new RangedAttribute("attribute.sortilege.name.staff_range", 0f, 0f, 512f));
+            () -> new StaffAttribute("attribute.sortilege.name.staff_range", 0f, 0f, 512f, ChatFormatting.BLUE));
 }

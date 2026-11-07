@@ -1,6 +1,7 @@
 package net.lyof.sortilege.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.lyof.sortilege.util.EnchantHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
@@ -20,6 +21,10 @@ public class SmithingTransformRecipeMixin {
 
         Map<Enchantment, Integer> enchants = EnchantmentHelper.getEnchantments(original);
         EnchantmentHelper.setEnchantments(Map.of(), original);
+
+        // Invalidate limit cache
+        EnchantHelper.getTotalEnchantSlots(null);
+
         for (Map.Entry<Enchantment, Integer> entry : enchants.entrySet()) {
             if (entry.getKey().canEnchant(original))
                 original.enchant(entry.getKey(), entry.getValue());

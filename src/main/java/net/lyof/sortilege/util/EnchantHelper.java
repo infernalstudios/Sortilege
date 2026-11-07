@@ -25,7 +25,6 @@ public class EnchantHelper {
     private static int ENCHANT_COUNT;
 
     public static void clear() {
-        ENCHLIMIT_CACHE.clear();
         ENCHANT_TARGETS.clear();
         ENCHANT_COUNT = 0;
     }
@@ -67,13 +66,13 @@ public class EnchantHelper {
 
 
     public static final String ENCHLIMIT_NBT = Sortilege.MOD_ID + "_extra_enchants";
-    private static final Map<Item, Integer> ENCHLIMIT_CACHE = new HashMap<>();
     private static ItemStack cacher = null;
     private static int usedSlots;
     private static int totalSlots;
 
     private static void buildCache(ItemStack stack) {
         cacher = stack;
+        if (stack == null) return;
 
         usedSlots = 0;
         for (Enchantment enchant : EnchantmentHelper.getEnchantments(stack).keySet())

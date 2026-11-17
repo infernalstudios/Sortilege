@@ -1296,6 +1296,24 @@ public class ModConfig {
                         )
                         .addArray("recipes", List.of("sortilege:staff/dark_staff"))
                 )
+
+                .comment("Kobolds")
+                .addObject(staff -> staff
+                        .add("id", "kobold_iron_staff")
+                        .add("sort_index", 3000)
+                        .add("type", "sortilege:experience")
+                        .addObject("properties", properties -> properties
+                                .add("parent", "IRON")
+                                .add("damage", 4)
+                                .add("piercing", 1)
+                                .add("range", 10)
+                                .add("cooldown", 12)
+                        )
+                        .addObject("cost", cost -> cost
+                                .add("value", 3)
+                        )
+                        .addArray("recipes", List.of("sortilege:staff/kobold_iron_staff"))
+                )
         ).bind(staffs);
     }
 

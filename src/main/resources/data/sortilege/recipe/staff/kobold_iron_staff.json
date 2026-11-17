@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:iron_ingot",
+  "base": "sortilege:iron_staff",
+  "result": {
+    "id": "sortilege:kobold_iron_staff"
+  },
+  "template": "kobolds:kobold_template"
+}

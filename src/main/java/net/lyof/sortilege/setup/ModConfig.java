@@ -1312,7 +1312,7 @@ public class ModConfig {
                         .addObject("cost", cost -> cost
                                 .add("value", 3)
                         )
-                        .addArray("recipes", List.of("sortilege:staff/iron_staff"))
+                        .addArray("recipes", List.of("sortilege:staff/kobold_iron_staff"))
                 )
         ).bind(staffs);
     }
